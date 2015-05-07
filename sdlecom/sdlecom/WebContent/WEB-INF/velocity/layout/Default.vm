@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><title>Search Platform</title>
+<meta http-equiv="content-type" content="text/html; charset=${WebserverStatic.encoding}" />
+<link rel="stylesheet" href="$link.getContextPath()/resources/styles/application.css" />
+<link rel="stylesheet" href="$link.getContextPath()/resources/styles/jquery-ui-1.8.11.base.css" />
+<link rel="stylesheet" href="$link.getContextPath()/resources/styles/jquery-ui-custom-ext.css" />
+<script type="text/javascript" src="$link.getContextPath()/resources/javascripts/jquery.min.js"/></script>
+<script type="text/javascript" src="$link.getContextPath()/resources/javascripts/jquery-ui.min.js"/></script>
+<script type="text/javascript" src="$link.getContextPath()/resources/javascripts/jquery.cookie.js"></script>
+<script type="text/javascript" src="$link.getContextPath()/smartcharts/js/SmartCharts.js"></script>
+<script type="text/javascript" src="$link.getContextPath()/resources/javascripts/tooltip.js"></script>
+<script type="text/javascript" src="$link.getContextPath()/resources/javascripts/menuControl.js"></script>
+<script type="text/javascript" src="$link.getContextPath()/resources/javascripts/operation.js"></script>
+<script type="text/javascript" src="$link.getContextPath()/resources/javascripts/jquery.browser.js"></script>
+<link rel="shortcut icon" href="$link.getContextPath()/favicon.ico"/>
+</head>
+<body link="#0000ff" vlink="#0000ff" bgcolor="white" leftmargin="4" topmargin="0" marginheight="4" marginwidth="4">
+#set( $region = "/WEB-INF/velocity/region" )
+#parse( "$region/header.vm" )
+
+<table width="100%" height="100%">
+   
+<TR>
+    <TD valign="top" width="15%" style="white-space:nowrap;" rowspan="2">	      
+#if( $selectedToptab )
+  #parse( "$region/tabs.vm" )
+#end
+    </TD>
+    <TD valign="top" width="85%" >   
+    	<table style="text-align:right" align="right">
+    	<tr>#parse("$region/indexesJumper.vm")	
+		<td style="text-align:right" align="right"><label class="highlight">Select Action: </label></td><td style="text-align:right" align="right">#parse("$region/dashboard/includeActionDropdownList.vm")</td>
+	    <td style="text-align:right" align="right"><button type="button" class="go" onClick="jumptolink('action')">Go</button></td></tr>
+	    </table>
+    </TD>
+</TR>
+<TR>
+<TD valign="top" width="85%">
+ $screen_content
+ </TD>
+</TR>
+<tr>
+<td colspan="2" align=right nowrap style="font-size: 12px;">Build Number: ${toolLoader.getBuildVersion()}&nbsp;&nbsp;|&nbsp;&nbsp;Build Date&nbsp;${toolLoader.getBuildDate()}</td>
+</tr>
+</table>
+</body>
+</html>

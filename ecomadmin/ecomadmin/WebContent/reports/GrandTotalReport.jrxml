@@ -1,0 +1,938 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version last-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="GrandTotalReport" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d0e059b3-7c22-4365-820e-31856a490c3e">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="125"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#EFF7FF"/>
+		</conditionalStyle>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#EFF7FF"/>
+		</conditionalStyle>
+	</style>
+	<style name="lowerborder">
+		<box>
+			<pen lineWidth="0.5"/>
+			<topPen lineWidth="0.5"/>
+			<leftPen lineWidth="0.5"/>
+			<bottomPen lineWidth="0.5"/>
+			<rightPen lineWidth="0.5"/>
+		</box>
+	</style>
+	<subDataset name="Data" uuid="818f3c2b-3aee-4c74-b7ec-a178aba773d7">
+		<parameter name="SITE_ID" class="java.lang.Long">
+			<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+		</parameter>
+		<parameter name="FROM_DATE" class="java.lang.String">
+			<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+		</parameter>
+		<parameter name="TO_DATE" class="java.lang.String">
+			<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+		</parameter>
+		<parameter name="REQUEST_URL" class="java.lang.String"/>
+		<parameter name="ROLE" class="java.lang.String">
+			<defaultValueExpression><![CDATA["PSO"]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[EXEC SP_COMMON_GET_GRAND_TOTALS_RPT $P{SITE_ID}, $P{FROM_DATE}, $P{TO_DATE}]]>
+		</queryString>
+		<field name="NODE_NAME" class="java.lang.String"/>
+		<field name="SITE_NAME" class="java.lang.String"/>
+		<field name="SUBSCRIPTION" class="java.lang.String"/>
+		<field name="TOTAL_AMOUNT" class="java.math.BigDecimal"/>
+		<field name="TOTAL_SERVICE_FEE" class="java.math.BigDecimal"/>
+		<field name="TOTAL_TX_AMOUNT" class="java.math.BigDecimal"/>
+		<field name="TOTAL_TRANSACTION_COST" class="java.math.BigDecimal"/>
+		<field name="TOTAL_NETPROFIT" class="java.math.BigDecimal"/>
+		<field name="TOTAL_CLIENT_PROFIT_SHARE" class="java.math.BigDecimal"/>
+		<field name="TOTAL_AMCAD_PROFIT_SHARE" class="java.math.BigDecimal"/>
+		<field name="PAYMENTTYPE" class="java.lang.String"/>
+		<variable name="Amount_By_Node" class="java.math.BigDecimal" resetType="Group" resetGroup="NODE_NAME" calculation="Sum">
+			<variableExpression><![CDATA[$F{TOTAL_AMOUNT}]]></variableExpression>
+		</variable>
+		<variable name="Amount_By_Site" class="java.math.BigDecimal" resetType="Group" resetGroup="SITE_NAME" calculation="Sum">
+			<variableExpression><![CDATA[$F{TOTAL_AMOUNT}]]></variableExpression>
+		</variable>
+		<variable name="ServiceFee_By_Node" class="java.math.BigDecimal" resetType="Group" resetGroup="NODE_NAME" calculation="Sum">
+			<variableExpression><![CDATA[$F{TOTAL_SERVICE_FEE}]]></variableExpression>
+		</variable>
+		<variable name="ServiceFee_By_Site" class="java.math.BigDecimal" resetType="Group" resetGroup="SITE_NAME" calculation="Sum">
+			<variableExpression><![CDATA[$F{TOTAL_SERVICE_FEE}]]></variableExpression>
+		</variable>
+		<variable name="TransactionAmount_By_Node" class="java.math.BigDecimal" resetType="Group" resetGroup="NODE_NAME" calculation="Sum">
+			<variableExpression><![CDATA[$F{TOTAL_TX_AMOUNT}]]></variableExpression>
+		</variable>
+		<variable name="TransactionAmount_By_Site" class="java.math.BigDecimal" resetType="Group" resetGroup="SITE_NAME" calculation="Sum">
+			<variableExpression><![CDATA[$F{TOTAL_TX_AMOUNT}]]></variableExpression>
+		</variable>
+		<variable name="TransactionCost_By_Node" class="java.math.BigDecimal" resetType="Group" resetGroup="NODE_NAME" calculation="Sum">
+			<variableExpression><![CDATA[$F{TOTAL_TRANSACTION_COST}]]></variableExpression>
+		</variable>
+		<variable name="TransactionCost_By_Site" class="java.math.BigDecimal" resetType="Group" resetGroup="SITE_NAME" calculation="Sum">
+			<variableExpression><![CDATA[$F{TOTAL_TRANSACTION_COST}]]></variableExpression>
+		</variable>
+		<variable name="NetProfit_By_Node" class="java.math.BigDecimal" resetType="Group" resetGroup="NODE_NAME" calculation="Sum">
+			<variableExpression><![CDATA[$F{TOTAL_NETPROFIT}]]></variableExpression>
+		</variable>
+		<variable name="NetProfit_By_Site" class="java.math.BigDecimal" resetType="Group" resetGroup="SITE_NAME" calculation="Sum">
+			<variableExpression><![CDATA[$F{TOTAL_NETPROFIT}]]></variableExpression>
+		</variable>
+		<variable name="ClientProfitShare_By_Node" class="java.math.BigDecimal" resetType="Group" resetGroup="NODE_NAME" calculation="Sum">
+			<variableExpression><![CDATA[$F{TOTAL_CLIENT_PROFIT_SHARE}]]></variableExpression>
+		</variable>
+		<variable name="ClientProfitShare_By_Site" class="java.math.BigDecimal" resetType="Group" resetGroup="SITE_NAME" calculation="Sum">
+			<variableExpression><![CDATA[$F{TOTAL_CLIENT_PROFIT_SHARE}]]></variableExpression>
+		</variable>
+		<variable name="AmcadProfitShare_By_Node" class="java.math.BigDecimal" resetType="Group" resetGroup="NODE_NAME" calculation="Sum">
+			<variableExpression><![CDATA[$F{TOTAL_AMCAD_PROFIT_SHARE}]]></variableExpression>
+		</variable>
+		<variable name="AmcadProfitShare_By_Site" class="java.math.BigDecimal" resetType="Group" resetGroup="SITE_NAME" calculation="Sum">
+			<variableExpression><![CDATA[$F{TOTAL_AMCAD_PROFIT_SHARE}]]></variableExpression>
+		</variable>
+		<variable name="TotalAmount" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{TOTAL_AMOUNT}]]></variableExpression>
+		</variable>
+		<variable name="TotalNetProfit" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{TOTAL_NETPROFIT}]]></variableExpression>
+		</variable>
+		<variable name="TotalClientProfitShare" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{TOTAL_CLIENT_PROFIT_SHARE}]]></variableExpression>
+		</variable>
+		<variable name="TotalAmcadProfitShare" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{TOTAL_AMCAD_PROFIT_SHARE}]]></variableExpression>
+		</variable>
+		<variable name="TotalTransactionCost" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{TOTAL_TRANSACTION_COST}]]></variableExpression>
+		</variable>
+		<variable name="TotalTransactionAmount" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{TOTAL_TX_AMOUNT}]]></variableExpression>
+		</variable>
+		<variable name="TotalServiceFee" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{TOTAL_SERVICE_FEE}]]></variableExpression>
+		</variable>
+		<group name="NODE_NAME">
+			<groupExpression><![CDATA[$F{NODE_NAME}]]></groupExpression>
+		</group>
+		<group name="SITE_NAME">
+			<groupExpression><![CDATA[$F{SITE_NAME}]]></groupExpression>
+		</group>
+	</subDataset>
+	<parameter name="SITE_ID" class="java.lang.Long" isForPrompting="false">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FROM_DATE" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TO_DATE" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REQUEST_URL" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="ROLE" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["PSO"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 1 AS F1]]>
+	</queryString>
+	<field name="F1" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="583" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="21" width="555" height="30" uuid="c906677e-5fec-4b20-ae62-5fde8452ba7e"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="20" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Grand Total Report]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="54" width="555" height="25" uuid="b588d63c-7a71-4755-bcf8-851a8d123b75"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{FROM_DATE} != null && $P{TO_DATE} != null? $P{FROM_DATE} + " TO " + $P{TO_DATE} : "All Available Transactions"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<componentElement>
+				<reportElement key="table 1" style="table 1" x="0" y="0" width="555" height="125" uuid="17e006b5-30e7-4068-a9bf-16f2fc14142a"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Data" uuid="5bc8a942-e71d-43af-8ef3-8609bb76f4e4">
+						<parametersMapExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}]]></parametersMapExpression>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="560" uuid="c25f9435-4d6a-4e52-ae1b-45e902977aaf">
+						<jr:groupHeader groupName="NODE_NAME">
+							<jr:cell height="30" rowSpan="1">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="560" height="30" uuid="bba97df0-c16d-46dd-9140-8eec6ee0f0af"/>
+									<textElement textAlignment="Left" verticalAlignment="Middle">
+										<font size="8" isBold="true"/>
+									</textElement>
+									<textFieldExpression><![CDATA["Node : " + $F{NODE_NAME}]]></textFieldExpression>
+								</textField>
+							</jr:cell>
+						</jr:groupHeader>
+						<jr:groupHeader groupName="SITE_NAME">
+							<jr:cell height="30" rowSpan="1">
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="560" height="30" uuid="cdb7e6f5-c51b-46ef-a9b1-cbe63acb80b4"/>
+									<textElement textAlignment="Left" verticalAlignment="Middle">
+										<font size="8" isBold="true"/>
+									</textElement>
+									<textFieldExpression><![CDATA["Client : "+ $F{SITE_NAME}]]></textFieldExpression>
+								</textField>
+							</jr:cell>
+						</jr:groupHeader>
+						<jr:column width="140" uuid="92c0b323-d516-4b09-9da9-17d94e5cb83b">
+							<jr:tableFooter height="30" rowSpan="1">
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="140" height="30" forecolor="#000099" uuid="d6339aaf-55d3-48ba-8351-aa818443ddba"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font size="8" isBold="true"/>
+									</textElement>
+									<textFieldExpression><![CDATA["Grand Total"]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:groupFooter groupName="NODE_NAME">
+								<jr:cell style="table 1_TH" height="40" rowSpan="1">
+									<staticText>
+										<reportElement style="lowerborder" x="0" y="0" width="140" height="20" forecolor="#000000" uuid="101a25d4-8deb-4fed-ae43-6d654a779e5b"/>
+										<textElement>
+											<font size="8"/>
+										</textElement>
+										<text><![CDATA[]]></text>
+									</staticText>
+									<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+										<reportElement stretchType="RelativeToTallestObject" x="0" y="20" width="140" height="20" uuid="03529c42-475f-4c94-8e1d-ef1afb4f680c"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font size="8" isBold="true"/>
+										</textElement>
+										<textFieldExpression><![CDATA["Totals For " + $F{NODE_NAME}]]></textFieldExpression>
+									</textField>
+								</jr:cell>
+							</jr:groupFooter>
+							<jr:groupFooter groupName="SITE_NAME">
+								<jr:cell style="table 1_TH" height="20" rowSpan="1">
+									<box topPadding="0"/>
+									<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+										<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="140" height="20" uuid="016ac3e6-18bf-46bc-9a65-cab77025b9ad"/>
+										<textElement textAlignment="Center" verticalAlignment="Middle">
+											<font size="8" isBold="true"/>
+										</textElement>
+										<textFieldExpression><![CDATA["Totals For " + $F{SITE_NAME}]]></textFieldExpression>
+									</textField>
+								</jr:cell>
+							</jr:groupFooter>
+							<jr:columnHeader height="33" rowSpan="1">
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<staticText>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="140" height="33" uuid="5d7445fe-4844-4591-bb1c-57ba4065ab1c"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font size="8" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Subscription]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table 1_TD" height="20" rowSpan="1"/>
+							<jr:detailCell height="20" rowSpan="1">
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="140" height="20" uuid="7510be77-bb0e-4329-bd60-7eed67a9551e"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font size="8" isBold="false"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{SUBSCRIPTION}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="60" uuid="2f2c6d16-e457-4df7-934e-92eaa521ba54">
+							<jr:tableFooter height="30" rowSpan="1">
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="30" forecolor="#000099" uuid="ffa1309e-0771-4071-983c-0532359ae09a"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font size="8" isBold="true"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{TotalAmount}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:groupFooter groupName="NODE_NAME">
+								<jr:cell style="table 1_TH" height="40" rowSpan="1">
+									<staticText>
+										<reportElement style="lowerborder" x="0" y="0" width="60" height="20" uuid="ba883b7b-fc0b-44f3-b69b-a705fb6337d7"/>
+										<textElement>
+											<font size="8"/>
+										</textElement>
+										<text><![CDATA[]]></text>
+									</staticText>
+									<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+										<reportElement stretchType="RelativeToTallestObject" x="0" y="20" width="60" height="20" uuid="61731335-78c2-4770-8388-3e51516fba02"/>
+										<textElement textAlignment="Right" verticalAlignment="Middle">
+											<font size="8" isBold="true"/>
+											<paragraph rightIndent="3"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$V{Amount_By_Node}]]></textFieldExpression>
+									</textField>
+								</jr:cell>
+							</jr:groupFooter>
+							<jr:groupFooter groupName="SITE_NAME">
+								<jr:cell style="table 1_TH" height="20" rowSpan="1">
+									<box topPadding="0"/>
+									<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+										<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="20" uuid="762b5f4e-8c77-4f83-bbed-baf55d64d1f3"/>
+										<textElement textAlignment="Right" verticalAlignment="Middle">
+											<font size="8" isBold="true"/>
+											<paragraph rightIndent="3"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$V{Amount_By_Site}]]></textFieldExpression>
+									</textField>
+								</jr:cell>
+							</jr:groupFooter>
+							<jr:columnHeader height="33" rowSpan="1">
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<staticText>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="33" uuid="b9039463-77fe-4352-a7c3-9517d7782e2d"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font size="8" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Amount]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table 1_TD" height="20" rowSpan="1"/>
+							<jr:detailCell height="20" rowSpan="1">
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="20" uuid="660fb924-0642-48bb-887a-c303dd99e404"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font size="8" isBold="false"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{TOTAL_AMOUNT}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="60" uuid="aeb0cbff-5508-4c59-9435-11d62a55f06c">
+							<jr:tableFooter height="30" rowSpan="1">
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="30" forecolor="#000099" uuid="edf6a345-13f7-40b5-b0a5-f4ddc9358996"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font size="8" isBold="true"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{TotalServiceFee}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:groupFooter groupName="NODE_NAME">
+								<jr:cell style="table 1_TH" height="40" rowSpan="1">
+									<staticText>
+										<reportElement style="lowerborder" x="0" y="0" width="60" height="20" uuid="a936eb1b-e1bb-4aff-9820-21d45436abaf"/>
+										<textElement>
+											<font size="8"/>
+										</textElement>
+										<text><![CDATA[]]></text>
+									</staticText>
+									<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+										<reportElement stretchType="RelativeToTallestObject" x="0" y="20" width="60" height="20" uuid="2c0d1ee1-d643-4b8c-86a6-dc8cb1d7a195"/>
+										<textElement textAlignment="Right" verticalAlignment="Middle">
+											<font size="8" isBold="true"/>
+											<paragraph rightIndent="3"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$V{ServiceFee_By_Node}]]></textFieldExpression>
+									</textField>
+								</jr:cell>
+							</jr:groupFooter>
+							<jr:groupFooter groupName="SITE_NAME">
+								<jr:cell style="table 1_TH" height="20" rowSpan="1">
+									<box topPadding="0"/>
+									<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+										<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="20" uuid="08ca75c4-9ef2-443c-bb46-b906221c30d3"/>
+										<textElement textAlignment="Right" verticalAlignment="Middle">
+											<font size="8" isBold="true"/>
+											<paragraph rightIndent="3"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$V{ServiceFee_By_Site}]]></textFieldExpression>
+									</textField>
+								</jr:cell>
+							</jr:groupFooter>
+							<jr:columnHeader height="33" rowSpan="1">
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<staticText>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="33" uuid="ae782a32-8a57-4e94-a533-64ff311ce586"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font size="8" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Service Fee]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table 1_TD" height="20" rowSpan="1"/>
+							<jr:detailCell height="20" rowSpan="1">
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="20" uuid="2da2cc10-43b4-4a8b-95dd-5d9e26bc4915"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font size="8" isBold="false"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{TOTAL_SERVICE_FEE}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="60" uuid="cc177490-40bd-4de8-8c1b-03fb41437dee">
+							<jr:tableFooter height="30" rowSpan="1">
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="30" forecolor="#000099" uuid="21d2e79e-a61a-4389-81b4-1962c73806a8"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font size="8" isBold="true"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{TotalTransactionAmount}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:groupFooter groupName="NODE_NAME">
+								<jr:cell style="table 1_TH" height="40" rowSpan="1">
+									<staticText>
+										<reportElement style="lowerborder" x="0" y="0" width="60" height="20" uuid="c79a16d8-c145-469f-aa2a-ddcc0c075f4e"/>
+										<textElement>
+											<font size="8"/>
+										</textElement>
+										<text><![CDATA[]]></text>
+									</staticText>
+									<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+										<reportElement stretchType="RelativeToTallestObject" x="0" y="20" width="60" height="20" uuid="cc41085b-c6e8-46dd-b38a-c3cc36cd003b"/>
+										<textElement textAlignment="Right" verticalAlignment="Middle">
+											<font size="8" isBold="true"/>
+											<paragraph rightIndent="3"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$V{TransactionAmount_By_Node}]]></textFieldExpression>
+									</textField>
+								</jr:cell>
+							</jr:groupFooter>
+							<jr:groupFooter groupName="SITE_NAME">
+								<jr:cell style="table 1_TH" height="20" rowSpan="1">
+									<box topPadding="0"/>
+									<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+										<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="20" uuid="15ed2d8a-3a3e-4481-806f-2c104c82ad6c"/>
+										<textElement textAlignment="Right" verticalAlignment="Middle">
+											<font size="8" isBold="true"/>
+											<paragraph rightIndent="3"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$V{TransactionAmount_By_Site}]]></textFieldExpression>
+									</textField>
+								</jr:cell>
+							</jr:groupFooter>
+							<jr:columnHeader height="33" rowSpan="1">
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<staticText>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="33" uuid="ca28ca5e-4b3c-4394-a47a-9025ef8c1938"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font size="8" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Total Transaction Amount]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table 1_TD" height="20" rowSpan="1"/>
+							<jr:detailCell height="20" rowSpan="1">
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="20" uuid="49afb35b-8570-4f9d-abd2-7458b5ef0f8b"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font size="8" isBold="false"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{TOTAL_TX_AMOUNT}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="60" uuid="4fb9d85d-c3c9-48f2-8a43-60094967711c">
+							<printWhenExpression><![CDATA[$P{ROLE}.contains("PSO")]]></printWhenExpression>
+							<jr:tableFooter height="30" rowSpan="1">
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="30" forecolor="#000099" uuid="d128c439-8604-4eab-a8aa-136b5d60693b"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font size="8" isBold="true"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{TotalTransactionCost}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:groupFooter groupName="NODE_NAME">
+								<jr:cell style="table 1_TH" height="40" rowSpan="1">
+									<staticText>
+										<reportElement style="lowerborder" x="0" y="0" width="60" height="20" uuid="601becb3-3b60-46f7-8c7f-8f0083145b84"/>
+										<textElement>
+											<font size="8"/>
+										</textElement>
+										<text><![CDATA[]]></text>
+									</staticText>
+									<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+										<reportElement stretchType="RelativeToTallestObject" x="0" y="20" width="60" height="20" uuid="d10fd592-2614-4129-9e09-c63255d49534"/>
+										<textElement textAlignment="Right" verticalAlignment="Middle">
+											<font size="8" isBold="true"/>
+											<paragraph rightIndent="3"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$V{TransactionCost_By_Node}]]></textFieldExpression>
+									</textField>
+								</jr:cell>
+							</jr:groupFooter>
+							<jr:groupFooter groupName="SITE_NAME">
+								<jr:cell style="table 1_TH" height="20" rowSpan="1">
+									<box topPadding="0"/>
+									<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+										<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="20" uuid="4b81cade-4fb6-4a0a-b02c-dee00924b217"/>
+										<textElement textAlignment="Right" verticalAlignment="Middle">
+											<font size="8" isBold="true"/>
+											<paragraph rightIndent="3"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$V{TransactionCost_By_Site}]]></textFieldExpression>
+									</textField>
+								</jr:cell>
+							</jr:groupFooter>
+							<jr:columnHeader height="33" rowSpan="1">
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<staticText>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="33" uuid="36aa5d17-370d-4dbd-a10e-088701a6195f"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font size="8" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Transaction Cost]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table 1_TD" height="20" rowSpan="1"/>
+							<jr:detailCell height="20" rowSpan="1">
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="20" uuid="5d120dfe-3404-4554-837f-8f2716652e63"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font size="8" isBold="false"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{TOTAL_TRANSACTION_COST}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="60" uuid="e0144edb-998d-443d-8356-139953c32f1e">
+							<printWhenExpression><![CDATA[$P{ROLE}.contains("PSO")]]></printWhenExpression>
+							<jr:tableFooter height="30" rowSpan="1">
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="30" forecolor="#000099" uuid="1df07ad3-ba00-4a1f-9434-85471aa3eb9e"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font size="8" isBold="true"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{TotalNetProfit}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:groupFooter groupName="NODE_NAME">
+								<jr:cell style="table 1_TH" height="40" rowSpan="1">
+									<staticText>
+										<reportElement style="lowerborder" x="0" y="0" width="60" height="20" uuid="0d5281f0-69ab-424d-a946-fb9227b6336b"/>
+										<textElement>
+											<font size="8"/>
+										</textElement>
+										<text><![CDATA[]]></text>
+									</staticText>
+									<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+										<reportElement stretchType="RelativeToTallestObject" x="0" y="20" width="60" height="20" uuid="46b6f3be-0647-45bc-b786-a56a31ae8ebf"/>
+										<textElement textAlignment="Right" verticalAlignment="Middle">
+											<font size="8" isBold="true"/>
+											<paragraph rightIndent="3"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$V{NetProfit_By_Node}]]></textFieldExpression>
+									</textField>
+								</jr:cell>
+							</jr:groupFooter>
+							<jr:groupFooter groupName="SITE_NAME">
+								<jr:cell style="table 1_TH" height="20" rowSpan="1">
+									<box topPadding="0"/>
+									<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+										<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="20" uuid="d913e5ed-c3d5-488e-ad0e-e5f8f0be41a6"/>
+										<textElement textAlignment="Right" verticalAlignment="Middle">
+											<font size="8" isBold="true"/>
+											<paragraph rightIndent="3"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$V{NetProfit_By_Site}]]></textFieldExpression>
+									</textField>
+								</jr:cell>
+							</jr:groupFooter>
+							<jr:columnHeader height="33" rowSpan="1">
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<staticText>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="33" uuid="11a2b22e-ef90-4580-8410-98ac982be7d6"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font size="8" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Net Profit]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table 1_TD" height="20" rowSpan="1"/>
+							<jr:detailCell height="20" rowSpan="1">
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="20" uuid="fd2fd373-f573-4088-8089-92035a496697"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font size="8" isBold="false"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{TOTAL_NETPROFIT}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="60" uuid="69e9fab5-8bf2-4cfa-8d12-5b3a4844496a">
+							<jr:tableFooter height="30" rowSpan="1">
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="30" forecolor="#000099" uuid="5e44b1d7-91e9-48db-bac0-f96eb50795c8"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font size="8" isBold="true"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{TotalClientProfitShare}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:groupFooter groupName="NODE_NAME">
+								<jr:cell style="table 1_TH" height="40" rowSpan="1">
+									<staticText>
+										<reportElement style="lowerborder" x="0" y="0" width="60" height="20" uuid="6b50ec5e-dcfb-42d4-9188-11dc36ff74c0"/>
+										<textElement>
+											<font size="8"/>
+										</textElement>
+										<text><![CDATA[]]></text>
+									</staticText>
+									<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+										<reportElement stretchType="RelativeToTallestObject" x="0" y="20" width="60" height="20" uuid="f47dc70e-13e2-45fb-b447-eefccbbe2d81"/>
+										<textElement textAlignment="Right" verticalAlignment="Middle">
+											<font size="8" isBold="true"/>
+											<paragraph rightIndent="3"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$V{ClientProfitShare_By_Node}]]></textFieldExpression>
+									</textField>
+								</jr:cell>
+							</jr:groupFooter>
+							<jr:groupFooter groupName="SITE_NAME">
+								<jr:cell style="table 1_TH" height="20" rowSpan="1">
+									<box topPadding="0"/>
+									<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+										<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="20" uuid="60f5479a-6a11-4d09-ac57-d1a3a36a0088"/>
+										<textElement textAlignment="Right" verticalAlignment="Middle">
+											<font size="8" isBold="true"/>
+											<paragraph rightIndent="3"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$V{ClientProfitShare_By_Site}]]></textFieldExpression>
+									</textField>
+								</jr:cell>
+							</jr:groupFooter>
+							<jr:columnHeader height="33" rowSpan="1">
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<staticText>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="33" uuid="12fe110c-2096-4f6c-9fed-681aee72bd7a"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font size="8" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Client Share]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table 1_TD" height="20" rowSpan="1"/>
+							<jr:detailCell height="20" rowSpan="1">
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="20" uuid="dfc72c46-d783-49d0-94ca-063095a1b828"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font size="8" isBold="false"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{TOTAL_CLIENT_PROFIT_SHARE}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="60" uuid="03da54ec-c632-4024-9772-2f198bec18af">
+							<printWhenExpression><![CDATA[$P{ROLE}.contains("PSO")]]></printWhenExpression>
+							<jr:tableFooter height="30" rowSpan="1">
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="30" forecolor="#000099" uuid="fcb4aaac-9e52-477d-8e44-930d3354799b"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font size="8" isBold="true"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{TotalAmcadProfitShare}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:groupFooter groupName="NODE_NAME">
+								<jr:cell style="table 1_TH" height="40" rowSpan="1">
+									<staticText>
+										<reportElement style="lowerborder" x="0" y="0" width="60" height="20" uuid="bd2845e5-bfc8-4ed1-83fa-b7f3a36ffd45"/>
+										<textElement>
+											<font size="8"/>
+										</textElement>
+										<text><![CDATA[]]></text>
+									</staticText>
+									<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+										<reportElement stretchType="RelativeToTallestObject" x="0" y="20" width="60" height="20" uuid="61069da6-ac3c-493d-8f39-156151c71b69"/>
+										<textElement textAlignment="Right" verticalAlignment="Middle">
+											<font size="8" isBold="true"/>
+											<paragraph rightIndent="3"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$V{AmcadProfitShare_By_Node}]]></textFieldExpression>
+									</textField>
+								</jr:cell>
+							</jr:groupFooter>
+							<jr:groupFooter groupName="SITE_NAME">
+								<jr:cell style="table 1_TH" height="20" rowSpan="1">
+									<box topPadding="0"/>
+									<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+										<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="20" uuid="228c6f46-0226-45f7-8fe1-01447bd071ff"/>
+										<textElement textAlignment="Right" verticalAlignment="Middle">
+											<font size="8" isBold="true"/>
+											<paragraph rightIndent="3"/>
+										</textElement>
+										<textFieldExpression><![CDATA[$V{AmcadProfitShare_By_Site}]]></textFieldExpression>
+									</textField>
+								</jr:cell>
+							</jr:groupFooter>
+							<jr:columnHeader height="33" rowSpan="1">
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<staticText>
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="33" uuid="41cc955f-e9fb-4a6c-ba34-f6debc90d379"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font size="8" isBold="true"/>
+									</textElement>
+									<text><![CDATA[Amcad Share]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter style="table 1_TD" height="20" rowSpan="1"/>
+							<jr:detailCell height="20" rowSpan="1">
+								<box>
+									<pen lineWidth="0.5"/>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+									<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="20" uuid="bbb12614-0151-4d96-adfa-4bb04f8e0832"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font size="8" isBold="false"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{TOTAL_AMCAD_PROFIT_SHARE}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="27" splitType="Stretch">
+			<textField>
+				<reportElement x="207" y="3" width="80" height="20" uuid="059e87ff-fd04-49ea-8a20-9ebd2cbf1dbd"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page " + ($V{PAGE_NUMBER}.intValue())  +" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="287" y="3" width="40" height="20" uuid="0a8d0b57-4df7-46a4-aafc-0b4fd156c343"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

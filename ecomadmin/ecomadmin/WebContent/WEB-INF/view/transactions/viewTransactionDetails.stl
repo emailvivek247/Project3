@@ -1,0 +1,488 @@
+<#include "../lib/layout.stl" />
+<@dashboardLayout>
+
+<style>
+
+.transDetailsTables {
+font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+border-collapse: collapse;
+border-left:1px solid #b3b3b3;
+border-right:1px solid #b3b3b3;
+border-bottom:1px solid #b3b3b3;
+}
+
+.transDetailsTables th {
+text-align: left;
+padding-top: 5px;
+padding-bottom: 4px;
+background-color: #f5f5f5;
+color: #000;
+}
+
+.transDetailsTables td, .transDetailsTables th {
+border-top: 1px solid #b3b3b3;
+padding: 5px 7px 5px 7px;
+word-wrap:break-word;
+}
+
+.tablesRows tr:nth-child(even) td {
+color: #000;
+background-color: #efefef;
+}
+.btn-small {
+padding: 0 8px;
+line-height: 24px;
+border-width: 4px;
+font-size: 13px;
+}
+.boldText{font-weight:bold;}
+.rightAlign{text-align:right;}
+</style>
+
+
+<#if transactionList?has_content && transactionList?size &gt; 0>
+<div class="row-fluid">
+	<div class="col-xs-12" style="padding:0px;">
+		<div class="widget-box gridMargins">
+			<div class="widget-header">
+				<h4>Transaction Details</h4>
+				<div class="widget-toolbar">
+					<a href="#" data-action="collapse">
+						<i class="icon-chevron-up"></i>
+					</a>
+				</div><!-- end widget toolbar-->
+			</div><!-- end widget header-->
+			<div class="widget-body">
+				<div class="widget-main">
+					<div class="row-fluid">
+						<div class="col-xs-12">
+							<div class="form-horizontal">
+								<div class="widget-box transparent">
+									<div class="widget-body">
+										<div class="widget-main">
+											<div class="row-fluid">
+													<#assign totalAmount = 0>
+													<#list transactionList as transaction>
+													<table id="transDetails" class="data transDetailsTables tablesRows" cellpadding="0" cellspacing="0" style="width:100%;display:inline-table;margin:0px;">
+														<tr>
+															<td class="rightAlign boldText">Site Name :</td><td> <#if transactionList?first.getSite().getName()?has_content>${transactionList?first.getSite().getDescription()}</#if></td>
+															<td class="rightAlign boldText">Transaction Type :</td><td><#if transaction.getTransactionType()?has_content>${transaction.getTransactionType()?capitalize}</#if></td>
+															<td class="rightAlign boldText">Created By: </td><td><#if transactionList?first.getCreatedBy()?has_content>${transactionList?first.getCreatedBy()}</#if></td>
+														</tr>
+														<tr class="alt">
+															<td class="rightAlign boldText">Transaction Date :</td><td> <#if transactionList?first.getTransactionDate()?has_content>${SystemUtil.getDateInTimezone(transactionList?first.getTransactionDate(),transactionList?first.site.timeZone)}</#if></td>
+															<td class="rightAlign boldText">Amount :</td><td><#if transaction.getBaseAmount()?has_content>${transaction.getBaseAmount()?string.currency}</#if></td>
+															<td class="rightAlign boldText">Modified By: </td><td><#if transactionList?first.getModifiedBy()?has_content>${transactionList?first.getModifiedBy()}</#if></td>
+														</tr>
+														<tr>
+															<td class="rightAlign boldText">Transaction Reference Number :</td><td> <#if transactionList?first.getTxRefNum()?has_content>${transactionList?first.getTxRefNum()}</#if></td>
+															<td class="rightAlign boldText">Service Fee :</td><td><#if transaction.getServiceFee()?has_content>${transaction.getServiceFee()?string.currency}</#if></td>
+															<td class="rightAlign boldText">Transaction Comments: </td><td><#if transactionList?first.getComments()?has_content>${transactionList?first.getComments()}</#if></td>
+														</tr>
+														<tr class="alt">
+															<td class="rightAlign boldText">Referenced Transaction Reference Number :</td><td> <#if transactionList?first.getOrigTxRefNum()?has_content><a href="viewtransactiondetails.admin?transactionRefNum=${transactionList?first.getOrigTxRefNum()}&paymentChannel=${paymentChannel}">${transactionList?first.getOrigTxRefNum()}</a></#if></td>
+															<td class="rightAlign boldText">Total Amount : </td><td><#if transaction.getTotalTxAmount()?has_content>${transaction.getTotalTxAmount()?string.currency}</#if></td>
+															<#if paymentChannel = "OTC">
+															<td class="rightAlign boldText">Client Machine Name: </td><td><#if transactionList?first.getMachineName()?has_content>${transactionList?first.getMachineName()}</#if></td>
+															<#elseif paymentChannel = "RECURRING">
+															<td class="rightAlign boldText">Client Machine Name: </td><td><#if transactionList?first.getMachineName()?has_content>${transactionList?first.getMachineName()}</#if></td>
+															<#else>
+															<td class="rightAlign boldText">Client Machine Name: </td><td><#if transactionList?first.getMachineName()?has_content>${transactionList?first.getMachineName()}</#if></td>
+															</#if>
+														</tr>
+														<tr>
+															<td class="rightAlign boldText">Card Charged :</td><td> <#if transactionList?first.getCardNumber()?has_content>${transactionList?first.getCardNumber()}</#if></td>
+															<td class="rightAlign boldText">Refund Transaction :</td>
+																	<td>
+																		<#if transaction.getTransactionType() == "CHARGE">
+																		<#if paymentChannel == "RECURRING">
+																		<#if transaction.isPreviousAccess()>
+																			N/A
+																		<#else>
+																			<#if transaction.getTxRefNum()?has_content>
+																				<#if  SystemUtil.isValidRefund(transactionList?first.getTransactionDate()?datetime)>
+																					<a href="confirmrefundtransaction.admin?transactionRefNum=${transaction.getTxRefNum()}&paymentChannel=${paymentChannel}">Refund</a>
+																				<#else>
+																					Transaction is older than 60 days and cannot be refunded.
+																				</#if>
+																			</#if>
+																		</#if>
+																	<#else>
+																		<#if transaction.getTxRefNum()?has_content>
+																			<#if  SystemUtil.isValidRefund(transactionList?first.getTransactionDate()?datetime)>
+																				<a href="confirmrefundtransaction.admin?transactionRefNum=${transaction.getTxRefNum()}&paymentChannel=${paymentChannel}">Refund</a>
+																			<#else>
+																				Transaction is older than 60 days and cannot be refunded.
+																			</#if>
+																		</#if>
+																	</#if>
+																<#else>
+																	N/A
+																</#if>
+															</td>
+															<td>&nbsp;</td><td>&nbsp;</td>
+														</tr>
+														<tr class="alt">
+															<td class="rightAlign boldText">Name On Card :</td><td> <#if transactionList?first.getAccountName()?has_content>${transactionList?first.getAccountName()?capitalize}</#if></td>
+															<td class="rightAlign boldText">Invoice Number :</td>
+																<td>
+																	<#if paymentChannel = "OTC" || paymentChannel = "WEB">
+																		<#if transactionList?first.getInvoiceNumber()?has_content>
+																			${transactionList?first.getInvoiceNumber()}
+																		</#if>
+																	<#else>
+																		N/A
+																	</#if>
+																</td>
+															<td>&nbsp;</td><td>&nbsp;</td>
+														</tr>
+														<tr>
+															<td class="rightAlign boldText">Settlement Status :</td><td> <#if transactionList?first.getAccountName()?has_content>${transactionList?first.getSettlementStatus()?capitalize}</#if></td>
+															<#if paymentChannel = "OTC" && transaction.getTransactionType() == "CHARGE">
+																<td class="rightAlign boldText">Receipt :</td><td> <a href="submitReceiptForm.admin?txRefNum=${transaction.getTxRefNum()}" target="_blank">View Receipt</a></td>
+															<#else>
+																<td class="rightAlign boldText">Receipt :</td><td>N/A</td>
+															</#if>
+															<td>&nbsp;</td><td>&nbsp;</td>
+														</tr>
+													<#if paymentChannel = "PAYASUGO">
+														<tr class="alt">
+															<td class="rightAlign boldText">Certified Document(s) :</td><td> <#if transactionList?first.isCertified()?has_content && transactionList?first.isCertified()>Yes<#else>No</#if></td>
+															<td>&nbsp;</td><td>&nbsp;</td>
+															<td>&nbsp;</td><td>&nbsp;</td>
+														</tr>
+													</#if>
+													</table>
+													</#list>
+												</div><!--/row-fluid-->
+											</div>
+										</div><!--/widget-main-->
+									</div><!--/widget-body-->
+								</div><!--/widget-box-->
+							</div>
+						</div><!--/span-->
+					</div> <!--row Fluid-->
+				</div> <!--end widget main-->
+			</div><!--End widget body-->
+		</div><!-- end widget box-->
+	</div><!-- end span-->
+</div><!--/row fluid-->
+	<!-- End two column window -->
+<#if paymentChannel = "WEB">
+<div class="row-fluid">
+	<div class="col-xs-12">
+		<div class="widget-box gridMargins">
+			<div class="widget-header">
+				<h4>Transaction Items</h4>
+				<div class="widget-toolbar">
+					<a href="#" data-action="collapse">
+						<i class="icon-chevron-up"></i>
+					</a>
+				</div><!-- end widget toolbar-->
+			</div><!-- end widget header-->
+			<div class="widget-body">
+				<div class="widget-main">
+					<div class="row-fluid">
+						<div class="col-xs-12">
+							<div class="form-horizontal">
+								<div class="widget-box transparent">
+									<div class="widget-body">
+										<div class="widget-main">
+											<div class="row-fluid">
+												<#assign hasRefunds = false>
+												<#if transactionList?first.getWebTxItems()?has_content && (transactionList?first.getWebTxItems()?size > 0)>
+													<#if !transactionList?first.getOrigTxRefNum()?has_content>
+													<div>
+														<span><i class="icon-shopping-cart"></i>&nbsp;Purchases</span>
+													</div>
+													<table id="itemList1" class="data transDetailsTables tablesRows" width="100%" cellpadding="0" cellspacing="0">
+														<thead>
+															<tr class="head">
+																<th data-field="transactionDate" filter='false' style="text-align:center;">Transaction Date</th>
+																<th data-field="productId" filter='false' style="text-align:center;">Product Id</th>
+																<th data-field="productName" filter='false' style="text-align:center;">Product Name</th>
+																<th data-field="productType" filter='false' style="text-align:center;">Product Type</th>
+																<th data-field="quantity" filter='false' style="text-align:center;">Quantity</th>
+															<#if paymentChannel = "RECURRING" || paymentChannel = "PAYASUGO">
+																<th data-field="pageCount" filter='false' style="text-align:center;">Page(s)</th>
+															</#if>
+																<th data-field="amount" filter='false' style="text-align:center;">Amount</th>
+																<th data-field="serviceFee" filter='false' style="text-align:center;">Service Fee</th>
+																<th data-field="tax" filter='false' style="text-align:center;">Tax</th>
+																<th data-field="totalAmount" filter='false' style="text-align:center;">Total Amount</th>
+																<th data-field="actions" filter='false' style="text-align:center;">Action</th>
+															</tr>
+														</thead>
+														<tbody>
+															<#list transactionList?first.getWebTxItems() as purchasedItem>
+															<tr>
+																<td class="" style="text-align:center; width:50px"><#if purchasedItem.getModifiedDate()?has_content>${SystemUtil.getDateInTimezone(transactionList?first.getTransactionDate(),transactionList?first.site.timeZone)}</#if></td>
+																<td class="" style="text-align:center;"><#if purchasedItem.getProductId()?has_content>${purchasedItem.getProductId()}</#if></td>
+																<td class="" style="text-align:center;"><#if purchasedItem.getItemName()?has_content>${purchasedItem.getItemName()}</#if></td>
+																<td class="" style="text-align:center;"><#if purchasedItem.getProductType()?has_content>${purchasedItem.getProductType()}</#if></td>
+																<td class="" style="text-align:center;"><#if purchasedItem.getProductType()?has_content>${purchasedItem.getItemQuantity()}</#if></td>
+															<#if paymentChannel = "RECURRING" || paymentChannel = "PAYASUGO">
+																<td class="" style="text-align:center;"><#if purchasedItem.getPageCount()?has_content>${purchasedItem.getPageCount()}</#if></td>
+															</#if>
+																<td class="" style="text-align:right;"><#if purchasedItem.getTotalTxAmount()?has_content>${purchasedItem.getBaseAmount()?string.currency}</#if></td>
+																<td class="" style="text-align:right;"><#if purchasedItem.getTotalTxAmount()?has_content>${purchasedItem.getServiceFee()?string.currency}</#if></td>
+																<td class="" style="text-align:right;"><#if purchasedItem.getTotalTxAmount()?has_content>${purchasedItem.getTax()?string.currency}</#if></td>
+																<td class="" style="text-align:right;"><#if purchasedItem.getTotalTxAmount()?has_content>${purchasedItem.getTotalTxAmount()?string.currency}</#if></td>
+																<td class="" style="text-align:center;">N/A</td>
+															</tr>
+														 	</#list>
+														</tbody>
+													</table>
+													<#else>
+														<#assign hasRefunds = true>
+													</#if>
+													<#if hasRefunds>
+													<div>
+														<span><i class="icon-money"></i>&nbsp;Refunds</span>
+													</div>
+													<table id="itemList2" class="data transDetailsTables tablesRows" width="100%" cellpadding="0" cellspacing="0">
+														<thead>
+															<tr class="head">
+																<th filter='false' style="text-align:center;">Transaction Date</th>
+																<th filter='false' style="text-align:center;">Product Id</th>
+																<th filter='false' style="text-align:center;">Product Name</th>
+																<th filter='false' style="text-align:center;">Product Type</th>
+																<th filter='false' style="text-align:center;">Quantity</th>
+															<#if paymentChannel = "RECURRING" || paymentChannel = "PAYASUGO">
+																<th filter='false' style="text-align:center;">Page(s)</th>
+															</#if>
+																<th filter='false' style="text-align:center;">Amount</th>
+																<th filter='false' style="text-align:center;">Service Fee</th>
+																<th filter='false' style="text-align:center;">Tax</th>
+																<th filter='false' style="text-align:center;">Total Amount</th>
+																<th filter='false' style="text-align:center;">Comments</th>
+															</tr>
+														</thead>
+														<tbody>
+															<#assign TotalTxAmount = 0>
+															<#list transactionList?first.getWebTxItems() as purchasedItem>
+															<#if purchasedItem.isRefunded()>
+															<tr>
+																<td class="" style="text-align:center;"><#if purchasedItem.getModifiedDate()?has_content>${SystemUtil.getDateInTimezone(transactionList?first.getTransactionDate(),transactionList?first.site.timeZone)}</#if></td>
+																<td class="" style="text-align:center;"><#if purchasedItem.getProductId()?has_content>${purchasedItem.getProductId()}</#if></td>
+																<td class="" style="text-align:center;"><#if purchasedItem.getItemName()?has_content>${purchasedItem.getItemName()}</#if></td>
+																<td class="" style="text-align:center;"><#if purchasedItem.getProductType()?has_content>${purchasedItem.getProductType()}</#if></td>
+																<td class="" style="text-align:center;"><#if purchasedItem.getProductType()?has_content>${purchasedItem.getItemQuantity()}</#if></td>
+															<#if paymentChannel = "RECURRING" || paymentChannel = "PAYASUGO">
+																<td class="" style="text-align:center;"><#if purchasedItem.getPageCount()?has_content>${purchasedItem.getPageCount()}</#if></td>
+															</#if>
+																<td class="" style="text-align:right;"><#if purchasedItem.getTotalTxAmount()?has_content>${purchasedItem.getBaseAmount()?string.currency}</#if></td>
+																<td class="" style="text-align:right;"><#if purchasedItem.getTotalTxAmount()?has_content>${purchasedItem.getServiceFee()?string.currency}</#if></td>
+																<td class="" style="text-align:right;"><#if purchasedItem.getTotalTxAmount()?has_content>${purchasedItem.getTax()?string.currency}</#if></td>
+																<td class="" style="text-align:right;"><#if purchasedItem.getTotalTxAmount()?has_content>${purchasedItem.getTotalTxAmount()?string.currency}</#if></td>
+																<td class="" style="text-align:center;"><#if purchasedItem.getComments()?has_content>${purchasedItem.getComments()}</#if></td>
+															</tr>
+															</#if>
+															<#if purchasedItem.isRefunded()>
+																<#assign TotalTxAmount = TotalTxAmount + purchasedItem.getTotalTxAmount()>
+															</#if>
+														 	</#list>
+														</tbody>
+													</table>
+													</#if>
+												</#if>
+											</div>
+										</div><!--/widget-main-->
+									</div><!--/widget-body-->
+								</div><!--/widget-box-->
+							</div>
+						</div><!--/span-->
+					</div> <!--row Fluid-->
+				</div> <!--end widget main-->
+			</div><!--End widget body-->
+		</div><!-- end widget box-->
+	</div><!-- end span-->
+</div><!--/row fluid-->
+</#if>
+
+<#if paymentChannel = "PAYASUGO">
+<div class="row-fluid">
+	<div class="col-xs-12">
+		<div class="widget-box gridMargins">
+			<div class="widget-header">
+				<h4>Transaction Items</h4>
+				<div class="widget-toolbar">
+					<a href="#" data-action="collapse">
+						<i class="icon-chevron-up"></i>
+					</a>
+				</div><!-- end widget toolbar-->
+			</div><!-- end widget header-->
+			<div class="widget-body">
+				<div class="widget-main">
+					<div class="row-fluid">
+						<div class="col-xs-12">
+							<div class="form-horizontal">
+								<div class="widget-box transparent">
+									<div class="widget-body">
+										<div class="widget-main">
+											<div class="row-fluid">
+												<#assign hasRefunds = false>
+												<#if transactionList?first.getPayAsUGoTxItems()?has_content && (transactionList?first.getPayAsUGoTxItems()?size > 0)>
+													<#if !transactionList?first.getOrigTxRefNum()?has_content>
+													<div>
+														<span><i class="icon-shopping-cart"></i>&nbsp;Purchases</span>
+													</div>
+													<table id="itemList1" class="data transDetailsTables tablesRows" width="100%" cellpadding="0" cellspacing="0">
+														<thead>
+															<tr class="head">
+																<th filter='false' style="text-align:center;">Transaction Date</th>
+																<th filter='false' style="text-align:center;">Product Id</th>
+																<th filter='false' style="text-align:center;">Product Name</th>
+																<th filter='false' style="text-align:center;">Product Type</th>
+																<th filter='false' style="text-align:center;">Location Name</th>
+																<th filter='false' style="text-align:center;">Certified Document Number</th>
+																<th filter='false' style="text-align:center;">Quantity</th>
+															<#if paymentChannel = "RECURRING" || paymentChannel = "PAYASUGO">
+																<th filter='false' style="text-align:center;">Page(s)</th>
+															</#if>
+																<th filter='false' style="text-align:center;">Amount</th>
+																<th filter='false' style="text-align:center;">Service Fee</th>
+																<th filter='false' style="text-align:center;">Tax</th>
+																<th filter='false' style="text-align:center;">Total Amount</th>
+																<th filter='false' style="text-align:center;">Action</th>
+															</tr>
+														</thead>
+														<tbody>
+															<#list transactionList?first.getPayAsUGoTxItems() as purchasedItem>
+															<tr>
+																<td style="text-align:center; width:50px"><#if purchasedItem.getModifiedDate()?has_content>${SystemUtil.getDateInTimezone(transactionList?first.getTransactionDate(),transactionList?first.site.timeZone)}</#if></td>
+																<td style="text-align:center;"><#if purchasedItem.getProductId()?has_content>${purchasedItem.getProductId()}</#if></td>
+																<td style="text-align:center;"><#if purchasedItem.getItemName()?has_content>${purchasedItem.getItemName()}</#if></td>
+																<td style="text-align:center;"><#if purchasedItem.getProductType()?has_content>${purchasedItem.getProductType()}</#if></td>
+																<td style="text-align:center;"><#if purchasedItem.getLocationName()?has_content>${purchasedItem.getLocationName()}</#if></td>
+																<td style="text-align:center; width:100px"><#if purchasedItem.getCertifiedDocumentNumber()?has_content>${purchasedItem.getCertifiedDocumentNumber()}</#if></td>
+																<td style="text-align:center;"><#if purchasedItem.getItemQuantity()?has_content>${purchasedItem.getItemQuantity()}</#if></td>
+															<#if paymentChannel = "OTC" || paymentChannel = "PAYASUGO">
+																<td style="text-align:center;"><#if purchasedItem.getPageCount()?has_content>${purchasedItem.getPageCount()}</#if></td>
+															</#if>
+																<td style="text-align:right;"><#if purchasedItem.getTotalTxAmount()?has_content>${purchasedItem.getBaseAmount()?string.currency}</#if></td>
+																<td style="text-align:right;"><#if purchasedItem.getTotalTxAmount()?has_content>${purchasedItem.getServiceFee()?string.currency}</#if></td>
+																<td style="text-align:right;"><#if purchasedItem.getTotalTxAmount()?has_content>${purchasedItem.getTax()?string.currency}</#if></td>
+																<td style="text-align:right;"><#if purchasedItem.getTotalTxAmount()?has_content>${purchasedItem.getTotalTxAmount()?string.currency}</#if></td>
+																<td style="text-align:center;">
+																<#if purchasedItem.isRefunded()>
+																	<#assign hasRefunds = true>
+																	Refund Processed
+																<#else>
+																	<#if ( request.isUserInRole("C_REFUNDTX_ADMIN") || SystemUtil.isPSOSuperAdmin(request) || SystemUtil.isPSOTxAdmin(request)) >
+																		<#if  SystemUtil.isValidRefund(transactionList?first.getTransactionDate()?datetime)>
+																			<a href="confirmpartialrefund.admin?itemId=${purchasedItem.getId()}&paymentChannel=${paymentChannel}">Refund Item</a>
+																		<#else>
+																			Transaction is older than 60 days and cannot be refunded.
+																		</#if>
+																	<#else>
+																		N/A
+																	</#if>
+																</#if>
+																</td>
+															</tr>
+														 	</#list>
+
+														</tbody>
+													</table>
+													<br class="clear"/><br class="clear"/>
+													<#else>
+														<#assign hasRefunds = true>
+													</#if>
+													<#if hasRefunds>
+													<div>
+														<span><i class="icon-money"></i>&nbsp;Refunds</span>
+													</div>
+													<table id="itemList2" class="data transDetailsTables tablesRows" width="100%" cellpadding="0" cellspacing="0">
+														<thead>
+															<tr class="head">
+																<th filter='false' style="text-align:center;">Transaction Date</th>
+																<th filter='false' style="text-align:center;">Product Id</th>
+																<th filter='false' style="text-align:center;">Product Name</th>
+																<th filter='false' style="text-align:center;">Product Type</th>
+																<th filter='false' style="text-align:center;">Location Name</th>
+																<th filter='false' style="text-align:center;">Certified Document Number</th>
+																<th filter='false' style="text-align:center;">Quantity</th>
+															<#if paymentChannel = "RECURRING" || paymentChannel = "PAYASUGO">
+																<th filter='false' style="text-align:center;">Page(s)</th>
+															</#if>
+																<th filter='false' style="text-align:center;">Amount</th>
+																<th filter='false' style="text-align:center;">Service Fee</th>
+																<th filter='false' style="text-align:center;">Tax</th>
+																<th filter='false' style="text-align:center;">Total Amount</th>
+																<th filter='false' style="text-align:center;">Comments</th>
+															</tr>
+														</thead>
+														<tbody>
+															<#assign TotalTxAmount = 0>
+															<#list transactionList?first.getPayAsUGoTxItems() as purchasedItem>
+															<#if purchasedItem.isRefunded()>
+															<tr>
+																<td style="text-align:center;"><#if purchasedItem.getModifiedDate()?has_content>${SystemUtil.getDateInTimezone(transactionList?first.getTransactionDate(),transactionList?first.site.timeZone)}</#if></td>
+																<td style="text-align:center;"><#if purchasedItem.getProductId()?has_content>${purchasedItem.getProductId()}</#if></td>
+																<td style="text-align:center;"><#if purchasedItem.getItemName()?has_content>${purchasedItem.getItemName()}</#if></td>
+																<td style="text-align:center;"><#if purchasedItem.getProductType()?has_content>${purchasedItem.getProductType()}</#if></td>
+																<td style="text-align:center;"><#if purchasedItem.getLocationName()?has_content>${purchasedItem.getLocationName()}</#if></td>
+																<td style="text-align:center; width:100px"><#if purchasedItem.getCertifiedDocumentNumber()?has_content>${purchasedItem.getCertifiedDocumentNumber()}</#if></td>
+																<td style="text-align:center;"><#if purchasedItem.getItemQuantity()?has_content>${purchasedItem.getItemQuantity()}</#if></td>
+															<#if paymentChannel = "RECURRING" || paymentChannel = "PAYASUGO">
+																<td style="text-align:center;"><#if purchasedItem.getPageCount()?has_content>${purchasedItem.getPageCount()}</#if></td>
+															</#if>
+																<td style="text-align:right;"><#if purchasedItem.getTotalTxAmount()?has_content>${purchasedItem.getBaseAmount()?string.currency}</#if></td>
+																<td style="text-align:right;"><#if purchasedItem.getTotalTxAmount()?has_content>${purchasedItem.getServiceFee()?string.currency}</#if></td>
+																<td style="text-align:right;"><#if purchasedItem.getTotalTxAmount()?has_content>${purchasedItem.getTax()?string.currency}</#if></td>
+																<td style="text-align:right;"><#if purchasedItem.getTotalTxAmount()?has_content>${purchasedItem.getTotalTxAmount()?string.currency}</#if></td>
+																<td style="text-align:center;"><#if purchasedItem.getComments()?has_content>${purchasedItem.getComments()}</#if></td>
+															</tr>
+															</#if>
+															<#if purchasedItem.isRefunded()>
+																<#assign TotalTxAmount = TotalTxAmount + purchasedItem.getTotalTxAmount()>
+															</#if>
+														 	</#list>
+														</tbody>
+													</table>
+													</#if>
+												</#if>
+											</div>
+										</div><!--/widget-main-->
+									</div><!--/widget-body-->
+								</div><!--/widget-box-->
+							</div>
+						</div><!--/span-->
+					</div> <!--row Fluid-->
+				</div> <!--end widget main-->
+			</div><!--End widget body-->
+		</div><!-- end widget box-->
+	</div><!-- end span-->
+</div><!--/row fluid-->
+</#if>
+<#else>
+	<#if transactionRefNum?has_content || paymentChannel?has_content>
+		<div class="subHeader">
+			<span>Could not find any transaction with the provided transaction reference number and the payment type. Please check the search criteria and try again.</span>
+		</div>
+	</#if>
+</#if>
+<script type="text/javascript">
+	$(document).ready(function(){
+		 $("#tblDetails").kendoGrid();
+
+	$("#itemList1").kendoGrid({
+            sortable: false,
+            filterable:false
+        });
+
+        <#if hasRefunds?has_content && hasRefunds>
+        	$("#itemList2").kendoGrid({
+            sortable: false,
+            filterable:false
+        });
+        </#if>
+
+
+		$('#OTCTranForm').validationEngine();
+        $('#OTCTranForm').validationEngine('hide');
+		$('#btnRefTran').button();
+	});
+</script>
+</@dashboardLayout>

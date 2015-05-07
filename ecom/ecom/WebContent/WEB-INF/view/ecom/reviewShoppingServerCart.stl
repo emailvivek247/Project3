@@ -1,0 +1,359 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><title>Amcad - Accept</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Expires" content="-1">
+<link rel="shortcut icon" href="/favicon.ico"/>
+</head>
+<body>
+<#assign form  =JspTaglibs["http://www.springframework.org/tags/form"]>
+<#assign spring=JspTaglibs["http://www.springframework.org/tags"]>
+<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/validationEngine.jquery.css" type="text/css" />
+<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/jquery-ui-1.8.11.base.css" />
+<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/jquery-ui-custom-ext.css" />
+<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/payment.css" />
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.min.js"/></script>
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery-ui.min.js"/></script>
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.validationEngine-en.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.validationEngine.js"></script>
+<style>
+div.ADCSI {
+	width: 1000px;
+}
+span.ADCSI_leftcol {
+	width: 150px;
+	text-align:right;
+	display: inline-block;
+}
+span.ADCSI_leftcol_extended {
+	width: 250px;
+}
+div.ADCSI_row {
+	margin-right: 20px;
+}
+#pay {
+	background: #55a003 url(resources/styles/images/greenGrad.png) 50% 50% repeat-x;
+	color: white;
+}
+#pay:hover {
+	background: #55a003 url(resources/styles/images/greenGrad.png) 50% 50% repeat-x;
+	color: white;
+}
+#btnPayNow {
+	background: #55a003 url(resources/styles/images/greenGrad.png) 50% 50% repeat-x;
+	color: #ffffff;
+}
+#btnPayNow:hover {
+	background: #55a003 url(resources/styles/images/greenGrad.png) 50% 50% repeat-x;
+	color: #F0E6E8;
+}
+.unPaid {	
+	color: #ED1C43;
+}
+td.border {
+	border: 1px #CCC solid;
+	vertical-align:top;
+	padding: 10px;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+}
+.center {
+	text-align:center;
+}
+.right {
+	text-align:right;
+}
+.left {
+	text-align:left;
+}
+.top {
+	vertical-align:top;
+}
+.seperator {
+	border-bottom: 1px #CCC solid;
+	padding-bottom:5px;
+	padding-top:5px;
+}
+.header {
+	background: #EEE;
+}
+.spacer {
+	padding-right:10px;
+}
+table {
+	cell-padding:0px;
+	border-spacing: 0px;
+}
+table.miniCart {
+	margin-left:auto; 
+	margin-right:auto;
+	font-size:small;	
+}
+#cardDetails {
+    min-height: 700px;
+    height: 700px;  
+}
+
+body>#cardDetails {
+    height: auto;  
+}
+.hidden{
+  display:none;
+}
+</style>
+	<@form.form id="ccinfo-form" action="purchaseItemsPayment.admin" modelAttribute="creditCardForm" method="post" autocomplete="on">
+	<div class="content">
+		<div style="width: 1000px; margin-left: auto;margin-right:auto;">
+			<div id="ADCSI" class="ADCSI" style="margin-top: 0px; margin-bottom: 12px;">
+			<#if ERROR?has_content && ERROR.description?has_content>
+				${ERROR.description}
+			<#else>
+			<img class="centerAlign" src="${image_url}" />
+			<table width="100%" id="cardDetails" class="centerAlign">
+				<tr>
+					<td class="border center" width="300px" rowspan="2">
+					<b>Your Order Summary</b><br /><br />
+					<table width="100%" class="miniCart" >
+						<tr class="center">
+							<th class="center header">Descriptions</th><th class="center header">Amount</th>
+						</tr>
+						<#assign totalAmount = 0>
+						<#assign totalServiceFee = 0>
+						<#assign totalTranAmount = 0>						
+						<#list ITEMS as item>
+						<tr>
+							<td class="left seperator">
+								<u>${item.productId}</u><br />
+								<#if item.productId?has_content>Item Type: ${item.productId}<br /></#if>
+								<#if item.pageCount?has_content>Pages: ${item.pageCount}<br /></#if>
+								Item Price: ${item.baseAmount?string.currency}<br />
+								Service Fee: ${item.serviceFee?string.currency}<br />								
+								<#assign totalAmount = totalAmount + item.baseAmount>
+								<#assign totalServiceFee = totalServiceFee + item.serviceFee>
+								<#assign totalTranAmount = totalTranAmount + item.totalTxAmount>
+							</td>
+							<td class="right seperator top spacer">
+									${item.totalTxAmount?string.currency}
+							</td>
+						</tr>
+						</#list>
+						<tr>
+							<td class="right seperator"><b>Item Total:</b></td>
+							<td class="right seperator spacer"><b>${totalAmount?string.currency}</b></td>
+						</tr>
+						<tr>
+							<td class="right seperator"><b>Service Fee:</b></td>
+							<td class="right seperator spacer"><b>${totalServiceFee?string.currency}</b></td>
+						</tr>
+						<tr>
+							<td class="right seperator"><b>Total:</b></td>
+							<td class="right seperator spacer"><b>${totalTranAmount?string.currency}</b></td>
+						</tr>						
+					</table>			       
+			       </td> 	
+			       <td class="border center">
+			            <h3><a href="#"><@spring.message code="security.ecommerce.paymentInformation" /></a></h3>
+					    <#if user.getCreditCard()?has_content>
+							<div class="paymentTypeSelector" style="text-align:left">
+							<#if user.isCardAvailable() && user.isCreditCardActive()>
+								<@form.radiobutton path="useExistingAccount" value="E" checked="checked" /> <@spring.message code="security.ecommerce.label.useExistingAccount"/> ${creditCardForm.getMaskedCard()}. <br />
+								<@form.radiobutton path="useExistingAccount" value="U"/> <@spring.message code="security.ecommerce.label.updateAccount"/> <br />																
+							<#elseif user.isCardAvailable() && !user.isCreditCardActive()>
+								<@form.radiobutton  path="useExistingAccount" value="E"/> <@spring.message code="security.ecommerce.label.useExistingAccount"/> ${creditCardForm.getMaskedCard()}. <br />
+								<label> <@spring.message code="security.ecommerce.label.inactiveCreditCard" /> </label>	<br />					
+								<@form.radiobutton  path="useExistingAccount" value="U" checked="checked"/> <@spring.message code="security.ecommerce.label.updateAccount" />
+							<#elseif !user.isCardAvailable()>								
+								<@form.radiobutton  path="useExistingAccount" value="N" style="display:none" checked="checked"/> <@spring.message code="security.ecommerce.label.useNewCard" />
+							</#if>									
+							</div>														
+						</#if>
+						<br />
+					    <div id="ccinfo">		
+					    	<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.ecommerce.accountName" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="accountName" class="validate[required,minSize[1],maxSize[50]] ADCSI_Input" spellcheck="false" tabindex="4" maxlength="50" autocomplete="off" />
+									<@form.errors path="accountName" cssClass="sverror hidden" />						
+								</span>
+							</span>
+							</div>			
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.ecommerce.accountNumber" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="number" class="validate[required,custom[creditCardVMAD],minSize[15],maxSize[16]] ADCSI_Input" spellcheck="false" tabindex="5" maxlength="16" autocomplete="off" />						
+								    <@form.errors path="number" cssClass="sverror hidden"/>
+								</span>
+							</span>
+							</div>
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.ecommerce.accountExpirationMonth" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="expMonthS" style="width:45px" class="validate[required,custom[ccMonth],minSize[2],maxSize[2]] ADCSI_Input" spellcheck="false" tabindex="6" maxlength="2" autocomplete="off" />
+									<@form.errors path="expMonthS" cssClass="sverror hidden" />
+									&nbsp;&nbsp;<font style="font-weight: bold;"><@spring.message code="security.ecommerce.accountExpirationYear" /></font>
+									<@form.input path="expYear" style="width:60px" class="validate[required,custom[ccYear],minSize[4],maxSize[4]] ADCSI_Input" spellcheck="false" tabindex="7" maxlength="4" autocomplete="off" />
+									<@form.errors path="expYear" cssClass="sverror hidden" />						
+								</span>
+							</span>														
+							</div>							
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.ecommerce.accountSecurityCode" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="cvv" style="width:60px" class="validate[required,custom[numeric],minSize[1],maxSize[4]] ADCSI_Input" spellcheck="false" tabindex="8" maxlength="4" autocomplete="off" />&nbsp;&nbsp;<a href="publicsecuritycodehelp.admin" target="_blank"><@spring.message code="security.ecommerce.label.securityCodeHelp" /></a>
+									<@form.errors path="cvv" cssClass="sverror hidden" />						
+								</span>
+							</span>
+							</div>
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span style="display:inline;"><img title="Visa" src="${request.getContextPath()}/resources/images/visa.png" /></span><span style="display:inline;"><img title="Master Card" src="${request.getContextPath()}/resources/images/master.png" /></span><span style="display:inline;"><img title="American Express" src="${request.getContextPath()}/resources/images/amex.png" /></span><span style="display:inline;"><img title="Discover" src="${request.getContextPath()}/resources/images/discover.png" /></span>
+							</span>
+							</div>
+							<br />							
+							BILLING ADDRESS		
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.authentication.addressLine1" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="addressLine1" class="validate[required,minSize[1],maxSize[250]] ADCSI_Input" spellcheck="false" tabindex="9" maxlength="250" autocomplete="on" />
+									<@form.errors path="addressLine1" cssClass="sverror hidden" />							
+								</span>
+							</span>
+							</div>
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.authentication.addressLine2" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input class="ADCSI_Input" path="addressLine2" spellcheck="false" tabindex="10" maxlength="250" autocomplete="on" />
+									<@form.errors path="addressLine2" cssClass="sverror hidden" />						
+								</span>
+							</span>
+							</div>
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.authentication.city" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="city" class="validate[required,minSize[1],maxSize[50]] ADCSI_Input" spellcheck="false" tabindex="11" maxlength="50" autocomplete="on" />
+									<@form.errors path="city" cssClass="sverror hidden" />						
+								</span>
+							</span>
+							</div>
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.authentication.state" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="state" class="validate[required,custom[state],minSize[1],maxSize[2]] ADCSI_Input" spellcheck="false" tabindex="12" maxlength="2" style="width:45px" autocomplete="on" />
+									<@form.errors path="state" cssClass="sverror hidden" />						
+								</span>
+							</span>
+							</div>
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.authentication.zip" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="zip" style="width:75px" class="validate[required,custom[onlyNumberSp],minSize[5],maxSize[5]] ADCSI_Input" spellcheck="false" tabindex="13" maxlength="5" autocomplete="on" />
+									<@form.errors path="zip" cssClass="sverror hidden" />						
+								</span>
+							</span>
+							</div> 
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.ecommerce.phoneNumber" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="phoneNumber" style="width:150px" class="validate[required,custom[phone],custom[numeric],minSize[10],maxSize[10]] ADCSI_Input" spellcheck="false" tabindex="14" maxlength="10" autocomplete="on" />
+									<@form.errors path="phoneNumber" cssClass="sverror hidden" />
+								</span>
+							</span>
+							</div>
+							<#if !user.isCardAvailable()>
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" >
+									<@form.checkbox path="saveCreditCard" tabindex="21" />					
+									<@form.errors path="saveCreditCard" cssClass="sverror hidden" />	
+							</span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@spring.message code="security.ecommerce.label.saveCardInformation" />								
+								</span>
+							</span>
+							</div>
+							</#if>
+							<#if cancel_url?has_content && cancel_text?has_content>
+							<div style="text-align: center;padding-top: 30px;padding-bottom: 10px;">
+							    <a href="${cancel_url}">${cancel_text}</a>						
+							</div>
+							</#if>
+						</div>
+						<div style="text-align: center;padding-top: 30px;padding-bottom: 10px;">
+							   <span style="display:none;"></span>
+							   <img id="processing" src="${request.getContextPath()}/resources/images/processing.gif" style="display:none" /><br />
+							   <input class="button" type="submit" id="btnPayNow" name="btnPayNow" tabindex="21" value='<@spring.message code="security.ecommerce.payNow"/>' />						
+						</div>
+					</td>						
+                </tr>                
+			</table>
+			</#if>		
+		</div>
+	</div>
+	</@form.form>
+
+<script type="text/javascript">	
+		$(document).ready(function(){
+			$("input:submit").button();
+			var icons = {
+				header: "ui-icon-circle-arrow-e",
+				headerSelected: "ui-icon-circle-arrow-s"
+			};
+			$("img#processing").hide();
+			$("#btnPayNow").button({
+	            icons: {
+	                primary: "ui-icon-cart"
+	            }
+	        });
+	        $("#ccinfo-form").validationEngine();
+	        $("#ccinfo-form").validationEngine('hide');	
+	        jQuery('.sverror').each(function() {
+			    var currentElement = '#' + $(this).attr('id').split('.')[0];	     
+		        $(currentElement).validationEngine('showPrompt', $(this).html(), 'fail', 'topRight', true);
+			});
+			<#if user.isCardAvailable() && user.isCreditCardActive()>
+				$("#ccinfo").hide();
+			</#if>
+			$("input[name='useExistingAccount']").change(function() { 
+				$("#ccinfo-form").validationEngine('hide');	
+			    if($(this).val() == "E")  {
+			    	$("#ccinfo").hide();			   
+			    } else {
+			    	$("#ccinfo").show();
+			    }
+			});
+		});
+		$("#ccinfo-form").submit(function(e) {
+	 		if ($(".formError").length > 0 || $(".formErrorContent").length > 0) {
+	    		$("img#processing").hide();	    		
+	    		return false;
+	    	} else {
+	    		 $("#ccinfo-form").bind("jqv.form.result", function(event, errorFound) {
+				 	  if(errorFound) {
+				 	  	$("img#processing").hide();
+				 	  	$("#btnPayNow").show();	 
+				 	  	return false;
+				 	  }
+				 	  else {
+				 	  	$("img#processing").show();
+				 	  	$("#btnPayNow").hide();
+				 	  	return true;
+				 	  }
+				 });
+	    	}    
+	    });	
+</script>
+</body>
+</html>
+

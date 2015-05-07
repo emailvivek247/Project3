@@ -1,0 +1,19 @@
+<h3>What's an Analyzer?</h3>
+<p>An Analyzer takes a string and turns it into tokens. Analyzer works in two 
+  places:</p>
+<ul>
+  <li>It analyzes retreived content and Search saves the tokens to indexes.</li>
+  <li>It analyzes search query and Search match the tokens to the ones in the 
+    indexes. </li>
+</ul>
+<p>So if and only if the saved tokens and query tokens are exactly the same, there 
+  can be a match.</p>
+<p>The most effective and actually useful one is &quot;Number or LowerCase&quot;(NumberOrLowerCase), 
+  which simply save connected letters and numbers into tokens, leaving out anything 
+  else.</p>
+<p>The most commonly used is the Standard English(StandardAnalyzer).</p>
+<p>For Chinese, Japanese, Korean, you can use CJKAnalyzer.</p>
+<p>If you want to use your own Analyzers, you can add an entry to &quot;${WebserverStatic.rootDirectory}WEB-INF\conf\xsearch-web-config.xml&quot; 
+  in &lt;analyzers&gt;, and put your Analyzer file in the classpath.</p>
+<p>For more details, please search &quot;Lucene Analyzer&quot; on the web.</p>
+<p>&nbsp;</p>

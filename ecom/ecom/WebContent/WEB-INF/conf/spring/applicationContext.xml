@@ -1,0 +1,107 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:cache="http://www.springframework.org/schema/cache"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:task="http://www.springframework.org/schema/task"
+    xmlns:jaxws="http://cxf.apache.org/jaxws"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+           http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.0.xsd
+           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd
+           http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd ">
+
+    <import resource="ecomRS.xml" />
+    <import resource="ecomWS.xml" />
+    <import resource="addSubscriptionsValidator.xml" />
+    <import resource="payAsUGoPageFeeCalculator.xml" />
+    <import resource="hibernate.xml" />
+    <import resource="MQ.xml" />
+    <import resource="classpath:META-INF/cxf/cxf.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+    <import resource="security/applicationContext-security.xml" />
+
+
+    <context:component-scan base-package="com.fdt" >
+    <!-- To Exclude Spring MVC Related classes, as it is already loaded by the Dispatcher Servlet  -->
+    	<context:exclude-filter type="regex" expression="com.fdt.*.ui.*"/>
+    	<context:exclude-filter type="regex" expression="com.fdt.test.*"/>
+ 	</context:component-scan>
+
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <bean id="serverMessageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="classpath:servermessages" />
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+
+    <!--  This  is for Asynchronous Setup -->
+    <task:annotation-driven executor="ecomExecutor" scheduler="ecomScheduler" />
+
+    <task:scheduler id="ecomScheduler" pool-size="3" />
+
+    <bean id="ecomExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor">
+        <property name="concurrencyLimit" value="1" />
+    </bean>
+
+    <!-- Payment Gateway -->
+    <bean id="paymentGateway" class="com.fdt.paymentgateway.service.PayPalPaymentGatewayServiceImpl" />
+
+    <bean name="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl"
+      p:host    ="${emailservice.emailserver}"
+      p:port    ="${emailservice.emailport}"  />
+<!--   p:username="${emailservice.username}"
+      p:password="${emailservice.password}"
+      p:javaMailProperties-ref="javaMailProperties"/>
+
+    <util:properties id="javaMailProperties">
+        <prop key="mail.smtp.auth">true</prop>
+    </util:properties> -->
+
+
+    <bean name="freemarkerConfiguration" class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean"
+        p:templateLoaderPath="${CONFIG_LOCATION}/emailtemplates/" />
+
+    <bean id="propertyPlaceholderConfigurer" class="org.jasypt.spring31.properties.EncryptablePropertySourcesPlaceholderConfigurer">
+        <constructor-arg>
+            <bean class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">
+                <property name="config">
+                    <bean class="org.jasypt.encryption.pbe.config.EnvironmentStringPBEConfig">
+                        <property name="algorithm" value="PBEWITHSHA256AND256BITAES-CBC-BC" />
+                        <property name="passwordEnvName" value="PROPERTY_FILE_KEY" />
+                    </bean>
+                </property>
+                <property name="provider" ref="bouncyCastleProvider" />
+                <property name="stringOutputType" value = "HEXADECIMAL" />
+            </bean>
+        </constructor-arg>
+        <property name="locations" >
+            <list>
+                <value>${CONFIG_LOCATION}/spring/properties/server.properties</value>
+            </list>
+        </property>
+        <property name="ignoreResourceNotFound" value="false" />
+    </bean>
+
+    <!--  This is for Cache Settings -->
+
+    <cache:annotation-driven cache-manager="ehCacheManager"/>
+
+    <bean id="ehCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager"
+        p:cacheManager-ref="ehCacheManagerFactory" />
+
+    <bean id="ehCacheManagerFactory" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation">
+            <value>${CONFIG_LOCATION}/spring/ehcache.xml</value>
+        </property>
+    </bean>
+
+    <bean id="bouncyCastleProvider" class="org.bouncycastle.jce.provider.BouncyCastleProvider" />
+
+
+</beans>

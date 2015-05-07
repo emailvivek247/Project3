@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch-web>
+    <analyzers>
+        <analyzer name="Synonym Algorithm">
+            <class>com.fdt.sdl.core.analyzer.synonym.SynonymAlgorithm</class>
+            <description>Synonyms</description>
+            <language>Any</language>
+        </analyzer>
+        <analyzer name="Alpha Numeric Algorithm">
+            <class>com.fdt.sdl.core.analyzer.AlphaNumericAnalyzer</class>
+            <description>Alpha Numeric Algorithm that strip all the special characters and spaces</description>
+            <language>Any</language>
+        </analyzer>
+        <analyzer name="Alpha Numeric Double Metaphone Algorithm">
+            <class>com.fdt.sdl.core.analyzer.phonetix.AlphaNumericDoubleMetaphoneAnalyzer</class>
+            <description>Double Metaphone Algorithm that Strips Special Characters and spaces</description>
+            <language>Any</language>
+        </analyzer>
+        <analyzer name="Number or LowerCase(Recommended) Algorithm">
+            <class>com.fdt.sdl.core.analyzer.NumberLowerCaseAnalyzer</class>
+            <description>Analyze Number or LowerCase words</description>
+            <language>Any</language>
+        </analyzer>
+        <analyzer name="Standard English Algorithm">
+            <class>com.fdt.sdl.core.analyzer.StandardEnglishAnalyzer</class>
+            <description>StandardAnalyzer does both lower-case and stop-word filtering, and in addition tries to do some basic clean-up of words, for example taking out apostrophes ( ' ) and removing periods from acronyms (i.e. "U.S.A." becomes "USA").  It alse includes non-alphabetic characters, such as digits and various punctuation characters</description>
+            <language>English</language>
+        </analyzer>
+        <analyzer name="Extensible IKAnalyzer Algorithm">
+            <class>org.wltea.analyzer.lucene.IKAnalyzer</class>
+            <description>support IP address, email, url, date, Romen Numbers, Scientific numbers, Chinese names, locations, User extensible dictionaries.
+            Customizable configuration file is WEB-INF/classes/IKAnalyzer.cfg.xml
+            </description>
+            <language>Chinese, Japanese, Korean, English, etc. Basically, most languages.</language>
+        </analyzer>
+        <analyzer name="One Word, Number or LowerCase Algorithm">
+            <class>com.fdt.sdl.core.analyzer.OneWordNumberLowerCaseAnalyzer</class>
+            <description>
+             Analyze Number or LowerCase words, but also keep a word that's connected by non-letter characters remaining as one word.
+             For example, "I.B.M." => "ibm", "M-234" => "m234".
+             So later search, "ibm", "I.B.M", or "M234", can find the intended matches.
+            </description>
+          <language>Any</language>
+        </analyzer>
+        <analyzer name="Keyword Case Insensitive Alpha Numeric Algorithm">
+            <class>com.fdt.sdl.core.analyzer.KeywordCaseInsensitiveAlphNumericAnalyzer</class>
+            <description>Removes the Special Characters in Keyword Case Insensitive</description>
+          <language>Any</language>
+        </analyzer>
+        <analyzer name="Simple Lower Case Algorithm">
+            <class>com.fdt.sdl.core.analyzer.SimpleLowerCaseAnalyzer</class>
+            <description>Lower case the letters</description>
+            <language>Any</language>
+        </analyzer>
+        <analyzer name="Whitespace Algorithm">
+            <class>org.apache.lucene.analysis.WhitespaceAnalyzer</class>
+            <description>Separate keywords by whitespace</description>
+            <language>Any</language>
+        </analyzer>
+        <analyzer name="Case Insensitive Keyword Algorithm">
+            <class>com.fdt.sdl.core.analyzer.KeywordLowerCaseAnalyzer</class>
+            <description>Analyzer for Keyword, but case insensitive</description>
+            <language>Any</language>
+        </analyzer>
+        <analyzer name="Comma-Semicolon Algorithm">
+            <class>com.fdt.sdl.core.analyzer.CommaSemicolonAnalyzer</class>
+            <description>Separate keywords by Comma or Semicolon, and lowercase them. Mostly for tags, especially good for tag clouds.</description>
+            <language>Any</language>
+        </analyzer>
+        <analyzer name="Comma-Semicolon Extended Algorithm">
+            <class>com.fdt.sdl.core.analyzer.CommaSemicolonExtendedAnalyzer</class>
+            <description>Extend Comma-Semicolon analyzer, by also separating multi-worded keywords. Good for searching, but Keyword Counting will have different value. </description>
+            <language>Any</language>
+        </analyzer>
+        <analyzer name="Snowball-Danish Algorithm">
+            <class>com.fdt.sdl.core.analyzer.DanishSnowballAnalyzer</class>
+            <description></description>
+            <language>Danish</language>
+        </analyzer>
+        <analyzer name="Snowball-Dutch Algorithm">
+            <class>com.fdt.sdl.core.analyzer.DutchSnowballAnalyzer</class>
+            <description></description>
+            <language>Dutch</language>
+        </analyzer>
+        <analyzer name="Snowball-English Algorithm">
+            <class>com.fdt.sdl.core.analyzer.EnglishSnowballAnalyzer</class>
+            <description></description>
+            <language>English</language>
+        </analyzer>
+        <analyzer name="Snowball-Finnish Algorithm">
+            <class>com.fdt.sdl.core.analyzer.FinnishSnowballAnalyzer</class>
+            <description></description>
+            <language>Finnish</language>
+        </analyzer>
+        <analyzer name="Snowball-French Algorithm">
+            <class>com.fdt.sdl.core.analyzer.FrenchSnowballAnalyzer</class>
+            <description></description>
+            <language>French</language>
+        </analyzer>
+        <analyzer name="Snowball-German2 Algorithm">
+            <class>com.fdt.sdl.core.analyzer.German2SnowballAnalyzer</class>
+            <description></description>
+            <language>German</language>
+        </analyzer>
+        <analyzer name="Snowball-German Algorithm">
+            <class>com.fdt.sdl.core.analyzer.GermanSnowballAnalyzer</class>
+            <description></description>
+            <language>German</language>
+        </analyzer>
+        <analyzer name="Snowball-Italian Algorithm">
+            <class>com.fdt.sdl.core.analyzer.ItalianSnowballAnalyzer</class>
+            <description></description>
+            <language>Italian</language>
+        </analyzer>
+        <analyzer name="Snowball-Kp Algorithm">
+            <class>com.fdt.sdl.core.analyzer.EnglishKpSnowballAnalyzer</class>
+            <description></description>
+            <language>English</language>
+        </analyzer>
+        <analyzer name="Snowball-Lovins Algorithm">
+            <class>com.fdt.sdl.core.analyzer.EnglishLovinsSnowballAnalyzer</class>
+            <description></description>
+            <language>English</language>
+        </analyzer>
+        <analyzer name="Snowball-Norwegian Algorithm">
+            <class>com.fdt.sdl.core.analyzer.NorwegianSnowballAnalyzer</class>
+            <description></description>
+            <language>Norwegian</language>
+        </analyzer>
+        <analyzer name="Snowball-Porter Algorithm">
+            <class>com.fdt.sdl.core.analyzer.EnglishPorterSnowballAnalyzer</class>
+            <description>plural removal, morphological variations. Not for irregulated plural form (eg. women, teeth, etc); doesn't work very well with words end with -y or -able e.g. sleepy---sleepi; doable--doabl; No tense differentiation.</description>
+            <language>English</language>
+        </analyzer>
+        <analyzer name="Snowball-Portuguese Algorithm">
+            <class>com.fdt.sdl.core.analyzer.PortugueseSnowballAnalyzer</class>
+            <description></description>
+            <parameter>Portuguese</parameter>
+            <language>Portuguese</language>
+        </analyzer>
+        <analyzer name="Snowball-Russian Algorithm">
+            <class>com.fdt.sdl.core.analyzer.RussianSnowballAnalyzer</class>
+            <description></description>
+            <language>Russian</language>
+        </analyzer>
+        <analyzer name="Snowball-Spanish Algorithm">
+            <class>com.fdt.sdl.core.analyzer.SpanishSnowballAnalyzer</class>
+            <description></description>
+            <language>Spanish</language>
+        </analyzer>
+        <analyzer name="Snowball-Swedish Algorithm">
+            <class>com.fdt.sdl.core.analyzer.SwedishSnowballAnalyzer</class>
+            <description></description>
+            <language>Swedish</language>
+        </analyzer>
+        <analyzer name="Portuguese Algorithm">
+            <class>com.fdt.sdl.core.analyzer.pt.PortugueseAnalyzer</class>
+            <description></description>
+            <language>Portuguese</language>
+        </analyzer>
+        <analyzer name="Brazilian Algorithm">
+            <class>org.apache.lucene.analysis.br.BrazilianAnalyzer</class>
+            <description></description>
+            <language>Brazilian</language>
+        </analyzer>
+        <analyzer name="CJK Algorithm">
+            <class>com.fdt.sdl.core.analyzer.CJKAnalyzer</class>
+            <description></description>
+            <language>Chinese, Japanese, Korean</language>
+        </analyzer>
+        <analyzer name="Czech Algorithm">
+            <class>org.apache.lucene.analysis.cz.CzechAnalyzer</class>
+            <description></description>
+            <language>Czech</language>
+        </analyzer>
+        <analyzer name="German Algorithm">
+            <class>com.fdt.sdl.core.analyzer.GermanAnalyzer</class>
+            <description></description>
+            <language>German</language>
+        </analyzer>
+        <analyzer name="Greek Algorithm">
+            <class>org.apache.lucene.analysis.el.GreekAnalyzer</class>
+            <description></description>
+            <language>Greek</language>
+        </analyzer>
+        <analyzer name="French Algorithm">
+            <class>org.apache.lucene.analysis.fr.FrenchAnalyzer</class>
+            <description></description>
+            <language>French</language>
+        </analyzer>
+        <analyzer name="Dutch Algorithm">
+            <class>com.fdt.sdl.core.analyzer.DutchAnalyzer</class>
+            <description></description>
+            <language>Dutch</language>
+        </analyzer>
+        <analyzer name="Russian Algorithm">
+            <class>org.apache.lucene.analysis.ru.RussianAnalyzer</class>
+            <description></description>
+            <language>Russian</language>
+        </analyzer>
+        <analyzer name="Thai Algorithm">
+            <class>com.fdt.sdl.core.analyzer.ThaiAnalyzer</class>
+            <description></description>
+            <language>Thai</language>
+        </analyzer>
+        <analyzer name="English Cluster Algorithm">
+            <class>com.fdt.sdl.core.analyzer.JFlexAnalyzer</class>
+            <description></description>
+            <language>English</language>
+        </analyzer>
+        <analyzer name="SoundEx Algorithm">
+            <class>com.fdt.sdl.core.analyzer.SoundExAnalyzer</class>
+            <description>a phonetic algorithm for indexing names by their sound when pronounced in English, support for Indic languages</description>
+            <language>English,Germany,Bengali, Hindi, Gujarati, Kannada, Malayalam, Tamil, Telugu, etc</language>
+        </analyzer>
+        <analyzer name="Metaphone Algorithm">
+            <class>com.fdt.sdl.core.analyzer.MetaphoneAnalyzer</class>
+            <description>Improvement to SoundEx Analyzer.</description>
+            <language>English,Germany,Bengali, Hindi, Gujarati, Kannada, Malayalam, Tamil, Telugu, etc</language>
+        </analyzer>
+        <analyzer name="Double Metaphone Algorithm">
+            <class>com.fdt.sdl.core.analyzer.DoubleMetaphoneAnalyzer</class>
+            <description>Similar to Metaphone Analyzer, more accurate.</description>
+            <language>English,Germany,Bengali, Hindi, Gujarati, Kannada, Malayalam, Tamil, Telugu, etc</language>
+        </analyzer>
+        <analyzer name="Date Algorithm">
+            <class>com.fdt.sdl.core.analyzer.DateAnalyzer</class>
+            <description>Date Analyzer for analyzing dates</description>
+            <language>English</language>
+        </analyzer>
+    </analyzers>
+
+  <similarities>
+    <similarity name="Default">
+        <class>org.apache.lucene.search.DefaultSimilarity</class>
+        <description>Default implementation. Check javadoc for org.apache.lucene.search.DefaultSimilarity</description>
+    </similarity>
+    <similarity name="Avoid Length Normalization">
+        <class>net.javacoding.xsearch.search.FairSimilarity</class>
+        <description>
+        By overriding lengthNorm, it is possible to discount how the length of a field contributes to a score. 
+        In DefaultSimilarity, lengthNorm = 1 / (numTerms in field)^0.5, 
+        but if one changes this to be 1 / (numTerms in field), all fields will be treated "fairly".
+        </description>
+    </similarity>
+  </similarities>
+
+  <column-classes>
+    <column-class name="String">
+        <value>java.lang.String</value>
+    </column-class>
+    <column-class name="Number(Integer,Float)">
+        <value>java.math.BigDecimal</value>
+    </column-class>
+    <column-class name="Time,Date">
+        <value>java.sql.Timestamp</value>
+    </column-class>
+    <!-- commented out, since it can only confuse users, but internally we still support these
+    <column-class name="Float">
+      <value>java.lang.Double</value>
+    </column-class>
+    <column-class name="Float(java.lang.Float)">
+      <value>java.lang.Float</value>
+    </column-class>
+    <column-class name="java.sql.Date">
+      <value>java.sql.Date</value>
+    </column-class>
+    <column-class name="java.sql.Time">
+      <value>java.sql.Time</value>
+    </column-class>
+    -->
+    <column-class name="Clob(java.sql.Clob)">
+        <value>java.sql.Clob</value>
+    </column-class>
+    <column-class name="Blob(java.sql.Blob)">
+        <value>java.sql.Blob</value>
+    </column-class>
+  </column-classes>
+
+    <index-field-types>
+        <index-field-type name="Keyword">
+            <value>Keyword</value>
+        </index-field-type>
+        <index-field-type name="Text">
+            <value>Text</value>
+        </index-field-type>
+        <index-field-type name="Hierachical Date">
+            <value>KeywordDateHierarchical</value>
+        </index-field-type>
+        <index-field-type name="Html Text">
+            <value>TextHtml</value>
+        </index-field-type>
+        <index-field-type name="Compressed Text">
+            <value>TextCompressed</value>
+        </index-field-type>
+        <index-field-type name="UnIndexed">
+            <value>UnIndexed</value>
+        </index-field-type>
+        <index-field-type name="Compressed UnIndexed">
+            <value>UnIndexedCompressed</value>
+        </index-field-type>
+        <index-field-type name="UnStored">
+            <value>UnStored</value>
+        </index-field-type>
+        <index-field-type name="Only as Parameter">
+            <value>Parameter</value>
+        </index-field-type>
+        <index-field-type name="Keyword + Boost Factor">
+            <value>KeywordBoost</value>
+        </index-field-type>
+        <index-field-type name="Keywords">
+            <value>Keywords</value>
+        </index-field-type>
+        <index-field-type name="Keyword Case Insensitive">
+            <value>KeywordCaseInsensitive</value>
+        </index-field-type>
+        <index-field-type name="Only as Boost Factor">
+            <value>Boost</value>
+        </index-field-type>
+    </index-field-types>
+
+    <wizard name="Get Data, Search, Display">
+        <step name="Configure Index Directory">
+            <action>configBasic,createIndex</action>
+            <repeatable>true</repeatable>
+            <description><![CDATA[Set the directory to store the index]]></description>
+        </step>
+        <step name="Connect to Data Source">
+            <action>configDataSource,configConnection,configFetcher</action>
+            <repeatable>true</repeatable>
+            <description><![CDATA[Setup and test data source]]></description>
+        </step>
+        <step name="Get Documents">
+            <action>configDataSelect,configWorkingQueue,configContent,configFetchResult</action>
+            <repeatable>true</repeatable>
+            <description><![CDATA[Get all documents, or just the list]]></description>
+        </step>
+        <!--<step name="Analyze Content">
+          <action>configAnalyzer</action>
+          <repeatable>true</repeatable>
+          <description><![CDATA[
+          Choose an analyzer to cut the content into searchable string
+          ]]></description>
+        </step>-->
+        <step name="Select a display template">
+            <action>listScaffolds,createTemplate</action>
+            <repeatable>true</repeatable>
+            <description><![CDATA[Choose one template and match corresponding columns]]></description>
+        </step>
+        <step name="Schedule Data Retrieval">
+          <action>listSchedules,configSchedule</action>
+          <repeatable>true</repeatable>
+          <description><![CDATA[
+          Choose repeat interval or a cron style schedule
+          ]]></description>
+        </step>
+    </wizard>
+
+    <date-formats>
+        <date-format>M/d/yyyy h:mm a</date-format>
+        <date-format>M/d/yyyy hh:mm:ss a</date-format>
+        <date-format>M/d/yyyy</date-format>
+        <date-format>h:mm a</date-format>
+        <date-format>h:mm a z</date-format>
+        <date-format>h:mm a, MMMMM dd, yyyy</date-format>
+        <date-format>h:mm:ss a</date-format>
+        <date-format>HH:mm</date-format>
+        <date-format>MMM dd, yyyy</date-format>
+        <date-format>MMMMM dd, yyyy</date-format>
+        <date-format>MMMMM dd, yyyy h:mm a</date-format>
+        <date-format>EEEEE, MMMMM dd, yyyy</date-format>
+        <date-format>EEEEE, MMMMM dd, yyyy h:mm:ss a</date-format>
+        <date-format>EEE MMM dd, hh:mm:ss a z</date-format>
+        <date-format>EEE MMM dd, hh:mm:ss a</date-format>
+        <date-format>EEE MMM dd, hh:mm:ss a yyyy</date-format>
+        <date-format>EEE, d MMM yyyy hh:mm:ss z</date-format>
+        <date-format>d.M.yy</date-format>
+        <date-format>d/M/yy</date-format>
+        <date-format>d/M/yy HH:mm</date-format>
+        <date-format>d/M/yy h:mm a</date-format>
+        <date-format>EEEEE, dd MMMMM, yyyy</date-format>
+        <date-format>dd MMMMM, yyyy HH:mm</date-format>
+        <date-format>dd MMMMM, yyyy</date-format>
+        <date-format>yyyy-MM-dd</date-format>
+        <date-format>yyyy-MM-dd HH:mm</date-format>
+        <date-format>yyyy-MM-dd HH:mm:ss z</date-format>
+        <date-format>yyyy/MM/dd HH:mm:ss z</date-format>
+    </date-formats>
+
+    <number-formats>
+        <number-format>0</number-format>
+        <number-format>#,##0</number-format>
+        <number-format>#,##0.##</number-format>
+        <number-format>$#,##0.##</number-format>
+    </number-formats>
+
+    <commands>
+        <command name="Incremental Indexing">
+          stopIndexing unlockStoppedIndex createPeriodTable
+          maybeBuildSynonyms incrementalIndexingWithoutDeletion
+          mergeIndexesIfNeeded
+          buildDictionaryIfNeeded ping-a-url
+        </command>
+        <command name="Incremental Indexing with Fast Deletion Detection">
+          stopIndexing unlockStoppedIndex createPeriodTable
+          maybeBuildSynonyms incrementalIndexingWithFastDeletion
+          mergeIndexesIfNeeded
+          buildDictionaryIfNeeded ping-a-url
+        </command>
+        <command name="Incremental Indexing with Thorough Deletion Detection">
+          stopIndexing unlockStoppedIndex createPeriodTable
+          maybeBuildSynonyms incrementalIndexingWithThoroughDeletion
+          mergeIndexesIfNeeded
+          buildDictionaryIfNeeded ping-a-url
+        </command>
+        <command name="Incremental Indexing,Fast Deletion Detection,Spell Check Index">
+          stopIndexing unlockStoppedIndex createPeriodTable
+          maybeBuildSynonyms incrementalIndexingWithFastDeletion
+          mergeIndexesIfNeeded
+          buildDictionaryIfNeeded ping-a-url
+        </command>
+        <command name="Re-create Index">
+          stopIndexing unlockStoppedIndex
+          maybeBuildSynonyms reCreateIndex
+          mergeIndexes
+          reBuildDictionary
+          buildDictionaryIfNeeded ping-a-url</command>
+        <command name="Subscribe Index">
+          inMemory stopIndexing unlockStoppedIndex
+          retrieveSubscription
+          ping-a-url
+        </command>
+        <command name="Re-create Spelling Dictionary">unlockStoppedIndex reBuildDictionary</command>
+        <command name="Refresh Index">refreshIndex</command>
+    </commands>
+</xsearch-web>

@@ -1,0 +1,129 @@
+<#include "../lib/layout.stl" />
+<@dashboardLayout>
+<#assign form  =JspTaglibs["http://www.springframework.org/tags/form"]>
+<#assign spring=JspTaglibs["http://www.springframework.org/tags"]>
+
+<style>
+.left {
+	text-align:left;
+}
+.right {
+	text-align:right;
+}
+.center {
+	text-align:center;
+}
+table#table_recordsmgmt {
+	width:50%; 
+	margin-left:25%; 
+	margin-right:10%;
+}
+</style>
+
+<#if nodeConfigForm?has_content>			
+<div class="row-fluid">	
+	<div class="col-xs-12">			
+		<div class="widget-box">	
+			<div class="widget-header">
+				<h4>${nodeConfigForm.getNode()} - Node Configuration</h4>	
+				<div class="widget-toolbar">
+					<a href="#" data-action="collapse">
+						<i class="icon-chevron-up"></i>
+					</a>							
+				</div><!-- end widget toolbar-->  
+			</div><!-- end widget header-->
+			<div class="widget-body">						
+				<div class="widget-main">
+					<div class="row-fluid">
+						<div class="col-xs-12">
+							<@form.form width="100%" id="frmNodeConfiginfo" name="frmNodeConfiginfo" action="updatenodeconfig.admin" modelAttribute="nodeConfigForm" method="post" autocomplete="off">
+								<@form.hidden path="node" />	
+								<table id="table_recordsmgmt" cellspacing="5" width="100%">
+									<tr>
+										<td class="right nowrap"><b>Last Modified By :&nbsp;&nbsp;</b></td>
+										<td class="left">
+											${modUserId}
+										</td>
+									</tr>	
+									<tr>
+										<td class="right nowrap"><b>From Email :&nbsp;&nbsp; </b></td>
+										<td class="left">
+											<@form.input style="width:300px" path="fromEmailAddress" class="validate[required,custom[email],minSize[6],maxSize[250]] ADCSI_Input" spellcheck="false" tabindex="1" maxlength="50" autocomplete="off" />
+											<@form.errors path="fromEmailAddress" cssClass="sverror hidden" />
+										</td>
+									</tr>
+									<tr>
+										<td class="right nowrap"><b>Reset Password Subject Text : &nbsp;&nbsp;</b></td>
+										<td class="left">
+											<@form.input style="width:300px" path="resetPasswordSubject" class="validate[required,minSize[1],maxSize[250]] ADCSI_Input" spellcheck="false" tabindex="2" maxlength="250" autocomplete="off" />
+											<@form.errors path="resetPasswordSubject" cssClass="sverror hidden" />	
+										</td>
+									</tr>
+									<tr>
+										<td class="right nowrap"><b>User Activation Email Subject Text :&nbsp;&nbsp; </b></td>
+										<td class="left">
+											<@form.input style="width:300px" path="userActivationSubject" class="validate[required,minSize[1],maxSize[250]] ADCSI_Input" spellcheck="false" tabindex="3" maxlength="250" autocomplete="off" />
+											<@form.errors path="userActivationSubject" cssClass="sverror hidden" />
+										</td>
+									</tr>
+									<tr>
+										<td class="right nowrap"><b>Lock User Account Notification Email Subject Text : &nbsp;&nbsp;</b></td>
+										<td class="left">
+											<@form.input style="width:300px" path="lockUserSubject" class="validate[required,minSize[1],maxSize[250]] ADCSI_Input" spellcheck="false" tabindex="4" maxlength="250" autocomplete="off" />
+											<@form.errors path="lockUserSubject" cssClass="sverror hidden" />
+										</td>
+									</tr>
+									<tr>
+										<td class="right nowrap"><b>UnLock User Account Notification Email Subject Text : &nbsp;&nbsp;</b></td>
+										<td class="left">
+											<@form.input style="width:300px" path="unlockUserSubject" class="validate[required,minSize[1],maxSize[250]] ADCSI_Input" spellcheck="false" tabindex="5" maxlength="250" autocomplete="off" />
+											<@form.errors path="unlockUserSubject" cssClass="sverror hidden" />
+										</td>
+									</tr>
+									<tr>
+									<tr>
+										<td class="right nowrap"><b>Alert Notification Subject Text : &nbsp;&nbsp;</b></td>
+										<td class="left">
+											<@form.input style="width:300px" path="alertSubject" class="validate[required,minSize[1],maxSize[250]] ADCSI_Input" spellcheck="false" tabindex="6" maxlength="250" autocomplete="off" />
+											<@form.errors path="alertSubject" cssClass="sverror hidden" />
+										</td>
+									</tr>
+									<tr>
+										<td class="right nowrap"><b>Inactive User Notification Subject Text : &nbsp;&nbsp;</b></td>
+										<td class="left">
+											<@form.input style="width:300px" path="inActiveUserNotifSubject" class="validate[required,minSize[1],maxSize[250]] ADCSI_Input" spellcheck="false" tabindex="6" maxlength="250" autocomplete="off" />
+											<@form.errors path="inActiveUserNotifSubject" cssClass="sverror hidden" />
+										</td>
+									</tr>
+									<tr>
+										<td class="center" colspan="5">
+											<span class="input-icon" >
+												<input class="btn btn-small btn-info" type="submit" value="Update" />
+												<i class="icon-retweet white" ></i>
+											</span>
+										</td>
+									</tr>							  
+								</table>
+							</@form.form>			
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<#else>
+	Configuration is not available for this Node.
+</#if>
+
+
+<script type="text/javascript">
+ $(document).ready(function() {
+ 	
+ 	jQuery('.sverror').each(function() {
+		    var currentElement = '#' + $(this).attr('id').split('.')[0];	     
+	        $(currentElement).validationEngine('showPrompt', $(this).html(), 'fail', 'topRight', true);
+	});
+ });
+</script>
+</@dashboardLayout>

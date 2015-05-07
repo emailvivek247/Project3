@@ -1,0 +1,3215 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://service.ecom.fdt.com/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="EComFacadeService" targetNamespace="http://service.ecom.fdt.com/">
+<wsdl:documentation>ACCEPT SOAP 1.2 Services for Internal Applications</wsdl:documentation>
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://service.ecom.fdt.com/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://service.ecom.fdt.com/">
+  <xs:element name="activateUser" type="tns:activateUser"/>
+  <xs:element name="activateUserResponse" type="tns:activateUserResponse"/>
+  <xs:element name="addFirmLevelUser" type="tns:addFirmLevelUser"/>
+  <xs:element name="addFirmLevelUserResponse" type="tns:addFirmLevelUserResponse"/>
+  <xs:element name="addFirmUserAccess" type="tns:addFirmUserAccess"/>
+  <xs:element name="addFirmUserAccessResponse" type="tns:addFirmUserAccessResponse"/>
+  <xs:element name="addSubscription" type="tns:addSubscription"/>
+  <xs:element name="addSubscriptionResponse" type="tns:addSubscriptionResponse"/>
+  <xs:element name="cancelSubscription" type="tns:cancelSubscription"/>
+  <xs:element name="cancelSubscriptionResponse" type="tns:cancelSubscriptionResponse"/>
+  <xs:element name="changeFromRecurringToRecurringSubscription" type="tns:changeFromRecurringToRecurringSubscription"/>
+  <xs:element name="changeFromRecurringToRecurringSubscriptionResponse" type="tns:changeFromRecurringToRecurringSubscriptionResponse"/>
+  <xs:element name="changePassword" type="tns:changePassword"/>
+  <xs:element name="changePasswordResponse" type="tns:changePasswordResponse"/>
+  <xs:element name="checkValidResetPasswordRequest" type="tns:checkValidResetPasswordRequest"/>
+  <xs:element name="checkValidResetPasswordRequestResponse" type="tns:checkValidResetPasswordRequestResponse"/>
+  <xs:element name="deleteCreditCard" type="tns:deleteCreditCard"/>
+  <xs:element name="deleteCreditCardResponse" type="tns:deleteCreditCardResponse"/>
+  <xs:element name="deleteShoppingCartItem" type="tns:deleteShoppingCartItem"/>
+  <xs:element name="deleteShoppingCartItemResponse" type="tns:deleteShoppingCartItemResponse"/>
+  <xs:element name="deleteUserAlerts" type="tns:deleteUserAlerts"/>
+  <xs:element name="deleteUserAlertsResponse" type="tns:deleteUserAlertsResponse"/>
+  <xs:element name="doSaleGetInfoWEB" type="tns:doSaleGetInfoWEB"/>
+  <xs:element name="doSaleGetInfoWEBResponse" type="tns:doSaleGetInfoWEBResponse"/>
+  <xs:element name="doSalePayAsUGo" type="tns:doSalePayAsUGo"/>
+  <xs:element name="doSalePayAsUGoInfo" type="tns:doSalePayAsUGoInfo"/>
+  <xs:element name="doSalePayAsUGoInfoResponse" type="tns:doSalePayAsUGoInfoResponse"/>
+  <xs:element name="doSalePayAsUGoResponse" type="tns:doSalePayAsUGoResponse"/>
+  <xs:element name="enableDisableFirmLevelUserAccess" type="tns:enableDisableFirmLevelUserAccess"/>
+  <xs:element name="enableDisableFirmLevelUserAccessResponse" type="tns:enableDisableFirmLevelUserAccessResponse"/>
+  <xs:element name="findUser" type="tns:findUser"/>
+  <xs:element name="findUserResponse" type="tns:findUserResponse"/>
+  <xs:element name="getAccessDetails" type="tns:getAccessDetails"/>
+  <xs:element name="getAccessDetailsResponse" type="tns:getAccessDetailsResponse"/>
+  <xs:element name="getAccessesForSite" type="tns:getAccessesForSite"/>
+  <xs:element name="getAccessesForSiteResponse" type="tns:getAccessesForSiteResponse"/>
+  <xs:element name="getChangeSubscriptionInfo" type="tns:getChangeSubscriptionInfo"/>
+  <xs:element name="getChangeSubscriptionInfoResponse" type="tns:getChangeSubscriptionInfoResponse"/>
+  <xs:element name="getCodes" type="tns:getCodes"/>
+  <xs:element name="getCodesResponse" type="tns:getCodesResponse"/>
+  <xs:element name="getCreditCardDetails" type="tns:getCreditCardDetails"/>
+  <xs:element name="getCreditCardDetailsByUserName" type="tns:getCreditCardDetailsByUserName"/>
+  <xs:element name="getCreditCardDetailsByUserNameResponse" type="tns:getCreditCardDetailsByUserNameResponse"/>
+  <xs:element name="getCreditCardDetailsResponse" type="tns:getCreditCardDetailsResponse"/>
+  <xs:element name="getFirmUsers" type="tns:getFirmUsers"/>
+  <xs:element name="getFirmUsersResponse" type="tns:getFirmUsersResponse"/>
+  <xs:element name="getLocationByNameAndAccessName" type="tns:getLocationByNameAndAccessName"/>
+  <xs:element name="getLocationByNameAndAccessNameResponse" type="tns:getLocationByNameAndAccessNameResponse"/>
+  <xs:element name="getLocationsBySiteId" type="tns:getLocationsBySiteId"/>
+  <xs:element name="getLocationsBySiteIdResponse" type="tns:getLocationsBySiteIdResponse"/>
+  <xs:element name="getNewTermsAndConditionsforUser" type="tns:getNewTermsAndConditionsforUser"/>
+  <xs:element name="getNewTermsAndConditionsforUserResponse" type="tns:getNewTermsAndConditionsforUserResponse"/>
+  <xs:element name="getPaidSubUnpaidByUser" type="tns:getPaidSubUnpaidByUser"/>
+  <xs:element name="getPaidSubUnpaidByUserResponse" type="tns:getPaidSubUnpaidByUserResponse"/>
+  <xs:element name="getPayAsUGoTransactionDetail" type="tns:getPayAsUGoTransactionDetail"/>
+  <xs:element name="getPayAsUGoTransactionDetailResponse" type="tns:getPayAsUGoTransactionDetailResponse"/>
+  <xs:element name="getPayAsUGoTransactionsByNode" type="tns:getPayAsUGoTransactionsByNode"/>
+  <xs:element name="getPayAsUGoTransactionsByNodePerPage" type="tns:getPayAsUGoTransactionsByNodePerPage"/>
+  <xs:element name="getPayAsUGoTransactionsByNodePerPageResponse" type="tns:getPayAsUGoTransactionsByNodePerPageResponse"/>
+  <xs:element name="getPayAsUGoTransactionsByNodeResponse" type="tns:getPayAsUGoTransactionsByNodeResponse"/>
+  <xs:element name="getPayAsUGoTxIdForPurchasedDoc" type="tns:getPayAsUGoTxIdForPurchasedDoc"/>
+  <xs:element name="getPayAsUGoTxIdForPurchasedDocResponse" type="tns:getPayAsUGoTxIdForPurchasedDocResponse"/>
+  <xs:element name="getRecurTransactionsByNode" type="tns:getRecurTransactionsByNode"/>
+  <xs:element name="getRecurTransactionsByNodeResponse" type="tns:getRecurTransactionsByNodeResponse"/>
+  <xs:element name="getRecurTxDetail" type="tns:getRecurTxDetail"/>
+  <xs:element name="getRecurTxDetailResponse" type="tns:getRecurTxDetailResponse"/>
+  <xs:element name="getShoppingBasketItems" type="tns:getShoppingBasketItems"/>
+  <xs:element name="getShoppingBasketItemsResponse" type="tns:getShoppingBasketItemsResponse"/>
+  <xs:element name="getSitesForNode" type="tns:getSitesForNode"/>
+  <xs:element name="getSitesForNodeResponse" type="tns:getSitesForNodeResponse"/>
+  <xs:element name="getSubscriptionDetails" type="tns:getSubscriptionDetails"/>
+  <xs:element name="getSubscriptionDetailsResponse" type="tns:getSubscriptionDetailsResponse"/>
+  <xs:element name="getTerm" type="tns:getTerm"/>
+  <xs:element name="getTermResponse" type="tns:getTermResponse"/>
+  <xs:element name="getUserAlertsByUserName" type="tns:getUserAlertsByUserName"/>
+  <xs:element name="getUserAlertsByUserNameResponse" type="tns:getUserAlertsByUserNameResponse"/>
+  <xs:element name="getUserSubscriptions" type="tns:getUserSubscriptions"/>
+  <xs:element name="getUserSubscriptionsResponse" type="tns:getUserSubscriptionsResponse"/>
+  <xs:element name="loadUserByUsername" type="tns:loadUserByUsername"/>
+  <xs:element name="loadUserByUsernameResponse" type="tns:loadUserByUsernameResponse"/>
+  <xs:element name="lockUnLockUser" type="tns:lockUnLockUser"/>
+  <xs:element name="lockUnLockUserResponse" type="tns:lockUnLockUserResponse"/>
+  <xs:element name="paySubscriptions" type="tns:paySubscriptions"/>
+  <xs:element name="paySubscriptionsResponse" type="tns:paySubscriptionsResponse"/>
+  <xs:element name="reactivateCancelledSubscription" type="tns:reactivateCancelledSubscription"/>
+  <xs:element name="reactivateCancelledSubscriptionResponse" type="tns:reactivateCancelledSubscriptionResponse"/>
+  <xs:element name="registerUser" type="tns:registerUser"/>
+  <xs:element name="registerUserResponse" type="tns:registerUserResponse"/>
+  <xs:element name="removeFirmLevelUserAccess" type="tns:removeFirmLevelUserAccess"/>
+  <xs:element name="removeFirmLevelUserAccessResponse" type="tns:removeFirmLevelUserAccessResponse"/>
+  <xs:element name="resendUserActivationEmail" type="tns:resendUserActivationEmail"/>
+  <xs:element name="resendUserActivationEmailResponse" type="tns:resendUserActivationEmailResponse"/>
+  <xs:element name="resetPassword" type="tns:resetPassword"/>
+  <xs:element name="resetPasswordRequest" type="tns:resetPasswordRequest"/>
+  <xs:element name="resetPasswordRequestResponse" type="tns:resetPasswordRequestResponse"/>
+  <xs:element name="resetPasswordResponse" type="tns:resetPasswordResponse"/>
+  <xs:element name="saveShoppingCartItem" type="tns:saveShoppingCartItem"/>
+  <xs:element name="saveShoppingCartItemResponse" type="tns:saveShoppingCartItemResponse"/>
+  <xs:element name="saveUserAlert" type="tns:saveUserAlert"/>
+  <xs:element name="saveUserAlertResponse" type="tns:saveUserAlertResponse"/>
+  <xs:element name="updateExistingCreditCardInformation" type="tns:updateExistingCreditCardInformation"/>
+  <xs:element name="updateExistingCreditCardInformationResponse" type="tns:updateExistingCreditCardInformationResponse"/>
+  <xs:element name="updateLastLoginTime" type="tns:updateLastLoginTime"/>
+  <xs:element name="updateLastLoginTimeResponse" type="tns:updateLastLoginTimeResponse"/>
+  <xs:element name="updateShoppingCartComments" type="tns:updateShoppingCartComments"/>
+  <xs:element name="updateShoppingCartCommentsResponse" type="tns:updateShoppingCartCommentsResponse"/>
+  <xs:element name="updateUser" type="tns:updateUser"/>
+  <xs:element name="updateUserResponse" type="tns:updateUserResponse"/>
+  <xs:element name="updateUserTerms" type="tns:updateUserTerms"/>
+  <xs:element name="updateUserTermsResponse" type="tns:updateUserTermsResponse"/>
+  <xs:complexType name="resetPasswordRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element minOccurs="0" name="clientName" type="xs:string"/>
+      <xs:element minOccurs="0" name="requestURL" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="resetPasswordRequestResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="activateUser">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element minOccurs="0" name="requestToken" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="activateUserResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="getPaidSubUnpaidByUser">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element minOccurs="0" name="nodeName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getPaidSubUnpaidByUserResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:user"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="user">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseEntity">
+        <xs:sequence>
+          <xs:element name="acceptedTerms" type="xs:boolean"/>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="access" nillable="true" type="tns:access"/>
+          <xs:element name="accessOverridden" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="accountDeletionDate" type="xs:dateTime"/>
+          <xs:element name="accountNonExpired" type="xs:boolean"/>
+          <xs:element name="accountNonLocked" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="addressLine1" type="xs:string"/>
+          <xs:element minOccurs="0" name="addressLine2" type="xs:string"/>
+          <xs:element name="authorizationPending" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="barNumber" type="xs:string"/>
+          <xs:element name="cardAvailable" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="city" type="xs:string"/>
+          <xs:element minOccurs="0" name="createdIp" type="xs:string"/>
+          <xs:element name="credentialsNonExpired" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="creditCard" type="tns:creditCard"/>
+          <xs:element name="creditCardActive" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="currentLoginTime" type="xs:dateTime"/>
+          <xs:element name="emailNotificationSent" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="existingPassword" type="xs:string"/>
+          <xs:element minOccurs="0" name="firmName" type="xs:string"/>
+          <xs:element minOccurs="0" name="firmNumber" type="xs:string"/>
+          <xs:element minOccurs="0" name="firstName" type="xs:string"/>
+          <xs:element minOccurs="0" name="lastLoginTime" type="xs:dateTime"/>
+          <xs:element minOccurs="0" name="lastName" type="xs:string"/>
+          <xs:element minOccurs="0" name="password" type="xs:string"/>
+          <xs:element name="payedUser" type="xs:boolean"/>
+          <xs:element name="paymentDue" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="phone" type="xs:string"/>
+          <xs:element name="purchasedDocuments" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="registeredNode" type="xs:string"/>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="sites" nillable="true" type="tns:site"/>
+          <xs:element minOccurs="0" name="state" type="xs:string"/>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="terms" nillable="true" type="tns:term"/>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="userAccessList" nillable="true" type="tns:userAccess"/>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="userAccount" nillable="true" type="tns:userAccount"/>
+          <xs:element minOccurs="0" name="username" type="xs:string"/>
+          <xs:element name="waitingForAuthorization" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="zip" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType abstract="true" name="abstractBaseEntity">
+    <xs:sequence>
+      <xs:element name="active" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="createdBy" type="xs:string"/>
+      <xs:element minOccurs="0" name="createdDate" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
+      <xs:element minOccurs="0" name="modifiedBy" type="xs:string"/>
+      <xs:element minOccurs="0" name="modifiedDate" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="access">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseEntity">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="accessFeatures" type="xs:string"/>
+          <xs:element minOccurs="0" name="accessType" type="tns:accessType"/>
+          <xs:element name="authorizationRequired" type="xs:boolean"/>
+          <xs:element name="authorized" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="clientShare" type="xs:double"/>
+          <xs:element minOccurs="0" name="code" type="xs:string"/>
+          <xs:element minOccurs="0" name="comments" type="xs:string"/>
+          <xs:element name="defaultAccessFlg" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="description" type="xs:string"/>
+          <xs:element name="firmLevelAccess" type="xs:boolean"/>
+          <xs:element name="governmentAccess" type="xs:boolean"/>
+          <xs:element name="guestFlg" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="maxDocumentsAllowed" type="xs:int"/>
+          <xs:element minOccurs="0" name="maxUsersAllowed" type="xs:int"/>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="nonReccurringFeeList" nillable="true" type="tns:nonRecurringFee"/>
+          <xs:element minOccurs="0" name="site" type="tns:site"/>
+          <xs:element minOccurs="0" name="subscriptionFee" type="tns:subscriptionFee"/>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="userAccessList" nillable="true" type="tns:userAccess"/>
+          <xs:element minOccurs="0" name="userAccount" type="tns:userAccount"/>
+          <xs:element name="visible" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="nonRecurringFee">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseEntity">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="code" type="tns:code"/>
+          <xs:element minOccurs="0" name="currency" type="xs:string"/>
+          <xs:element minOccurs="0" name="feeOverPageThreshold" type="xs:double"/>
+          <xs:element minOccurs="0" name="feeUnderPageThreshold" type="xs:double"/>
+          <xs:element minOccurs="0" name="pageThreshold" type="xs:long"/>
+          <xs:element name="serviceFee" type="xs:boolean"/>
+          <xs:element name="sumTxamountPlusServiceFee" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="code">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseEntity">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="category" type="xs:string"/>
+          <xs:element minOccurs="0" name="code" type="xs:string"/>
+          <xs:element minOccurs="0" name="description" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="site">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseEntity">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="access" nillable="true" type="tns:access"/>
+          <xs:element name="achEnabled" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="achHoldingPeriod" type="xs:long"/>
+          <xs:element name="autoActivate" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="bankDetails" type="tns:bankDetails"/>
+          <xs:element name="barNumberRequired" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="cardUsageFee" type="tns:creditUsageFee"/>
+          <xs:element minOccurs="0" name="checkHoldingPeriod" type="xs:long"/>
+          <xs:element minOccurs="0" name="county" type="xs:string"/>
+          <xs:element minOccurs="0" name="customerBankDetails" type="tns:bankDetails"/>
+          <xs:element minOccurs="0" name="description" type="xs:string"/>
+          <xs:element name="enableMicroTxOTC" type="xs:boolean"/>
+          <xs:element name="enableMicroTxWeb" type="xs:boolean"/>
+          <xs:element name="firmNumberRequired" type="xs:boolean"/>
+          <xs:element name="freeSite" type="xs:boolean"/>
+          <xs:element name="locationEnabled" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="magensaInfo" type="tns:magensaInfo"/>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="merchantList" nillable="true" type="tns:merchant"/>
+          <xs:element minOccurs="0" name="name" type="xs:string"/>
+          <xs:element minOccurs="0" name="nameOnCheck" type="xs:string"/>
+          <xs:element minOccurs="0" name="node" type="tns:node"/>
+          <xs:element minOccurs="0" name="searchDayThreshold" type="xs:long"/>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="siteAccess" nillable="true" type="tns:siteAccess"/>
+          <xs:element minOccurs="0" name="state" type="xs:string"/>
+          <xs:element minOccurs="0" name="subscriptionValidationText" type="xs:string"/>
+          <xs:element name="sumTxamountPlusServiceFee" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="term" type="tns:term"/>
+          <xs:element minOccurs="0" name="timeZone" type="xs:string"/>
+          <xs:element minOccurs="0" name="webPaymentFee" type="tns:webPaymentFee"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="bankDetails">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseEntity">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="accountNumber" type="xs:string"/>
+          <xs:element minOccurs="0" name="bankAddressLine1" type="xs:string"/>
+          <xs:element minOccurs="0" name="bankAddressLine2" type="xs:string"/>
+          <xs:element minOccurs="0" name="bankCity" type="xs:string"/>
+          <xs:element minOccurs="0" name="bankCode" type="xs:string"/>
+          <xs:element minOccurs="0" name="bankName" type="xs:string"/>
+          <xs:element minOccurs="0" name="bankState" type="xs:string"/>
+          <xs:element minOccurs="0" name="bankZipcode" type="xs:string"/>
+          <xs:element minOccurs="0" name="custAccountName" type="xs:string"/>
+          <xs:element minOccurs="0" name="endCheckNumber" type="xs:long"/>
+          <xs:element minOccurs="0" name="fromAddressLine1" type="xs:string"/>
+          <xs:element minOccurs="0" name="fromAddressLine2" type="xs:string"/>
+          <xs:element minOccurs="0" name="fromCity" type="xs:string"/>
+          <xs:element minOccurs="0" name="fromFirstName" type="xs:string"/>
+          <xs:element minOccurs="0" name="fromLastName" type="xs:string"/>
+          <xs:element minOccurs="0" name="fromMiddleIntial" type="xs:string"/>
+          <xs:element minOccurs="0" name="fromPhoneNumber" type="xs:string"/>
+          <xs:element minOccurs="0" name="fromState" type="xs:string"/>
+          <xs:element minOccurs="0" name="fromZipcode" type="xs:string"/>
+          <xs:element minOccurs="0" name="lastIssuedCheckNumber" type="xs:long"/>
+          <xs:element minOccurs="0" name="routingNumber" type="xs:string"/>
+          <xs:element minOccurs="0" name="siteId" type="xs:long"/>
+          <xs:element minOccurs="0" name="startCheckNumber" type="xs:long"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="creditUsageFee">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseEntity">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="additionalFee" type="xs:double"/>
+          <xs:element minOccurs="0" name="downgradeFee" type="xs:double"/>
+          <xs:element minOccurs="0" name="flatFee" type="xs:double"/>
+          <xs:element minOccurs="0" name="flatFeeCutOff" type="xs:double"/>
+          <xs:element minOccurs="0" name="microTxFeeCutOff" type="xs:double"/>
+          <xs:element minOccurs="0" name="percenteFee" type="xs:double"/>
+          <xs:element minOccurs="0" name="site" type="tns:site"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="magensaInfo">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseEntity">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="cardType" type="xs:string"/>
+          <xs:element minOccurs="0" name="encryptionBlockType" type="xs:string"/>
+          <xs:element minOccurs="0" name="hostId" type="xs:string"/>
+          <xs:element minOccurs="0" name="hostPassword" type="xs:string"/>
+          <xs:element minOccurs="0" name="outputFormatCode" type="xs:string"/>
+          <xs:element minOccurs="0" name="registeredBy" type="xs:string"/>
+          <xs:element minOccurs="0" name="site" type="tns:site"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="merchant">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseEntity">
+        <xs:sequence>
+          <xs:element name="microPaymentAccount" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="partner" type="xs:string"/>
+          <xs:element minOccurs="0" name="password" type="xs:string"/>
+          <xs:element minOccurs="0" name="site" type="tns:site"/>
+          <xs:element minOccurs="0" name="txFeeFlat" type="xs:double"/>
+          <xs:element minOccurs="0" name="txFeeFlatAmex" type="xs:double"/>
+          <xs:element minOccurs="0" name="txFeePercent" type="xs:double"/>
+          <xs:element minOccurs="0" name="txFeePercentAmex" type="xs:double"/>
+          <xs:element minOccurs="0" name="userName" type="xs:string"/>
+          <xs:element minOccurs="0" name="vendorName" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="node">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseEntity">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="description" type="xs:string"/>
+          <xs:element minOccurs="0" name="name" type="xs:string"/>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="sites" nillable="true" type="tns:site"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="siteAccess">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseEntity">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="access" type="tns:access"/>
+          <xs:element minOccurs="0" name="site" type="tns:site"/>
+          <xs:element minOccurs="0" name="siteAccessCompositePrimaryKey" type="tns:siteAccessCompositePrimaryKey"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="siteAccessCompositePrimaryKey">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="accessId" type="xs:long"/>
+      <xs:element minOccurs="0" name="siteId" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="term">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseEntity">
+        <xs:sequence>
+          <xs:element name="default" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="description" type="xs:string"/>
+          <xs:element minOccurs="0" name="site" type="tns:site"/>
+          <xs:element minOccurs="0" name="termType" type="tns:termType"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="termType">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseEntity">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="termTypeCode" type="xs:string"/>
+          <xs:element minOccurs="0" name="termTypeDesc" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="webPaymentFee">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseEntity">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="additionalFee" type="xs:double"/>
+          <xs:element minOccurs="0" name="flatFee" type="xs:double"/>
+          <xs:element minOccurs="0" name="flatFeeCutOff" type="xs:double"/>
+          <xs:element minOccurs="0" name="microTxFeeCutOff" type="xs:double"/>
+          <xs:element minOccurs="0" name="percenteFee" type="xs:double"/>
+          <xs:element minOccurs="0" name="site" type="tns:site"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="subscriptionFee">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseEntity">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="currency" type="xs:string"/>
+          <xs:element minOccurs="0" name="description" type="xs:string"/>
+          <xs:element minOccurs="0" name="fee" type="xs:double"/>
+          <xs:element minOccurs="0" name="paymentPeriod" type="tns:code"/>
+          <xs:element minOccurs="0" name="term" type="xs:long"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="userAccess">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseEntity">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="access" type="tns:access"/>
+          <xs:element name="accessOverriden" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="authorizationDate" type="xs:dateTime"/>
+          <xs:element name="authorized" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="authorizedBy" type="xs:string"/>
+          <xs:element minOccurs="0" name="comments" type="xs:string"/>
+          <xs:element name="deleted" type="xs:boolean"/>
+          <xs:element name="firmAccessAdmin" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="firmAdminUserAccessId" type="xs:long"/>
+          <xs:element minOccurs="0" name="user" type="tns:user"/>
+          <xs:element minOccurs="0" name="userAccessCompositePrimaryKey" type="tns:userAccessCompositePrimaryKey"/>
+          <xs:element minOccurs="0" name="userAccount" type="tns:userAccount"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="userAccessCompositePrimaryKey">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="accessId" type="xs:long"/>
+      <xs:element minOccurs="0" name="userId" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="userAccount">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseEntity">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="creditCard" type="tns:creditCard"/>
+          <xs:element minOccurs="0" name="lastBillingDate" type="xs:dateTime"/>
+          <xs:element minOccurs="0" name="lastTxRefNum" type="xs:string"/>
+          <xs:element name="markForCancellation" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="nextBillingDate" type="xs:dateTime"/>
+          <xs:element minOccurs="0" name="userAccess" type="tns:userAccess"/>
+          <xs:element name="verified" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="creditCard">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseEntity">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="addressLine1" type="xs:string"/>
+          <xs:element minOccurs="0" name="addressLine2" type="xs:string"/>
+          <xs:element minOccurs="0" name="cardType" type="tns:cardType"/>
+          <xs:element minOccurs="0" name="city" type="xs:string"/>
+          <xs:element minOccurs="0" name="expiryMonth" type="xs:int"/>
+          <xs:element minOccurs="0" name="expiryYear" type="xs:int"/>
+          <xs:element minOccurs="0" name="name" type="xs:string"/>
+          <xs:element minOccurs="0" name="number" type="xs:string"/>
+          <xs:element minOccurs="0" name="phone" type="xs:long"/>
+          <xs:element minOccurs="0" name="securityCode" type="xs:string"/>
+          <xs:element minOccurs="0" name="state" type="xs:string"/>
+          <xs:element minOccurs="0" name="userAccount" type="tns:userAccount"/>
+          <xs:element minOccurs="0" name="userId" type="xs:long"/>
+          <xs:element minOccurs="0" name="zip" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="getTerm">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="siteName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getTermResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:term"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getPayAsUGoTxIdForPurchasedDoc">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element minOccurs="0" name="productKey" type="xs:string"/>
+      <xs:element minOccurs="0" name="uniqueIdentifier" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getPayAsUGoTxIdForPurchasedDocResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:payAsUGoTxItem"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="payAsUGoTxItem">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseEntity">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="barNumber" type="xs:string"/>
+          <xs:element minOccurs="0" name="baseAmount" type="xs:double"/>
+          <xs:element name="certified" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="certifiedDocumentNumber" type="xs:string"/>
+          <xs:element minOccurs="0" name="comments" type="xs:string"/>
+          <xs:element name="documentAvailable" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="downloadURL" type="xs:string"/>
+          <xs:element minOccurs="0" name="itemName" type="xs:string"/>
+          <xs:element name="itemQuantity" type="xs:int"/>
+          <xs:element minOccurs="0" name="locationId" type="xs:long"/>
+          <xs:element minOccurs="0" name="locationName" type="xs:string"/>
+          <xs:element name="pageCount" type="xs:int"/>
+          <xs:element minOccurs="0" name="payAsUGoTxId" type="xs:long"/>
+          <xs:element minOccurs="0" name="productId" type="xs:string"/>
+          <xs:element minOccurs="0" name="productType" type="xs:string"/>
+          <xs:element minOccurs="0" name="refundTxId" type="xs:long"/>
+          <xs:element name="refunded" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="serviceFee" type="xs:double"/>
+          <xs:element minOccurs="0" name="tax" type="xs:double"/>
+          <xs:element minOccurs="0" name="totalTxAmount" type="xs:double"/>
+          <xs:element minOccurs="0" name="uniqueIdentifier" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="deleteShoppingCartItem">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="shoppingCartItem" type="tns:shoppingCartItem"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="shoppingCartItem">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseEntity">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="access" type="tns:access"/>
+          <xs:element minOccurs="0" name="accessName" type="xs:string"/>
+          <xs:element minOccurs="0" name="application" type="xs:string"/>
+          <xs:element minOccurs="0" name="barNumber" type="xs:string"/>
+          <xs:element minOccurs="0" name="baseAmount" type="xs:double"/>
+          <xs:element name="certified" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="comments" type="xs:string"/>
+          <xs:element name="documentsPurchased" type="xs:int"/>
+          <xs:element minOccurs="0" name="downloadURL" type="xs:string"/>
+          <xs:element name="firmAccessAdmin" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="locationId" type="xs:long"/>
+          <xs:element minOccurs="0" name="locationName" type="xs:string"/>
+          <xs:element minOccurs="0" name="nodeName" type="xs:string"/>
+          <xs:element name="pageCount" type="xs:int"/>
+          <xs:element minOccurs="0" name="productId" type="xs:string"/>
+          <xs:element minOccurs="0" name="productType" type="xs:string"/>
+          <xs:element minOccurs="0" name="serviceFee" type="xs:double"/>
+          <xs:element minOccurs="0" name="stateCode" type="xs:string"/>
+          <xs:element name="sumTxamountPlusServiceFee" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="totalTxAmount" type="xs:double"/>
+          <xs:element minOccurs="0" name="uniqueIdentifier" type="xs:string"/>
+          <xs:element minOccurs="0" name="user" type="tns:user"/>
+          <xs:element minOccurs="0" name="userId" type="xs:long"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="deleteShoppingCartItemResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="getPayAsUGoTransactionsByNodePerPage">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="transactionRequestDTO" type="tns:transactionRequestDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="transactionRequestDTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="fromDate" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="nodeName" type="xs:string"/>
+      <xs:element minOccurs="0" name="numberOfRecords" type="xs:int"/>
+      <xs:element minOccurs="0" name="startingFrom" type="xs:int"/>
+      <xs:element minOccurs="0" name="toDate" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getPayAsUGoTransactionsByNodePerPageResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:pageRecordsDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="pageRecordsDTO">
+    <xs:sequence>
+      <xs:element name="recordCount" type="xs:int"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="records" nillable="true" type="xs:anyType"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getAccessesForSite">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="siteId" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getAccessesForSiteResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:access"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="saveShoppingCartItem">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="shoppingCartItem" type="tns:shoppingCartItem"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="saveShoppingCartItemResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="getNewTermsAndConditionsforUser">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element minOccurs="0" name="nodeName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getNewTermsAndConditionsforUserResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:term"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getCreditCardDetailsByUserName">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getCreditCardDetailsByUserNameResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:creditCard"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getFirmUsers">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="adminUserName" type="xs:string"/>
+      <xs:element minOccurs="0" name="accessId" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getFirmUsersResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:firmUserDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="firmUserDTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="accessId" type="xs:long"/>
+      <xs:element minOccurs="0" name="accessName" type="xs:string"/>
+      <xs:element minOccurs="0" name="barNumber" type="xs:string"/>
+      <xs:element name="firmLevelAccess" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="firmName" type="xs:string"/>
+      <xs:element minOccurs="0" name="firmNumber" type="xs:string"/>
+      <xs:element minOccurs="0" name="firstName" type="xs:string"/>
+      <xs:element minOccurs="0" name="id" type="xs:long"/>
+      <xs:element name="isFirmAccessAdmin" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="lastName" type="xs:string"/>
+      <xs:element minOccurs="0" name="nodeName" type="xs:string"/>
+      <xs:element name="paidTransactions" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="phone" type="xs:string"/>
+      <xs:element name="userAccessActive" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="userAccessId" type="xs:long"/>
+      <xs:element minOccurs="0" name="userId" type="xs:long"/>
+      <xs:element name="userLocked" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="username" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getUserSubscriptions">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element minOccurs="0" name="nodeName" type="xs:string"/>
+      <xs:element minOccurs="0" name="siteName" type="xs:string"/>
+      <xs:element name="activeSubscriptionsOnly" type="xs:boolean"/>
+      <xs:element name="firmAdminSubscriptionsOnly" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getUserSubscriptionsResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:subscriptionDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="subscriptionDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseDTO">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="accessId" type="xs:long"/>
+          <xs:element name="accessOverridden" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="accountModifiedDate" type="xs:dateTime"/>
+          <xs:element minOccurs="0" name="authorizationDate" type="xs:dateTime"/>
+          <xs:element name="authorizationRequired" type="xs:boolean"/>
+          <xs:element name="authorized" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="authorizedBy" type="xs:string"/>
+          <xs:element minOccurs="0" name="category" type="xs:string"/>
+          <xs:element minOccurs="0" name="comments" type="xs:string"/>
+          <xs:element minOccurs="0" name="creditCard" type="tns:creditCard"/>
+          <xs:element name="firmAccessAdmin" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="firmAdminUserAccessId" type="xs:long"/>
+          <xs:element name="firmLevelAccess" type="xs:boolean"/>
+          <xs:element name="governmentAccess" type="xs:boolean"/>
+          <xs:element name="isMarkedForCancellation" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="lastBillingDate" type="xs:dateTime"/>
+          <xs:element name="maxDocumentsAllowed" type="xs:int"/>
+          <xs:element name="maxUsersAllowed" type="xs:int"/>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="newAccessIds" nillable="true" type="xs:long"/>
+          <xs:element minOccurs="0" name="nextBillingDate" type="xs:dateTime"/>
+          <xs:element minOccurs="0" name="nodeName" type="xs:string"/>
+          <xs:element name="payMentPending" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="period" type="xs:string"/>
+          <xs:element minOccurs="0" name="siteId" type="xs:long"/>
+          <xs:element minOccurs="0" name="siteName" type="xs:string"/>
+          <xs:element minOccurs="0" name="subscription" type="xs:string"/>
+          <xs:element minOccurs="0" name="subscriptionFee" type="xs:double"/>
+          <xs:element minOccurs="0" name="term" type="xs:long"/>
+          <xs:element minOccurs="0" name="user" type="tns:user"/>
+          <xs:element minOccurs="0" name="userAccessId" type="xs:long"/>
+          <xs:element name="userAccountActive" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="userAccountId" type="xs:long"/>
+          <xs:element name="visible" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType abstract="true" name="abstractBaseDTO">
+    <xs:sequence>
+      <xs:element name="active" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="createdBy" type="xs:string"/>
+      <xs:element minOccurs="0" name="createdDate" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="machineName" type="xs:string"/>
+      <xs:element minOccurs="0" name="modifiedBy" type="xs:string"/>
+      <xs:element minOccurs="0" name="modifiedDate" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getUserAlertsByUserName">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element minOccurs="0" name="nodeName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getUserAlertsByUserNameResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:userAlert"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="userAlert">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseEntity">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="advancedQuery" type="xs:string"/>
+          <xs:element minOccurs="0" name="alertName" type="xs:string"/>
+          <xs:element minOccurs="0" name="alertQuery" type="xs:string"/>
+          <xs:element minOccurs="0" name="alertQueryToBeDisplayed" type="xs:string"/>
+          <xs:element minOccurs="0" name="baseURL" type="xs:string"/>
+          <xs:element minOccurs="0" name="basicQuery" type="xs:string"/>
+          <xs:element minOccurs="0" name="comments" type="xs:string"/>
+          <xs:element name="displayable" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="emailLink" type="xs:string"/>
+          <xs:element minOccurs="0" name="firstName" type="xs:string"/>
+          <xs:element minOccurs="0" name="indexName" type="xs:string"/>
+          <xs:element minOccurs="0" name="lastName" type="xs:string"/>
+          <xs:element minOccurs="0" name="nodeName" type="xs:string"/>
+          <xs:element minOccurs="0" name="siteName" type="xs:string"/>
+          <xs:element minOccurs="0" name="templateName" type="xs:string"/>
+          <xs:element minOccurs="0" name="userId" type="xs:long"/>
+          <xs:element minOccurs="0" name="username" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="saveUserAlert">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userAlert" type="tns:userAlert"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="saveUserAlertResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="getRecurTxDetail">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element minOccurs="0" name="recurTxRefNum" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getRecurTxDetailResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:recurTx"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="recurTx">
+    <xs:complexContent>
+      <xs:extension base="tns:tx">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="access" type="tns:access"/>
+          <xs:element minOccurs="0" name="accessId" type="xs:long"/>
+          <xs:element name="cardExpired" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="clientShare" type="xs:double"/>
+          <xs:element minOccurs="0" name="lastBillingDate" type="xs:dateTime"/>
+          <xs:element minOccurs="0" name="nextBillingDate" type="xs:dateTime"/>
+          <xs:element name="previousAccess" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="userId" type="xs:long"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="tx">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseEntity">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="accountName" type="xs:string"/>
+          <xs:element minOccurs="0" name="authCode" type="xs:string"/>
+          <xs:element minOccurs="0" name="baseAmount" type="xs:double"/>
+          <xs:element minOccurs="0" name="cardNumber" type="xs:string"/>
+          <xs:element minOccurs="0" name="cardType" type="tns:cardType"/>
+          <xs:element minOccurs="0" name="checkNum" type="xs:string"/>
+          <xs:element minOccurs="0" name="comments" type="xs:string"/>
+          <xs:element minOccurs="0" name="machineName" type="xs:string"/>
+          <xs:element minOccurs="0" name="merchantId" type="xs:long"/>
+          <xs:element minOccurs="0" name="origTxRefNum" type="xs:string"/>
+          <xs:element minOccurs="0" name="serviceFee" type="xs:double"/>
+          <xs:element minOccurs="0" name="settlementStatus" type="tns:settlementStatusType"/>
+          <xs:element minOccurs="0" name="site" type="tns:site"/>
+          <xs:element minOccurs="0" name="tax" type="xs:double"/>
+          <xs:element minOccurs="0" name="totalTxAmount" type="xs:double"/>
+          <xs:element minOccurs="0" name="transactionDate" type="xs:dateTime"/>
+          <xs:element minOccurs="0" name="transactionType" type="tns:transactionType"/>
+          <xs:element minOccurs="0" name="txFeeFlat" type="xs:double"/>
+          <xs:element minOccurs="0" name="txFeePercent" type="xs:double"/>
+          <xs:element minOccurs="0" name="txRefNum" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="updateUser">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="updatedUser" type="tns:user"/>
+      <xs:element minOccurs="0" name="modifiedBy" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="updateUserResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="doSalePayAsUGo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element minOccurs="0" name="payAsUGoTransactionDTO" type="tns:payAsUSubDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="payAsUSubDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseDTO">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="creditCard" type="tns:creditCard"/>
+          <xs:element minOccurs="0" name="officeLoc" type="xs:string"/>
+          <xs:element minOccurs="0" name="officeLocAddressLine1" type="xs:string"/>
+          <xs:element minOccurs="0" name="officeLocAddressLine2" type="xs:string"/>
+          <xs:element minOccurs="0" name="officeLocCity" type="xs:string"/>
+          <xs:element minOccurs="0" name="officeLocComments1" type="xs:string"/>
+          <xs:element minOccurs="0" name="officeLocComments2" type="xs:string"/>
+          <xs:element minOccurs="0" name="officeLocPhone" type="xs:string"/>
+          <xs:element minOccurs="0" name="officeLocState" type="xs:string"/>
+          <xs:element minOccurs="0" name="officeLocZip" type="xs:string"/>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="payAsUGoTransactionItemList" nillable="true" type="tns:payAsUGoTxItem"/>
+          <xs:element name="saveCreditCard" type="xs:boolean"/>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="shoppingCartItemList" nillable="true" type="tns:shoppingCartItem"/>
+          <xs:element minOccurs="0" name="siteName" type="xs:string"/>
+          <xs:element minOccurs="0" name="transactionLocation" type="xs:string"/>
+          <xs:element name="useFirmsCreditCard" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="userName" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="doSalePayAsUGoResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:payAsUGoTx"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="payAsUGoTx">
+    <xs:complexContent>
+      <xs:extension base="tns:tx">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="access" type="tns:access"/>
+          <xs:element minOccurs="0" name="accessId" type="xs:long"/>
+          <xs:element name="certified" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="firmAdminUserAccessId" type="xs:long"/>
+          <xs:element name="itemCount" type="xs:int"/>
+          <xs:element minOccurs="0" name="itemsPurchased" type="xs:long"/>
+          <xs:element minOccurs="0" name="itemsRefunded" type="xs:long"/>
+          <xs:element name="pageCount" type="xs:int"/>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="payAsUGoTxItems" nillable="true" type="tns:payAsUGoTxItem"/>
+          <xs:element minOccurs="0" name="siteId" type="xs:long"/>
+          <xs:element minOccurs="0" name="userFirstName" type="xs:string"/>
+          <xs:element minOccurs="0" name="userId" type="xs:long"/>
+          <xs:element minOccurs="0" name="userLastName" type="xs:string"/>
+          <xs:element minOccurs="0" name="userName" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="updateShoppingCartComments">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="shoppingCartItem" type="tns:shoppingCartItem"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="updateShoppingCartCommentsResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="getSitesForNode">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="nodeName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getSitesForNodeResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:site"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getRecurTransactionsByNode">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element minOccurs="0" name="nodeName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getRecurTransactionsByNodeResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:recurTx"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="addFirmUserAccess">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="firmLevelUserRequestDTO" type="tns:firmLevelUserRequestDTO"/>
+      <xs:element minOccurs="0" name="adminUserName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="firmLevelUserRequestDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseDTO">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="accessId" type="xs:long"/>
+          <xs:element minOccurs="0" name="nodeName" type="xs:string"/>
+          <xs:element minOccurs="0" name="user" type="tns:user"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="addFirmUserAccessResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="paySubscriptions">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="tns:subscriptionDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="paySubscriptionsResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:payPalDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="payPalDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseDTO">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="accessCode" type="xs:string"/>
+          <xs:element minOccurs="0" name="accessDescription" type="xs:string"/>
+          <xs:element minOccurs="0" name="accessId" type="xs:long"/>
+          <xs:element minOccurs="0" name="authCode" type="xs:string"/>
+          <xs:element minOccurs="0" name="errorCode" type="xs:string"/>
+          <xs:element minOccurs="0" name="errorDesc" type="xs:string"/>
+          <xs:element minOccurs="0" name="merchantId" type="xs:long"/>
+          <xs:element minOccurs="0" name="referencedtxRefNum" type="xs:string"/>
+          <xs:element minOccurs="0" name="subFee" type="tns:subscriptionFee"/>
+          <xs:element name="sucessful" type="xs:boolean"/>
+          <xs:element name="systemException" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="txAmount" type="xs:double"/>
+          <xs:element minOccurs="0" name="txRefNum" type="xs:string"/>
+          <xs:element minOccurs="0" name="userId" type="xs:long"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="deleteCreditCard">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteCreditCardResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="removeFirmLevelUserAccess">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="request" type="tns:removeFirmLevelAccessRequestDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="removeFirmLevelAccessRequestDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseDTO">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="comments" type="xs:string"/>
+          <xs:element minOccurs="0" name="firmUserName" type="xs:string"/>
+          <xs:element name="sendNotification" type="xs:boolean"/>
+          <xs:element name="userAccessId" type="xs:long"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="removeFirmLevelUserAccessResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="resendUserActivationEmail">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element minOccurs="0" name="nodeName" type="xs:string"/>
+      <xs:element minOccurs="0" name="requestURL" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="resendUserActivationEmailResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="changeFromRecurringToRecurringSubscription">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userAccessId" type="xs:long"/>
+      <xs:element minOccurs="0" name="accessId" type="xs:long"/>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element minOccurs="0" name="machineName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="changeFromRecurringToRecurringSubscriptionResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:upgradeDowngradeDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="upgradeDowngradeDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseDTO">
+        <xs:sequence>
+          <xs:element name="accessUnAuthorizedExceptionFlag" type="xs:boolean"/>
+          <xs:element name="acctExistForCurSub" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="cardUsageFee" type="tns:creditUsageFee"/>
+          <xs:element name="charge" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="currentFee" type="xs:double"/>
+          <xs:element minOccurs="0" name="currentUserAccessId" type="xs:long"/>
+          <xs:element name="downgrade" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="downgradeFee" type="xs:double"/>
+          <xs:element minOccurs="0" name="existingUserAccountDetail" type="tns:userAccountDetailDTO"/>
+          <xs:element minOccurs="0" name="newAccessDetailDTO" type="tns:accessDetailDTO"/>
+          <xs:element minOccurs="0" name="newBalance" type="xs:double"/>
+          <xs:element minOccurs="0" name="newFee" type="xs:double"/>
+          <xs:element minOccurs="0" name="secondaryTxId" type="xs:string"/>
+          <xs:element minOccurs="0" name="transactionId" type="xs:string"/>
+          <xs:element minOccurs="0" name="unUsedBalance" type="xs:double"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="userAccountDetailDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseDTO">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="site" type="tns:site"/>
+          <xs:element minOccurs="0" name="subFee" type="tns:subscriptionFee"/>
+          <xs:element minOccurs="0" name="userAccount" type="tns:userAccount"/>
+          <xs:element minOccurs="0" name="userId" type="xs:long"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="accessDetailDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseDTO">
+        <xs:sequence>
+          <xs:element name="authorizationRequired" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="site" type="tns:site"/>
+          <xs:element minOccurs="0" name="subFee" type="tns:subscriptionFee"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="reactivateCancelledSubscription">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element minOccurs="0" name="existingUserAccessId" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="reactivateCancelledSubscriptionResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:payPalDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="checkValidResetPasswordRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element minOccurs="0" name="nodeName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="checkValidResetPasswordRequestResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="loadUserByUsername">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element minOccurs="0" name="nodeName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="loadUserByUsernameResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:user"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="cancelSubscription">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element minOccurs="0" name="userAccessId" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="cancelSubscriptionResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:payPalDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="addFirmLevelUser">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="request" type="tns:firmLevelUserRequestDTO"/>
+      <xs:element minOccurs="0" name="adminUserName" type="xs:string"/>
+      <xs:element minOccurs="0" name="clientName" type="xs:string"/>
+      <xs:element minOccurs="0" name="requestURL" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="addFirmLevelUserResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:serviceResponseDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="serviceResponseDTO">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+      <xs:element minOccurs="0" name="status" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="resetPassword">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="user" type="tns:user"/>
+      <xs:element minOccurs="0" name="requestToken" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="resetPasswordResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="registerUser">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="aNewUser" type="tns:user"/>
+      <xs:element minOccurs="0" name="siteId" type="xs:long"/>
+      <xs:element minOccurs="0" name="accessId" type="xs:long"/>
+      <xs:element minOccurs="0" name="clientName" type="xs:string"/>
+      <xs:element minOccurs="0" name="requestURL" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="registerUserResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="getChangeSubscriptionInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userAccessId" type="xs:long"/>
+      <xs:element minOccurs="0" name="accessId" type="xs:long"/>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getChangeSubscriptionInfoResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:upgradeDowngradeDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteUserAlerts">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userAlertDTO" type="tns:userAlertDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="userAlertDTO">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="userAlertIdList" nillable="true" type="xs:long"/>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="deleteUserAlertsResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="updateUserTerms">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="user" type="tns:user"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="updateUserTermsResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="getLocationByNameAndAccessName">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="locationName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getLocationByNameAndAccessNameResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:location"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="location">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseEntity">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="clerkName" type="xs:string"/>
+          <xs:element minOccurs="0" name="description" type="xs:string"/>
+          <xs:element minOccurs="0" name="designation" type="xs:string"/>
+          <xs:element minOccurs="0" name="locationCode" type="xs:string"/>
+          <xs:element minOccurs="0" name="noteOfAuthenticity" type="xs:string"/>
+          <xs:element minOccurs="0" name="sealOfAuthenticity" type="xs:base64Binary"/>
+          <xs:element minOccurs="0" name="signature" type="xs:base64Binary"/>
+          <xs:element minOccurs="0" name="site" type="tns:site"/>
+          <xs:element minOccurs="0" name="stateDescription" type="xs:string"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="getPayAsUGoTransactionDetail">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element minOccurs="0" name="recTxId" type="xs:long"/>
+      <xs:element minOccurs="0" name="isRefund" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getPayAsUGoTransactionDetailResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:payAsUGoTx"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getSubscriptionDetails">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element minOccurs="0" name="accessId" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getSubscriptionDetailsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:subscriptionDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="addSubscription">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="subscriptionDTO" type="tns:subscriptionDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="addSubscriptionResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:accessDetailDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="enableDisableFirmLevelUserAccess">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="request" type="tns:enableDisableFirmAccessRequestDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="enableDisableFirmAccessRequestDTO">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseDTO">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="comments" type="xs:string"/>
+          <xs:element name="enable" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="firmUserName" type="xs:string"/>
+          <xs:element minOccurs="0" name="userAccessId" type="xs:long"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="enableDisableFirmLevelUserAccessResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="getCodes">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="codeCategory" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getCodesResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:code"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="changePassword">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="existingUser" type="tns:user"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="changePasswordResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="getShoppingBasketItems">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element minOccurs="0" name="nodeName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getShoppingBasketItemsResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:shoppingCartItem"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="findUser">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="findUserResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:user"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getCreditCardDetails">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userId" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getCreditCardDetailsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:creditCard"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="updateExistingCreditCardInformation">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element minOccurs="0" name="modifiedBy" type="xs:string"/>
+      <xs:element minOccurs="0" name="newCreditCardInformation" type="tns:creditCard"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="updateExistingCreditCardInformationResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="getAccessDetails">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="accessId" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getAccessDetailsResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:accessDetailDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getLocationsBySiteId">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="siteId" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getLocationsBySiteIdResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:location"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="updateLastLoginTime">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="updateLastLoginTimeResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="doSalePayAsUGoInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="payAsUGoTransactionDTO" type="tns:payAsUSubDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="doSalePayAsUGoInfoResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:shoppingCartItem"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="lockUnLockUser">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+      <xs:element name="lockUnlock" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="modifiedBy" type="xs:string"/>
+      <xs:element name="isSendUserConfirmation" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="nodeName" type="xs:string"/>
+      <xs:element minOccurs="0" name="additionalComments" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="lockUnLockUserResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="getPayAsUGoTransactionsByNode">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="transactionRequestDTO" type="tns:transactionRequestDTO"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="getPayAsUGoTransactionsByNodeResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:payAsUGoTxView"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="payAsUGoTxView">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="accountName" type="xs:string"/>
+      <xs:element minOccurs="0" name="cardNumber" type="xs:string"/>
+      <xs:element name="certified" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="createdBy" type="xs:string"/>
+      <xs:element minOccurs="0" name="createdDate" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="firmUserName" type="xs:string"/>
+      <xs:element minOccurs="0" name="itemsPurchased" type="xs:int"/>
+      <xs:element minOccurs="0" name="nodeName" type="xs:string"/>
+      <xs:element minOccurs="0" name="payAsUGoTxId" type="xs:long"/>
+      <xs:element minOccurs="0" name="siteDescription" type="xs:string"/>
+      <xs:element minOccurs="0" name="siteName" type="xs:string"/>
+      <xs:element minOccurs="0" name="subscription" type="xs:string"/>
+      <xs:element minOccurs="0" name="timezone" type="xs:string"/>
+      <xs:element minOccurs="0" name="totalTxAmount" type="xs:double"/>
+      <xs:element minOccurs="0" name="transactionDate" type="tns:timestamp"/>
+      <xs:element minOccurs="0" name="transactionType" type="xs:string"/>
+      <xs:element minOccurs="0" name="txRefNum" type="xs:string"/>
+      <xs:element minOccurs="0" name="userName" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="timestamp">
+    <xs:sequence>
+      <xs:element name="nanos" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="doSaleGetInfoWEB">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="siteName" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="itemList" type="tns:webTxItem"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="webTxItem">
+    <xs:complexContent>
+      <xs:extension base="tns:abstractBaseEntity">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="baseAmount" type="xs:double"/>
+          <xs:element minOccurs="0" name="caseNumber" type="xs:string"/>
+          <xs:element minOccurs="0" name="comments" type="xs:string"/>
+          <xs:element minOccurs="0" name="itemName" type="xs:string"/>
+          <xs:element minOccurs="0" name="itemQuantity" type="xs:long"/>
+          <xs:element minOccurs="0" name="pageCount" type="xs:long"/>
+          <xs:element minOccurs="0" name="partyRole" type="xs:string"/>
+          <xs:element minOccurs="0" name="partySeq" type="xs:string"/>
+          <xs:element minOccurs="0" name="productId" type="xs:string"/>
+          <xs:element minOccurs="0" name="productType" type="xs:string"/>
+          <xs:element minOccurs="0" name="refundTxId" type="xs:long"/>
+          <xs:element name="refunded" type="xs:boolean"/>
+          <xs:element minOccurs="0" name="serviceFee" type="xs:double"/>
+          <xs:element minOccurs="0" name="tax" type="xs:double"/>
+          <xs:element minOccurs="0" name="totalTxAmount" type="xs:double"/>
+          <xs:element minOccurs="0" name="webTxId" type="xs:long"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="doSaleGetInfoWEBResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:webTxItem"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="accessType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="FREE_SUBSCRIPTION"/>
+      <xs:enumeration value="RECURRING_SUBSCRIPTION"/>
+      <xs:enumeration value="FIRM_DOC_BASED"/>
+      <xs:enumeration value="FIRM_USER_BASED"/>
+      <xs:enumeration value="NON_RECURRING_SUBSCRIPTION"/>
+      <xs:enumeration value="CERTIFIED_NON_RECURRING_SUBSCRIPTION"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="cardType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="AMEX"/>
+      <xs:enumeration value="DISCOVER"/>
+      <xs:enumeration value="VISA"/>
+      <xs:enumeration value="MASTER"/>
+      <xs:enumeration value="NA"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="settlementStatusType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="REFUNDED"/>
+      <xs:enumeration value="UNSETTLED"/>
+      <xs:enumeration value="VOIDED"/>
+      <xs:enumeration value="SETTLED"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="transactionType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="REFUND"/>
+      <xs:enumeration value="CHARGE"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="UserNotActiveException" type="tns:UserNotActiveException"/>
+  <xs:complexType name="UserNotActiveException">
+    <xs:sequence>
+      <xs:element name="description" nillable="true" type="xs:string"/>
+      <xs:element name="errorCode" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="UserNameNotFoundException" type="tns:UserNameNotFoundException"/>
+  <xs:complexType name="UserNameNotFoundException">
+    <xs:sequence>
+      <xs:element name="description" nillable="true" type="xs:string"/>
+      <xs:element name="errorCode" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="InvalidDataException" type="tns:InvalidDataException"/>
+  <xs:complexType name="InvalidDataException">
+    <xs:sequence>
+      <xs:element name="description" nillable="true" type="xs:string"/>
+      <xs:element name="errorCode" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="UserAlreadyActivatedException" type="tns:UserAlreadyActivatedException"/>
+  <xs:complexType name="UserAlreadyActivatedException">
+    <xs:sequence>
+      <xs:element name="description" nillable="true" type="xs:string"/>
+      <xs:element name="errorCode" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DuplicateAlertException" type="tns:DuplicateAlertException"/>
+  <xs:complexType name="DuplicateAlertException">
+    <xs:sequence>
+      <xs:element name="description" nillable="true" type="xs:string"/>
+      <xs:element name="errorCode" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MaximumNumberOfAlertsReachedException" type="tns:MaximumNumberOfAlertsReachedException"/>
+  <xs:complexType name="MaximumNumberOfAlertsReachedException">
+    <xs:sequence>
+      <xs:element name="description" nillable="true" type="xs:string"/>
+      <xs:element name="errorCode" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="PaymentGatewayUserException" type="tns:PaymentGatewayUserException"/>
+  <xs:complexType name="PaymentGatewayUserException">
+    <xs:sequence>
+      <xs:element name="description" nillable="true" type="xs:string"/>
+      <xs:element name="errorCode" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SDLBusinessException" type="tns:SDLBusinessException"/>
+  <xs:complexType name="SDLBusinessException">
+    <xs:sequence>
+      <xs:element name="description" nillable="true" type="xs:string"/>
+      <xs:element name="businessMessage" nillable="true" type="xs:string"/>
+      <xs:element name="errorCode" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="PaymentGatewaySystemException" type="tns:PaymentGatewaySystemException"/>
+  <xs:complexType name="PaymentGatewaySystemException">
+    <xs:sequence>
+      <xs:element name="description" nillable="true" type="xs:string"/>
+      <xs:element name="errorCode" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MaxUsersExceededException" type="tns:MaxUsersExceededException"/>
+  <xs:complexType name="MaxUsersExceededException">
+    <xs:sequence>
+      <xs:element name="description" nillable="true" type="xs:string"/>
+      <xs:element name="errorCode" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="AccessUnAuthorizedException" type="tns:AccessUnAuthorizedException"/>
+  <xs:complexType name="AccessUnAuthorizedException">
+    <xs:sequence>
+      <xs:element name="description" nillable="true" type="xs:string"/>
+      <xs:element name="errorCode" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="UserAccountExistsException" type="tns:UserAccountExistsException"/>
+  <xs:complexType name="UserAccountExistsException">
+    <xs:sequence>
+      <xs:element name="description" nillable="true" type="xs:string"/>
+      <xs:element name="errorCode" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="UserNameAlreadyExistsException" type="tns:UserNameAlreadyExistsException"/>
+  <xs:complexType name="UserNameAlreadyExistsException">
+    <xs:sequence>
+      <xs:element name="description" nillable="true" type="xs:string"/>
+      <xs:element name="errorCode" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="BadPasswordException" type="tns:BadPasswordException"/>
+  <xs:complexType name="BadPasswordException">
+    <xs:sequence>
+      <xs:element name="description" nillable="true" type="xs:string"/>
+      <xs:element name="errorCode" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="doSaleGetInfoWEBResponse">
+    <wsdl:part element="tns:doSaleGetInfoWEBResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getShoppingBasketItemsResponse">
+    <wsdl:part element="tns:getShoppingBasketItemsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="paySubscriptions">
+    <wsdl:part element="tns:paySubscriptions" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRecurTxDetailResponse">
+    <wsdl:part element="tns:getRecurTxDetailResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSitesForNodeResponse">
+    <wsdl:part element="tns:getSitesForNodeResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUserSubscriptions">
+    <wsdl:part element="tns:getUserSubscriptions" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteUserAlerts">
+    <wsdl:part element="tns:deleteUserAlerts" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="PaymentGatewaySystemException">
+    <wsdl:part element="tns:PaymentGatewaySystemException" name="PaymentGatewaySystemException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateLastLoginTime">
+    <wsdl:part element="tns:updateLastLoginTime" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCreditCardDetailsByUserName">
+    <wsdl:part element="tns:getCreditCardDetailsByUserName" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAccessDetailsResponse">
+    <wsdl:part element="tns:getAccessDetailsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCodes">
+    <wsdl:part element="tns:getCodes" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="removeFirmLevelUserAccessResponse">
+    <wsdl:part element="tns:removeFirmLevelUserAccessResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="resetPassword">
+    <wsdl:part element="tns:resetPassword" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="reactivateCancelledSubscriptionResponse">
+    <wsdl:part element="tns:reactivateCancelledSubscriptionResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="resendUserActivationEmailResponse">
+    <wsdl:part element="tns:resendUserActivationEmailResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteShoppingCartItemResponse">
+    <wsdl:part element="tns:deleteShoppingCartItemResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getLocationsBySiteId">
+    <wsdl:part element="tns:getLocationsBySiteId" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTermResponse">
+    <wsdl:part element="tns:getTermResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSitesForNode">
+    <wsdl:part element="tns:getSitesForNode" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="doSalePayAsUGoInfo">
+    <wsdl:part element="tns:doSalePayAsUGoInfo" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="saveShoppingCartItem">
+    <wsdl:part element="tns:saveShoppingCartItem" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getFirmUsers">
+    <wsdl:part element="tns:getFirmUsers" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addFirmLevelUserResponse">
+    <wsdl:part element="tns:addFirmLevelUserResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCreditCardDetailsResponse">
+    <wsdl:part element="tns:getCreditCardDetailsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAccessesForSite">
+    <wsdl:part element="tns:getAccessesForSite" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="reactivateCancelledSubscription">
+    <wsdl:part element="tns:reactivateCancelledSubscription" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="cancelSubscriptionResponse">
+    <wsdl:part element="tns:cancelSubscriptionResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="resetPasswordResponse">
+    <wsdl:part element="tns:resetPasswordResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="cancelSubscription">
+    <wsdl:part element="tns:cancelSubscription" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getChangeSubscriptionInfo">
+    <wsdl:part element="tns:getChangeSubscriptionInfo" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="AccessUnAuthorizedException">
+    <wsdl:part element="tns:AccessUnAuthorizedException" name="AccessUnAuthorizedException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getShoppingBasketItems">
+    <wsdl:part element="tns:getShoppingBasketItems" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteShoppingCartItem">
+    <wsdl:part element="tns:deleteShoppingCartItem" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPayAsUGoTransactionsByNodePerPageResponse">
+    <wsdl:part element="tns:getPayAsUGoTransactionsByNodePerPageResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="doSaleGetInfoWEB">
+    <wsdl:part element="tns:doSaleGetInfoWEB" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getChangeSubscriptionInfoResponse">
+    <wsdl:part element="tns:getChangeSubscriptionInfoResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="lockUnLockUserResponse">
+    <wsdl:part element="tns:lockUnLockUserResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getLocationByNameAndAccessName">
+    <wsdl:part element="tns:getLocationByNameAndAccessName" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getLocationByNameAndAccessNameResponse">
+    <wsdl:part element="tns:getLocationByNameAndAccessNameResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPayAsUGoTransactionDetailResponse">
+    <wsdl:part element="tns:getPayAsUGoTransactionDetailResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPayAsUGoTxIdForPurchasedDocResponse">
+    <wsdl:part element="tns:getPayAsUGoTxIdForPurchasedDocResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="checkValidResetPasswordRequestResponse">
+    <wsdl:part element="tns:checkValidResetPasswordRequestResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCreditCardDetails">
+    <wsdl:part element="tns:getCreditCardDetails" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAccessesForSiteResponse">
+    <wsdl:part element="tns:getAccessesForSiteResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPayAsUGoTransactionsByNodeResponse">
+    <wsdl:part element="tns:getPayAsUGoTransactionsByNodeResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getTerm">
+    <wsdl:part element="tns:getTerm" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRecurTransactionsByNode">
+    <wsdl:part element="tns:getRecurTransactionsByNode" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="UserNameAlreadyExistsException">
+    <wsdl:part element="tns:UserNameAlreadyExistsException" name="UserNameAlreadyExistsException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="doSalePayAsUGo">
+    <wsdl:part element="tns:doSalePayAsUGo" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateUser">
+    <wsdl:part element="tns:updateUser" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="saveUserAlertResponse">
+    <wsdl:part element="tns:saveUserAlertResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNewTermsAndConditionsforUser">
+    <wsdl:part element="tns:getNewTermsAndConditionsforUser" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="paySubscriptionsResponse">
+    <wsdl:part element="tns:paySubscriptionsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="resetPasswordRequestResponse">
+    <wsdl:part element="tns:resetPasswordRequestResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="UserNotActiveException">
+    <wsdl:part element="tns:UserNotActiveException" name="UserNotActiveException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="activateUserResponse">
+    <wsdl:part element="tns:activateUserResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="changeFromRecurringToRecurringSubscriptionResponse">
+    <wsdl:part element="tns:changeFromRecurringToRecurringSubscriptionResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateShoppingCartCommentsResponse">
+    <wsdl:part element="tns:updateShoppingCartCommentsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPaidSubUnpaidByUserResponse">
+    <wsdl:part element="tns:getPaidSubUnpaidByUserResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="saveShoppingCartItemResponse">
+    <wsdl:part element="tns:saveShoppingCartItemResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateUserTermsResponse">
+    <wsdl:part element="tns:updateUserTermsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCreditCardDetailsByUserNameResponse">
+    <wsdl:part element="tns:getCreditCardDetailsByUserNameResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="registerUserResponse">
+    <wsdl:part element="tns:registerUserResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getAccessDetails">
+    <wsdl:part element="tns:getAccessDetails" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSubscriptionDetails">
+    <wsdl:part element="tns:getSubscriptionDetails" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPayAsUGoTransactionsByNode">
+    <wsdl:part element="tns:getPayAsUGoTransactionsByNode" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateUserTerms">
+    <wsdl:part element="tns:updateUserTerms" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="DuplicateAlertException">
+    <wsdl:part element="tns:DuplicateAlertException" name="DuplicateAlertException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCodesResponse">
+    <wsdl:part element="tns:getCodesResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="loadUserByUsernameResponse">
+    <wsdl:part element="tns:loadUserByUsernameResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getNewTermsAndConditionsforUserResponse">
+    <wsdl:part element="tns:getNewTermsAndConditionsforUserResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPaidSubUnpaidByUser">
+    <wsdl:part element="tns:getPaidSubUnpaidByUser" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="resendUserActivationEmail">
+    <wsdl:part element="tns:resendUserActivationEmail" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateExistingCreditCardInformation">
+    <wsdl:part element="tns:updateExistingCreditCardInformation" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPayAsUGoTransactionDetail">
+    <wsdl:part element="tns:getPayAsUGoTransactionDetail" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findUserResponse">
+    <wsdl:part element="tns:findUserResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="enableDisableFirmLevelUserAccessResponse">
+    <wsdl:part element="tns:enableDisableFirmLevelUserAccessResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateUserResponse">
+    <wsdl:part element="tns:updateUserResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="MaximumNumberOfAlertsReachedException">
+    <wsdl:part element="tns:MaximumNumberOfAlertsReachedException" name="MaximumNumberOfAlertsReachedException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="PaymentGatewayUserException">
+    <wsdl:part element="tns:PaymentGatewayUserException" name="PaymentGatewayUserException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getFirmUsersResponse">
+    <wsdl:part element="tns:getFirmUsersResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="UserNameNotFoundException">
+    <wsdl:part element="tns:UserNameNotFoundException" name="UserNameNotFoundException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addSubscriptionResponse">
+    <wsdl:part element="tns:addSubscriptionResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="SDLBusinessException">
+    <wsdl:part element="tns:SDLBusinessException" name="SDLBusinessException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="BadPasswordException">
+    <wsdl:part element="tns:BadPasswordException" name="BadPasswordException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteCreditCardResponse">
+    <wsdl:part element="tns:deleteCreditCardResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="resetPasswordRequest">
+    <wsdl:part element="tns:resetPasswordRequest" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addFirmUserAccess">
+    <wsdl:part element="tns:addFirmUserAccess" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="doSalePayAsUGoInfoResponse">
+    <wsdl:part element="tns:doSalePayAsUGoInfoResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUserSubscriptionsResponse">
+    <wsdl:part element="tns:getUserSubscriptionsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUserAlertsByUserNameResponse">
+    <wsdl:part element="tns:getUserAlertsByUserNameResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="registerUser">
+    <wsdl:part element="tns:registerUser" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findUser">
+    <wsdl:part element="tns:findUser" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="removeFirmLevelUserAccess">
+    <wsdl:part element="tns:removeFirmLevelUserAccess" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSubscriptionDetailsResponse">
+    <wsdl:part element="tns:getSubscriptionDetailsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPayAsUGoTransactionsByNodePerPage">
+    <wsdl:part element="tns:getPayAsUGoTransactionsByNodePerPage" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getLocationsBySiteIdResponse">
+    <wsdl:part element="tns:getLocationsBySiteIdResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="UserAlreadyActivatedException">
+    <wsdl:part element="tns:UserAlreadyActivatedException" name="UserAlreadyActivatedException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="enableDisableFirmLevelUserAccess">
+    <wsdl:part element="tns:enableDisableFirmLevelUserAccess" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addSubscription">
+    <wsdl:part element="tns:addSubscription" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteCreditCard">
+    <wsdl:part element="tns:deleteCreditCard" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteUserAlertsResponse">
+    <wsdl:part element="tns:deleteUserAlertsResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateLastLoginTimeResponse">
+    <wsdl:part element="tns:updateLastLoginTimeResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="InvalidDataException">
+    <wsdl:part element="tns:InvalidDataException" name="InvalidDataException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="changeFromRecurringToRecurringSubscription">
+    <wsdl:part element="tns:changeFromRecurringToRecurringSubscription" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="lockUnLockUser">
+    <wsdl:part element="tns:lockUnLockUser" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="MaxUsersExceededException">
+    <wsdl:part element="tns:MaxUsersExceededException" name="MaxUsersExceededException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addFirmUserAccessResponse">
+    <wsdl:part element="tns:addFirmUserAccessResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="changePasswordResponse">
+    <wsdl:part element="tns:changePasswordResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="changePassword">
+    <wsdl:part element="tns:changePassword" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateShoppingCartComments">
+    <wsdl:part element="tns:updateShoppingCartComments" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="checkValidResetPasswordRequest">
+    <wsdl:part element="tns:checkValidResetPasswordRequest" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRecurTransactionsByNodeResponse">
+    <wsdl:part element="tns:getRecurTransactionsByNodeResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateExistingCreditCardInformationResponse">
+    <wsdl:part element="tns:updateExistingCreditCardInformationResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getPayAsUGoTxIdForPurchasedDoc">
+    <wsdl:part element="tns:getPayAsUGoTxIdForPurchasedDoc" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="activateUser">
+    <wsdl:part element="tns:activateUser" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUserAlertsByUserName">
+    <wsdl:part element="tns:getUserAlertsByUserName" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="loadUserByUsername">
+    <wsdl:part element="tns:loadUserByUsername" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="saveUserAlert">
+    <wsdl:part element="tns:saveUserAlert" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="doSalePayAsUGoResponse">
+    <wsdl:part element="tns:doSalePayAsUGoResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="UserAccountExistsException">
+    <wsdl:part element="tns:UserAccountExistsException" name="UserAccountExistsException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getRecurTxDetail">
+    <wsdl:part element="tns:getRecurTxDetail" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addFirmLevelUser">
+    <wsdl:part element="tns:addFirmLevelUser" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="EComFacadeService">
+    <wsdl:operation name="resetPasswordRequest">
+      <wsdl:input message="tns:resetPasswordRequest" name="resetPasswordRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:resetPasswordRequestResponse" name="resetPasswordRequestResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:UserNotActiveException" name="UserNotActiveException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:UserNameNotFoundException" name="UserNameNotFoundException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="activateUser">
+      <wsdl:input message="tns:activateUser" name="activateUser">
+    </wsdl:input>
+      <wsdl:output message="tns:activateUserResponse" name="activateUserResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:InvalidDataException" name="InvalidDataException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:UserAlreadyActivatedException" name="UserAlreadyActivatedException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getPaidSubUnpaidByUser">
+      <wsdl:input message="tns:getPaidSubUnpaidByUser" name="getPaidSubUnpaidByUser">
+    </wsdl:input>
+      <wsdl:output message="tns:getPaidSubUnpaidByUserResponse" name="getPaidSubUnpaidByUserResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getTerm">
+      <wsdl:input message="tns:getTerm" name="getTerm">
+    </wsdl:input>
+      <wsdl:output message="tns:getTermResponse" name="getTermResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPayAsUGoTxIdForPurchasedDoc">
+      <wsdl:input message="tns:getPayAsUGoTxIdForPurchasedDoc" name="getPayAsUGoTxIdForPurchasedDoc">
+    </wsdl:input>
+      <wsdl:output message="tns:getPayAsUGoTxIdForPurchasedDocResponse" name="getPayAsUGoTxIdForPurchasedDocResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteShoppingCartItem">
+      <wsdl:input message="tns:deleteShoppingCartItem" name="deleteShoppingCartItem">
+    </wsdl:input>
+      <wsdl:output message="tns:deleteShoppingCartItemResponse" name="deleteShoppingCartItemResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPayAsUGoTransactionsByNodePerPage">
+      <wsdl:input message="tns:getPayAsUGoTransactionsByNodePerPage" name="getPayAsUGoTransactionsByNodePerPage">
+    </wsdl:input>
+      <wsdl:output message="tns:getPayAsUGoTransactionsByNodePerPageResponse" name="getPayAsUGoTransactionsByNodePerPageResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAccessesForSite">
+      <wsdl:input message="tns:getAccessesForSite" name="getAccessesForSite">
+    </wsdl:input>
+      <wsdl:output message="tns:getAccessesForSiteResponse" name="getAccessesForSiteResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="saveShoppingCartItem">
+      <wsdl:input message="tns:saveShoppingCartItem" name="saveShoppingCartItem">
+    </wsdl:input>
+      <wsdl:output message="tns:saveShoppingCartItemResponse" name="saveShoppingCartItemResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNewTermsAndConditionsforUser">
+      <wsdl:input message="tns:getNewTermsAndConditionsforUser" name="getNewTermsAndConditionsforUser">
+    </wsdl:input>
+      <wsdl:output message="tns:getNewTermsAndConditionsforUserResponse" name="getNewTermsAndConditionsforUserResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCreditCardDetailsByUserName">
+      <wsdl:input message="tns:getCreditCardDetailsByUserName" name="getCreditCardDetailsByUserName">
+    </wsdl:input>
+      <wsdl:output message="tns:getCreditCardDetailsByUserNameResponse" name="getCreditCardDetailsByUserNameResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFirmUsers">
+      <wsdl:input message="tns:getFirmUsers" name="getFirmUsers">
+    </wsdl:input>
+      <wsdl:output message="tns:getFirmUsersResponse" name="getFirmUsersResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUserSubscriptions">
+      <wsdl:input message="tns:getUserSubscriptions" name="getUserSubscriptions">
+    </wsdl:input>
+      <wsdl:output message="tns:getUserSubscriptionsResponse" name="getUserSubscriptionsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUserAlertsByUserName">
+      <wsdl:input message="tns:getUserAlertsByUserName" name="getUserAlertsByUserName">
+    </wsdl:input>
+      <wsdl:output message="tns:getUserAlertsByUserNameResponse" name="getUserAlertsByUserNameResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="saveUserAlert">
+      <wsdl:input message="tns:saveUserAlert" name="saveUserAlert">
+    </wsdl:input>
+      <wsdl:output message="tns:saveUserAlertResponse" name="saveUserAlertResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:MaximumNumberOfAlertsReachedException" name="MaximumNumberOfAlertsReachedException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:UserNameNotFoundException" name="UserNameNotFoundException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:DuplicateAlertException" name="DuplicateAlertException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getRecurTxDetail">
+      <wsdl:input message="tns:getRecurTxDetail" name="getRecurTxDetail">
+    </wsdl:input>
+      <wsdl:output message="tns:getRecurTxDetailResponse" name="getRecurTxDetailResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateUser">
+      <wsdl:input message="tns:updateUser" name="updateUser">
+    </wsdl:input>
+      <wsdl:output message="tns:updateUserResponse" name="updateUserResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:UserNameNotFoundException" name="UserNameNotFoundException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="doSalePayAsUGo">
+      <wsdl:input message="tns:doSalePayAsUGo" name="doSalePayAsUGo">
+    </wsdl:input>
+      <wsdl:output message="tns:doSalePayAsUGoResponse" name="doSalePayAsUGoResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:PaymentGatewayUserException" name="PaymentGatewayUserException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:SDLBusinessException" name="SDLBusinessException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:PaymentGatewaySystemException" name="PaymentGatewaySystemException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="updateShoppingCartComments">
+      <wsdl:input message="tns:updateShoppingCartComments" name="updateShoppingCartComments">
+    </wsdl:input>
+      <wsdl:output message="tns:updateShoppingCartCommentsResponse" name="updateShoppingCartCommentsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSitesForNode">
+      <wsdl:input message="tns:getSitesForNode" name="getSitesForNode">
+    </wsdl:input>
+      <wsdl:output message="tns:getSitesForNodeResponse" name="getSitesForNodeResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRecurTransactionsByNode">
+      <wsdl:input message="tns:getRecurTransactionsByNode" name="getRecurTransactionsByNode">
+    </wsdl:input>
+      <wsdl:output message="tns:getRecurTransactionsByNodeResponse" name="getRecurTransactionsByNodeResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addFirmUserAccess">
+      <wsdl:input message="tns:addFirmUserAccess" name="addFirmUserAccess">
+    </wsdl:input>
+      <wsdl:output message="tns:addFirmUserAccessResponse" name="addFirmUserAccessResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:MaxUsersExceededException" name="MaxUsersExceededException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:UserNameNotFoundException" name="UserNameNotFoundException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:SDLBusinessException" name="SDLBusinessException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="paySubscriptions">
+      <wsdl:input message="tns:paySubscriptions" name="paySubscriptions">
+    </wsdl:input>
+      <wsdl:output message="tns:paySubscriptionsResponse" name="paySubscriptionsResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:AccessUnAuthorizedException" name="AccessUnAuthorizedException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:SDLBusinessException" name="SDLBusinessException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="deleteCreditCard">
+      <wsdl:input message="tns:deleteCreditCard" name="deleteCreditCard">
+    </wsdl:input>
+      <wsdl:output message="tns:deleteCreditCardResponse" name="deleteCreditCardResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:UserAccountExistsException" name="UserAccountExistsException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="removeFirmLevelUserAccess">
+      <wsdl:input message="tns:removeFirmLevelUserAccess" name="removeFirmLevelUserAccess">
+    </wsdl:input>
+      <wsdl:output message="tns:removeFirmLevelUserAccessResponse" name="removeFirmLevelUserAccessResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:UserNameNotFoundException" name="UserNameNotFoundException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:SDLBusinessException" name="SDLBusinessException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="resendUserActivationEmail">
+      <wsdl:input message="tns:resendUserActivationEmail" name="resendUserActivationEmail">
+    </wsdl:input>
+      <wsdl:output message="tns:resendUserActivationEmailResponse" name="resendUserActivationEmailResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:UserNameNotFoundException" name="UserNameNotFoundException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:UserAlreadyActivatedException" name="UserAlreadyActivatedException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="changeFromRecurringToRecurringSubscription">
+      <wsdl:input message="tns:changeFromRecurringToRecurringSubscription" name="changeFromRecurringToRecurringSubscription">
+    </wsdl:input>
+      <wsdl:output message="tns:changeFromRecurringToRecurringSubscriptionResponse" name="changeFromRecurringToRecurringSubscriptionResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:MaxUsersExceededException" name="MaxUsersExceededException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:PaymentGatewayUserException" name="PaymentGatewayUserException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:SDLBusinessException" name="SDLBusinessException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:PaymentGatewaySystemException" name="PaymentGatewaySystemException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="reactivateCancelledSubscription">
+      <wsdl:input message="tns:reactivateCancelledSubscription" name="reactivateCancelledSubscription">
+    </wsdl:input>
+      <wsdl:output message="tns:reactivateCancelledSubscriptionResponse" name="reactivateCancelledSubscriptionResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:PaymentGatewayUserException" name="PaymentGatewayUserException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:PaymentGatewaySystemException" name="PaymentGatewaySystemException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="checkValidResetPasswordRequest">
+      <wsdl:input message="tns:checkValidResetPasswordRequest" name="checkValidResetPasswordRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:checkValidResetPasswordRequestResponse" name="checkValidResetPasswordRequestResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:InvalidDataException" name="InvalidDataException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="loadUserByUsername">
+      <wsdl:input message="tns:loadUserByUsername" name="loadUserByUsername">
+    </wsdl:input>
+      <wsdl:output message="tns:loadUserByUsernameResponse" name="loadUserByUsernameResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="cancelSubscription">
+      <wsdl:input message="tns:cancelSubscription" name="cancelSubscription">
+    </wsdl:input>
+      <wsdl:output message="tns:cancelSubscriptionResponse" name="cancelSubscriptionResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:SDLBusinessException" name="SDLBusinessException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:PaymentGatewaySystemException" name="PaymentGatewaySystemException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="addFirmLevelUser">
+      <wsdl:input message="tns:addFirmLevelUser" name="addFirmLevelUser">
+    </wsdl:input>
+      <wsdl:output message="tns:addFirmLevelUserResponse" name="addFirmLevelUserResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:MaxUsersExceededException" name="MaxUsersExceededException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:UserNameNotFoundException" name="UserNameNotFoundException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:SDLBusinessException" name="SDLBusinessException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="resetPassword">
+      <wsdl:input message="tns:resetPassword" name="resetPassword">
+    </wsdl:input>
+      <wsdl:output message="tns:resetPasswordResponse" name="resetPasswordResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:InvalidDataException" name="InvalidDataException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:UserNameNotFoundException" name="UserNameNotFoundException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="registerUser">
+      <wsdl:input message="tns:registerUser" name="registerUser">
+    </wsdl:input>
+      <wsdl:output message="tns:registerUserResponse" name="registerUserResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:UserNameAlreadyExistsException" name="UserNameAlreadyExistsException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getChangeSubscriptionInfo">
+      <wsdl:input message="tns:getChangeSubscriptionInfo" name="getChangeSubscriptionInfo">
+    </wsdl:input>
+      <wsdl:output message="tns:getChangeSubscriptionInfoResponse" name="getChangeSubscriptionInfoResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:MaxUsersExceededException" name="MaxUsersExceededException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:SDLBusinessException" name="SDLBusinessException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="deleteUserAlerts">
+      <wsdl:input message="tns:deleteUserAlerts" name="deleteUserAlerts">
+    </wsdl:input>
+      <wsdl:output message="tns:deleteUserAlertsResponse" name="deleteUserAlertsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateUserTerms">
+      <wsdl:input message="tns:updateUserTerms" name="updateUserTerms">
+    </wsdl:input>
+      <wsdl:output message="tns:updateUserTermsResponse" name="updateUserTermsResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:UserNameNotFoundException" name="UserNameNotFoundException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getLocationByNameAndAccessName">
+      <wsdl:input message="tns:getLocationByNameAndAccessName" name="getLocationByNameAndAccessName">
+    </wsdl:input>
+      <wsdl:output message="tns:getLocationByNameAndAccessNameResponse" name="getLocationByNameAndAccessNameResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPayAsUGoTransactionDetail">
+      <wsdl:input message="tns:getPayAsUGoTransactionDetail" name="getPayAsUGoTransactionDetail">
+    </wsdl:input>
+      <wsdl:output message="tns:getPayAsUGoTransactionDetailResponse" name="getPayAsUGoTransactionDetailResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSubscriptionDetails">
+      <wsdl:input message="tns:getSubscriptionDetails" name="getSubscriptionDetails">
+    </wsdl:input>
+      <wsdl:output message="tns:getSubscriptionDetailsResponse" name="getSubscriptionDetailsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addSubscription">
+      <wsdl:input message="tns:addSubscription" name="addSubscription">
+    </wsdl:input>
+      <wsdl:output message="tns:addSubscriptionResponse" name="addSubscriptionResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:SDLBusinessException" name="SDLBusinessException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="enableDisableFirmLevelUserAccess">
+      <wsdl:input message="tns:enableDisableFirmLevelUserAccess" name="enableDisableFirmLevelUserAccess">
+    </wsdl:input>
+      <wsdl:output message="tns:enableDisableFirmLevelUserAccessResponse" name="enableDisableFirmLevelUserAccessResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:UserNameNotFoundException" name="UserNameNotFoundException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:SDLBusinessException" name="SDLBusinessException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getCodes">
+      <wsdl:input message="tns:getCodes" name="getCodes">
+    </wsdl:input>
+      <wsdl:output message="tns:getCodesResponse" name="getCodesResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="changePassword">
+      <wsdl:input message="tns:changePassword" name="changePassword">
+    </wsdl:input>
+      <wsdl:output message="tns:changePasswordResponse" name="changePasswordResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:UserNameNotFoundException" name="UserNameNotFoundException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:BadPasswordException" name="BadPasswordException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getShoppingBasketItems">
+      <wsdl:input message="tns:getShoppingBasketItems" name="getShoppingBasketItems">
+    </wsdl:input>
+      <wsdl:output message="tns:getShoppingBasketItemsResponse" name="getShoppingBasketItemsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findUser">
+      <wsdl:input message="tns:findUser" name="findUser">
+    </wsdl:input>
+      <wsdl:output message="tns:findUserResponse" name="findUserResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:UserNameNotFoundException" name="UserNameNotFoundException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getCreditCardDetails">
+      <wsdl:input message="tns:getCreditCardDetails" name="getCreditCardDetails">
+    </wsdl:input>
+      <wsdl:output message="tns:getCreditCardDetailsResponse" name="getCreditCardDetailsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateExistingCreditCardInformation">
+      <wsdl:input message="tns:updateExistingCreditCardInformation" name="updateExistingCreditCardInformation">
+    </wsdl:input>
+      <wsdl:output message="tns:updateExistingCreditCardInformationResponse" name="updateExistingCreditCardInformationResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:PaymentGatewayUserException" name="PaymentGatewayUserException">
+    </wsdl:fault>
+      <wsdl:fault message="tns:PaymentGatewaySystemException" name="PaymentGatewaySystemException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getAccessDetails">
+      <wsdl:input message="tns:getAccessDetails" name="getAccessDetails">
+    </wsdl:input>
+      <wsdl:output message="tns:getAccessDetailsResponse" name="getAccessDetailsResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLocationsBySiteId">
+      <wsdl:input message="tns:getLocationsBySiteId" name="getLocationsBySiteId">
+    </wsdl:input>
+      <wsdl:output message="tns:getLocationsBySiteIdResponse" name="getLocationsBySiteIdResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateLastLoginTime">
+      <wsdl:input message="tns:updateLastLoginTime" name="updateLastLoginTime">
+    </wsdl:input>
+      <wsdl:output message="tns:updateLastLoginTimeResponse" name="updateLastLoginTimeResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:UserNameNotFoundException" name="UserNameNotFoundException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="doSalePayAsUGoInfo">
+      <wsdl:input message="tns:doSalePayAsUGoInfo" name="doSalePayAsUGoInfo">
+    </wsdl:input>
+      <wsdl:output message="tns:doSalePayAsUGoInfoResponse" name="doSalePayAsUGoInfoResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:SDLBusinessException" name="SDLBusinessException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="lockUnLockUser">
+      <wsdl:input message="tns:lockUnLockUser" name="lockUnLockUser">
+    </wsdl:input>
+      <wsdl:output message="tns:lockUnLockUserResponse" name="lockUnLockUserResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPayAsUGoTransactionsByNode">
+      <wsdl:input message="tns:getPayAsUGoTransactionsByNode" name="getPayAsUGoTransactionsByNode">
+    </wsdl:input>
+      <wsdl:output message="tns:getPayAsUGoTransactionsByNodeResponse" name="getPayAsUGoTransactionsByNodeResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doSaleGetInfoWEB">
+      <wsdl:input message="tns:doSaleGetInfoWEB" name="doSaleGetInfoWEB">
+    </wsdl:input>
+      <wsdl:output message="tns:doSaleGetInfoWEBResponse" name="doSaleGetInfoWEBResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:SDLBusinessException" name="SDLBusinessException">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="EComFacadeServiceSoapBinding" type="tns:EComFacadeService">
+    <soap12:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="activateUser">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="activateUser">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="activateUserResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="InvalidDataException">
+        <soap12:fault name="InvalidDataException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UserAlreadyActivatedException">
+        <soap12:fault name="UserAlreadyActivatedException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="resetPasswordRequest">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="resetPasswordRequest">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="resetPasswordRequestResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="UserNotActiveException">
+        <soap12:fault name="UserNotActiveException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UserNameNotFoundException">
+        <soap12:fault name="UserNameNotFoundException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getPaidSubUnpaidByUser">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="getPaidSubUnpaidByUser">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getPaidSubUnpaidByUserResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getTerm">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="getTerm">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getTermResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPayAsUGoTxIdForPurchasedDoc">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="getPayAsUGoTxIdForPurchasedDoc">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getPayAsUGoTxIdForPurchasedDocResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteShoppingCartItem">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteShoppingCartItem">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteShoppingCartItemResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAccessesForSite">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="getAccessesForSite">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getAccessesForSiteResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPayAsUGoTransactionsByNodePerPage">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="getPayAsUGoTransactionsByNodePerPage">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getPayAsUGoTransactionsByNodePerPageResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="saveShoppingCartItem">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="saveShoppingCartItem">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="saveShoppingCartItemResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getNewTermsAndConditionsforUser">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="getNewTermsAndConditionsforUser">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getNewTermsAndConditionsforUserResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCreditCardDetailsByUserName">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="getCreditCardDetailsByUserName">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getCreditCardDetailsByUserNameResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFirmUsers">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="getFirmUsers">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getFirmUsersResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUserSubscriptions">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="getUserSubscriptions">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getUserSubscriptionsResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUserAlertsByUserName">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="getUserAlertsByUserName">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getUserAlertsByUserNameResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="saveUserAlert">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="saveUserAlert">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="saveUserAlertResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="MaximumNumberOfAlertsReachedException">
+        <soap12:fault name="MaximumNumberOfAlertsReachedException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UserNameNotFoundException">
+        <soap12:fault name="UserNameNotFoundException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="DuplicateAlertException">
+        <soap12:fault name="DuplicateAlertException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getRecurTxDetail">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="getRecurTxDetail">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getRecurTxDetailResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateUser">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="updateUser">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="updateUserResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="UserNameNotFoundException">
+        <soap12:fault name="UserNameNotFoundException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="doSalePayAsUGo">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="doSalePayAsUGo">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="doSalePayAsUGoResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="PaymentGatewayUserException">
+        <soap12:fault name="PaymentGatewayUserException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SDLBusinessException">
+        <soap12:fault name="SDLBusinessException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="PaymentGatewaySystemException">
+        <soap12:fault name="PaymentGatewaySystemException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="updateShoppingCartComments">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="updateShoppingCartComments">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="updateShoppingCartCommentsResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRecurTransactionsByNode">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="getRecurTransactionsByNode">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getRecurTransactionsByNodeResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSitesForNode">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="getSitesForNode">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getSitesForNodeResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addFirmUserAccess">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="addFirmUserAccess">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="addFirmUserAccessResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="MaxUsersExceededException">
+        <soap12:fault name="MaxUsersExceededException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UserNameNotFoundException">
+        <soap12:fault name="UserNameNotFoundException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SDLBusinessException">
+        <soap12:fault name="SDLBusinessException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="paySubscriptions">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="paySubscriptions">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="paySubscriptionsResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="AccessUnAuthorizedException">
+        <soap12:fault name="AccessUnAuthorizedException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SDLBusinessException">
+        <soap12:fault name="SDLBusinessException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="deleteCreditCard">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteCreditCard">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteCreditCardResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="UserAccountExistsException">
+        <soap12:fault name="UserAccountExistsException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="removeFirmLevelUserAccess">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="removeFirmLevelUserAccess">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="removeFirmLevelUserAccessResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="UserNameNotFoundException">
+        <soap12:fault name="UserNameNotFoundException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SDLBusinessException">
+        <soap12:fault name="SDLBusinessException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="changeFromRecurringToRecurringSubscription">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="changeFromRecurringToRecurringSubscription">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="changeFromRecurringToRecurringSubscriptionResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="MaxUsersExceededException">
+        <soap12:fault name="MaxUsersExceededException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="PaymentGatewayUserException">
+        <soap12:fault name="PaymentGatewayUserException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SDLBusinessException">
+        <soap12:fault name="SDLBusinessException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="PaymentGatewaySystemException">
+        <soap12:fault name="PaymentGatewaySystemException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="resendUserActivationEmail">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="resendUserActivationEmail">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="resendUserActivationEmailResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="UserNameNotFoundException">
+        <soap12:fault name="UserNameNotFoundException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UserAlreadyActivatedException">
+        <soap12:fault name="UserAlreadyActivatedException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="reactivateCancelledSubscription">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="reactivateCancelledSubscription">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="reactivateCancelledSubscriptionResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="PaymentGatewayUserException">
+        <soap12:fault name="PaymentGatewayUserException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="PaymentGatewaySystemException">
+        <soap12:fault name="PaymentGatewaySystemException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="checkValidResetPasswordRequest">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="checkValidResetPasswordRequest">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="checkValidResetPasswordRequestResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="InvalidDataException">
+        <soap12:fault name="InvalidDataException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="loadUserByUsername">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="loadUserByUsername">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="loadUserByUsernameResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="cancelSubscription">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="cancelSubscription">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="cancelSubscriptionResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SDLBusinessException">
+        <soap12:fault name="SDLBusinessException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="PaymentGatewaySystemException">
+        <soap12:fault name="PaymentGatewaySystemException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="addFirmLevelUser">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="addFirmLevelUser">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="addFirmLevelUserResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="MaxUsersExceededException">
+        <soap12:fault name="MaxUsersExceededException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UserNameNotFoundException">
+        <soap12:fault name="UserNameNotFoundException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SDLBusinessException">
+        <soap12:fault name="SDLBusinessException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="registerUser">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="registerUser">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="registerUserResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="UserNameAlreadyExistsException">
+        <soap12:fault name="UserNameAlreadyExistsException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="resetPassword">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="resetPassword">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="resetPasswordResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="InvalidDataException">
+        <soap12:fault name="InvalidDataException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="UserNameNotFoundException">
+        <soap12:fault name="UserNameNotFoundException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getChangeSubscriptionInfo">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="getChangeSubscriptionInfo">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getChangeSubscriptionInfoResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="MaxUsersExceededException">
+        <soap12:fault name="MaxUsersExceededException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SDLBusinessException">
+        <soap12:fault name="SDLBusinessException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="deleteUserAlerts">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="deleteUserAlerts">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteUserAlertsResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateUserTerms">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="updateUserTerms">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="updateUserTermsResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="UserNameNotFoundException">
+        <soap12:fault name="UserNameNotFoundException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getLocationByNameAndAccessName">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="getLocationByNameAndAccessName">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getLocationByNameAndAccessNameResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPayAsUGoTransactionDetail">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="getPayAsUGoTransactionDetail">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getPayAsUGoTransactionDetailResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSubscriptionDetails">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="getSubscriptionDetails">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getSubscriptionDetailsResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addSubscription">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="addSubscription">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="addSubscriptionResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SDLBusinessException">
+        <soap12:fault name="SDLBusinessException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="enableDisableFirmLevelUserAccess">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="enableDisableFirmLevelUserAccess">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="enableDisableFirmLevelUserAccessResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="UserNameNotFoundException">
+        <soap12:fault name="UserNameNotFoundException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="SDLBusinessException">
+        <soap12:fault name="SDLBusinessException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getCodes">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="getCodes">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getCodesResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="changePassword">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="changePassword">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="changePasswordResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="UserNameNotFoundException">
+        <soap12:fault name="UserNameNotFoundException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="BadPasswordException">
+        <soap12:fault name="BadPasswordException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getShoppingBasketItems">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="getShoppingBasketItems">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getShoppingBasketItemsResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findUser">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="findUser">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findUserResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="UserNameNotFoundException">
+        <soap12:fault name="UserNameNotFoundException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getCreditCardDetails">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="getCreditCardDetails">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getCreditCardDetailsResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getAccessDetails">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="getAccessDetails">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getAccessDetailsResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateExistingCreditCardInformation">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="updateExistingCreditCardInformation">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="updateExistingCreditCardInformationResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="PaymentGatewayUserException">
+        <soap12:fault name="PaymentGatewayUserException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="PaymentGatewaySystemException">
+        <soap12:fault name="PaymentGatewaySystemException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getLocationsBySiteId">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="getLocationsBySiteId">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getLocationsBySiteIdResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateLastLoginTime">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="updateLastLoginTime">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="updateLastLoginTimeResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="UserNameNotFoundException">
+        <soap12:fault name="UserNameNotFoundException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="doSalePayAsUGoInfo">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="doSalePayAsUGoInfo">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="doSalePayAsUGoInfoResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SDLBusinessException">
+        <soap12:fault name="SDLBusinessException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="lockUnLockUser">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="lockUnLockUser">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="lockUnLockUserResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPayAsUGoTransactionsByNode">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="getPayAsUGoTransactionsByNode">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getPayAsUGoTransactionsByNodeResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="doSaleGetInfoWEB">
+      <soap12:operation soapAction="" style="document"/>
+      <wsdl:input name="doSaleGetInfoWEB">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="doSaleGetInfoWEBResponse">
+        <soap12:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="SDLBusinessException">
+        <soap12:fault name="SDLBusinessException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="EComFacadeService">
+    <wsdl:port binding="tns:EComFacadeServiceSoapBinding" name="EComFacadeServiceImplPort">
+      <soap12:address location="http://localhost:1001/ecom/service/EComFacadeService"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

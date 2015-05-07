@@ -1,0 +1,503 @@
+<#include "../lib/layout.stl" />
+<@dashboardLayout>
+<#assign form  =JspTaglibs["http://www.springframework.org/tags/form"]>
+<#assign spring=JspTaglibs["http://www.springframework.org/tags"]>
+<!-- Begin window -->
+<style>
+
+.textAlignRight{text-align:right;}
+.floatLeft{float:left;}
+.boldText{font-weight:bold;}
+.btn-search {
+padding: 0 8px;
+line-height: 24px;
+border-width: 4px;
+font-size: 13px;
+}
+.fontHelvetica{font-family:Arial, Helvetica, sans-serif;}
+
+.boxPadding{padding:0 0 8px 0;}
+</style>
+<#if SUCCESS_ARCHIEVE?has_content>
+	<div class="subHeader success">
+		<span>${SUCCESS_ARCHIEVE}</span>
+	</div>
+	<br class="clear"/><br class="clear"/>
+</#if>
+<div class="row-fluid">
+<div class="span12">
+	<div class="widget-box">
+		<div class="widget-header">
+			<h4>Search Users</h4>
+
+			<div class="widget-toolbar">
+				<a href="#" data-action="collapse">
+					<i class="icon-chevron-up"></i>
+				</a>
+			</div><!-- end widget toolbar-->
+		</div><!-- end widget header-->
+		<div class="widget-body">
+			<div class="widget-main">
+				<div class="row-fluid">
+					<@form.form id="userSearchForm" name="userSearchForm" class="form-horizontal" action="" modelAttribute="searchCriteria" method="post" onsubmit="return searchUsers();" autocomplete="off">
+						<div class="span5" style="text-align:left;">
+							<div class="widget-box transparent floatLeft">
+								<div class="widget-body">
+										<div class="widget-main">
+											<div class="row-fluid textAlignRight">
+					                            <label class="control-label boldText" for="siteId" class="k-tooltip-validation">Select Site : </label>
+					                                <select id="siteId" name="siteId" style="width:200px" class="k-widget k-dropdownlist" tabindex="1">
+														<#if sites?has_content && sites?size &gt; 1>
+															<option value="" selected>All Sites</option>
+														</#if>
+														<#if sites?has_content>
+															<#foreach site in sites>
+															   <#if (selectedSiteId?has_content)>
+																	<#if (selectedSiteId == site.id)>
+																		<option value="${site.id}" selected> ${site.description}</option>
+																	<#else>
+																		<option value="${site.id}"> ${site.description}</option>
+																	</#if>
+															   <#else>
+																	<option value="${site.id}"> ${site.description}</option>
+															   </#if>
+															</#foreach>
+														</#if>
+													</select>
+					                         </div>
+
+				                   			 <div class="row-fluid textAlignRight">
+					                            <label class="control-label boldText" for="accessId" class="k-tooltip-validation">Select Subscription : </label>
+
+					                                <select id="accessId" name="accessId" style="width:200px" class="k-widget k-dropdownlist"  tabindex="2"></select>
+
+					                         </div>
+
+					                         <div class="row-fluid textAlignRight">
+					                            <label class="control-label boldText" for="userSubscriptionStatus" class="k-tooltip-validation">Subscription Status : </label>
+
+					                                 <select id="userSubscriptionStatus" name="userSubscriptionStatus" class="k-widget k-dropdownlist" tabindex="4" style="width:200px">
+														<option value="ALL" <#if userSubscriptionStatus?has_content && userSubscriptionStatus=="ALL">selected</#if>>All</option>
+														<option value="ACTIVE" <#if userSubscriptionStatus?has_content && userSubscriptionStatus=="ACTIVE">selected</#if>>Active</option>
+														<option value="INACTIVE" <#if userSubscriptionStatus?has_content && userSubscriptionStatus=="INACTIVE">selected</#if>>Inactive</option>
+														<option value="OVERRIDDEN" <#if userSubscriptionStatus?has_content && userSubscriptionStatus=="OVERRIDDEN">selected</#if>>Overridden</option>
+														<option value="PENDINGAUTH" <#if userSubscriptionStatus?has_content && userSubscriptionStatus=="PENDINGAUTH">selected</#if>>Awaiting Authorization</option>
+													 </select>
+
+					                         </div>
+
+					                         <div class="row-fluid textAlignRight">
+					                            <label class="control-label boldText" for="NameFirst" class="k-tooltip-validation">User Status : </label>
+
+					                                <select name="active" id="active" class="k-widget k-dropdownlist" style="width:200px" tabindex="3">
+														<option value="ALL" <#if active?has_content && active=="ALL">selected</#if>>All</option>
+														<option value="ACTIVE" <#if active?has_content && active=="ACTIVE">selected</#if>>Active Users</option>
+														<option value="INACTIVE" <#if active?has_content && active=="INACTIVE">selected</#if>>Inactive Users</option>
+													 </select>
+
+					                        </div>
+
+					                        <div class="row-fluid textAlignRight">
+					                            <label class="control-label boldText" for="NameFirst" class="k-tooltip-validation">User Type : </label>
+
+					                                <select id="paiduser" name="paiduser" style="width:200px" class="k-widget k-dropdownlist" tabindex="4">
+														<option value="ALL" <#if paiduser?has_content && paiduser=="ALL">selected</#if>>All</option>
+														<option value="Y" <#if paiduser?has_content && paiduser=="Y">selected</#if>>Recurring Users</option>
+														<option value="N" <#if paiduser?has_content && paiduser=="N">selected</#if>>Free and Pay as you Go Users</option>
+													 </select>
+
+					                        </div>
+
+										</div><!--/widget-main-->
+								</div><!--/widget-body-->
+							</div><!--/widget-box-->
+						</div><!--/span-->
+						<div class="span5">
+							<div class="widget-box transparent floatLeft">
+								<div class="widget-body">
+										<div class="widget-main">
+
+											<div class="row-fluid textAlignRight">
+												<label class="control-label boldText" for="firstName" class="k-tooltip-validation" style="">First Name :&nbsp; </label>
+					                            <@form.input type="k-textbox" path="firstName" tabindex="5" maxlength="50" autocomplete="off" class="boxPadding"/>
+					                        </div>
+
+					                        <div class="row-fluid textAlignRight" >
+					                            <label class="control-label boldText" for="lastName" class="k-tooltip-validation">Last Name :&nbsp;</label>
+					                            <@form.input type="k-textbox" path="lastName" tabindex="6" maxlength="50" autocomplete="off" class="boxPadding"/>
+					                        </div>
+
+					                        <div class="row-fluid textAlignRight" >
+					                            <label class="control-label boldText" for="userName" class="k-tooltip-validation">User Name :&nbsp; </label>
+					                            <@form.input type="k-textbox" path="userName" tabindex="7" maxlength="50" autocomplete="off" class="boxPadding"/>
+					                        </div>
+
+					                        <div class="row-fluid textAlignRight">
+					                            <label class="control-label boldText" for="NameFirst" class="k-tooltip-validation">Firm Number : &nbsp;</label>
+					                            <@form.input type="k-textbox" path="firmNumber" tabindex="8" maxlength="20" autocomplete="off" class="boxPadding"/>
+					                        </div>
+
+					                        <div class="row-fluid textAlignRight" >
+					                            <label class="control-label boldText" for="NameFirst" class="k-tooltip-validation">Bar Number :&nbsp; </label>
+					                            <@form.input type="k-textbox" path="barNumber" tabindex="9" maxlength="20" autocomplete="off" class="boxPadding"/>
+					                        </div>
+
+										</div><!--/widget-main-->
+								</div><!--/widget-body-->
+							</div><!--/widget-box-->
+						</div><!--/span-->
+						<div class="span2">
+							<div class="widget-box transparent">
+								<div class="widget-body">
+										<div class="widget-main">
+
+											<span class="input-icon">
+												<input type="submit" class="btn btn-small btn-info btn-search" style="width:86px;padding:0 0 0 10px;font-size:15px;" value="Search"/>
+												<i class="icon-search white"></i>
+											</span>
+											<span class="input-icon">
+												<input id="reset"  class="btn btn-small" type="reset" style="width:86px;padding:1px 0px;" value="Reset" />
+												<i class="icon-undo white"></i>
+											</span>
+
+
+
+
+
+										</div><!--/widget-main-->
+								</div><!--/widget-body-->
+							</div><!--/widget-box-->
+						</div><!--/span-->
+						<div class="center">
+
+						</div><!--/span-->
+					</@form.form>
+				</div> <!--row Fluid-->
+			</div> <!--end widget main-->
+		</div><!--End widget body-->
+	</div><!-- end widget box-->
+</div><!-- end span-->
+</div><!--/row fluid-->
+
+<div class="row-fluid">
+	<div id="usersGridDiv" class="k-content gridMargins">
+		<!--Begin Grid-->
+        <div id="grid"></div>
+		<!--End Grid-->
+
+	</div>
+</div>
+
+<div class="row-fluid">
+    <div id="divDetailsTab" class="gridMargins">
+
+    </div>
+</div>
+
+<script>
+ 	<!--INITIALIZE KENDO DROPDOWNLISTS, GRID, AND TABSTRIP-->
+	$(document).ready(function () {
+
+		$("#grid").hide();
+
+    	$('#userSearchForm').validationEngine();
+
+
+	    var siteList1 = $("#siteId").kendoDropDownList();
+        var accessList1 = $("#accessId").kendoDropDownList({
+            autoBind: false,
+            cascadeFrom: "siteId",
+            optionLabel: "All Subscriptions...",
+            dataTextField: "description",
+            dataValueField: "id",
+            dataSource: {
+                type: "json",
+                serverFiltering: true,
+                transport: {
+                    read: {
+				        url: "getsubscriptionsbysite.admin",
+				        data: function(){
+				            return {
+				                siteId: $("#siteId").val()
+				            };
+				        }
+				    }
+                }
+            }
+        }).data("kendoDropDownList");
+
+        $("#userSubscriptionStatus").kendoDropDownList();
+     	$("#active").kendoDropDownList();
+     	$("#paiduser").kendoDropDownList();
+
+		var loadedFromDatabase = false;
+        var dataSource = new kendo.data.DataSource({
+			 transport: {
+    			read: {
+	        			url: function(e){
+							var url = 'searchUsers.admin';
+							url = url + getFormParameters();
+							loadedFromDatabase = true;
+							return url;
+				        },
+				        dataType: "json",
+				        type: "GET"
+				 }
+         	},
+         	schema: {
+                        model: {
+                        	id: "id",
+                            fields:  {
+	                            username: {},
+	                            firstName: {},
+	                            lastname: {},
+	                            phone: {},
+	                            waitingForAuthorization: {},
+	                            payedUser: {},
+	                            paymentDue: {},
+	                            accessOverridden: {},
+	                            active: {},
+	                           	accountNonLocked: {},
+	                            lastLoginTime: {},
+	                            createdDate: {},
+	                            firmNumber: {},
+	                            barNumber: {},
+	                            lastLoginTimeString: {},
+	                            dateTimeCreatedString: {}
+                            }
+                        },
+                        data: "records",
+                        total: "recordCount"
+                 },
+                 pageSize: 5,
+                 serverPaging: true,
+                 serverSorting: true
+
+        });
+
+
+         $("#grid").kendoGrid({
+                dataSource: dataSource,
+                autoBind: false,
+                navigatable: true,
+                resizable: true,
+                scrollable: true,
+                selectable: "row",
+                sortable: {
+                    mode: "single",
+                    allowUnsort: true
+                },
+                pageable: {
+                		refresh: true,
+                		pageSizes: [5, 15, 25, 50, 100],
+                		pageSize: true,
+                		numeric: true,
+                		info: true,
+                		input: true
+                },
+                columns: [
+                    { field: "username", title: "User Name", sortable: false, width: 200},
+                    { field: "firstName", title: "First Name", sortable: false, template: '#=firstName.substring(0, 1).toUpperCase() + firstName.substring(1).toLowerCase() #', attributes: {"class": "capitalize"}},
+                    { field: "lastName", title: "Last Name", sortable: false, template: '#=lastName.substring(0, 1).toUpperCase() + lastName.substring(1).toLowerCase() #', attributes: {"class": "capitalize"}},
+                    { field: "phone", title: "Phone", sortable: false},
+                    { field: "waitingForAuthorization", title: "Authorization Status", template: "#= waitingForAuthorization ? 'Yes' : 'No' #" , sortable: true, overflow: "visible"},
+                    { field: "payedUser", title: "Recurring User", template: "#= payedUser ? 'Yes' : 'No' #", sortable: false},
+                    { field: "paymentDue", title: "Payment Due", template: "#= paymentDue ? 'Yes' : 'No' #",  sortable: true },
+                    { field: "accessOverridden", title: "Access Overridden", template: "#= accessOverridden ? 'Yes' : 'No' #", sortable: true },
+                    { field: "active",  title: "Active", template: "#= active ? 'Yes' : 'No' #" , sortable: false},
+                    { field: "accountNonLocked", title: "Account Locked", template: "#= accountNonLocked ? 'No' : 'Yes' #" , sortable: false},
+                    { field: "lastLoginTimeString", title: "Last Login", sortable: true},
+                    { field: "dateTimeCreatedString", title: "Date Created", sortable: true},
+                    { field: "firmNumber", title: "Firm Number", sortable: false},
+                    { field: "barNumber", title: "Bar Number", sortable: false},
+                    ],
+                editable: "false",
+	           	change: function (e) {
+	           	       if (e != null && e != "" && e != undefined) {
+				            var data = this.dataItem(this.select());
+				            rowUserName = data.username;//IMP
+				            rowPath= data.path;
+				        }
+				        else {
+				             rowUserName = $('table tbody tr:first td:first').text();
+				        }
+				        var tabIndex = 0;
+			        	if ($("#tabstrip").data("kendoTabStrip") != null)
+			        	{
+							tabIndex = $("#tabstrip").data("kendoTabStrip").select().index()
+						}
+						getUserDetails(rowUserName, tabIndex);
+					},
+				  dataBound: function () {
+				  	var grid = $("#grid").data("kendoGrid");
+				  	if (grid.dataSource.total() > 0) {
+						$("#grid").show();
+						if(loadedFromDatabase == true){
+							grid.select(grid.tbody.find(">tr:first"));
+							loadedFromDatabase = false;
+						}
+					} else {
+						$("#grid").hide();
+						$("#divDetailsTab").html('<div class="row-fluid center"><h4>No Records Found</h4></div>');
+					}
+				  }
+            }).data("kendoGrid");
+			$("#grid .k-pager-wrap").append('<a href="#" onClick="onInvokeExportToExcel()"><img src="resources/images/excel.png" alt="Export To Excel" class="help" original-title="Export To Excel"/>');
+			$("#grid .k-pager-wrap").append('<a href="#" onClick="onInvokeExportToPDF()"><img src="resources/images/pdf.png" alt="Export To PDF" class="help" original-title="Export To PDF">');
+
+
+            if ($("#userName").val().trim() != "") {
+				searchUsers();
+			}
+
+		});  //end DOCUMENT.READY
+
+	function getUserDetails(username, tabIndex) {
+		if (tabIndex ==  null) tabIndex == 0;
+        $.ajax({
+        	cache: false,
+            type: "GET",
+            url: "viewecomuserdetails.admin?username=" + username,
+            success: function(response) {
+                $("#divDetailsTab").html( response );
+                $("#tabstrip").kendoTabStrip({
+                        animation: false
+                }).data("kendoTabStrip").select(tabIndex);
+                if(tabIndex == 1){
+                	getAccountInfo(username);
+                } else if (tabIndex == 3) {
+                	getRecurringTransactions();
+    			} else if (tabIndex == 4) {
+    				getPayAsYouGoTransactions();
+    			}
+            }
+    	});
+    }  //GET_USER_DETAILS
+
+
+	function showDetails(e) {
+		e.preventDefault();
+		var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+		var url = "viewecomuserdetails.admin?";
+		url = url + 'username=' + dataItem.username ;
+		window.location.href = url;
+	}
+
+	function GetDateString(value) {
+        if (value && value != null){
+        	var dt = new Date(value);
+        	var dtString = dt.toString();
+
+        	return dtString;
+        }
+	    else{
+    	    return "";
+    	}
+	 }
+
+	<#if errors?has_content && errors?size &gt; 0>
+		<#list errors as error>
+			<#if error.getCode() = "INPUT_ERROR">
+				 $('#lastname').validationEngine('showPrompt','Please search only by one field', 'fail', 'topRight', true);
+			</#if>
+		</#list>
+	</#if>
+	function searchUsers(){
+		var grid = $('#grid').data('kendoGrid');
+		grid.dataSource.read();
+		return false;
+	}
+    function onInvokeAction(id, action) {
+        $.jmesa.setExportToLimit(id, '');
+        $.jmesa.createHiddenInputFieldsForLimitAndSubmit(id);
+    }
+
+    function getFormParameters(){
+			var searchForm = document.getElementById('userSearchForm');
+			var url = '';
+
+			var siteId = searchForm.siteId.value;
+			url = url + '?siteId=' + siteId;
+
+			var accessId = searchForm.accessId.value;
+			url = url + '&accessId=' + accessId;
+
+			var active = searchForm.active.value;
+			url = url + '&active=' + active;
+
+			var paiduser = searchForm.paiduser.value;
+			url = url + '&paiduser=' + paiduser;
+
+			var userSubscriptionStatus = searchForm.userSubscriptionStatus.value;
+			url = url + '&userSubscriptionStatus=' + userSubscriptionStatus;
+
+			var firstName = searchForm.firstName.value;
+			url = url + '&firstName=' + firstName;
+
+			var lastName = searchForm.lastName.value;
+			url = url + '&lastName=' + lastName;
+
+			var userName = searchForm.userName.value;
+			url = url + '&userName=' + userName;
+
+			var firmNumber = searchForm.firmNumber.value;
+			url = url + '&firmNumber=' + firmNumber;
+
+			var barNumber = searchForm.barNumber.value;
+			url = url + '&barNumber=' + barNumber;
+
+			return url;
+    }
+
+	function getExportURL(exportType){
+			var url = 'viewecomuserexport.admin';
+			url = url + getFormParameters() + '&exportType=' + exportType;
+			return url;
+    }
+
+    function onInvokeExportToExcel(){
+    	var url = getExportURL('excel');
+		location.href = url;
+	}
+
+    function onInvokeExportToPDF(){
+    	var url = getExportURL('pdf');
+		location.href = url;
+    }
+
+    function onInvokeExportAction(id, action) {
+	    var parameterString = createParameterStringForLimit(id);
+	    var pendingAuth = "false";
+	    var pendingPayment = "false";
+	    var overriddenAccess = "false";
+	    if ($('#pendingAuth').is(':checked')) { pendingAuth = "true"; }
+	    if ($('#pendingPayment').is(':checked')) { pendingPayment = "true"; }
+	    if ($('#overriddenAccess').is(':checked')) { overriddenAccess = "true"; }
+	    var active = $('input:radio[name=active]:checked').val();
+	    var paiduser = $('input:radio[name=paiduser]:checked').val();
+	    location.href = 'viewecomuserexport.admin?' + parameterString + '&firstName=' + $('#firstName').val() + '&lastName=' + $('#lastName').val() + '&userName=' + $('#userName').val() + '&siteId=' + $('#siteId').val() + '&accessId=' + $('#accessId').val() + '&siteName=' + $("#siteId :selected").text() + '&pendingAuth=' + pendingAuth + '&pendingPayment=' + pendingPayment + '&overriddenAccess=' + overriddenAccess + '&active=' + active + '&paiduser=' + paiduser + '&firmNumber=' + $('#firmNumber').val() + '&barNumber=' + $('#barNumber').val();
+	}
+	$('#reset').click(function() {
+		var now = new Date();
+		var date = new Date(now.getFullYear(), now.getMonth(), 1);
+		$('#fromDate').datepicker('setDate', date);
+		$('#toDate').datepicker('setDate', now);
+		$('#firstName').val("");
+		$('#lastName').val("");
+		$('#userName').val("");
+		$('#firmName').val("");
+		$('#firmNumber').val("");
+		$('#barNumber').val("");
+		$('#pendingAuth').prop('checked', false);
+		$('#overriddenAccess').prop('checked', false);
+		$('#pendingPayment').prop('checked', false);
+		$('input:radio[name=active]').prop('checked', false);
+		$('input:radio[name=paiduser]').prop('checked', false);
+		$("#siteId").val("");
+		$('#accessId').children().remove();
+		$('#accessId').append('<option value="" selected>All Subscriptions</option>');
+	});
+
+
+</script>
+</@dashboardLayout>

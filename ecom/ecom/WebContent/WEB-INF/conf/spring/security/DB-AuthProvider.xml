@@ -1,0 +1,34 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+
+    <bean id="passwordEncoder" class="org.jasypt.springsecurity3.authentication.encoding.PBEPasswordEncoder"
+        p:pbeStringEncryptor-ref="jasyptPBEStringEncryptor" />
+
+    <bean id="databaseAuthenticationProvider"
+        class="org.springframework.security.authentication.dao.DaoAuthenticationProvider"
+        p:userDetailsService-ref="userDetailsService"
+        p:hideUserNotFoundExceptions="false"
+        p:passwordEncoder-ref="passwordEncoder" />
+
+    <bean id="preAuthenticationProvider"
+        class="org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider"
+        p:preAuthenticatedUserDetailsService-ref="preUserDetailsService"
+    />
+
+    <bean id="jasyptPBEStringEncryptor" class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">
+       <property name="config">
+           <bean class="org.jasypt.encryption.pbe.config.EnvironmentStringPBEConfig">
+               <property name="algorithm" value="PBEWITHSHA256AND256BITAES-CBC-BC" />
+               <property name="passwordEnvName" value="USER_AUTH_KEY" />
+           </bean>
+       </property>
+       <property name="provider" ref="bouncyCastleProvider" />
+       <property name="stringOutputType" value = "HEXADECIMAL" />
+    </bean>
+
+</beans>

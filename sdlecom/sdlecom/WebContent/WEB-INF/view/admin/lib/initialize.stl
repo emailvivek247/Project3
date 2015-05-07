@@ -1,0 +1,3 @@
+<#-- This is auto included in all freemarker pages -->
+<#import "/WEB-INF/view/admin/layout/layouts.stl" as layout>
+<#import "common.stl" as com>

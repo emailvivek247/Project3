@@ -1,0 +1,70 @@
+<script type="text/javascript">
+<!--
+function isDate(v){
+  var v = v.substring(v.lastIndexOf('.')+1);
+  return v == 'Timestamp' || v == 'Time' || v == 'Date';
+}
+function isNumber(v){
+  var v = v.substring(v.lastIndexOf('.')+1);
+  return v == 'BigDecimal' || v == 'Double' || v == 'Float';
+}
+function isString(v){
+  var v = v.substring(v.lastIndexOf('.')+1);
+  return v == 'String' || v == 'Blob' || v == 'Clob';
+}
+function isSimpleString(v){
+  var v = v.substring(v.lastIndexOf('.')+1);
+  return v == 'String';
+}
+function showIf(object, found){
+  if(found){
+    object.show();
+  }else{
+    object.hide();
+  }
+}
+function onlyShow(object, value, allowedValues){
+    var values = allowedValues.split(",");
+    var found = false;
+    for(_i = 0; _i < values.length; _i++){
+      if (value == values[_i]) found = true;
+    }
+    showIf(object,found);
+}
+function onlyShowSelectOption(s, allowedValues){
+  s.find('option').each(function(){
+    onlyShow($(this), $(this).val(),allowedValues);
+  });
+} 
+
+function onChangeOption() {
+  //var x=document.getElementById('columntable').rows
+  //for (i = 1; i < x.length; i++){//skip the th row
+  //  changeOption(x[i].cells, i-1)
+  //}
+  $('#columntable tr').each(function(){
+    var t = $(this).find('select[name=columnType]').val();
+    var s = $(this).find('select[name=indexFieldType]');
+    if(!t) return;
+    if(isDate(t)){
+      onlyShowSelectOption(s,'Keyword,KeywordDateHierarchical,UnIndexed,Parameter');
+    }else if(isNumber(t)){
+      onlyShowSelectOption(s,'Keyword,UnIndexed,UnStored,Parameter,KeywordBoost,Keywords,Boost');
+    }else if(isSimpleString(t)){
+      onlyShowSelectOption(s,'Keyword,Text,TextHtml,TextCompressed,UnIndexed,UnStored,Parameter,Keywords,KeywordCaseInsensitive');
+    }else if(isString(t)){
+      onlyShowSelectOption(s,'Text,TextHtml,TextCompressed,UnIndexed,UnStored,Keywords');
+    }
+    showIf($(this).find('[id^=primaryKey]'),isNumber(t)||isSimpleString(t));
+    showIf($(this).find('[id^=modifiedDate]'),isDate(t));
+  });
+}
+onChangeOption();
+$().ready(function() {
+  $('#columntable select').click(function(){
+    onChangeOption();
+  });
+});
+
+// -->
+</script>

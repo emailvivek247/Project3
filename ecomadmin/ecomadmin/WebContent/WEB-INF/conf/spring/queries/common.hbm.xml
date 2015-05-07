@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+
+    <sql-query name="GET_ADMIN_USER_DETAILS">
+        <![CDATA[
+            SELECT
+                 USERS.ID AS USERS_ID
+                ,USERS.EMAIL_ID AS USERS_EMAIL_ID
+                ,USERS.FIRST_NAME AS USERS_FIRST_NAME
+                ,USERS.LAST_NAME AS USERS_LAST_NAME
+                ,USERS.ACTIVE AS USERS_ACTIVE
+                ,USERS.ACCOUNT_NONEXPIRED AS USERS_ACCOUNT_NONEXPIRED
+                ,USERS.ACCOUNT_NONLOCKED AS USERS_ACCOUNT_NONLOCKED
+                ,USERS.CREDENIALS_NONEXPIRED AS USERS_CREDENIALS_NONEXPIRED
+                ,USERS.LAST_LOGIN_TIME AS USERS_LAST_LOGIN_TIME
+                ,USERS.DATE_TIME_CREATED AS USERS_DATE_TIME_CREATED
+                ,SITE.ID AS SITE_ID
+                ,SITE.Description AS SITE_NAME
+                ,ACCESS.ID AS ACCESS_ID
+                ,ACCESS.ACCESS_CD AS ACCESS_ACCESS_CD
+                ,USERS.PASSWORD AS USERS_PASSWORD
+            FROM
+                  AUTH_ADMIN_USERS USERS
+                  LEFT OUTER JOIN AUTH_ADMIN_USERS_ACCESS USERACCESS ON USERACCESS.USER_ID = USERS.ID
+                  LEFT OUTER JOIN AUTH_ADMIN_ACCESS ACCESS ON ACCESS.ID = USERACCESS.ACCESS_ID
+                  LEFT OUTER JOIN AUTH_ADMIN_USERS_SITES SITEADMINUSERS ON SITEADMINUSERS.USER_ID = USERS.ID
+                  LEFT OUTER JOIN ECOMM_SITE SITE ON SITE.ID = SITEADMINUSERS.SITE_ID
+            WHERE
+                USERS.EMAIL_ID = :username
+        ]]>
+    </sql-query>
+
+    <sql-query name="GET_ADMIN_USERS">
+        <![CDATA[
+            SELECT
+                 USERS.ID
+                ,USERS.EMAIL_ID
+                ,USERS.FIRST_NAME
+                ,USERS.LAST_NAME
+                ,USERS.ACTIVE
+                ,USERS.ACCOUNT_NONLOCKED
+                ,SITE.Description AS SITE_NAME
+            FROM
+                  AUTH_ADMIN_USERS USERS
+                  INNER JOIN AUTH_ADMIN_USERS_SITES SITEADMINUSERS ON SITEADMINUSERS.USER_ID = USERS.ID
+                  INNER JOIN ECOMM_SITE SITE ON SITE.ID = SITEADMINUSERS.SITE_ID
+            ORDER BY USERS.DATE_TIME_CREATED DESC
+        ]]>
+    </sql-query>
+
+    <sql-query name="GET_ADMIN_ACCESS">
+        <![CDATA[
+            SELECT
+                AA.ID AS ACCESSID,
+                AA.ACCESS_CD,
+                AA.ACCESS_DESCR
+            FROM
+                AUTH_ADMIN_ACCESS AA
+            WHERE
+                AA.ACTIVE = 'Y'
+        ]]>
+    </sql-query>
+
+    <sql-query name="ARCHIVE_ADMIN_USER" callable="true" >
+        <![CDATA[
+            {call SP_ADMIN_DELETE_USER (:userName)}
+        ]]>
+    </sql-query>
+
+</hibernate-mapping>

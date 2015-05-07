@@ -1,0 +1,10 @@
+<br /><br /><br /><br /><br />
+<h3 style="text-align: center;">Going to Indexing Log of $!{dc.getName()} ? </h2>
+<script type="text/javascript">
+var logLocation = 'showIndexLog.do?indexName=$!{dc.getName()}';
+if(confirm('Going to monitor the indexing log of $!{dc.getName()}? Choose "OK" to continue, choose "Cancel" to go back to Desktop.')){
+	window.location=logLocation;
+}else{
+	window.location='desktop.do';
+}
+</script>

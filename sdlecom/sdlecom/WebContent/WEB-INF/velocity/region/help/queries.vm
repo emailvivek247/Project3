@@ -1,0 +1,42 @@
+<h3>Queries</h3>
+
+<p>Content in databases are retrieved by SQL queries. The queries are executed 
+  in this order:</p>
+<ol>
+  <li>Parent Query</li>
+  <li>Child Query 1</li>
+  <li>Child Query 2</li>
+  <li>...</li>
+</ol>
+<p>Each query can reference parameters from all previous queries.</p>
+<h6><a name="main"></a>Parent Query</h6>
+<p>Parent Query is supposed to retrieve document <strong>Primary Key</strong> value 
+  and <strong>Modified Date</strong> value, although these values are optional. 
+  If <strong>Modified Date</strong> is selected, the rows must be ordered by descending 
+  &quot;modified date&quot; column.</p>
+<p><strong>Primary Key</strong> is used to prevent duplication.</p>
+<p><strong>Modified Date</strong> is used to check whether a document has been 
+  updated. Search is using the value to maintain the range of time of the indexed 
+  contents. So if a column is an increasing sequence number, and document is not 
+  updated, the column can also be chosen as <strong>Modified Date</strong>. </p>
+<p>To save your effort, use &quot;Automatically Generate Result Columns&quot; 
+  button to populate definition of each columns. Usually you need to change &quot;Type&quot;, 
+  &quot;Field Type&quot;, and select &quot;Primary Key&quot;, &quot;Modified Date&quot;. 
+</p>
+<p>For &quot;Type&quot;, sometimes you may need to change it from Integer to String. 
+  Otherwise, you usually don't need to change it. You can leave it as it is if 
+  you are not sure.</p>
+<p>For &quot;Field Type&quot;, please carefully check the differences in the page 
+  and make the selection.</p>
+<h6><a name="Child"></a>Child Query</h6>
+<p>Child Query can be used to retrieve additional values related to the document. 
+  Some special case can utilize these features:</p>
+<p>To select from LOV tables, you can use &quot;Cache&quot; option to save some 
+  JDBC query time.</p>
+<p>To select from a column in rows that needs to be &quot;vertically concatenated&quot;, 
+  you can use &quot;Concatenate&quot; option. For example, if one article has 
+  many replies, by one article id, you select many rows with column &quot;reply&quot; 
+  in it. By choosing &quot;Concatenate&quot; on column &quot;reply&quot;, you 
+  can concatenate all replies related to one particular article.</p>
+<p>If you want to &quot;horizontally concatenate&quot;(concatenate several fields 
+  in one row), you have to do it by SQL.</p>

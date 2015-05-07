@@ -1,0 +1,134 @@
+<#include "../lib/layout.stl" />
+<@dashboardLayout>
+
+<style>
+div.ui-datepicker {
+	font-size:11px;
+}
+.ui-datepicker .ui-datepicker-title select {
+	font-size:11px;
+}
+div.subHeader {
+	text-align:center;
+	width:100%;
+	font-weight:bold;
+	color:#ffffff;
+	background-color:#029642;
+	line-height:50px;
+}
+#content .inner {
+    min-width:100%;
+	width:auto;
+}
+</style>
+<#if ERROR_MSG?has_content>
+	<div class="subHeader">
+		<span>There was a error processing the transaction. Please find the error details below,</span>
+		<br class="clear"/>		
+		${ERROR_MSG}
+	</div>
+<#else>
+	<#if responseDto.getTxRefNum()?has_content>
+	<div class="subHeader">
+		<span>The transaction you are trying to refund is successfully processed. The refund transaction details are below,</span>
+	</div>
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="widget-box transparent">
+				<div class="widget-header">
+					<h4>Refund Successful</h4>
+					<div class="widget-toolbar">
+						<a href="#" data-action="collapse">
+							<i class="icon-chevron-up"></i>
+						</a>
+					</div><!-- end widget toolbar-->
+				</div><!-- end widget header-->
+				<div class="widget-body">
+					<div class="widget-main">
+						<div class="row-fluid">
+							<div class="span4">
+							</div>
+							<div class="span8">
+								<div class="form-horizontal">
+									<div class="widget-box transparent">
+										<div class="widget-body">
+											<div class="widget-main">
+												
+												<div class="row-fluid">
+													<table>
+														<tr>	
+															<td class="right">Refund Transaction Reference Number: </td>
+															<td class="left"><b>${responseDto.getTxRefNum()}</b></td>
+														</tr>
+														<tr>
+															<td class="right">Original Transaction Reference Number: </td>
+															<td class="left"><#if responseDto.getReferencedtxRefNum()?has_content><b>${responseDto.getReferencedtxRefNum()}</b></#if></td>					
+														</tr>
+														<tr>	
+															<td class="right">Amount Refunded: </td>
+															<td class="left"><b>${responseDto.getTxAmount()?string.currency}</b></td>
+														</tr>
+													</table>
+												</div><!--/span-->
+	
+											</div><!--/widget-main-->
+										</div><!--/widget-body-->
+									</div><!--/widget-box-->
+								</div>
+							</div><!--/span-->
+						</div> <!--row Fluid-->
+					</div> <!--end widget main-->
+				</div><!--End widget body-->
+			</div><!-- end widget box-->
+		</div><!-- end span-->
+	</div><!--/row fluid-->
+	<#else>
+	<div class="subHeader">
+		<span>The refund could not be processed. </span>
+	</div>
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="widget-box transparent">
+				<div class="widget-header">
+					<h4>Refund UnSuccessful</h4>
+					<div class="widget-toolbar">
+						<a href="#" data-action="collapse">
+							<i class="icon-chevron-up"></i>
+						</a>
+					</div><!-- end widget toolbar-->
+				</div><!-- end widget header-->
+				<div class="widget-body">
+					<div class="widget-main">
+						<div class="row-fluid">
+							<div class="span4">
+							</div>
+							<div class="span8">
+								<div class="form-horizontal">
+									<div class="widget-box transparent">
+										<div class="widget-body">
+											<div class="widget-main">
+												
+												<div class="row-fluid">
+													<table>
+														<tr>	
+															<td class="right"><b>Error Desciption: </b></td>
+															<td class="left">${ERROR_MSG}</td>
+														</tr>					
+													</table>
+												</div><!--/span-->
+	
+											</div><!--/widget-main-->
+										</div><!--/widget-body-->
+									</div><!--/widget-box-->
+								</div>
+							</div><!--/span-->
+						</div> <!--row Fluid-->
+					</div> <!--end widget main-->
+				</div><!--End widget body-->
+			</div><!-- end widget box-->
+		</div><!-- end span-->
+	</div><!--/row fluid-->
+	</#if>
+</#if>
+
+</@dashboardLayout>

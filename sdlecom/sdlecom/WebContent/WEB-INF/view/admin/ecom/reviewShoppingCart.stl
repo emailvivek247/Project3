@@ -1,0 +1,288 @@
+<#include "/admin/lib/include.stl" />
+<@loginLayout encoding="utf-8">
+
+<link rel="stylesheet" href="resources/styles/login.css" />
+<script type="text/javascript" src="resources/javascripts/jquery.min.js"/></script>
+<script type="text/javascript" src="resources/javascripts/jquery-ui.min.js"/></script>
+<script type="text/javascript" src="resources/javascripts/jquery.validationEngine-en.js"></script>
+<script type="text/javascript" src="resources/javascripts/jquery.validationEngine.js"></script>
+<script type="text/javascript" src="resources/javascripts/jquery.cookie.js"></script>
+
+
+<style>
+div.ADCSI {
+	width:80%;
+}
+div.ADCSI_row {
+	margin-right: 20px;
+}
+table#subscriptionDetails {
+	border-collapse: collapse;
+	margin: auto;
+}
+
+table#subscriptionDetails td {	
+	padding: 5px 5px;
+}
+
+
+th.header{
+	color: #039;
+	border-bottom: 2px solid #6678B1;
+	padding: 5px 5px;
+}
+td.header{
+	color: #039;
+	border-bottom: 2px solid #6678B1;
+	padding: 5px 5px;
+}
+th.subheader{
+	color: #039;
+	border-top: 1px solid #6678B1;
+	text-align:left;
+	padding: 5px 5px;
+}
+td.footer{
+	color: #039;
+	border-top: 2px solid #6678B1;
+	padding: 5px 5px;
+}
+.left {
+	text-align:left;
+}
+.right {
+	text-align:right;
+}
+.center {
+	text-align:center;
+}
+.button, .button2{
+	font-family: 'rockwell',Arial,Helvetica,'sans serif';
+	font-family: 'rockwell' url(0/!important);
+	letter-spacing: .08em;
+	font-size: 12px;
+	color: #D5C9AD;
+	background-color: #5B5042;
+	border: none;
+	text-decoration: none;
+	text-transform: uppercase;
+	text-align: center;
+	padding: 6.5px;
+	cursor:pointer;	
+}
+.button:hover {
+	background-color: #4F6426;
+}
+.button2:hover {
+	background-color: #8A382F;
+}
+textarea { resize:both; }
+</style>
+
+<input type="hidden" id="refreshed" value="no">
+<script type="text/javascript">
+	onload=function(){
+		var e=document.getElementById("refreshed");
+	if(e.value=="no")e.value="yes";
+		else{e.value="no";location.reload();
+	}
+}
+</script>
+
+
+
+		
+			
+
+<div class="content">
+	<div style="width:90%;min-width:900px;margin-left:auto;margin-right:auto;margin-top:100px;">
+		<div id="ADCSI" class="ADCSI" style="margin-top:0px; margin-bottom: 12px;">
+			<div class="ADCSI_title" id="ADCSI_title">				
+					<span style="width:49%;text-align:left;display:inline-block;"><b><@spring.message code="form.name.reviewShoppingCart" /></b></span>
+					<span style="width:49%;text-align:right;display:inline-block;"><a href="accountInformation.admin"><@spring.message code="form.name.accountInformation" /></a> | <a href="logout.admin"><@spring.message code="security.authentication.logout" /></a>&nbsp;(${request.getRemoteUser()})</a></span>
+			</div>	
+			<div style="text-align:center;padding-top: 10px;padding-bottom: 20px;">
+				<Label id="updateCommentErrorLabel" style="text-align: center; vertical-align: middle">&nbsp;</Label>
+				<br /><br />
+				
+				<#if SHOPPING_CART?has_content>
+					<#assign documentsBasedAccess = false>
+					<#list SHOPPING_CART as shoppingCartItem>
+						<#if shoppingCartItem.access.firmLevelAccess && (shoppingCartItem.access.maxDocumentsAllowed > 0) && !shoppingCartItem.access.governmentAccess>
+							<#assign documentsBasedAccess = true>	
+						</#if>
+					</#list>
+
+					<#assign totalBaseAmount = 0>
+					<#assign totalServiceFee = 0>
+					<#assign totalTransactionAmount = 0>
+					 <input type="hidden" name="application_name" value="AICMS">
+					 <input type="hidden" name="site_name" value="DALLAS">
+					 <input type="hidden" name="image_url" value="http://roam.amcad.com/demo/templates/hyland/Default/resource/ROAM.gif">
+					 <input type="hidden" name="return_url" value="http://www.google.com">
+					 <input type="hidden" name="return_text" value="<@spring.message code="security.ecommerce.label.returnTo" /> Google">
+					 <input type="hidden" name="cancel_text" value="Cancel and <@spring.message code="security.ecommerce.label.returnTo" /> Yahoo">
+					 <input type="hidden" name="cancel_url" value="http://www.yahoo.com">
+					 <input type="hidden" name="user_name" value="${request.getRemoteUser()}">
+					<table width="90%" id="subscriptionDetails">
+					<tr>
+					<th class="header"><@spring.message code="security.ecommerce.label.productId" /></th>
+					<th class="header"><@spring.message code="security.ecommerce.label.productType" /></th>
+					<th class="header"><@spring.message code="security.ecommerce.label.certifiedDocument" /></th>
+					<th class="header"><@spring.message code="security.ecommerce.label.pageCount" /></th>
+					<th class="header"><@spring.message code="security.ecommerce.label.price" /></th>
+					<th class="header"><@spring.message code="security.ecommerce.label.serviceFee" /></th>
+					<th class="header"><@spring.message code="security.ecommerce.totalAmount" /></th>
+					<#if documentsBasedAccess>
+						<th class="header"><@spring.message code="security.ecommerce.documentsPurchased" /></th>
+						<th class="header"><@spring.message code="security.ecommerce.maxDocumentsAllowed" /></th>
+					</#if>
+					<th class="header"><@spring.message code="security.ecommerce.Comments" /></th>
+					<th class="header"><@spring.message code="security.ecommerce.label.Action" /></th>	
+					</tr>
+					
+					<#assign counter = 0>
+					<#list SHOPPING_CART as shoppingCartItem>
+					<#assign totalTransactionAmount = totalTransactionAmount + shoppingCartItem.totalTxAmount>
+					<#assign counter = counter + 1>
+						<tr>
+							<td>${shoppingCartItem.productId}</td>
+							<td>${shoppingCartItem.productType}</td>
+							<td><#if shoppingCartItem.isCertified() > Yes <#else> No </#if></td>
+							<td>${shoppingCartItem.pageCount}</td>
+							<#if shoppingCartItem.isSumTxamountPlusServiceFee()>
+								<td>${shoppingCartItem.totalTxAmount?string.currency}</td>
+								<td>$0.0</td>
+							<#else>
+								<td >
+									${shoppingCartItem.baseAmount?string.currency}											
+								</td>
+								<td>
+									${shoppingCartItem.serviceFee?string.currency}											
+								</td>
+							</#if>
+							<td>
+								${shoppingCartItem.totalTxAmount?string.currency}											
+							</td>
+							<#if shoppingCartItem.access.firmLevelAccess && (shoppingCartItem.access.maxDocumentsAllowed > 0) && !shoppingCartItem.access.governmentAccess>
+								<td class="center">${shoppingCartItem.documentsPurchased}</td>
+								<td class="center">${shoppingCartItem.access.maxDocumentsAllowed}</td>
+							<#elseif documentsBasedAccess>
+								<td class="center">N/A</td>
+								<td class="center">N/A</td>
+							</#if>
+							<td class="right">
+								<#if shoppingCartItem.comments?has_content>
+									<textarea id="comments${shoppingCartItem.id}" rows="1" name="comments${shoppingCartItem.id}" maxlength="200">${shoppingCartItem.comments}</textarea>
+								<#else>
+									<textarea id="comments${shoppingCartItem.id}" rows="1" name="comments${shoppingCartItem.id}" maxlength="200"></textarea>
+								</#if>
+								<br />											
+							</td>
+							
+							<td><a href="#"  onClick="addComments(${shoppingCartItem.id}); return false;"><img title="Update Comments" src="resources/images/update.png"> </a>&nbsp;&nbsp;<a href="removeitem.admin?productkey=${shoppingCartItem.productId}${shoppingCartItem.uniqueIdentifier}"><img title="Remove Item" src="resources/images/remove.gif"> </a></td>
+						</tr>
+						<tr>
+							 <input type="hidden" name="item_id_${counter}" value="${shoppingCartItem.productId}">
+							 <input type="hidden" name="item_type_${counter}" value="${shoppingCartItem.productType}">
+							 <input type="hidden" name="item_pagecount_${counter}" value="${shoppingCartItem.pageCount}">
+							 <input type="hidden" name="item_access_name_${counter}" value="${shoppingCartItem.accessName}">
+							 <input type="hidden" name="item_unique_identifier_${counter}" value="${shoppingCartItem.uniqueIdentifier}">
+							 <input type="hidden" name="item_download_url_${counter}" value="${shoppingCartItem.downloadURL}">
+							 <input type="hidden" name="item_application_${counter}" value="${shoppingCartItem.application}">
+						</tr>
+					</#list>
+					
+					<tr><td class="right footer" colspan="7"><b><@spring.message code="security.ecommerce.totalAmount" />:&nbsp;&nbsp;${totalTransactionAmount?string.currency}</b></td><td class="footer"></td>
+					<td class="right footer" colspan="4"></td>
+					</tr>
+					
+					</table>
+					<table width="90%" id="subscriptionDetails">
+					<tr>
+						
+					</tr>
+					<tr>
+						<td class="right">
+							<a style="color: #D5C9AD;width:100px;text-decoration: none;" class="button2" href="search.do"><@spring.message code="security.ecommerce.label.continueToSearchPage" /></a>
+								<a style="color: #D5C9AD;width:100px;text-decoration: none;" class="button" href="redirectPage.admin?return_url=${request.getRequestURL()}"><@spring.message code="security.ecommerce.checkout" /></a>							
+						</td>
+					</tr>
+					</table>
+				<#else>
+					<span><@spring.message code="security.ecommerce.label.emptyShoppingCart" /></span> <br /><br /><br /><br />
+					<a  style="color: #D5C9AD;width:100px;text-decoration: none;" class="button2" href="search.do"><@spring.message code="security.ecommerce.label.continueToSearchPage" /></a><br /><br />
+				</#if>
+				<br /><br />
+				<div style="text-align:left;padding-left:20px;color:red;">
+					<@spring.message code="security.ecommerce.label.emptyShoppingCartFinePrint" />	
+				</div>
+				<br /><br />
+				<a href="https://www.paypal.com/us/verified/pal=vshyamsundar%40amcad%2ecom" target="_blank"><img src="https://www.paypal.com/en_US/i/icon/verification_seal.gif" border="0" alt="Official PayPal Seal"></a>
+				<br /><br />
+			</div>	
+		</div>			    			
+	</div>
+</div>
+
+<script>
+	function addComments(shoppingCartItemId){
+		var commentsElem = this.document.getElementById('comments' + shoppingCartItemId);
+		if(commentsElem.value == ''){
+			alert('Please Enter Comments');
+			return;
+		}
+		var dataString = 'shoppingCartItemId=' + shoppingCartItemId + 
+						'&comments=' + commentsElem.value;
+		var url = 'updateShoppingCartComments.admin?';
+		
+	 	 $.ajax({
+	        url: url,
+	        type: "POST",
+	        dataType: "json",
+	        data: dataString,
+	        success: function (results) {
+	                if(results){
+	                    if(results.errorCode == 'SUCCESS'){
+							// Display Success message
+				 			displaySuccessMessage(getErrorDesription(results));
+				 		}  else {
+				 			// There were errors on server side display it
+				 			displayErrorMessage(getErrorDesription(results));
+				 		}
+	            	}
+	        },
+	        
+	        // Error occured on server 
+	        error: function (xhr, ajaxOptions, thrownError) {
+	        	var response = JSON.parse(xhr.responseText);
+	 			displayErrorMessage(getErrorDesription(response));
+	        }
+	    });
+	}
+	
+	function getErrorDesription(results){
+		var errorString = '';
+		for(var k in results.errors){
+			errorString = errorString + results.errors[k] + '</br>';
+		}
+		errorString = errorString + '</br>';
+		return errorString;
+	}
+
+	function displayErrorMessage(message){	
+		var statusElem = document.getElementById('updateCommentErrorLabel');
+		var statusLabelText = '<font color="red" size=2>' + message + '</font>';
+		statusElem.innerHTML  = statusLabelText;
+	}
+	
+	function displaySuccessMessage(message){	
+		var statusElem = document.getElementById('updateCommentErrorLabel');
+		var statusLabelText = '<font color="green" size=2>' + message + '</font>';
+		statusElem.innerHTML  = statusLabelText;
+	}
+	
+</script>
+</@loginLayout>
+
+

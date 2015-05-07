@@ -1,0 +1,35 @@
+<@layout.basic menu="dataset/dataset/schedule" hasWizard=false>
+
+<br/>
+
+<@com.section2 "Timer Configuration">
+    <table class="xsearchtable">
+      <tr>
+        <th>Enabled</th><th>Indexing Action</th><th>Timings</th><th>Action</th>
+      </tr>
+    <#foreach schedule in dc.schedules>
+      <tr>
+      <td><#if schedule.isEnabled > Enabled <#else> Not Enabled </#if></td>
+      <td><a href="configSchedule.do?indexName=${indexName}&scheduleId=${schedule.id}">
+        ${schedule.indexingMode}
+        </a>
+      </td>
+      <td>
+        <#if schedule.isInterval>
+          Every ${schedule.interval?if_exists} minutes
+        <#else>
+          Cron Setting [0 ${schedule.cronSetting?if_exists}]
+        </#if>
+      </td>
+      <td>
+        <a href="listSchedules.do?indexName=${indexName}&scheduleId=${schedule.id}&operation=delete">Delete</a>
+      </td>
+      </tr>
+    </#foreach>
+    </table>
+    <ul>
+      <li><a href="configSchedule.do?indexName=${indexName}&scheduleId=${dc.schedules.size()}">Add a Timer</a>
+    </ul>
+</@com.section2>
+
+</@>

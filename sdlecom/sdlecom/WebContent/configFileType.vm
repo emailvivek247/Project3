@@ -1,0 +1,55 @@
+## $Id: configFileType.vm 5787 2009-07-07 06:28:25Z cylu $
+
+#set( $title = $msg.get("title") )
+#set( $selectedMenu = 'dataset' )
+#set( $selectedToptab = "search" )
+#set( $selectedSubtab = "configFilterableColumns" )
+
+
+<form name="f" method="post" action="configFilterableColumns.do">
+<input type="hidden" name="indexName" value="$!{dc.name}">
+<input type="hidden" name="operation" value="save">
+<br />
+#errorMarkup()
+#messageMarkup()
+
+#openFieldset("What&#39;s Filterable Columns?")
+<div class="help">
+<p>Filterable Columns are used in "narrowBy.vm" when displaying search results.
+<p>Filterable Columns can only be the <b>Keyword</b> or <b>String</b> Field Type.
+<p>You can change the types in <a href="configWorkingQueue.do?indexName=$indexName">SQL Queries</a> tab.
+<p>Here you can choose to enable/disable some of them, to change the display order, or to set the display name.
+<p>If a filterable column has a <b>Parent Column</b>, then this child column is displayed in "narrowBy.vm" only when the parent column is selected.<br />
+Be careful not to form a loop there. We don&#39;t check for loops.
+</p>
+</div>
+#closeFieldset()
+
+<br />
+<table id="columntable" class="xsearchtable">
+<tr><th>Display Order</th><th>Column</th><th>Type</th><th>Display Name</th><th>Parent Column</th><th>Filterable</th></tr>
+#macro( dropdownListColumn $__listName $__list $__selected )
+<select name=$__listName>
+  <option value="">None</option>
+  #foreach( $v in $__list )
+    <option value="$v.columnName"#if( $__selected == $v.columnName ) selected="selected"#end>$v.columnName</option>
+  #end
+</select>
+#end
+#foreach ($c in $columns)
+    <tr>
+      <td align="center"><input type="text" name="filterOrder_$c.columnName" size="3" value="$!{c.filterDisplayOrder}"></td>
+      <td align="center">$c.columnName</td>
+      <td align="center">$c.indexFieldType</td>
+      <td align="center"><input type="text" name="name_$c.columnName" value="$!{c.displayName}"></td>
+      <td align="center">#dropdownListColumn("parentColumnName_$c.columnName" $columns $c.filterParentColumnName)</td>
+      <td align="center"><input type="checkbox" name="enable_${c.columnName}" value="Y" #if($c.isFilterable)checked="checked"#end></td>
+    </tr>
+#end
+</table>
+<table width="80%" cellpadding="5" cellspacing="0" border="0" align="center">
+<tr><td align=right>
+#actionSubmitButton( "f" "submitSave" $!msg.get("button.save") "save" )
+</td></tr>
+</table>
+</form>

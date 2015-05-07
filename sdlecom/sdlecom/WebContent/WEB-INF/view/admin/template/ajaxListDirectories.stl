@@ -1,0 +1,5 @@
+<ul class="jqueryFileTree" style="display: none;">
+ <#list dirs as d>
+ <li class="directory collapsed"><a href="#" rel="${dir}${d.name}/">${d.name}</a></li>
+ </#list>
+</ul>

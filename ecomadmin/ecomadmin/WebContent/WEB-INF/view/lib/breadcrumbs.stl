@@ -1,0 +1,25 @@
+
+
+<!-- Begin one column window -->
+
+	<div class="breadcrumbs" id="breadcrumbs">
+		<script type="text/javascript">
+			try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+		</script>
+
+		<ul class="breadcrumb">
+			<li>
+				<i class="icon-home home-icon"></i>
+				<#if currentBreadCrumb?has_content>
+					<#foreach breadCrumbLink in currentBreadCrumb>
+						<#if breadCrumbLink?has_content &&  breadCrumbLink.currentPage == true>
+							${breadCrumbLink.label}
+						<#else>
+							<a href="${breadCrumbLink.url}">${breadCrumbLink.label}></a>
+						</#if>
+					</#foreach>
+				</#if>
+			</li>
+		</ul><!-- .breadcrumb -->
+	</div> <!--.breadcrumbs div--->
+

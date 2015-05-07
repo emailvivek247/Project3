@@ -1,0 +1,108 @@
+<script type="text/javascript">
+var columns = [];
+
+#set( $UserPreference = $toolLoader.load("net.javacoding.xsearch.foundation.UserPreference"))
+#set( $sampleValues = $UserPreference.sampleValues)
+
+#foreach( $column in $dc.getFecthedColumns($id))
+  #set($cvalue = $escapeChars.forHTMLTag($sampleValues.get($column.columnName)) )
+  columns.push({name:'$column.columnName',type:'$column.columnType', example:'$!{cvalue.replaceAll("\r?\n","<br />")}'});
+#end
+
+var parameters = [];
+#if( $query.parameters.size() > 0 )
+  #foreach( $p in $query.parameters )
+    parameters.push({name:'$p.name',index:$p.index, value:'$p.value', 'is-variable-binding': $p.isVariableBinding});
+  #end
+#end
+
+jQuery(document).ready(function() {
+  if(parameters.length>0){
+	  for( var i=0; i<parameters.length; i++){
+	    insertParamRow(i+1, parameters[i]);
+	  }
+  }else{
+    insertParamRow(1, {name:'', index:1,value:'', 'is-variable-binding': true});
+  }
+});
+
+var tdsTemplate = function() {
+  return [
+    'td', { align: 'center'}, '<input type="checkbox" name="paramSelect" value="1">',
+    'td', { align: 'center'}, this.index,
+    'td', {}, "<select name='paramName' id='selectParam"+this.index+"'></select>",
+    'td', {}, "<input type='text' name='paramValue' id='exampleValue"+this.index+"'size='40' value='"+(this.value ? this.value : '') +"'>",
+    'td', { align: 'center'}, '<input type="checkbox" name="paramIsVariableBinding'+this.index
+                               +'" id="paramIsVariableBinding'+this.index+'" value="1" '
+                               +(this['is-variable-binding']==undefined || this['is-variable-binding'] ? 'checked="checked"' : '') +'>',
+  ];
+};
+
+var selectOptionsTemplate = function(){
+  var options = [];
+  for(var i=0;i<this.columns.length;i++){
+    options.push('option');
+    if(this.columns[i].name==this.selected){
+      options.push({selected:'selected', 'value':this.columns[i].name});
+    }else{
+      options.push({'value':this.columns[i].name});
+    }
+    options.push(this.columns[i].name + ' (' + this.columns[i].type + ')' );
+  }
+  return options;
+};
+
+
+function insertParamRow(index, param) {
+  param.index = index;
+  var t = $('#paramtable')[0];
+  var row = t.insertRow(index);
+  try{
+    $(row).tplAppend( param, tdsTemplate);
+  }catch(e){}
+  $('#selectParam'+index).tplAppend( {columns: columns, selected:param.name}, selectOptionsTemplate).change(function(){
+    var selectedIndex = $('#selectParam'+index)[0].selectedIndex;
+    if(confirm("Using previously selected Testing Value "+columns[selectedIndex].example+" ?")){
+      $('#exampleValue'+index).val(columns[selectedIndex].example);
+    }
+  });
+};
+
+//------------------
+
+function resetParamIndex() {
+  var table = document.getElementById('paramtable');
+  for (var i = table.rows.length - 1; i >= 1; i--) {
+    table.rows[i].cells[1].innerHTML = i;
+  }
+}
+
+function addParamRow() {
+  var table = document.getElementById('paramtable');
+  var index = table.rows.length;
+  insertParamRow(index,{});
+};
+
+function insertParamRows() {
+  var table = document.getElementById('paramtable');
+  var selects = document.getElementsByName('paramSelect');
+  for (var i = table.rows.length - 1; i >= 1; i--) {
+    if (selects[i-1].checked) {
+      insertParamRow(i, {});
+    }
+  }
+  resetParamIndex();
+};
+
+function deleteParamRows() {
+  var table = document.getElementById('paramtable');
+  var selects = document.getElementsByName('paramSelect');
+  for (var i = table.rows.length - 1; i >= 1; i--) {
+    if (selects[i-1].checked) {
+      table.deleteRow(i);
+    }
+  }
+  resetParamIndex();
+};
+
+</script>

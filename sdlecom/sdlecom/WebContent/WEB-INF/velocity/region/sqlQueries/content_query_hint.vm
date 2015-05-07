@@ -1,0 +1,6 @@
+#openContainer("width:78%;")
+<div id="containerHeader"><span class="left">Create Child Queries Here</span>&nbsp;#toggleADiv("sub_sequent_query_hint" "toggle_sq_hint" "<img src='resources/images/expand.gif' alt='expand'>" "<img src='$link.getContextPath()/resources/images/collapse.gif' alt='collapse'>" "block")</div>
+<div id="sub_sequent_query_hint">
+&nbsp;&nbsp;If you have a one-to-many association, you can use Child Queries referring <b>parameters</b> from <b>Parent Query's Result</b>.
+</div>#displayADiv("sub_sequent_query_hint")
+#closeContainer()

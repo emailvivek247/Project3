@@ -1,0 +1,157 @@
+<#include "../lib/layout.stl" />
+<@dashboardLayout>
+<div class="row-fluid" style="margin-bottom:10px;">
+  <div id="grid" class="gridMargins"></div>
+</div>
+<div class="row-fluid" style="margin-bottom:30px;">
+  <div id="divSiteDetails" class="gridMargins"></div>
+</div>
+<script>
+<!--EVENTS FOR DATA BINDING AND ROW SELECT -->
+    $(document).ready(function() {
+        $("#grid").kendoGrid({
+            dataSource: {
+                type     : "json",
+                transport: {
+                    read: "getSiteList.admin"
+                },
+
+                schema: {
+                    model: {
+                        fields: {
+                            description: { type: "string"},
+                            county: { type: "string" },
+                            id: { type: "string" } ,
+                            active: { type: "string" } ,
+                            autoActivate: { type: "string" } ,
+                            name: { type: "string" } ,
+                            state: { type: "string"}
+                        },
+                        id: "id"
+                    }
+                },
+                pageSize: 5,
+				group: [
+							{ field: "node.description", dir: "asc" }
+                	],
+
+
+            },
+
+            filterable: true,
+            sortable: true,
+            pageable: true,
+            selectable: 'row',
+            navigatable: true,
+            groupable: true,
+            columns: [
+            	{
+                    field:"node.description",
+                    title: "Node",
+
+
+                },
+                {
+                    field:"description",
+                    title: "Site",
+
+                },
+                {
+                    field: "county",
+                    title: "County",
+                    template: function(e){
+                    	if(e.county != null && e.county != ''){
+                    		return e.county;
+                    	} else {
+                    		return 'N/A';
+                    	}
+                    }
+
+                },
+                {
+                    field:"state",
+                    title: "State",
+
+
+                },
+                {
+                    field:"timeZone",
+                    title: "Time Zone"
+                },
+                {
+                    field:"autoActivate",
+                    height: "70px",
+                    title: "Auto Activate",
+                    template: "#= (autoActivate) ? 'Yes' : 'No' #",
+
+                },
+                {
+                    field:"active",
+                    title: "Active",
+                    template: "#= (active) ? 'Yes' : 'No' #",
+                }
+            ],
+            change: function (e) {
+               if (e != null && e != "" && e != undefined) {
+		       		if (this.select().length > 0 ) {
+		            	var data = this.dataItem(this.select());
+		            	rowID = data.id;
+		            	getSiteDetails(rowID, 0);
+		            }
+		        }
+		        else {
+		            rowID = $('table tbody tr:first td:first').text();
+		            getSiteDetails(rowID, 0);
+		        }
+			},
+			dataBound: function () {
+			  var grid = $("#grid").data("kendoGrid");
+			  grid.select("tr:eq(2)");
+			}
+    	});
+    });	  //END DOCUMENT.READY
+
+
+			function getSiteDetails(siteId, tabIndex) {
+		        $.ajax({
+		        	cache: false,
+		            type: "GET",
+		            url: "viewSiteDetails.admin?siteId=" + siteId,
+		            success: function(response) {
+
+		                $("#divSiteDetails").html( response );
+		        		$("#tabstrip").kendoTabStrip({
+            	            animation: false
+			            }).data("kendoTabStrip").select(tabIndex);
+		                $("#tabstrip").kendoTabStrip({
+	                        animation: false
+	                    });
+		            }
+		        });
+
+		    }
+
+
+
+            $(document.body).keydown(function(e) {
+                if (e.altKey && e.keyCode == 71) {
+                    $("#grid").data("kendoGrid").table.focus();
+                }
+            });
+
+
+           //pressing Alt + p will direct to Available Subscriptions tab
+
+            $(document.body).keydown(function(e) {
+                if (e.altKey && e.keyCode == 80) {
+                    $("#tabstrip").data("kendoTabStrip").select("#availSub");
+                }
+            });
+</script>
+        <!--input type="button" value="GO!" onclick="getSiteDetails(1);" /-->
+
+
+
+<!-- End one column window -->
+
+</@dashboardLayout>

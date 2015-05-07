@@ -1,0 +1,127 @@
+<#include "../lib/layout.stl" />
+<@dashboardLayout>
+<!-- Begin one column window -->
+	<style type="text/css">		
+	.imageBox,.imageBoxHighlighted{
+		/*width:130px; Total width of each image box */
+		/*height:160px; Total height of each image box */
+				
+	}
+	.imageBox_theImage{
+		width:110px;	/* Width of image */
+		height:125px;	/* Height of image */
+
+		/*
+		Don't change these values *
+		*/
+		background-position: center center;
+		background-repeat: no-repeat;
+		margin: 0 auto;
+		margin-bottom:2px;
+	}
+
+	.imageBox .imageBox_theImage{
+		border:1px solid #DDD;	/* Border color for not selected images */
+		padding:2px;
+				
+	}
+	.imageBox .node {
+		background-color:#ffffff;
+		background-image:url('resources/images/node.png');
+		color:#000000;
+		text-align:center;
+	}
+	.imageBox .node p{
+		padding-top: 50px;
+	}
+	.imageBox .site {
+		background-color:#ffffff;
+		background-image:url('resources/images/site.png');
+		color:#000000;
+		text-align:center;
+	}
+	.imageBox .site p{
+		padding-top: 50px; 
+	}
+	.imageBoxHighlighted .imageBox_theImage{
+		border:3px solid #316AC5;	/* Border color for selected image */
+		padding:0px;
+
+	}
+	.imageBoxHighlighted span{	/* Title of selected image */
+		background-color: #316AC5;
+		color:#FFFFFF;
+		padding:2px;
+	}
+
+	.imageBox_label{	/* Title of images - both selected and not selected */
+		text-align:center;
+		font-family: arial;
+		font-size:11px;
+		padding-top:2px;
+		margin: 0 auto;
+	}
+	#content .inner {
+    	min-width:100%;
+		width:auto;
+	}
+	.col-xs-3{padding-right:0px;}
+	</style>
+	
+		
+	
+<div class="page-content">
+	<div class="col-xs-12 no-border no-padding">
+		<div class="widget-box no-border">
+			<div class="widget-body no-border">
+				<div class="widget-main no-padding">
+					<div class="row-fluid">
+						<div class="col-xs-12">
+							<div class="row">
+							<#list nodes as node>							
+								<div class="col-xs-3">
+									<div class="widget-box" style="">
+										<div class="widget-header">
+											<h4>${node.description}</h4>
+											<div class="widget-toolbar">
+												<a href="#" data-action="collapse">
+													<i class="icon-chevron-up"></i>
+												</a>
+											</div><!-- end widget toolbar-->
+										</div><!-- end widget header-->
+										<div class="widget-body" style="padding:10px 0;">
+											<div class="widget-main no-padding">
+														<div id="${node.name}_content"> 
+																<a href="viewnodeconfig.admin?nodeName=${node.name}">
+																	<div class="imageBox" id="imageBox0">
+																		<div class="imageBox_theImage node"><p>${node.description}</p></div>
+																		<div class="imageBox_label"><span>View/Update Node Configuration</span></div>
+																	</div>
+																</a>
+														</div>		
+											</div><!-- end widget-main-->
+										</div><!-- end widget body-->	
+									</div><!--END widget-box no-border-->
+								</div><!--END col-sm-4 no-padding no-wrap-->
+							</#list>
+							</div><!--END row-->
+						</div><!--END col-xs-12-->
+					</div><!--END row-fluid-->
+				</div><!--END widget-main-->
+			</div><!--END widget-body no-border-->
+		</div><!--END widget-box no-border-->
+	</div><!--END col-xs-12 no-border no-padding-->
+</div><!--END page-content-->
+
+
+
+
+
+
+
+
+						
+			
+			
+
+</@dashboardLayout>

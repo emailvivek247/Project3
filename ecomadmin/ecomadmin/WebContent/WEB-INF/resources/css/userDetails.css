@@ -1,0 +1,134 @@
+/*************************************************************************
+*
+* ADOBE CONFIDENTIAL
+* ___________________
+*
+*  Copyright 2013 AMCAD LLC
+*  All Rights Reserved.
+*
+* NOTICE:  All information contained herein is, and remains
+* the property of AMCAD LLC.
+**************************************************************************/
+
+
+.left {
+	text-align:left;
+}
+.right {
+	text-align:right;
+}
+.center {
+	text-align:center;
+}
+td.footer {
+	font-weight:bold;
+}
+
+#content .inner {
+	width:1480px;
+}
+.jmesa .jmesa-highlight a {
+	
+}
+div.subHeader {
+	text-align:center;
+	width:100%;
+	font-weight:bold;
+	color:#ffffff;
+	background-color:#8F1704;
+	line-height:50px;
+}
+div#header {
+	width: auto;
+}
+a#btnGetRecurringTrans,	a#btnGetWebTrans {
+	cursor:pointer;
+}
+
+#tabs{
+	margin-bottom:30px;
+	width:1480px;
+}
+
+.containers{
+	margin:0px;
+	border-top-left-radius:0px;	
+	-moz-border-radius-topleft:0px;
+	border-top-right-radius:0px;	
+	-moz-border-radius-topright:0px;
+	border-bottom-right-radius:5px;
+	-moz-border-radius-bottomright:5px;
+	border-bottom-left-radius:5px;
+	-moz-border-radius-bottomleft:5px;
+}
+
+.noBorder{
+	border-top:0px;
+}
+
+.noBgButtons{
+	background:none;
+	border:none;
+	color:#1F92FF;
+}
+
+#btnsubmit{background:none;border:0px;}
+
+#tdAddNewSub{
+	border-bottom:0px;
+	padding-top:20px;
+}
+#accessList{
+	table-layout:fixed;
+	width:100%;
+}
+.userDetBorLeft{
+	border-left:2px solid #CDCDCD;
+	padding-left:5px;
+}
+.expired{color:#BF0B38}
+
+.subDetHeader{
+	background-color:#729fcf;
+	color:#fff;
+	border:0px;
+	font-weight:bold;
+}
+
+tr.stripe{
+   background: #e3e3e3;]
+}
+
+table.zebraTable caption
+{
+	display: none;
+}
+
+table.zebraTable tr td, table.zebraTable tr th
+{
+	border-bottom: 1px solid #cccccc;
+}
+
+table.zebraTable tr.unPaid td
+{
+	color:#BF0B38;
+}
+
+table.zebraTable tr th, table.zebraTable tr td
+{
+	padding: 7px;
+}
+
+table.zebraTable tr.paid td
+{
+	color:#3FC700;
+}
+
+td.unPaid
+{
+	color:#BF0B38;
+}
+td.zebraTable
+{
+	color:#3FC700;
+}

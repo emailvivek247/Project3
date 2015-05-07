@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='utf-8'?>
+#set( $layout = "Empty.vm" )
+##
+##
+#macro(oneRow $_prompt $_value)
+  <$_prompt>$_value</$_prompt>
+#end
+#macro(keys $keywords)    
+#foreach ($keyWord in $keywords)    
+#if ($velocityCount<=3)
+#if ($velocityCount>1), #end$velocityCount. $keyWord.key#end
+#end
+#end
+#macro(displaySimpleQueryReport $report $total)
+  #oneRow('index-name' $report.reportName )
+  #oneRow('total-queries' $report.recordCount )
+  #oneRow('average-query-time' $report.avgSearchingTime )
+  <top-keywords>#keys($report.topKeyWords)</top-keywords>
+  <top-ips>#keys($report.topIps)</top-ips>
+#end
+##
+##
+##
+#set($QueryLogAnalyzer   = $toolLoader.load("net.javacoding.xsearch.status.QueryLogAnalyzer"))
+#set($period = ${request.getParameter("period")})
+#if (!$period) 
+  #set($period = 0)  
+#end
+##
+#set($allReport= $QueryLogAnalyzer.getReport(null,$period))
+#set($report = $allReport)
+##
+##
+<usage-report>
+<system-information>
+  #set($schedulerMetaData = $WebserverStatic.getScheduler().getMetaData() )
+  #set($__time = ${schedulerMetaData.runningSince()} )
+  #oneRow('version' $product.get('product.version') )
+  #oneRow('build' $product.getProperty('build.number') )
+  #oneRow('up-time' "#displayElapsedTime($__time)(since $__time)" )
+  #oneRow('os-name' $systemInfo.OSName )
+  #oneRow('os-version' $systemInfo.OSVersion )
+  #oneRow('jvm-vendor' $systemInfo.JVMVender )
+  #oneRow('jvm-version' $systemInfo.JVMVersion )
+  #oneRow('total-memory' $systemInfo.totalMemory )
+  #oneRow('free-memory' $systemInfo.freeMemory )
+  #oneRow('max-memory' $systemInfo.maxMemory )
+  #oneRow('local-access-url' $WebserverStatic.localURL )
+  #oneRow('remote-access-url' $WebserverStatic.serverURL )
+</system-information>
+<index-usage-summary>
+  #foreach( $dataSet in $QueryLogAnalyzer.allDataSets )
+    #set($queryReport= $QueryLogAnalyzer.getReport($dataSet,$period))
+    #displaySimpleQueryReport($queryReport false)
+  #end
+  #displaySimpleQueryReport($allReport true )
+</index-usage-summary>  
+#parse("/WEB-INF/velocity/region/report/reportXML.vm")
+</usage-report>

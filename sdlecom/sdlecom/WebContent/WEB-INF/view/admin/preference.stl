@@ -1,0 +1,420 @@
+<#import "dashboardHeader.stl" as layout>
+<@layout.basic menu="system/siteAdmin">
+
+<#macro section2(somevalue)>
+ <@com.section2 somevalue>
+  <table width="100%" cellpadding="5" cellspacing="0" border="1">
+  <#nested>
+  </table>
+ </@com.section2>
+</#macro>
+
+<@com.errorMarkup/>
+<@com.messageMarkup/>
+
+<#assign sc = new("net.javacoding.xsearch.config.ServerConfiguration")>
+<#assign sc = sc.getServerConfiguration()>
+<#assign ds = sc.getServerDataSource()>
+<BR>
+<div id="customMessageList" class="important" style="margin-left: 0.5in; margin-right: 0.5in;">
+    <table border="0" summary="Important">
+        <tr>
+            <td rowspan="2" align="center" valign="top" width="25">
+                <img alt="[Message]" src="${request.getContextPath()}/resources/images/note.gif">
+            </td>
+            <th align="left">Message</th>
+        </tr>
+        <tr>
+            <td colspan="2" align="left" valign="top">
+              <ul id="msgList"></ul>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+ <div id="compGroupA" class="demo" width="80%" style="border:0px">
+  <div id="tabs" class="dashboardContent" width="80%" style="border:0px;">
+      <ul style="background:none; border:0px; margin:0 0 0 0; padding: 0 0 0 0; text-align: center;">
+            <li><a href="#tabs-2">Instance Index Root Directory</a></li>
+            <li><a href="#tabs-1">Instance DB Connection</a></li>            
+            <li><a href="#tabs-3">Account Administration</a></li>
+            <li><a href="#tabs-4">Index Configuration</a></li>
+            <li><a href="#tabs-5">Indexing Log</a></li>
+            <li><a href="#tabs-6">Email Notification for Indexing</a></li>
+            <li><a href="#tabs-7">Server URL</a></li>
+      </ul>
+      
+    <div id="tabs-1">
+    <form name="f2" action="" method="post">
+    <input type="hidden" name="operation" value="list">
+        <#assign wc = WebserverStatic.getWebConfiguration()>
+        <#if ds.jdbcdriver?has_content>
+            <#assign jdbcdriver = wc.getJdbcdriver(ds.jdbcdriver, jdbcdriverName)>
+        </#if>
+        <#include "dataset/configConnection/initJdbcDrivers.stl">
+        <#macro JDBCIntallationHint>
+          <tr><td>
+          <div id="jdbcHint" style="display:none;">
+            <@com.section3 "width:80%;", 'Note: How to install JDBC driver?' >
+            &nbsp;1. Please <a id="driverURL" href="http://www.google.com/search?q=download+jdbc+driver" target="_blank">search</a> to download the specific jdbc driver compatible with your Java version. <br/>
+            &nbsp;2. Copy the jar or zip files into "${WebserverStatic.getDriverDirectory()}${WebserverStatic.getSeparator()}<span id='driverDir'></span>"<br/>
+            &nbsp;3. For new jdbc driver, create a file jdbcdriver.xml( you can copy and modify other examples )<br/>
+            &nbsp;4. Restart the server.<br/>
+            </@com.section3>
+          </div>
+          </td></tr>
+        </#macro>
+        
+        <#macro tableRowComment(id, somevalue)>  <tr><td>&nbsp;</td><td colspan="2" id="${id}">${somevalue?if_exists}</td></tr></#macro>
+        
+        <#macro jdbcdriverDropdownList(listname)>
+          <select name=${listname} onChange="changeJdbcdriver(this)">
+            <option value="">Select a database driver</option>
+          <#foreach j in wc.jdbcdrivers>
+            <option value=""
+              <#if jdbcdriver?has_content && j.className == jdbcdriver.className && j.name == jdbcdriver.name>selected='selected'</#if>>
+              ${j.name} (${j.className})
+              <#if !j.available> -Not Installed-<#else> v${j.version?if_exists}</#if>
+            </option>
+          </#foreach>
+            <option value="">Others...</option>
+          </select>
+        </#macro>
+        
+        
+        <input type="hidden" name="driverDirectoryName" id="driverDirectoryName" value="${ds.driverDirectoryName?if_exists}">
+        <input type="hidden" name="jdbcdriver" id="jdbcdriver" value="${ds.jdbcdriver?if_exists}">
+        <input type="hidden" name="jdbcdriverName" id="jdbcdriverName" value="${ds.name?if_exists}">
+        <br />
+        
+        <@com.section2 title="Instance Level Database Connection Parameters" width='70%'> 
+        <table id="t" width="100%" cellpadding="5" cellspacing="0" border="0">
+        
+        <@com.tr2td "JDBC Driver">
+          <table><tr><td><@jdbcdriverDropdownList "jdbcdriverList"/></td></tr><@JDBCIntallationHint/></table>
+        </@com.tr2td>
+        
+        <@com.trTextInput "Database URL", "dbUrl", ds.dbUrl?if_exists />
+        <#call tableRowComment("urlExample", "Example: " + jdbcdriver.urlExample?if_exists)>
+        
+        <@com.trTextInput "Database User", "dbUsername", ds.dbUsername?if_exists />
+        
+        <@com.tr2td "Database Password">
+          <input type="password" name="dbPassword" id="dbPassword"  size="80" value="${ds.dbPassword?if_exists}" autocomplete="off">
+        </@com.tr2td>
+        
+        <#call tableRowComment("note", "Note: Use a read-only username/password if possible")>
+        <@com.trTextInput "Testing Query", "dbcpValidationQuery", ds.dbcpValidationQuery?if_exists />
+        
+        <#if jdbcdriver.validateSql?has_content>
+         <@tableRowComment "validateSql", "Example: " + jdbcdriver.validateSql />
+        <#else>
+         <@tableRowComment "validateSql", "" />
+        </#if>
+        <tr><td></td>
+            <td>
+                <table>
+                    <tr>
+                        <td>
+                            <button type="submit" class="general ui-corner-all" name="btnTestDBConf" id="btnTestDBConf">Test</button> 
+                        </td>
+                        <td>
+                            <button type="submit" class="general ui-corner-all" name="btnSaveDBConf" id="btnSaveDBConf">Save</button>                     
+                        </td>
+                        <td>                
+                             <input type="checkbox" name="noTestDBConf" id="noTestDBConf" value="true" >Save without validation</input>                             
+                        </td>                
+                    </tr>
+                </table>    
+            </td>
+         </tr>  
+        </table>
+        </@com.section2>
+        </form>
+    </div>
+    <div id="tabs-2">
+     <form name="f1" method="post" action="preference.do" style="padding: 0 100px 0 100px">
+     <input type="hidden" name="operation" value="list">
+        <table border="0" width="50%">  
+      <br />
+           <@com.trTextInput "Instance Index Root Directory", "indexRootDirectory", sc.indexRootDirectory, 60>
+            <td><@com.actionSubmitButton "f1", "submitSave2", "Save", "save"/></td> 
+           </@com.trTextInput>           
+        </table>
+        <table width="50%">
+            <td>
+                <p>Note: Here you can set/change the instance index root directory for all of the available indexes. 
+                    <ul>
+                        <li>
+                            In order to be able to change the instance index root directory dynamically, please make sure that the 
+                            <i>"Prefix index with the instance index root directory"</i> check box is selected within the <b>Index Info</b> tab, 
+                            otherwise the path will not be affected.
+                        </li>
+                    </ul>
+                    Example:
+                    <ol>
+                        <li>You have 4 indexes: Indexes A, B, C and D.</li>
+                        <li>All of these indexes are pointing to E:\ drive on your computer</li>
+                        <li>You want to move your indexes from Development to Production, but the Production machine has an F:\ drive rather than an E:\ drive<\li>
+                        <li>Rather than going to each individual index, you can simply specify the directory in the above text box</li>
+                            <p>*Note: Make sure that your <i>"Prefix index with the instance index root directory"</i> 
+                                check box is selected within the <b>Index Info</b> tab of the desired indexes, 
+                                otherwise the path will not be changed automatically.
+                            </p>
+                        <li>Type in the desired path in the text box and click the Save button</li>
+                        <li>If you want to double check your changes, go to the Index Info tab within each index and see whether the path got changed.</li>
+                    </ol>
+                </p>
+            </td>
+        </table>
+                
+                
+                <script type="text/javascript">
+                     $(document).ready(function() {
+                            $( "#tabs" ).tabs({
+                                cookie: {
+                                    // store cookie for a day, without, it would be a session cookie
+                                    expires: 0
+                                },
+                                select:function(event, ui) {
+                                     $(".important").hide();                                           
+                                }
+                            });
+                            $('#mainContent').show();
+                      });
+                </script>
+                   
+    </div>
+   
+    <div id="tabs-3">
+     <ul>
+      <li><a href="changeUserNamePassword.do">Change Admin User Name/Password</a></li>
+     </ul>
+    </div>
+
+    <div id="tabs-4">
+    
+    
+     <table border="0">
+      <@com.tr2td "Uploads">
+        <input type="checkbox" name="isMergingOldDatasetValues" value="on"<#if sc.isMergingOldDatasetValues> checked</#if>>
+         Conditionally Merge New Uploaded Index Configurations with Existing Settings.  
+         <br/>Merged Settings will preserve existing settings include:
+         <ol>
+           <li>Database Connection Information, including driver, url, user name, password</li>
+           <li>Schedule for indexing, also including subscribed URL settings.</li>
+         </ol> 
+         This is recommended when you have production, staging, testing, development servers with different settings above, <br/>
+         or you are using cluster mode with searching nodes and indexing nodes.
+      </@com.tr2td>
+      </tr>
+      </table>
+      <table width="100%" cellpadding="5" cellspacing="0" border="0">
+            <tr><td width="50%">&nbsp;</td><td>
+            <@com.actionSubmitButton "f1", "submitSave4", "Save", "save"/>
+            </td></tr>         
+        </table>
+                
+    </div>
+  
+    <div id="tabs-5">
+   
+    
+        <table border="0">  
+          <@com.tr2td "Short Indexing Log">
+            <input type="checkbox" name="isShortIndexingLogEnabled" value="on"<#if sc.isShortIndexingLogEnabled> checked</#if>>
+             Enable Short Indexing Log for viewing indexing process via the web. 
+             <br/>Disabling it will disable this eye-candy, but will avoid creating and deleting many small files. 
+          </@com.tr2td>
+          <@com.trTextInput "Indexing Log Size", "indexingLogSizeInMB", sc.getIndexingLogSizeInMB(), 4>
+            MB <br/>This is for real indexing log. Larger logSize can hold more indexing history when analyzing any indexing problem. 
+            <br/>Takes effect for next indexing process.
+          </@com.trTextInput>
+        </tr>
+      </table>
+      <table width="100%" cellpadding="5" cellspacing="0" border="0">
+            <tr><td width="50%">&nbsp;</td><td>
+            <@com.actionSubmitButton "f1", "submitSave5", "Save", "save"/>
+            </td></tr>
+        </table>
+      
+    </div>
+    
+    <div id="tabs-6">
+    
+    
+    <table border="0">  
+      <@com.tr2td "Enable Email Notification">
+        <input type="checkbox" name="emailLogging_isEnabled" value="on"<#if sc.loggingConfiguration.isEnabled> checked</#if>>
+         Get email notifications for indexing processes.
+      </@com.tr2td>
+      <@com.tr2td "Threshold">
+        <select name="emailLogging_threshold" id="emailLogging_threshold">
+          <option value="ERROR">Error</option>
+        </select>
+        <script>$().ready(function() {
+         $('#emailLogging_threshold').val("${sc.loggingConfiguration.threshold}");
+        });</script>
+      </@com.tr2td>
+      <@com.trTextInput "SMTP Host", "emailLogging_smtpHost", sc.loggingConfiguration.smtpHost, 30>
+        This is the host name that's running SMTP server like sendmail.
+      </@com.trTextInput>
+      <@com.trTextInput "To Address", "emailLogging_toAddress", sc.loggingConfiguration.toAddress, 30>
+        This is the email address to receive notifications. Multiple email adresses are seperated by commas. E.g. johndoe@mail.com,smith@mail.com
+      </@com.trTextInput>
+      <@com.trTextInput "From Address", "emailLogging_fromAddress", sc.loggingConfiguration.fromAddress, 30>
+        This is the email address to send emails from.
+      </@com.trTextInput>
+        <table width="100%" cellpadding="5" cellspacing="0" border="0">
+        <tr><td width="50%">&nbsp;</td><td>
+        <@com.actionSubmitButton "f1", "submitSave6", "Save", "save"/>
+        </td></tr>
+        </table>
+       
+    </div>  
+
+    <div id="tabs-7">
+    
+     <table border="0">
+          <@com.tr2td "Local Access URL">
+            ${WebserverStatic.getLocalURL()}
+          </@com.tr2td>
+          <@com.tr2td "Remote Access URL">
+            ${WebserverStatic.getServerURL()}
+          </@com.tr2td>
+          <@com.tr2td>
+            <@com.actionSubmitButton "f1", "submitSave7", "Reset", "resetURL"/>
+             <br/>
+             <br/>
+          </@com.tr2td>
+          </table>        
+    </div>    
+  </div>
+   </form>  
+</div>
+<div style="text-align:right;padding-right:20px;font-size: 12px;">
+	Build Number: ${pageStyleUtil.getBuildVersion()}&nbsp;&nbsp;|&nbsp;&nbsp;Build Date&nbsp;${pageStyleUtil.getBuildDate()}
+</div>
+<script type="text/javascript">
+        function changeJdbcdriver(jdbcdriverList) {
+          if(jdbcdriverList.selectedIndex<=0) return;//skip the first option
+          var d = jdbcDrivers[jdbcdriverList.selectedIndex-1];
+          if (!d.available) {
+            var dbName = d.name.replace(new RegExp (' ', 'gi'), '+') ; //url encode name becomes "Microsoft+SQL+server"
+            $("#jdbcHint").show();
+            $("#driverURL").attr("href", 'http://www.google.com/search?q=download+'+dbName+'+jdbc+driver');
+            $("#driverDir").html(d.dir);
+          }else{
+            $("#jdbcHint").hide();
+          }
+          document.f2.driverDirectoryName.value = d.dir;
+          document.f2.jdbcdriver.value = d['class'];
+          document.f2.jdbcdriverName.value = d['name'];
+          $('#urlExample').html('&nbsp;Example: ' + d['url-example']);
+          if (d['validate-sql'] != '') {
+            $('#validateSql').html('&nbsp;Example: ' + d['validate-sql']);
+          } else {
+            $('#validateSql').html('&nbsp;');
+          }  
+        }
+        
+        $(document).ready(function() {
+            $('#customMessageList').hide();
+            $("#btnSaveDBConf").click(function() {
+                $('#submitSave').attr('disabled', 'disabled');      
+                          
+                var driverDirectoryName = $('input[name=driverDirectoryName]').val();
+                var jdbcdriver = $('input[name=jdbcdriver]').val();
+                var jdbcdriverName = $('input[name=jdbcdriverName]').val();
+                var dbUrl = $('input[name=dbUrl]').val();
+                var dbUsername = $('input[name=dbUsername]').val();
+                var dbPassword = $('input[name=dbPassword]').val();
+                var dbcpValidationQuery = $('input[name=dbcpValidationQuery]').val();
+                var noTestDBConf = "false";
+                
+                if ($('input[name=noTestDBConf]').is(':checked')) {
+                    noTestDBConf = "true";                                   
+                }
+                
+                var dataString = 'driverDirectoryName='+ driverDirectoryName + '&jdbcDriver=' + jdbcdriver + '&jdbcDriverName=' + jdbcdriverName + '&dbUrl=' + dbUrl + '&dbUsername=' + dbUsername + '&dbPassword=' + dbPassword + '&dbcpValidationQuery=' + dbcpValidationQuery + '&noTestDBConf=' + noTestDBConf;
+                $.ajax({
+                    type: "POST",
+                    url: "saveInstanceDbConnection.admin",
+                    data: dataString,
+                    success: function(data) {
+                      $.each(data, function(i,item){
+                         var elementID = "#" + item.code;   
+                         if (item.code != "SUCCESS" && item.code!="ERROR") {
+                             $(elementID).validationEngine('showPrompt', item.description, 'fail', 'topRight', true); 
+                         } else if (item.code == "SUCCESS") {
+                             $("#customMessageList").removeClass("error");
+                             $("#customMessageList").addClass("success");
+                             $("#msgList").children().remove();
+                             $("#msgList").append('<li>' + item.description + '</li>'); 
+                              $('#customMessageList').show();
+                             $("#btnUpdateAcct").hide();
+                         } else {
+                             $("#customMessageList").removeClass("success");
+                             $("#customMessageList").addClass("error"); 
+                             $("#msgList").children().remove();
+                             $('#customMessageList').show();
+                             $("#msgList").append('<li>' + item.description + '</li>'); 
+                         }
+                        $("#btnUpdateAcct").removeAttr("disabled");
+                      });       
+                    },
+                    error:(function() { })
+                });
+                return false;
+            });
+        });;
+
+
+        $(document).ready(function() {
+            $("#btnTestDBConf").click(function() {
+                $('#submitSave').attr('disabled', 'disabled');      
+                          
+                var driverDirectoryName = $('input[name=driverDirectoryName]').val();
+                var jdbcdriver = $('input[name=jdbcdriver]').val();
+                var jdbcdriverName = $('input[name=jdbcdriverName]').val();
+                var dbUrl = $('input[name=dbUrl]').val();
+                var dbUsername = $('input[name=dbUsername]').val();
+                var dbPassword = $('input[name=dbPassword]').val();
+                var dbcpValidationQuery = $('input[name=dbcpValidationQuery]').val();
+                var noTestDBConf = $('input[name=noTestDBConf]').val();
+                var dataString = 'driverDirectoryName='+ driverDirectoryName + '&jdbcDriver=' + jdbcdriver + '&jdbcDriverName=' + jdbcdriverName + '&dbUrl=' + dbUrl + '&dbUsername=' + dbUsername + '&dbPassword=' + dbPassword + '&dbcpValidationQuery=' + dbcpValidationQuery + '&noTestDBConf=' + noTestDBConf;
+                $.ajax({
+                    type: "POST",
+                    url: "testInstanceDbConnection.admin",
+                    data: dataString,
+                    success: function(data) {
+                      $.each(data, function(i,item){
+                         var elementID = "#" + item.code;   
+                         if (item.code != "SUCCESS" && item.code!="ERROR") {
+                             $(elementID).validationEngine('showPrompt', item.description, 'fail', 'topRight', true); 
+                         } else if (item.code == "SUCCESS") {
+                             $("#customMessageList").removeClass("error");
+                             $("#customMessageList").addClass("success");
+                             $("#msgList").children().remove();
+                             $("#msgList").append('<li>' + item.description + '</li>'); 
+                             $('#customMessageList').show();
+                             $("#btnUpdateAcct").hide();
+                         } else {
+                             $("#customMessageList").removeClass("success");
+                             $("#customMessageList").addClass("error"); 
+                             $("#msgList").children().remove();
+                             $('#customMessageList').show();
+                             $("#msgList").append('<li>' + item.description + '</li>'); 
+                         }
+                        $("#btnUpdateAcct").removeAttr("disabled");
+                      });       
+                    },
+                    error:(function() { })
+                });
+                return false;
+            });
+        });;
+</script>
+
+</@>

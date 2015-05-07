@@ -1,0 +1,10 @@
+<#assign actionName = request.getAttribute("org.apache.struts.action.mapping.instance").getPath()?substring(1)>
+<div class="breadcrumb">
+<#assign listTemplate = "listTemplates.do?indexName=" + indexName>
+ <#if actionName == "editTemplate"><a href="${listTemplate}">Page Views</a> &gt; ${template.name}
+<#elseif actionName == "createTemplate">
+ <a href="listScaffolds.do?indexName=${indexName}">Page View</a> &gt; ${scaffold.name}
+<#elseif actionName == "editTemplateFile">
+ <a href="${listTemplate}">Page View</a> &gt; <a href="editTemplate.do?indexName=${indexName}&templateName=${template.name}">${template.name}</a> &gt; ${fileName}
+</#if>
+</div>

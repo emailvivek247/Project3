@@ -1,0 +1,41 @@
+<scaffold order="16" isPartial="true">
+  <name>RSS Syndication</name>
+  <description><![CDATA[Add RSS feeds to a template.]]></description>
+  <notes><![CDATA[All fields are mandatory.]]></notes>  
+  <variables>
+    <separator header="RSS Configuration" position="start" status="open"/>
+    <column-variable name="titleColumn" >    
+      <prompt>Feed Title</prompt>
+      <columnSelector>isPrimaryKey</columnSelector>
+      <defaultValue class="string-column-value">
+        <highlighted>false</highlighted>
+        <summarized>false</summarized>
+        <HTMLEscaped>false</HTMLEscaped>
+      </defaultValue>
+    </column-variable>
+    <column-variable name="primaryKey" className="hiddenElement">
+      <columnSelector>isPrimaryKey</columnSelector>
+      <defaultValue class="string-column-value">
+        <highlighted>false</highlighted>
+        <summarized>false</summarized>
+        <HTMLEscaped>false</HTMLEscaped>
+      </defaultValue>
+    </column-variable>
+    <string-variable name="linkToContent" size="75">
+      <prompt>Link to Content</prompt>
+      <description>Link to the content. By default the link points to the current index and current template and the selected record. You may wish to change it to point to a different location.</description>
+      <defaultValue class="string-value">
+        <value><![CDATA[search.do?indexName=${indexName}&templateName=${templateName}&lq=]]></value>
+      </defaultValue>
+    </string-variable> 
+    <columns-variable name="additionalColumns">
+      <prompt>RSS Description</prompt>
+      <description>Select the columns to be part of the feed description.</description>
+      <columnSelector>isDisplayable</columnSelector>
+    </columns-variable>
+    <separator position="end"/>
+  </variables>
+  <operations>
+    <include type="prepend" file="rss20.stl" toFile="rss.stl"/>
+  </operations>
+</scaffold>

@@ -1,0 +1,28 @@
+<scaffold order="15" isPartial="true">
+  <name>NarrowBy In Tag Cloud Style</name>
+  <description><![CDATA[
+  Render a multi-valued filterable columns as a tag cloud. The file generated is a new file "narrowByTags.stl", 
+  and applicable to templates with "narrowBy_extra.stl".
+  ]]></description>
+  <variables>
+    <separator header="Cloud Configuration" position="start" status="open"/>
+    <columns-variable name="tagCloudColumns">
+      <prompt>Tag Cloud Column</prompt>
+      <description>Select Columns(filterable and string) to display as tag cloud.</description>
+      <columnSelector>isFilterable,isString</columnSelector>
+    </columns-variable>
+    <boolean-variable name="mergeTagCloud">
+      <prompt>Merge Tag Cloud</prompt>
+      <description><![CDATA[
+      If you select multiple columns for tag cloud, selecting this will merge different tag clouds into one tag cloud.
+      ]]></description>
+      <defaultValue class="boolean-value">
+        <value>false</value>
+      </defaultValue>
+    </boolean-variable>
+    <separator position="end"/>
+  </variables>
+  <operations>
+    <include type="prepend" withColumnName="true" file="narrowByTags.stl" toFile="narrowBy_extra.stl"/>
+  </operations>
+</scaffold>

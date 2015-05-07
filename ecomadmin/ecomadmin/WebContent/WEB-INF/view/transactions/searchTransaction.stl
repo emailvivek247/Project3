@@ -1,0 +1,534 @@
+<#include "../lib/layout.stl" />
+<@dashboardLayout>
+<style>
+.form-horizontal .control-group {
+width:800px;
+
+}
+input[readonly] {
+width:185px; height: 27px;
+}
+.formError .formErrorContent {
+width: 100%;
+background: #ee0101;
+color: #fff;
+width: 120px;
+font-family: tahoma;
+font-size: 11px;
+border: 2px solid #ddd;
+box-shadow: 0px 0px 6px #000;
+-moz-box-shadow: 0px 0px 6px #000;
+-webkit-box-shadow: 0px 0px 6px #000;
+padding: 4px 10px 4px 10px;
+border-radius: 6px;
+-moz-border-radius: 6px;
+-webkit-border-radius: 6px;
+}
+
+.daterangepicker .ranges .input-mini {
+background-color: #eee;
+border: 1px solid #ccc;
+border-radius: 4px;
+color: #555;
+display: block;
+font-size: 11px;
+height: 30px;
+line-height: 30px;
+vertical-align: middle;
+margin: 0 0 10px 0;
+padding: 0 6px;
+width: 137px;
+}
+
+.btn-search {
+padding: 0 8px;
+line-height: 24px;
+border-width: 4px;
+font-size: 13px;
+}
+
+div.infoPopUps {
+    display:none;
+    position: absolute;
+    width: 280px;
+    padding: 10px;
+    background: #fff;
+    color: #000000;
+    border: 3px solid #7EB544;
+    z-index: 1000;
+    float: right;
+    text-align:justify;
+  }
+  .no-border{border:0px;}
+  .minwidth { min-width:300px; width: auto !important; width: 300px; }
+  .minWidth400{min-width:400px;}
+  .no-wrap{white-space: nowrap;}
+  @media only screen and (max-width: 1490px) {
+  	.smallScreen{
+  		width:400px;
+  	}
+  	.inputBoxeSmall{
+  		margin-left:75px;
+  	}
+  	#invoiceId{
+  		width:170px;
+  	}
+  }
+  @media only screen and (max-width: 790px) {
+  	div.infoPopUps {
+	    width: 150px;
+	    font-size:1em;
+	  }
+  }
+</style>
+
+<div class="row-fluid">
+	<div class="col-xs-12 no-border">
+		<div class="widget-box no-border">
+			<div class="widget-header">
+				<h4>Search Transactions</h4>
+				<div class="widget-toolbar">
+					<a href="#" data-action="collapse">
+						<i class="icon-chevron-up"></i>
+					</a>
+				</div><!-- end widget toolbar-->
+			</div><!-- end widget header-->
+			<div class="widget-body no-border">
+				<div class="widget-main">
+					<div class="row-fluid">
+						<div class="col-xs-12">
+					<form id="frmTranSearch" name="frmTranSearch" class="form-horizontal" action="" method="post" onsubmit="return searchTransactions();" autocomplete="off" >
+							<div class="row" style="padding-left:20px;">
+								<div class="col-xs-12">
+									<div class="widget-box no-border">
+										<div class="widget-body no-border">
+											<div class="widget-main">
+												<label for="paymentChannel" class="k-tooltip-validation" style="float: left;width: 210px;padding-top: 5px;text-align: right;font-weight:bold;">Select Payment Type :&nbsp; </label>
+													<select id="paymentChannel" name="paymentChannel" class="k-widget k-dropdownlist" style="width:200px" tabindex="1" required validationMessage="Please select payment type">
+													  <option value="">Select Payment Type</option>
+													  <#if paymentChannel?has_content>
+														  <#if paymentChannel = "OTC">
+															  <option value="OTC" selected>Over The Counter</option>
+															  <option value="WEB">Web Payments</option>
+															  <option value="PAYASUGO">Pay As You Go Payments</option>
+															  <option value="RECURRING">Recurring Payments</option>
+														  <#elseif paymentChannel = "WEB">
+															  <option value="OTC">Over The Counter</option>
+															  <option value="WEB" selected>Web Payments</option>
+															  <option value="PAYASUGO">Pay As You Go Payments</option>
+															  <option value="RECURRING">Recurring</option>
+														  <#elseif paymentChannel = "RECURRING">
+															  <option value="OTC">Over The Counter</option>
+															  <option value="WEB">Web Payments</option>
+															  <option value="PAYASUGO">Pay As You Go Payments</option>
+															  <option value="RECURRING" selected>Recurring Payments</option>
+														  <#elseif paymentChannel = "PAYASUGO">
+															  <option value="OTC">Over The Counter</option>
+															  <option value="WEB">Web Payments</option>
+															  <option value="PAYASUGO" selected>Pay As You Go Payments</option>
+															  <option value="RECURRING">Recurring Payments</option>
+														  </#if>
+													  <#else>
+														  <option value="OTC">Over The Counter</option>
+														  <option value="WEB">Web Payments</option>
+														  <option value="PAYASUGO">Pay As You Go Payments</option>
+														  <option value="RECURRING">Recurring Payments</option>
+													  </#if>
+												     </select>
+												<span class="help-block header">Provide at least of one of the below search criteria:</span>
+										   </div><!--/widget-main-->
+									</div><!--/widget-body-->
+								</div><!--/widget-box-->
+							  </div><!--/col-xs-12-->
+							</div><!--/row-->
+							
+							<div class="row smallScreen" style="padding-left:20px;">
+								<div class="col-sm-4 no-padding no-wrap minWidth400 smallScreen">
+									<div class="widget-box no-border">
+										<div class="widget-body no-border" style="padding-left:0px;">
+											<div class="widget-main" style="padding-left:0px;">
+											 <div class="minwidth">
+											  <span style="padding-left:65px;">											
+												<label for="transactionRefNum" class="k-tooltip-validation boldText" >Transaction Number : </label>
+							                    	<input type="k-textbox" id="transactionRefNum" name="transactionRefNum" tabindex="2" maxlength="50"  style="width:210px" autocomplete="off" value="<#if transactionRefNum?has_content >${transactionRefNum}</#if>"/>
+							                  </span>
+							                 </div> 
+							                 <div class="minwidth">
+							                  <span style="padding-left:102px;">  
+							                    <label for="accountName" class="k-tooltip-validation boldText" >Name on Card : </label>
+							                    	<input type="k-textbox" id="accountName" name="accountName" tabindex="3" maxlength="50"  style="width:210px" autocomplete="off" value="<#if accountName?has_content >${accountName}</#if>"/>
+							                  </span>
+							                 </div> 
+							                 <div class="minwidth">
+							                  <span style="padding-left:0px;">
+							                    <label for="accountNumber" class="k-tooltip-validation boldText" >Last Four Digits of Credit Card : </label>
+													<input type="k-textbox" id="accountNumber" name="accountNumber"  tabindex="4" maxlength="50"  style="width:210px" autocomplete="off" value="<#if accountNumber?has_content >${accountNumber}</#if>"/>
+											  </span>
+											 </div> 
+							            	</div><!--/widget-main-->
+										</div><!--/widget-body-->
+									</div><!--/widget-box-->
+								</div><!--/col-sm-4-->
+								<div class="col-sm-4 no-padding no-wrap minWidth400 smallScreen inputBoxeSmall">
+									<div class="widget-box no-border">
+										<div class="widget-body no-border">
+											<div class="widget-main">
+											 <div class="minwidth">											
+												<span style="padding-left:34px;">
+													<label for="productId" class="k-tooltip-validation  boldText" ><font class="blue">*</font>&nbsp;Product Id : </label>
+					                    				<input type="k-textbox" id="productId" name="productId" tabindex="2" maxlength="50"  style="width:210px;margin-right:5px;" autocomplete="off" value="<#if productId?has_content >${productId}</#if>"/>
+															<i class="icon-question-sign blue bigger-110" id="prodIDInfo"></i>&nbsp;&nbsp;&nbsp;
+															<div id="prodIdPopUp" class="infoPopUps" style="position:absolute;top:7px;white-space:normal;">
+																<p>
+																  <i class="icon-circle-arrow-left blue bigger-110"></i>
+																  <b class="blue">Product ID</b> can be <b class="blue">Instrument Number</b> for AiLIS, for AiCMS it can be <b class="blue">Document ID</b> (Pay As You Go Transactions) or <b class="blue">Party ID</b> (External Web Transactions).
+																</p>
+															</div>
+												</span>
+											  </div>	
+							                  <div class="minwidth">  
+							                    <span style="padding-left:9px;">		
+							                    	<label for="productName" class="k-tooltip-validation boldText" ><font class="blue">*</font>&nbsp;Product Name : </label>
+					                    				<input type="k-textbox" id="productName" name="productName" tabindex="2" maxlength="50"  style="width:210px;margin-right:5px;" autocomplete="off" value="<#if productName?has_content >${productName}</#if>"/>
+															<i class="icon-question-sign blue bigger-110" id="prodNameInfo"></i>&nbsp;&nbsp;&nbsp;
+															<div id="prodNamePopUp" class="infoPopUps" style="position:absolute;top:30px;white-space:normal;">
+																<p>
+																  <i class="icon-circle-arrow-left blue bigger-110"></i>
+																  <b class="blue">Product Name</b> is <b class="blue">Case Number</b> (Pay As You Go Transactions, External Web Transactions, Over The Counter (OTC) Transactions) for AiCMS. 
+																</p>
+															</div>
+												</span>
+											  </div>	
+							                  <div class="minwidth">  
+							                    <span style="padding-left:13px;">
+													<label for="productType" class="k-tooltip-validation boldText" ><font class="blue">*</font>&nbsp;Product Type : </label>
+					                    				<input type="k-textbox" id="productType" name="productType" tabindex="2" maxlength="50"  style="width:210px;margin-right:5px;" autocomplete="off" value="<#if productType?has_content >${productType}</#if>"/>
+															<i class="icon-question-sign blue bigger-110" id="prodTypeInfo"></i>&nbsp;&nbsp;&nbsp;
+															<div id="prodTypePopUp" class="infoPopUps" style="position:absolute;top:60px;white-space:normal;">
+																<p>
+																  <i class="icon-circle-arrow-left blue bigger-110"></i>
+																  <b class="blue">Product Type</b> can be <b class="blue">Document Type Description</b> for AiLIS, <b class="blue">Party Name</b> (External Web Payments & Over The Counter (OTC) Transactions) and <b class="blue">Document Type Description</b> (Pay As You Go Transactions) for AiCMS.
+																</p>
+															</div>
+												</span>
+											  </div>				
+											</div>
+										</div>
+									</div>
+								</div>	
+								<div class="col-sm-4 no-padding no-wrap minWidth400 smallScreen inputBoxeSmall">
+									<div class="widget-box no-border">
+										<div class="widget-body no-border">
+											<div class="widget-main">
+											  <div class="minwidth" style="padding-left:10px;"> 
+												<label for="invoiceId" class="k-tooltip-validation boldText" >Invoice Number : </label>
+				                    				<input type="k-textbox" id="invoiceId" name="invoiceId" tabindex="2" maxlength="50"  style="width:210px" autocomplete="off" value="<#if invoiceId?has_content >${invoiceId}</#if>"/>
+											  </div>
+											  <div class="minwidth">	   	  
+												   	  <div class="input-group" style="padding-left:31px;margin-bottom:5px;">
+														<label for="dateRange" class="k-tooltip-validation boldText" >Date Range :&nbsp; </label>
+															<span class="input-group-addon" style="width:auto;">
+																<i class="icon-calendar"></i>
+															</span>
+															<input type="text" style="height:28px; width:170px;"  name="dateRange" tabindex="5" id="dateRange" value=""/>
+														</div>
+											 </div>
+											 <div class="minwidth">			
+														<div style="margin-left:244px;">
+															<span class="input-icon" >
+																<input type="submit" id="btnSearchErrorLog" class="btn btn-small btn-info btn-search" tabindex="6" value="Submit" style="font-size:15px;"/>
+																<i class="icon-search white"></i>
+															</span>
+														</div>
+											</div>			
+										  </div>
+										</div>
+									  </div>
+								   </div>
+							    </form><#--END FORM-->
+								</div><!--/row-->
+						</div><!--/col-xs-12-->
+				</div> <!--end widget main-->
+			</div><!--End widget body-->
+		</div><!-- end widget box-->
+	</div><!-- END /col-xs-12-->
+	<div class="col-xs-12 no-padding">
+		<div id="transListDiv" class="k-content">
+				<div id="noRecordsDiv" class="row-fluid center"><h4>No Records Found</h4></div>
+	           <div id="transGrid">				</div>
+	           <script>
+	           	$(document).ready(function(){
+	           			$("#transGrid").hide();
+	           			$("#noRecordsDiv").hide();
+				        var dataSource = new kendo.data.DataSource({
+							 transport: {
+				    			read: {	        			
+					        			url: function(e){
+											var url = 'lookupTransactions.admin?';
+											url = url + getFormParameters();
+											return url;
+								        },
+								        dataType: "json",
+								        type: "GET"
+								 	}
+				         	},
+							schema: {
+		    					data: "",
+	                            model: {
+	                            	id: "id",
+									fields: {
+										transactionDateString: {},
+										txRefNum: {},
+										origTxRefNum: {},
+										cardNumber: {},
+										accountName: {},
+										transactionType: {},
+										totalTxAmount: {}
+									}
+								},
+				                data: "records",
+				                total: "recordCount"
+							},
+							pageSize: 10,
+				            serverPaging: true
+				        });
+				        
+						$("#transGrid").kendoGrid({
+				                dataSource: dataSource,
+				                autoBind: false,
+				                scrollable: true,
+				                pageable: {
+				                		refresh: true,
+				                		pageSizes: true,
+				                		pageSize: true,                        		
+				                		numeric: true,
+				                		info: true,
+				                		input: true
+				                },
+				                
+							columns: [
+				                { field: "transactionDateString", title:"Transaction Date"},
+				                { field: "txRefNum", title:"Transaction Reference #"},
+				                { field: "origTxRefNum", title:"Sale Transaction Reference #"},
+				                { field: "cardNumber", title: "Card Number", template: "<div style='text-align:right;'>#= cardNumber#</div>"},
+				                { field: "accountName", title: "Name on Card", template: function(e){ return toCamelCase(e.accountName); }},
+				                { field: "totalTxAmount", title: "Total Transaction Amount", template: "<div style='text-align:right;'>$#= kendo.toString(totalTxAmount, 'n2') #</div>" },
+				                { field: "transactionType", title: "Transation Type", template: function(e){ return toCamelCase(e.transactionType); }},
+				                { field: "transactionType", title: "View Details" , 
+				                	template : function (e){
+										var searchForm = document.getElementById('frmTranSearch');
+				                		return '<a href="viewtransactiondetails.admin?transactionRefNum=' + e.txRefNum + '&paymentChannel=' + searchForm.paymentChannel.value + '" target="_new"><img src="resources/images/icon_info.png" alt="View Details" class="help" original-title="View Details"></a>';
+				                	}
+				                }
+				            ],
+							  dataBound: function () {
+							  	var grid = $("#transGrid").data("kendoGrid");					  	
+							  	if (grid.dataSource.total() > 0) {
+									$("#transGrid").show();
+									$("#noRecordsDiv").hide();
+								} else {
+									$("#transGrid").hide();
+									$("#noRecordsDiv").show();
+								}		
+							  }
+				            
+						});
+						$("#transGrid .k-pager-wrap").append('<a href="#" onClick="exportRecurringExcel()"><img src="resources/images/excel.png" alt="Export To Excel" class="help" original-title="Export To Excel"/>');
+						$("#transGrid .k-pager-wrap").append('<a href="#" onClick="exportRecurringPdf()"><img src="resources/images/pdf.png" alt="Export To PDF" class="help" original-title="Export To PDF">');
+						
+					
+				});		
+				</script>
+
+	</div>
+	
+	</div><!--END /col-xs-12-->
+   </div><!--/row-fluid-->
+</div>
+
+
+
+<br /><br />
+
+
+<script type="text/javascript">
+
+	function exportRecurringExcel(){
+		var grid = $('#transGrid').data('kendoGrid');
+		if(grid.dataSource.total() > 0){
+			var url = 'exportLookupTransactions.admin?';
+			url = url + getFormParameters();
+			url = url + '&exportType=excel';
+			location.href = url;
+		} else {
+			alert('No Records Found');
+		}	
+	}
+
+	function exportRecurringPdf(){
+		var grid = $('#transGrid').data('kendoGrid');
+		if(grid.dataSource.total() > 0){
+			var url = 'exportLookupTransactions.admin?';
+			url = url + getFormParameters();
+			url = url + '&exportType=pdf';
+			location.href = url;
+		} else {
+			alert('No Records Found');
+		}	
+	}
+
+	function toCamelCase(str) {
+		if(str != '' && str != null){
+			if (str != 'N/A'){
+				str = str.toLowerCase();
+			    return str.replace(/(?:^|\s)\w/g, function(match) {
+			        return match.toUpperCase();
+			    });
+			} else {
+				return str;
+			}
+		} 
+    }	
+
+	function searchTransactions(){
+		if(validateSearchForm() == false){
+			$.prompt('<font color="red">Provide at least of one of the search criteria</font>');
+			return false;
+		}
+		 
+		if($('#dateRange').val() != '' && validateDateRange() == false){
+			$.prompt('<font color="red">Invalid Date Range Format ! <br/> <br/> The valid Date Format is  MM/DD/YYYY - MM/DD/YYYY</font>');
+			return false;
+		}
+		var grid = $('#transGrid').data('kendoGrid');
+		grid.dataSource.read();		
+		return false;
+	}
+	
+	// Check if the date is in format MM/DD/YYYY - MM/DD/YYYY
+	function validateDateRange(){
+		var dtRange = $('#dateRange').val();
+		var fromDate = Date.parse(dtRange.substring(0,10));
+		var toDate = Date.parse(dtRange.substring(13,23));
+		if(fromDate != 'Nan' && fromDate > 0 && toDate != 'Nan' && toDate > 0){
+			return true;
+		} 
+		return false;
+	}
+	
+	function validateSearchForm(){
+			if($('#transactionRefNum').val() != ''){
+				return true;
+			} else if($('#accountName').val() != ''){
+				return true;
+			} else if($('#accountNumber').val() != ''){
+				return true;
+			} else if($('#productId').val() != ''){
+				return true;
+			} else if($('#productName').val() != ''){
+				return true;
+			} else if($('#productType').val() != ''){
+				return true;
+			} else if($('#invoiceId').val() != ''){
+				return true;
+			} else if($('#dateRange').val() != ''){
+				return true;
+			}
+			return false;
+	}	
+
+
+    function getFormParameters(){
+		var searchForm = document.getElementById('frmTranSearch');
+		var url = '';
+		
+		url = url + 'paymentChannel=' + searchForm.paymentChannel.value; 	        			
+		url = url + '&transactionRefNum=' + searchForm.transactionRefNum.value;
+		url = url + '&accountName=' + searchForm.accountName.value;
+		url = url + '&accountNumber=' + searchForm.accountNumber.value;
+		url = url + '&productId=' + searchForm.productId.value;
+		url = url + '&productName=' + searchForm.productName.value;
+		url = url + '&productType=' + searchForm.productType.value;
+		url = url + '&invoiceId=' + searchForm.invoiceId.value;
+		url = url + '&dateRange=' + searchForm.dateRange.value;
+		return url;
+    }
+
+
+
+	$(document).ready(function(){
+	
+	
+		     	$("#demo img[title]").tooltip();
+      
+	
+	//*INFO POP UPS	
+		$('#prodIDInfo').hover(
+			function() {
+			$('#prodIdPopUp').css( "display", "inline" );
+		},function(){	
+			$('#prodIdPopUp').hide();
+		});
+		
+		$('#prodNameInfo').hover(
+			function() {
+			$('#prodNamePopUp').css( "display", "inline" );
+		},function(){	
+			$('#prodNamePopUp').hide();
+		});
+		
+		$('#prodTypeInfo').hover(
+			function() {
+			$('#prodTypePopUp').css( "display", "inline" );
+		},function(){	
+			$('#prodTypePopUp').hide();
+		});
+		
+	 
+		$('#dateRange').daterangepicker(
+		    {
+		      ranges: {
+		         'Today': [moment(), moment()],
+		         'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
+		         'Last 7 Days': [moment().subtract('days', 6), moment()],
+		         'Last 30 Days': [moment().subtract('days', 29), moment()],
+		         'This Month': [moment().startOf('month'), moment().endOf('month')],
+		         'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+		      },
+		      startDate: moment().subtract('days', 0),
+		      endDate: moment()
+		    }
+		);
+		<#if transStartDate?has_content && transStartDate != "" && transEndDate?has_content && transEndDate != "">
+			$('#dateRange').val('${transStartDate}' + ' - ' + '${transEndDate}');
+		</#if>
+
+		$("#paymentChannel").kendoDropDownList();
+
+
+
+
+		var validator = $("#frmTranSearch").kendoValidator().data("kendoValidator");
+
+
+       $("#GenerateReport").click(function() {
+		    //Check Whether is it Empty
+		    if( !$('#dateRange').val() ) {
+			    bootbox.confirm("Please Enter a Date Range");
+			    return false;
+    		}
+		});
+
+        $("#btnSearchErrorLog").click(function() {
+        	if (validator.validate()) {
+
+        	} else {
+        		return false;
+        	}
+
+        });
+		$('#frmTranSearch').validationEngine();
+        $('#frmTranSearch').validationEngine('hide');
+    });
+ </script>
+</@dashboardLayout>

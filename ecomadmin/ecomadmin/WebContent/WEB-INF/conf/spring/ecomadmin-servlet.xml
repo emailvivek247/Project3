@@ -1,0 +1,88 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		   http://www.springframework.org/schema/mvc  http://www.springframework.org/schema/mvc/spring-mvc.xsd
+           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<context:component-scan base-package="com.fdt.common.util.SystemUtil, com.fdt.ecomadmin.ui, com.fdt.security.ui" />
+	<mvc:annotation-driven />
+    <mvc:resources location="/WEB-INF/resources/" mapping="/resources/**" cache-period="604800"/>
+
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/*.admin" />
+            <bean class="com.fdt.common.ui.breadcrumbs.BreadCrumbInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <bean id="reCaptcha" class="net.tanesha.recaptcha.ReCaptchaImpl">
+        <property name="privateKey" value="${reCaptcha.privateKey}" />
+        <property name="publicKey" value="${reCaptcha.publicKey}" />
+        <property name="includeNoscript" value="false" />
+        <property name="recaptchaServer" value="https://www.google.com/recaptcha/api" />
+    </bean>
+
+    <!-- <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+            <property name="prefix" value="/WEB-INF/view/" />
+            <property name="suffix" value=".stl" />
+        </bean> -->
+
+	<bean id="freemarkerConfig" class="com.fdt.common.util.spring.EComAdminFreeMarkerConfigurer">
+		<property name="templateLoaderPath" value="/WEB-INF/view/"/>
+		<property name="freemarkerSettings">
+			<props>
+  				<prop key="template_update_delay">0</prop>
+  				<prop key="number_format">0.###############</prop>
+			</props>
+		</property>
+		<property name="freemarkerVariables">
+        <map>
+            <entry key="SystemUtil">
+                <bean class="com.fdt.common.util.SystemUtil" />
+            </entry>
+         </map>
+        </property>
+    </bean>
+
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="cache" value="true"/>
+        <property name="suffix" value=".stl"/>
+        <property name="exposeRequestAttributes"  value="true" />
+        <property name="exposeSpringMacroHelpers" value="true"/>
+        <property name="redirectHttp10Compatible" value="false"/>
+    </bean>
+
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="/WEB-INF/conf/spring/properties/messages" />
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+
+    <bean id="propertyPlaceholderConfigurer" class="org.jasypt.spring31.properties.EncryptablePropertyPlaceholderConfigurer">
+        <constructor-arg>
+            <bean class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">
+                <property name="config">
+                    <bean class="org.jasypt.encryption.pbe.config.EnvironmentStringPBEConfig">
+                        <property name="algorithm" value="PBEWITHSHA256AND256BITAES-CBC-BC" />
+                        <property name="passwordEnvName" value="PROPERTY_FILE_KEY" />
+                    </bean>
+                </property>
+                <property name="provider">
+                    <bean class="org.bouncycastle.jce.provider.BouncyCastleProvider" />
+                </property>
+               <property name="stringOutputType" value = "HEXADECIMAL" />
+            </bean>
+        </constructor-arg>
+        <property name="locations" >
+            <list>
+                <value>/WEB-INF/conf/spring/properties/server.properties</value>
+            </list>
+        </property>
+    </bean>
+
+</beans>

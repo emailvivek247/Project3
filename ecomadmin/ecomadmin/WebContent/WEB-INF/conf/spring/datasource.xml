@@ -1,0 +1,46 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+     http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!-- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	    <property name="driverClassName" value="${jdbc.drivername}"/>
+	    <property name="url" value="${jdbc.url}"/>
+	    <property name="username" value="${jdbc.username}"/>
+	    <property name="password" value="${jdbc.password}"/>
+	    <property name="initialSize" value="${jdbc.initialPoolSize}" />
+	    <property name="maxActive" value="${jdbc.maxPoolSize}"/>
+        <property name="maxIdle" value="5"/>
+	    <property name="maxWait" value="10000"/>
+	    <property name="validationQuery" value="select 1"/>
+	    <property name="testOnBorrow" value="false"/>
+	    <property name="testWhileIdle" value="true"/>
+	    <property name="timeBetweenEvictionRunsMillis" value="1200000"/>
+	    <property name="minEvictableIdleTimeMillis" value="1800000"/>
+	    <property name="numTestsPerEvictionRun" value="5"/>
+	    <property name="defaultAutoCommit" value="false"/>
+	    <property name="poolPreparedStatements" value="true"/>
+	    <property name="maxOpenPreparedStatements" value="20"/>
+	</bean> -->
+
+    <bean id="dataSource" class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init" destroy-method="close">
+        <property name="uniqueResourceName" value="ecomadminDatasource" />
+        <property name="xaDataSourceClassName" value="${jdbc.drivername}" />
+        <property name="xaProperties">
+            <props>
+                <prop key="user">${jdbc.username}</prop>
+                <prop key="password">${jdbc.password}</prop>
+                <prop key="URL">${jdbc.url}</prop>
+            </props>
+        </property>
+        <property name="minPoolSize" value="${jdbc.minPoolSize}" />
+        <property name="poolSize"    value="${jdbc.poolSize}" />
+        <property name="maxPoolSize" value="${jdbc.maxPoolSize}" />
+        <property name="borrowConnectionTimeout" value="${jdbc.borrowConnectionTimeout}" />
+        <property name="maintenanceInterval"     value="${jdbc.maintenanceInterval}" />
+        <property name="maxLifetime"             value="${jdbc.maxLifetimeInSeconds}" />
+
+    </bean>
+
+</beans>

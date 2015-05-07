@@ -1,0 +1,94 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="ehcache.xsd"
+         updateCheck="false">
+
+    <diskStore path="java.io.tmpdir" />
+
+    <defaultCache maxElementsInMemory="500" eternal="false"  timeToIdleSeconds="10800" timeToLiveSeconds="10800"
+        overflowToDisk="true" />
+
+    <cache name="getSitesForNode"
+            timeToLiveSeconds   = "10800"
+            timeToIdleSeconds   = "10800"
+            maxElementsInMemory = "100"
+            memoryStoreEvictionPolicy = "LFU" />
+
+    <cache name="getAccessesForSite"
+            timeToLiveSeconds   = "10800"
+            timeToIdleSeconds   = "10800"
+            maxElementsInMemory = "100"
+            memoryStoreEvictionPolicy = "LFU" />
+
+    <cache name="getAccess"
+            timeToLiveSeconds   = "10800"
+            timeToIdleSeconds   = "10800"
+            maxElementsInMemory = "100"
+            memoryStoreEvictionPolicy = "LFU" />
+
+    <cache name="getSiteDetailByAccessId"
+            timeToLiveSeconds   = "10800"
+            timeToIdleSeconds   = "10800"
+            maxElementsInMemory = "100"
+            memoryStoreEvictionPolicy = "LFU" />
+
+    <cache name="getSubDetailsByAccesIds"
+            timeToLiveSeconds   = "10800"
+            timeToIdleSeconds   = "10800"
+            maxElementsInMemory = "100"
+            memoryStoreEvictionPolicy = "LFU" />
+
+    <cache name="getSubDetailsByName"
+            timeToLiveSeconds   = "10800"
+            timeToIdleSeconds   = "10800"
+            maxElementsInMemory = "100"
+            memoryStoreEvictionPolicy = "LFU" />
+
+    <cache name="getSiteDetails"
+            timeToLiveSeconds   = "10800"
+            timeToIdleSeconds   = "10800"
+            maxElementsInMemory = "100"
+            memoryStoreEvictionPolicy = "LFU" />
+
+    <cache name="getSiteDetailsBySiteName"
+            timeToLiveSeconds   = "10800"
+            timeToIdleSeconds   = "10800"
+            maxElementsInMemory = "100"
+            memoryStoreEvictionPolicy = "LFU" />
+
+    <cache name="getSites"
+            timeToLiveSeconds   = "10800"
+            timeToIdleSeconds   = "10800"
+            maxElementsInMemory = "100"
+            memoryStoreEvictionPolicy = "LFU" />
+
+    <cache name="getNodeConfiguration"
+            timeToLiveSeconds   = "10800"
+            timeToIdleSeconds   = "10800"
+            maxElementsInMemory = "100"
+            memoryStoreEvictionPolicy = "LFU" />
+
+    <cache name="getSiteConfiguration"
+            timeToLiveSeconds   = "10800"
+            timeToIdleSeconds   = "10800"
+            maxElementsInMemory = "100"
+            memoryStoreEvictionPolicy = "LFU" />
+
+    <cache name="getCodes"
+            timeToLiveSeconds   = "10800"
+            timeToIdleSeconds   = "10800"
+            maxElementsInMemory = "100"
+            memoryStoreEvictionPolicy = "LFU" />
+
+    <cache name="getReceiptConfigurationForSiteName"
+            timeToLiveSeconds   = "10800"
+            timeToIdleSeconds   = "10800"
+            maxElementsInMemory = "100"
+            memoryStoreEvictionPolicy = "LFU" />
+
+     <cache name="getTerm"
+            timeToLiveSeconds   = "10800"
+            timeToIdleSeconds   = "10800"
+            maxElementsInMemory = "100"
+            memoryStoreEvictionPolicy = "LFU" />
+
+</ehcache>

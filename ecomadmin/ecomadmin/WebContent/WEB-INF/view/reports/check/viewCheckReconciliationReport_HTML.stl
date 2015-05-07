@@ -1,0 +1,238 @@
+<#include "../../lib/layout.stl" />
+<@dashboardLayout>
+<style>
+.left {
+    text-align:left;
+}
+.right {
+    text-align:right;
+}
+.center {
+    text-align:center;
+}
+table.data tr td, table.data tr th {
+	border:none;
+}
+#content .inner {
+    min-width:100%;
+	width:auto;
+}
+div.ui-datepicker {
+	font-size:11px;
+}
+.ui-datepicker .ui-datepicker-title select {
+	font-size:11px;
+}
+
+table#table_recon {
+  margin-left:35%;  
+}
+
+div.formErrorContent {
+opacity: 0.87; 
+position: absolute; 
+top: 0px; 
+left: -41px; 
+margin-top: -11px;
+
+}
+
+.formError {
+position: absolute;
+top: 300px;
+left: 300px;
+padding-bottom: 55px;
+display: block;
+z-index: 5000;
+margin-top: 5px;
+}
+
+.formError .formErrorContent {
+width: 100%;
+background: #ee0101;
+color: #fff;
+width: 120px;
+font-family: tahoma;
+font-size: 11px;
+border: 2px solid #ddd;
+box-shadow: 0px 0px 6px #000;
+-moz-box-shadow: 0px 0px 6px #000;
+-webkit-box-shadow: 0px 0px 6px #000;
+padding: 4px 10px 4px 10px;
+border-radius: 6px;
+-moz-border-radius: 6px;
+-webkit-border-radius: 6px;
+}
+
+.daterangepicker .ranges .input-mini {
+background-color: #eee;
+border: 1px solid #ccc;
+border-radius: 4px;
+color: #555;
+display: block;
+font-size: 11px;
+height: 30px;
+line-height: 30px;
+vertical-align: middle;
+margin: 0 0 10px 0;
+padding: 0 6px;
+width: 137px;
+}
+.btn-search {
+padding: 0 8px;
+line-height: 24px;
+border-width: 4px;
+font-size: 13px;
+}
+</style>
+
+<#assign jmesa=JspTaglibs["http://code.google.com/p/jmesa"]>
+
+<div id="page-content" class="clearfix">
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="widget-box no-border">
+					<div class="widget-header">
+						<h4>Reconciliation Report</h4>
+
+						<div class="widget-toolbar">
+							<a href="#" data-action="collapse">
+								<i class="icon-chevron-up"></i>
+							</a>							
+						</div><!-- end widget toolbar-->  
+					</div><!-- end widget header-->
+
+				<div class="widget-body"> 
+					<div class="row-fluid">
+				        <div class="k-content">
+					        <form id="CheckReconciliationReportForm" action="searchcheckreconciliationreport.admin" method="post" autocomplete="off">
+					        <input type="hidden" id="setDefaultDates" name="setDefaultDates" value="Y">
+					        	<table id= "table_recon" cellspacing="5">
+					          	<input type="hidden" id="pageIndex" name="pageIndex" value="0">	
+					        	 <tr>  <br>	 
+								    <td class="right"><label class="control-label boldText" for="dateRange"><b>Date Range :&nbsp;</b> 
+				                    </label></td>
+								    <td class="left">
+								    <div class="control-group">
+										<div class="input-group" >
+											<span class="input-group-addon" >
+												<i class="icon-calendar"></i>
+											</span>									
+											<input type="text" style="height:28px; width:175px;" class="validate[groupRequired[payments]]"  name="dateRange" tabindex="5" id="dateRange"/>
+										</div>
+									</div>
+							 	    </td>				 
+								</tr>
+								 <tr>	
+								 	<td class="center"></td>
+									<td class="left"> <br>
+									 	<span class="input-icon">
+										 	<input type="submit" class="btn btn-small btn-info btn-search" id="GenerateReport" value="Generate Report" />
+										 	<i class="icon-table white"></i>
+									 	</span>
+								    </td>
+							     </tr>
+							     </table>
+								 <br class="clear"/><br class="clear"/>
+						 	</form>
+						</div> <!--k-content-->
+					</div> <!--end row-fluid-->
+				</div><!--End widget body-->
+			</div><!-- end widget box-->  
+		</div><!-- end span-->
+	</div><!-- end row-fluid-->	
+</div> <!--end page-content--->
+
+						<div class="row-fluid">
+							<div class="col-xs-12">
+								<div class="widget-box transparent ">
+									<div class="widget-body"> 				
+										<div class="row-fluid">
+											<div class="k-content">
+										        <#if displayFlag = true>
+												<div style="display:inline;">
+										            <#if pageIndex?has_content && lastPageIndex?has_content>
+												       <a href="viewcheckreconciliationreportpdf.admin?dateRange=<#if fromDate?has_content>${fromDate}</#if><#if toDate?has_content> - ${toDate}</#if>"><img src="resources/images/pdf.png" /></a>      
+												       <a href="viewcheckreconciliationreportxls.admin?dateRange=<#if fromDate?has_content>${fromDate}</#if><#if toDate?has_content> - ${toDate}</#if>"><img src="resources/images/excel.png" /></a>    
+												       <a href="viewcheckreconciliationreportrtf.admin?dateRange=<#if fromDate?has_content>${fromDate}</#if><#if toDate?has_content> - ${toDate}</#if>"><img src="resources/images/rtf.png" /></a>
+												     </#if>
+											    </div>
+											    <div style="float:right;display:inline-block;">        
+											        <a href="searchcheckreconciliationreportapp.admin?dateRange=<#if fromDate?has_content>${fromDate}</#if><#if toDate?has_content> - ${toDate}</#if>&pageIndex=<#if pageIndex?has_content>${pageIndex}<#else>0</#if>">
+											        	Switch to Advanced Viewer
+											        </a>
+											    </div>    
+											    </#if>
+											    <div class="col-xs-12" id="reportViewer">
+											    	                         
+													 <div id="reportContainer">
+													 	<div id="reportNav" style="width:300px;margin:0 auto;">  	 
+								                       		<#if pageIndex?has_content && lastPageIndex?has_content>
+									                            <#if pageIndex &gt; 0 >
+									                                    <a href="searchcheckreconciliationreport.admin?dateRange=<#if fromDate?has_content>${fromDate}</#if><#if toDate?has_content> - ${toDate}</#if>&pageIndex=0"><img src="resources/images/jasperImages/first.gif" border="0"></a>
+				    													<a href="searchcheckreconciliationreport.admin?dateRange=<#if fromDate?has_content>${fromDate}</#if><#if toDate?has_content> - ${toDate}</#if>&pageIndex=${pageIndex - 1}"><img src="resources/images/jasperImages/previous.gif" border="0"></a>
+									                            <#else>
+									                                    <img src="resources/images/jasperImages/first_grey.gif" border="0">
+									                                    <img src="resources/images/jasperImages/previous_grey.gif" border="0">
+									                            </#if>
+									                            <#if pageIndex &lt; lastPageIndex >
+									                                    <a href="searchcheckreconciliationreport.admin?dateRange=<#if fromDate?has_content>${fromDate}</#if><#if toDate?has_content> - ${toDate}</#if>&pageIndex=${pageIndex + 1}"><img src="resources/images/jasperImages/next.gif" border="0"></a>
+				    													<a href="searchcheckreconciliationreport.admin?dateRange=<#if fromDate?has_content>${fromDate}</#if><#if toDate?has_content> - ${toDate}</#if>&pageIndex=${lastPageIndex}"><img src="resources/images/jasperImages/last.gif" border="0"></a>
+									                            <#else>
+									                                    <img src="resources/images/jasperImages/next_grey.gif" border="0">
+									                                    <img src="resources/images/jasperImages/last_grey.gif" border="0">
+									                            </#if>
+								                             </#if> 
+						                             	</div><!--#  reportNav-->   
+						                            	<#if stringBuffer?has_content>
+						                                	${stringBuffer?string}
+						                                </#if>
+									                 </div>           			                 
+												</div><!--#reportViewer-->			            
+											</div> <!--End k-content-->			
+										</div> <!--end row-fluid-->
+										
+									</div><!--End widget body-->
+								</div><!-- end widget box-->  
+							</div><!-- end span-->
+						</div><!-- end row-fluid-->
+       
+       
+ <script type="text/javascript">
+	$(document).ready(function(){     
+	
+		$('#dateRange').daterangepicker(
+		    {
+		      ranges: {
+		         'Today': [moment(), moment()],
+		         'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
+		         'Last 7 Days': [moment().subtract('days', 6), moment()],
+		         'Last 30 Days': [moment().subtract('days', 29), moment()],
+		         'This Month': [moment().startOf('month'), moment().endOf('month')],
+		         'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+		      },
+		      startDate: moment().subtract('days', 0),
+		      endDate: moment()
+		    }
+		);
+		<#if fromDate?has_content && fromDate != "" && toDate?has_content && toDate != "">
+			$('#dateRange').val('${fromDate}' + ' - ' + '${toDate}');
+		<#else>
+			$('#dateRange').val(moment().subtract('days', 0).format('MM/DD/YYYY') + ' - ' + moment().format('MM/DD/YYYY'));
+		</#if>		
+           	
+           	
+       	$("#GenerateReport").click(function() {
+		    //Check Whether is it Empty	
+		    if( !$('#dateRange').val() ) {    
+			    bootbox.confirm("Please Enter a Date Range");
+			    return false; 
+    		}
+		});
+        
+		$('#CheckReconciliationReportForm').validationEngine();
+        $('#CheckReconciliationReportForm').validationEngine('hide');
+		
+    });
+</script>  
+</@dashboardLayout>

@@ -1,0 +1,170 @@
+<#include "../lib/include.stl" />
+<#assign form  =JspTaglibs["http://www.springframework.org/tags/form"]>
+<#assign spring=JspTaglibs["http://www.springframework.org/tags"]>
+
+
+<style>
+div.ADCSI {
+    width: 60%;
+}
+span.ADCSI_leftcol {
+    width: 150px;
+    text-align:right;
+    display: inline-block;
+}
+
+#footerTable {
+font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+font-size: 13px;
+color: #FBFCFA;
+}
+
+#Terms-box .back-to-login-link {
+color: #FE9;
+font-size: 14px;
+font-weight: bold;
+text-shadow: 1px 0 1px rgba(0,0,0,0.25);
+}
+
+#Terms-box .toolbar {
+background: #76b774;
+border-top: 2px solid #759759;
+padding: 9px 18px;
+}
+#acceptTitle {font-size: 45px;margin: 20px 0;}
+.login-container{margin-top:75px;}
+</style>
+
+
+<body class="login-layout">
+
+<div class="container-fluid" id="main-container">
+	<div id="main-content">
+		<div class="row-fluid">
+			<div class="span12">
+				<div class="login-container">
+					<div class="row-fluid">
+						<div class="position-relative">
+							<div id="Terms-box" class="visible widget-box no-border">
+								<div class="widget-body">
+										<div class="widget-main" style="background-color:#fff;">
+											<div class="center">
+												<h2>
+													<div id="acceptTitle" class="center">
+															<img src="resources/images/accept-logo.png">
+													</div>
+												</h2>
+											</div>
+											<div class="center">
+												<h4 class="header blue lighter bigger">
+													<i class="icon-list-alt green"></i>
+													TERMS AND CONDITIONS
+											</div>		
+											<div id="terms">
+											        <div style="text-align: center;padding-top: 10px;padding-bottom: 20px; ">
+											            <span style="display:none; "></span>
+
+											                Coming Soon....
+											        </div>
+								    		</div>
+										</div><!--/widget-main-->
+
+
+
+										<div class="toolbar">
+											<div id="menuSub1" style="padding:5px 0;display:inline-block;width:65%;">
+												<a href="publiclogin.admin" onclick="show_box('login-box');" class="back-to-login-link">
+													<i class="icon-arrow-left"></i>
+													Back to Login
+												</a>
+												</br>
+												<a href="publicsignUp.admin" onclick="show_box('login-box');" class="back-to-login-link">
+													<i class="icon-arrow-left"></i>
+													Back to Registration
+												</a>
+											</div>	
+											<div id="menuSub2" style="font-size:20px;float:right;display:inline-block;width:32%;color:white;">			
+												<div class="social-login center">
+													<span>
+														<a  href="https://www.facebook.com/pages/AMCAD/193699310720652" >
+															<i class="icon-facebook white "></i>
+														</a>
+													</span>
+													<span>
+														<a href="https://twitter.com/AmCadLLC">
+															<i class="icon-twitter white"></i>
+														</a>
+													</span>	
+													<span>
+														<a href="http://www.linkedin.com/company/amcad?trk=tabs_biz_home" >
+															<i class="icon-linkedin white"></i>
+														</a>
+													</span>	
+													<span>
+														<a href="http://www.youtube.com/user/AMCADLLC">
+															<i class="icon-youtube white"></i>
+														</a>
+													</span>
+												</div>  <!--end social login-->
+											</div>  <!--end menuSub2--->
+										</div>
+
+
+
+								</div><!--/widget-body-->
+							</div><!--/login-box-->
+
+										<div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div>
+										<div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div>
+										<div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div>
+										<div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div>
+										<div class="fill">&nbsp;</div><div class="fill">&nbsp;</div>
+										<div class="hr hr32 hr-dotted"></div>
+
+
+
+										<!--- Footer ---- Style is inherited from footerTable id--->
+										<div class="container-fluid" id="after-footer" width="50%">
+											<table border="0" width="100%" >
+												<tbody id="footerTable" style="color:#000;">
+										        	<tr>
+									               		<td width="50%" align="center" style="vertical-align:top">
+									                    		<a href="http://www.amcad.com"><img src="resources/images/amcadLogo.png" alt="AMCAD"  height="42px" border="0" /></a><br> &nbsp; Copyright &copy;2013 (dba AmCad & AmCad Digital Conversions)
+									                	</td>
+									                </tr>
+										        </tbody>
+									    	</table>
+									    </div><!-- end #after-footer -->
+								</div><!--/position-relative-->
+							</div>
+						</div>
+					</div><!--/span-->
+				</div><!--/row-->
+			</div> <!--main-content-->
+		</div><!--/.fluid-container-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

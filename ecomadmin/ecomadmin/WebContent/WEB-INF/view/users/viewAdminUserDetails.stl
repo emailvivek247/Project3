@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+
+<style>
+.left {
+	text-align:left;
+}
+.right {
+	text-align:right;
+}
+.center {
+	text-align:center;
+}
+td.footer {
+	font-weight:bold;
+}
+.ui-button {
+	cursor:pointer;
+}
+table tbody tr:hover {
+	cursor: auto;
+}
+.top {vertical-align:top;}
+.btn-search {
+padding: 0 8px;
+line-height: 24px;
+border-width: 4px;
+font-size: 13px;
+}
+</style>
+
+<script type="text/javascript" src="resources/js/jquery/plugins/jquery.form.js"></script>
+<body>
+
+	<!-- Begin two column window -->
+	<#assign userAccessList = user.getAccess()>
+	<#if ERROR_ARCHIVE_USER?has_content>
+		<div style="background-color:#BF0B38;color:#ffffff;text-align: center;font-weight: bold;">
+			<span>There was a error deleting the user. Please see the error below. <br />
+			${ERROR_ARCHIVE_USER}</span>
+		</div>	
+		<br class="clear"/><br class="clear"/>	
+	</#if>
+	
+	
+	
+	
+	
+	<!-- Begin Kendo Tabs -->
+	 <div id="KendoContent" class="k-content">   
+		<div id="tabstrip">
+			<ul>
+				<li class="k-state-active" id="userInfo">		
+				User Information
+				</li>
+				
+			</ul>	
+			<div class="k-content" id="userInfo">
+			<#if userAccessList?has_content && userAccessList?size &gt; 0>
+				<#if STATUS?has_content>
+				<div class="subHeader">
+					<span>${STATUS}</span>			
+				</div>
+				</#if>
+				<div id="noRightsDiv" style="background-color:#dd5a43;color:#ffffff;text-align: center;font-weight: bold;padding:10px 0px;display:none;">
+					<i class="icon-warning-sign white"></i>
+					<span>
+						User does not have any access rights. Please select the appropriate access below and save the settings.				
+					</span>			
+				</div>
+			<#else>
+				<div id="noRightsDiv" style="background-color:#dd5a43;color:#ffffff;text-align: center;font-weight: bold;padding:10px 0px;">
+					<i class="icon-warning-sign white"></i>
+					<span>
+						User does not have any access rights. Please select the appropriate access below and save the settings.				
+					</span>			
+				</div>
+			</#if>
+					<table role="grid" k-state="active" class="kendogrid" id="userInfoGrid">
+						<tbody>
+							<thead>
+							<th filter='false' style="width:50%"><b>User Information</th>
+							<th filter='false' style="width:50%"> </th>
+							</thead>	
+							<tr>
+								<td class="right top"><b>Registered Sites: </b></td>
+								<td class="left top">
+									<#if user.getSites()?has_content>
+										<#list user.getSites() as site >
+											${site.getName()}
+										</#list>	
+									</#if>
+								</td>
+							</tr>
+							<tr>
+								<td class="right top"><b>Email: </b></td>
+								<td class="left top"><#if user.username?has_content>${user.username}</#if></td>
+							</tr>
+							<tr>
+								<td class="right top"><b>First Name: </b></td>
+								<td class="left top"><#if user.firstName?has_content>${user.firstName}</#if></td>
+							</tr>
+							<tr>	
+								<td class="right top"><b>Last Name: </b></td>
+								<td class="left top"><#if user.lastName?has_content>${user.lastName}</#if></td>
+							</tr>
+							<tr>	
+								<td class="right top"><b>Active: </b></td>
+								<td class="left top"><#if user.isActive()>Yes<#else>No</#if></td>
+							</tr>
+							<tr>	
+								<td class="right top"><b>Account Locked: </b></td>
+								<#if user.isAccountNonLocked()>
+								<td class="left top" >						
+										<span class="green boldText">No&nbsp;</span>
+										<span style="display:inline-block;">							
+										<form id="useraccountaction" name="useraccountaction" action="lockecomadminuser.admin" method="post" autocomplete="off">
+											<input type="checkbox" name="sendnotification" style="display:none" value="true" />
+											<textarea id="comments" name="comments" style="display:none"></textarea>
+											<input type="hidden" name="username" value="${user.username}" />										
+											<a name="btnsubmit" id="btnsubmit" style="font-size:20px;"><i class="icon-lock red"></i>&nbsp;Lock User</a>				
+										</form>
+										</span>
+								</td>
+								<#else>
+								<td class="left top" style="color:#BF0B38;">
+										<span class="red boldText">Yes&nbsp;(User Account is Locked. Please unlock the account to enable access to the system.)</span>
+										<form id="useraccountaction" name="useraccountaction" action="unlockecomadminuser.admin" method="post" autocomplete="off">
+											<input type="checkbox" name="sendnotification" style="display:none" value="true" />
+											<textarea id="comments" name="comments" style="display:none"></textarea>
+											<input type="hidden" name="username" value="${user.username}"/>
+											<a name="btnsubmit" id="btnsubmit" style="font-size:20px;"><i class="icon-unlock-alt green"></i>&nbsp;Unlock User</a>								
+										</form>
+								</td>		
+								</#if>
+							</tr>
+							<tr>
+								<td class="right top"><b>Assigned Accesses: </b></td>
+								<td class="left top">
+									<form id="frmUserAccess" name="frmUserAccess" action="updateecomadminuseraccess.admin" method="post">
+									<input type="hidden" id="username" name="username" value="${user.username}" />
+									<div id="divCheckboxes">
+									<#assign userAccessList = user.getAccess()>
+									<#list accessList as access >
+										<#assign isAssigned = false>
+										<#if userAccessList?has_content && userAccessList?size &gt; 0>
+										<#list userAccessList as userAccess >
+											<#if access.getId() = userAccess.getId()>
+												<#assign isAssigned = true>
+											</#if>
+										</#list>
+										</#if>
+										<#if isAssigned>
+											<input class="hasAccess" type="checkbox" name="access" value="${access.getId()}" checked>${access.getDescription()} <br />
+										<#else>
+											<input class="hasAccess" type="checkbox" name="access" value="${access.getId()}" >${access.getDescription()} <br />
+										</#if>
+									</#list>
+									<span class="input-icon" style="margin-top:10px;">
+												<input class="btn btn-small btn-info btn-search" type="submit" id="btnUpdateUsrAccess" value="Update User Access"/>
+												<i class="icon-retweet white"></i>
+									</span>
+									</div>
+									</form>
+								</td>
+							</tr>
+						<#if SystemUtil.isPSOSuperAdmin(request)>
+							<tr>
+								<td class="right top" style="font-weight:bold;">Delete User : </td>
+								<td class="left top">
+							  		<form id="frmArchiveUser" name="frmArchiveUser" action="archiveAdminUser.admin" method="post" autocomplete="off">					
+									<input type="hidden" name="adminusername" value="${user.username}"/>			
+									<a class="archiveUser" id="lnkarchiveUser" style="cursor:pointer;"><img src="resources/images/User-Delete-32.png" alt="Delete User" title="Delete User" width="32px" height="32px"></a>
+									<div id="deletedUserSection" style="display:none;">
+										<textarea id="comments" rows="4" cols="50" name="comments" class="validate[required]"></textarea><br /><br />
+										<span class="input-icon">	
+											<input class="btn btn-danger btn-search" type="submit" id="btnArchiveUser" name="btnArchiveUser" value='Confirm Delete' />
+											<i class="icon-remove white"></i>
+										</span>	
+									</div>
+								</form>		
+								</td>					
+							</tr>
+						</#if>	
+				               	<#if (SystemUtil.isPSOUserAdmin(request) || SystemUtil.isPSOSuperAdmin(request)) >
+									<tr>	
+										<td colspan="2" style="text-align:center" class="top">
+																						
+										</td>					
+									</tr>
+						   		</#if>
+					   </tbody>
+				</table>
+			
+					
+
+			</div><!--End UserInfo Tab-->
+		
+		</div><!-- End Tabstrip -->
+	</div>  <!--End KendoContent -->
+
+
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		$(".kendogrid").kendoGrid({      
+	            sortable: false,
+	            scrollable: false
+	    });	
+	  	
+	  	$("#tabstrip").kendoTabStrip();  
+	  	
+	  	$( "#btnsubmit" ).button({
+	            icons: {
+	                primary: "ui-icon-arrowrefresh-1-e"
+	            }
+	    });
+	  	
+	  	var lockunlockoptions = {
+		    success: function(data) {
+		    	$.each(data, function(i,item){
+			        $.prompt(item.description, {
+						title: "Status",
+						buttons: { "Ok": true},
+						submit: function(e,v,m,f){
+							var grid = $("#grid").data("kendoGrid");
+							var username = "";
+						    grid.select().each(function () {
+						       var dataItem = grid.dataItem($(this));
+						       username = dataItem.username;						       
+						    });
+							var selectedUserRow = grid.dataItem(grid.select());
+							if(selectedUserRow.accountNonLocked == false){
+								selectedUserRow.set('accountNonLocked', true);
+							} else {
+								selectedUserRow.set('accountNonLocked', false);
+							}
+							$('[data-uid='+selectedUserRow.uid+']').addClass('k-state-selected');
+						    
+							getUserDetails(username);		
+						}
+					})
+		        });
+		    } 
+		};	
+			
+		$('#useraccountaction').ajaxForm(lockunlockoptions);
+		
+		var accessoptions = {
+		    success: function(data) {
+		    
+		    	$.each(data, function(i,item){
+			        $.prompt(item.description, {
+						title: "Status",
+						buttons: { "Ok": true},
+						submit: function(e,v,m,f){
+									
+						}
+					})
+		        });
+			  
+		        var counter=0;
+		      
+		        $('#divCheckboxes input:checked').each(function () {
+		            counter++;
+		        });
+		        if (counter > 0) {
+		             $("#noRightsDiv").hide();
+		        }
+		        else {
+		            $("#noRightsDiv").show();
+        		}
+		        
+		    } 
+		    
+		};
+		$('#frmUserAccess').ajaxForm(accessoptions);
+		        
+ 	});
+ 	
+ 	$("#lnkarchiveUser").click(function() {
+		$('#lnkarchiveUser').hide();
+		$('#deletedUserSection').show();
+	});
+ 	
+ 	$("#btnsubmit").click(function() {			
+		var txt = 'Do you want to Notify the user? <br /> If yes, enter any comments you want to send:<br /><textarea rows="5" cols="30" id="promptComments" name="promptComments"></textarea>';		
+		$.prompt(txt,{
+		   buttons:[
+				{title: 'Notify User',value:true},
+				{title: 'Do not Notify User',value:false}
+				],	
+		    focus:1,	
+		    prefix:'jqismooth',		
+			submit: function(v,m,f){
+				if (f.promptComments == "" || f.promptComments.length > 250) {
+					an = m.children('#promptComments');
+					an.css("border","solid #ff0000 1px");
+					return false;
+				}
+				submitChangeForm(v, f);							
+			}
+		});	
+	});	
+	
+	function submitChangeForm(sendNotification, f) {
+		if (sendNotification)  {
+	      	$('input[name=sendnotification]').attr('checked', true);
+	      	$('#comments').val(f.promptComments)
+	    } else {
+	    	$('input[name=sendnotification]').attr('checked', false);
+	    	$('#comments').val(f.promptComments)	
+	    }
+	    $("#useraccountaction").submit();
+	}  
+	
+	</script>
+
+</body>
+</html>

@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version last-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CheckReconciliationReport" language="groovy" pageWidth="800" pageHeight="612" orientation="Landscape" columnWidth="760" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isTitleNewPage="true" isSummaryNewPage="true" uuid="0de943e2-af95-4c4c-9a3d-6fcdded29399">
+	<property name="ireport.callouts" value="##Sun Sep 18 00:55:10 EDT 2011"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="FROM_DATE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TO_DATE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REQUEST_URL" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+	BANKHIST.ACCOUNT_NUM,
+	BANKHIST.CHECK_NUM,
+	BANKHIST.TRANSACTION_TYPE,
+	BANKHIST.DESCRIPTION1,
+	BANKHIST.DESCRIPTION2,
+	BANKHIST.TX_AMOUNT,
+	TRANSACTION_DATE,
+	BANKHIST.POSTED_DATE,
+	BANKHIST.IS_VERIFIED,
+	BANKHIST.IS_MATCHED,
+	SITE.DESCRIPTION AS SITENAME
+FROM ECOMM_BANK_TRAN_HIST BANKHIST
+LEFT OUTER JOIN ECOMM_CHECK_HIST CHECKHIST ON BANKHIST.CHECK_NUM = CHECKHIST.CHECKNUM
+LEFT OUTER JOIN ECOMM_SITE SITE ON SITE.ID = CHECKHIST.SITE_ID
+WHERE convert(DATE, TRANSACTION_DATE, 101) >= $P{FROM_DATE} AND  convert(DATE, TRANSACTION_DATE, 101) <= $P{TO_DATE}]]>
+	</queryString>
+	<field name="ACCOUNT_NUM" class="java.lang.String"/>
+	<field name="CHECK_NUM" class="java.lang.String"/>
+	<field name="TRANSACTION_TYPE" class="java.lang.String"/>
+	<field name="DESCRIPTION1" class="java.lang.String"/>
+	<field name="DESCRIPTION2" class="java.lang.String"/>
+	<field name="TX_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="TRANSACTION_DATE" class="java.sql.Timestamp"/>
+	<field name="POSTED_DATE" class="java.sql.Timestamp"/>
+	<field name="IS_VERIFIED" class="java.lang.String"/>
+	<field name="IS_MATCHED" class="java.lang.String"/>
+	<field name="SITENAME" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="197" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="88" width="760" height="30" uuid="a15cffc5-3772-43a8-82b8-6d41a80fdfe0"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="20" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Check Reconciliation Report]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="2" y="118" width="760" height="25" uuid="24a04e18-af09-43b2-9756-5ca115799703"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{FROM_DATE} != null && $P{TO_DATE} != null? $P{FROM_DATE} + " TO " + $P{TO_DATE} : ""]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="58">
+			<staticText>
+				<reportElement x="1" y="5" width="760" height="27" uuid="be0440dd-bfc4-44b2-a699-cef5ba9fa24e"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="18" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Check Reconciliation Report]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="table_TH" stretchType="RelativeToTallestObject" x="68" y="32" width="68" height="26" uuid="1eb5e82b-215e-4f39-820b-7223b8e03544"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Check Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="table_TH" stretchType="RelativeToTallestObject" x="364" y="32" width="70" height="26" uuid="a03ad6ff-4d7f-4f8d-b046-42232a313e66"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Transaction Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="table_TH" stretchType="RelativeToTallestObject" x="434" y="32" width="70" height="26" uuid="cc002bd7-f0dc-47f2-94cd-4b336f3da658"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Posted Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="table_TH" stretchType="RelativeToTallestObject" x="136" y="32" width="60" height="26" uuid="c5efad21-f79b-4eb4-9c9c-17882eb03658"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Transaction Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="table_TH" stretchType="RelativeToTallestObject" x="196" y="32" width="84" height="26" uuid="31c54985-71f1-400d-a95c-a580d90cbc03"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Description 1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="table_TH" stretchType="RelativeToTallestObject" x="1" y="32" width="67" height="26" uuid="af87bf6d-0321-44b3-a4f2-eb294b0713f7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Account Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="table_TH" stretchType="RelativeToTallestObject" x="280" y="32" width="84" height="26" uuid="a4326995-41e8-47a1-850b-860e1e8105b1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Description 2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="table_TH" stretchType="RelativeToTallestObject" x="504" y="32" width="58" height="26" uuid="6ec0b2b5-e99b-402e-a989-7ea88110872d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Verified]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="table_TH" stretchType="RelativeToTallestObject" x="562" y="32" width="62" height="26" uuid="ce6c0430-87c4-41cc-9fc2-a696b7fe853c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Matched Actual Check]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="table_TH" stretchType="RelativeToTallestObject" x="624" y="32" width="58" height="26" uuid="d90b1755-a123-4b6b-96ad-02490c13746a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Client]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="table_TH" stretchType="RelativeToTallestObject" x="682" y="32" width="77" height="26" uuid="a0e3de7e-0b6a-4d7e-81a0-62bff0dc2264"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement style="table_TD" stretchType="RelativeToTallestObject" x="434" y="0" width="70" height="20" uuid="23de6425-6aad-4511-9eae-8eadbc5634d5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{POSTED_DATE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement style="table_TD" stretchType="RelativeToTallestObject" x="364" y="0" width="70" height="20" uuid="e4192134-607a-46c8-8b15-fc42d3c4c402"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TRANSACTION_DATE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement style="table_TD" stretchType="RelativeToTallestObject" x="196" y="0" width="84" height="20" uuid="eeece8a6-de40-4b89-b360-721645c1d1fb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESCRIPTION1}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement style="table_TD" stretchType="RelativeToTallestObject" x="1" y="0" width="67" height="20" uuid="44d4cae4-6568-45c0-a7b4-db43e2b3bdf2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ACCOUNT_NUM}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement style="table_TD" stretchType="RelativeToTallestObject" x="280" y="0" width="84" height="20" uuid="ee25983b-9bf7-4cf2-8136-31b537ced0f8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESCRIPTION2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" hyperlinkType="Reference" hyperlinkTarget="_blank">
+				<reportElement style="table_TD" stretchType="RelativeToTallestObject" x="68" y="0" width="68" height="20" uuid="43cff314-5ec7-4628-83fd-92df5977d7a8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CHECK_NUM} != "0" ? $F{CHECK_NUM} : ""]]></textFieldExpression>
+				<hyperlinkReferenceExpression><![CDATA[$P{REQUEST_URL} + "searchchecktransactiondetails.admin?pageIndex=0&checkNum=" + $F{CHECK_NUM}]]></hyperlinkReferenceExpression>
+				<hyperlinkTooltipExpression><![CDATA["View Check Details"]]></hyperlinkTooltipExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement style="table_TD" stretchType="RelativeToTallestObject" x="136" y="0" width="60" height="20" uuid="915e04ff-2186-430d-b61e-a026f346f3b0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TRANSACTION_TYPE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement style="table_TD" stretchType="RelativeToTallestObject" x="504" y="0" width="58" height="20" uuid="c01c4f6f-ea1e-4404-9981-76ec0ceb47a8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{IS_VERIFIED} == "Y" ? "Yes" : "No"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement style="table_TD" stretchType="RelativeToTallestObject" x="562" y="0" width="62" height="20" uuid="2aa74fa9-60d8-44d0-8cea-66473f1c68cd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{IS_MATCHED} == "Y" ? "Yes" : "No"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement style="table_TD" stretchType="RelativeToTallestObject" x="624" y="0" width="58" height="20" uuid="9f0b9b3c-226d-43c3-bbaf-dffa68cd987f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SITENAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement style="table_TD" stretchType="RelativeToTallestObject" x="682" y="0" width="77" height="20" uuid="0635e1d1-2eea-45b1-b314-04f6b11df457"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TRANSACTION_TYPE} == "CREDIT" ? $F{TX_AMOUNT} : -$F{TX_AMOUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="30" splitType="Stretch">
+			<textField evaluationTime="Report">
+				<reportElement x="388" y="10" width="40" height="20" uuid="34a236d2-2aee-4e48-bbfb-eb4491b5fb09"/>
+				<textFieldExpression><![CDATA[" " + ($V{PAGE_NUMBER}.intValue() - 1)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="308" y="10" width="80" height="20" uuid="53d842c9-b6c8-4ddf-87bb-9cd6ab20bbea"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page " + ($V{PAGE_NUMBER}.intValue() - 1)  +" of"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

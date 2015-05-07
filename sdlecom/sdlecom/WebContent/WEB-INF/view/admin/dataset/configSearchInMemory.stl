@@ -1,0 +1,60 @@
+<@layout.basic menu="dataset/dataset/inMemory" hasWizard=true>
+<#macro radioInput(inputName, inputValue, expectedValue, selectedValue)>
+	<input type="radio" name="${inputName}" id="${inputName}" value="${inputValue}"<#if expectedValue==selectedValue>checked="checked"</#if>>
+</#macro>
+<#assign dirSizeChecker = new("net.javacoding.xsearch.core.DirectorySizeChecker")>
+<#assign link = new("org.apache.velocity.tools.struts.StrutsLinkTool")>
+
+<form name="f" method="post">
+<input type="hidden" name="operation" value="save">
+<br />
+<@com.errorMarkup/>
+<@com.messageMarkup/>
+
+<@com.section2 "Memory Mode" >
+<table align="center" class="xsearchtable">
+<tr><td class="xsearchtable_head">Index Directory</td><td>${dc.getIndexDirectory()}</td></tr>
+<tr><td class="xsearchtable_head">Index Size(MB)</td><td>${dirSizeChecker.init(dc).getIndexDirectorySizeInMB()?string(",##0.00")}</td></tr>
+<tr><td class="xsearchtable_head">Free JVM Memory</td><td>${freeMemory}</td></tr>
+<tr><td class="xsearchtable_head">Total JVM Memory</td><td>${totalMemory}</td></tr>
+<tr><td class="xsearchtable_head">Max JVM Memory</td><td>${maxMemory}</td></tr>
+</table>
+<br />
+<table class="xsearchtable">
+  <tr>
+    <th>Select</th>
+    <td align="center" class="xsearchtable_head"><h4><@radioInput "inMemory", "Y", true,  dc.isInMemorySearch />Load Index to memory</h4></td>
+    <td align="center" class="xsearchtable_head"><h4><@radioInput "inMemory", "N", false, dc.isInMemorySearch />Leave Index on disk</h4></td>
+  </tr>
+  <tr>
+    <td class="xsearchtable_head"><h6>Description:</h6></td>
+    <td><ul class="ulstyle"><li>Pre-load the index into memory.</li>
+    <li>Load on startup and when the index is updated.</li></ul></td>
+    <td><ul class="ulstyle"><li>Default mode</li></ul></td>
+  </tr>
+  <tr>
+    <td class="xsearchtable_head"><h6>Pros:</h6></td>
+    <td><ul class="ulstyle"><li>Searching will be much faster, comparable to commercial search websites. </li></ul>
+    </td>
+    <td><ul class="ulstyle"><li>Index can be much larger than available memory.</li></ul></td>
+  </tr>
+  <tr>
+    <td class="xsearchtable_head"><h6>Cons:</h6></td>
+    <td><ul class="ulstyle"><li>Limited by memory size.</li>
+      <li>Need to configure web server JVM options for larger heap size.<br/>
+        Take Tomcat for example, specify the JVM heap size in $TOMCAT_HOME/bin/tomcat.sh.<br />
+        You can specify '-Xmx256m' as part of TOMCAT_OPTS. That'll set your max
+        JVM heap size to 256MBs, usually enough for an index of 200MBs.</li></ul></td>
+    <td><ul class="ulstyle"><li>The first query will be slower since the content of the documents needs to be
+      retrieved from disk. If a lot of matched documents are found, even though searching
+      could be fast, the actual content still needs to be retrieved to display.</li></ul></td>
+  </tr>
+</table>
+<table width="80%" cellpadding="5" cellspacing="0" border="0" align="center">
+<tr><td align=center>
+<@com.actionSubmitButton "f", "submitSave", "Submit", "save" />
+</td></tr>
+</table>
+</@com.section2>
+</form>
+</@>

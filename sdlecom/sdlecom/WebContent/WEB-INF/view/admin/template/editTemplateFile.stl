@@ -1,0 +1,80 @@
+<#global jumperAction = "listTemplates.do">
+<@layout.basic menu="dataset/template/list" hasWizard=true>
+
+<#assign is_ftl = fileName?ends_with("stl")>
+
+<#include "/WEB-INF/view/admin/region/breadcrumb.stl">
+
+<form name="f" id="f" method="post" action="editTemplateFile.do">
+
+<input type="hidden" name="operation" value="save" />
+<input type="hidden" name="indexName" id="indexName" value="${indexName}" />
+<input type="hidden" name="templateName" value="${template.name}" />
+<input type="hidden" name="directoryName" value="${directoryName?if_exists}" />
+<input type="hidden" name="fileName" value="${fileName?if_exists}" />
+<br />
+
+<@com.errorMarkup/>
+<@com.messageMarkup/>
+
+<table id="t" width="100%" cellpadding="5" cellspacing="0" border="0">
+<@com.tr2td "Template">
+  <a href="editTemplate.do?indexName=${indexName}&templateName=${template.name}">${template.name}</a>
+</@com.tr2td>
+<@com.tr2td "File">${fileName?if_exists} (${templateFile?if_exists})</@com.tr2td>
+
+<script type="text/javascript">
+function selectCode(){
+ if(document.f.columnText.value.length>0){
+  document.f.columnText.focus();
+  document.f.columnText.select();
+ }
+}
+function changeTest() {
+  var t = document.getElementById("desc");
+  t.value = "Test";
+}
+</script>
+
+<#if templateFile.canWrite()>
+ <#assign wizardTip = "[Generated text is only useful inside loop &lt;#foreach doc in searchResult.docs&gt; ... &lt;/#foreach&gt; ]">
+ <#assign columnTip = "Choose a document field to get an example text">
+ <#if fileName.equalsIgnoreCase("documents.vm")>
+  <#assign display = "block">
+ <#else>
+  <#assign display = "none">
+ </#if>
+ <#if is_ftl>
+ <tr><@com.promptTD "Column Wizard"/><td>
+   <#include "region/columnChooser.stl">
+   <br/>
+   ( Generated rendering source code is only valid inside loop <i>&lt;#foreach doc in searchResult.docs&gt; ... &lt;/#foreach&gt;</i>)
+ </td></tr>
+ <tr><@com.promptTD "Generated Rendering Code"/><td>
+	 	 <table border=0>
+	 	 	<tr>
+	 	 		<td><input type="text" name="columnText" id="columnText" size="80" value="${columnTip}" readonly="readonly"></td>
+		  		<td>
+		  			<button type="button" class="general" name="select" onClick="selectCode()" <@com.tip 'Select the generated text for copying'/>>Select</button>
+		  		</td>
+		  	</tr>
+		  	<tr>
+		  		<td colspan=2>Select the generated rendering code and copy-pasted to the textarea below.</td>
+		  	</tr>	
+		 </table>		
+	 </td>
+ </tr>
+ </#if>
+ <tr>
+  <td valign="top">&nbsp;
+  </td> 
+ <td><textarea class="template resizable" rows="23" cols="90" name="templateText" id="templateText" wrap="off">${templateText?if_exists?html}</textarea></td></tr>
+ <@com.tr2td><button class="general" type="submit"/>Save</button></@com.tr2td>
+<#else>
+ <@com.tr2td "Permission"><i>Read Only</i></@com.tr2td>
+ <tr><td colspan="2"><textarea class="template" rows="50" cols="90" name="templateText" id="templateText" wrap="off" readonly="readonly">${templateText?if_exists?html}</textarea></td></tr>
+</#if></table>
+</form>
+
+<#include "/WEB-INF/view/admin/region/jquery/add_resizable_textarea.stl">
+</@>

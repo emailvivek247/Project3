@@ -1,0 +1,163 @@
+<#include "../lib/layout.stl" />
+<@dashboardLayout>
+
+<style>
+div.ui-datepicker {
+	font-size:11px;
+}
+.ui-datepicker .ui-datepicker-title select {
+	font-size:11px;
+}
+div.subHeader {
+	text-align:center;
+	width:100%;
+	font-weight:bold;
+	color:#ffffff;
+	background-color:#CF0A3B;
+	line-height:50px;
+}
+div.subHeader2 {
+	text-align:center;
+	width:100%;
+	font-weight:bold;
+	color:#948E8F;
+	line-height:25px;
+}
+.nowrap {
+	white-space: nowrap;
+}
+.right {
+	text-align:right;
+}
+.left {
+	text-align:left;
+}
+.center {
+	text-align:center;
+}
+td {
+	white-space: nowrap;
+}
+.refreshCacheLi {
+	cursor:pointer;
+}
+
+</style>
+<#assign jmesa=JspTaglibs["http://code.google.com/p/jmesa"]>
+
+<!-- Begin window -->
+<div id="page-content" class="clearfix">
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="widget-box">
+				<div class="widget-header">
+					<h4>Cache List</h4>
+					<div class="widget-toolbar">
+						<a href="#" data-action="collapse">
+							<i class="icon-chevron-up"></i>
+						</a>
+					</div><!-- end widget toolbar-->
+				</div><!-- end widget header-->
+
+				<div class="widget-body">
+					<div class="row-fluid">
+
+						<table width="60%" class="data" cellpadding="0" cellspacing="0">
+							<thead>
+							   <tr class="head">
+								 <th filter='false' class="right">Cache Name &nbsp&nbsp&nbsp</th>
+								 <th filter='false' class="left">Action</th>
+							   </tr>
+							</thead>
+							<tbody>
+							   <#list cacheList as cacheName>
+					           <tr>
+								 <td class="right">${cacheName}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</td>
+					             <td class="left">
+						             <span style="font-size:25px;margin-left:10px;"><i class="icon-refresh blue refreshCacheLi" alt="${cacheName}"></i></span>
+						             <img id="processing_${cacheName}" src="resources/images/processing.gif" style="display:none" />
+						             <span style="font-size:25px;"><i id="success_${cacheName}" class="icon-check green successImg" style="display:none"></i></span>
+						             <span style="font-size:25px;"><i id="error_${cacheName}" class="icon-exclamation-circle red errorImg" style="display:none"></i></span>
+						        </td>
+					           </tr>
+					           </#list>
+					        </tbody>
+					           <tr>
+								 <td class="right"><b>Refresh All Caches</b>&nbsp&nbsp&nbsp&nbsp&nbsp</td>
+					             <td class="left">
+					             	<span style="margin-left:6px;"><img class="refreshCacheLi" alt="ALL" src="resources/images/refreshAll.png" /></span>
+					             	<img id="processing_ALL" src="resources/images/processing.gif" style="display:none" />
+					             	<span style="font-size:25px;margin-left:4px;"><i id="success_ALL" class="icon-check green successImg" style="display:none"></i></span>
+					             	<span style="font-size:25px;"><i id="error_ALL" class="icon-exclamation-circle red errorImg" style="display:none"></i></span>
+					           </tr>
+						</table>	<br><br>
+					</div>	<!--row fluid-->
+				</div> <!-- widget body-->
+			</div> <!--widget box-->
+		</div> <!--span12-->
+	</div><!--row-fluid-->
+</div> <!--page-content-->
+
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.refreshCacheLi').click(function() {
+			var cacheNametxt = $(this).attr('alt');
+			$(this).hide();
+			var processingImageName = "#processing_" + cacheNametxt + "";
+			var successImageName = "#success_" + cacheNametxt + "";
+			var errorImageName = "#error_" + cacheNametxt + "";
+			$(processingImageName).show();
+
+			if (cacheNametxt == "ALL") {
+				$.ajax({
+					cache: false,
+				    type: 'POST',
+				    url: "refreshAllCaches.admin",
+				    data: {
+				       cacheName: cacheNametxt,
+				    },
+				    success: function(data, textStatus, jqXHR) {
+					  $.each(data, function(i,item){
+			    		 var elementID = "#" + item.code;
+			    		 if (item.code == "SUCCESS") {
+			    		 	 $(".refreshCacheLi").hide()
+			    			 $(processingImageName).hide();
+					    	 $(successImageName).show();
+					    	 $(".successImg").show();
+			    		 } else {
+			    			 $(".refreshCacheLi").hide()
+			    			 $(processingImageName).hide();
+					    	 $(errorImageName).show();
+					    	 $(".errorImg").show();
+			    		 }
+			          });
+				    }
+				});
+			}
+			else {
+				$.ajax({
+					cache: false,
+				    type: 'POST',
+				    url: "refreshCache.admin",
+				    data: {
+				       cacheName: cacheNametxt,
+				    },
+				    success: function(data, textStatus, jqXHR) {
+					  $.each(data, function(i,item){
+			    		 var elementID = "#" + item.code;
+			    		 if (item.code == "SUCCESS") {
+			    			 $(processingImageName).hide();
+					    	 $(successImageName).show();
+			    		 } else {
+			    			 $(processingImageName).hide();
+					    	 $(errorImageName).show();
+			    		 }
+			          });
+				    }
+				});
+			}
+		});
+    });
+</script>
+</@dashboardLayout>

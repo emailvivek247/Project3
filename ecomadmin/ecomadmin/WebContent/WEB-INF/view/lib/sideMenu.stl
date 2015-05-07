@@ -1,0 +1,248 @@
+<style>
+.menu-min .sidebar-shortcuts-large {
+display: none;
+position: absolute;
+z-index: 20;
+top: -1px;
+left: 42px;
+width: 188px;
+padding: 0px 0px 1px;
+background-color: rgb(255, 255, 255);
+-webkit-box-shadow: rgba(0, 0, 0, 0.2) 2px 1px 2px 0px;
+box-shadow: rgba(0, 0, 0, 0.2) 2px 1px 2px 0px;
+border: 1px solid rgb(204, 204, 204);
+border-image-source: initial;
+border-image-slice: initial;
+border-image-width: initial;
+border-image-outset: initial;
+border-image-repeat: initial;
+}
+</style>
+<div class="sidebar" id="sidebar">
+	<script type="text/javascript">
+		try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
+	</script>
+
+		<div class="sidebar-shortcuts" id="sidebar-shortcuts">
+			<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large" >
+				<a href="searchtransaction.admin">
+					<button class="btn btn-small btn-success" title="Transaction Lookup" style="width: 43px; line-height: 17px; margin-top: -2px; border-width: 4px;">
+						<i class="icon-search"></i>
+					</button>
+				</a>
+				<a href="viewpayasugotransactions.admin">
+					<button class="btn btn-small btn-info" title="Pay As You Go Transactions" style="width: 43px; line-height: 17px; margin-top: -2px; border-width: 4px;">
+						<i class="icon-briefcase"></i>
+					</button>
+				</a>
+				<a href="viewrecurringtransactions.admin">
+					<button class="btn btn-small btn-warning" title="Recurring Transactions" style="width: 43px; line-height: 17px; margin-top: -2px; border-width: 4px;">
+						<i class="icon-refresh"></i>
+					</button>
+				</a>
+
+				<a href="viewgrandtotalreport.admin">
+					<button class="btn btn-small btn-danger" title="Grand Total Report" style="width: 43px; line-height: 17px; margin-top: -2px; border-width: 4px;">
+						<i class="icon-money"></i>
+					</button>
+				</a>
+			</div>
+
+			<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+				<span class="btn btn-success"></span>
+
+				<span class="btn btn-info"></span>
+
+				<span class="btn btn-warning"></span>
+
+				<span class="btn btn-danger"></span>
+			</div>
+		</div><!-- #sidebar-shortcuts -->
+
+			<ul class="nav nav-list">
+				<li <#if topMenu == "dashboard">class="active"</#if>>
+				<a href="dashboard.admin">
+					<img src="resources/images/icon_home.png" alt="Home"/>
+					<!--<i class="icon-home"></i>-->
+					<span class="menu-text">&nbsp Home</span>
+				</a>
+				</li>
+				<li  <#if topMenu == "siteInfo">class="active"</#if>>
+				<a id="siteInfo" href="viewSiteInfo.admin">
+					<img src="resources/images/Location-256.png" alt="Users"/>
+					<!--<i class="icon-home"></i>-->
+					<span class="menu-text">&nbsp Site Information</span>
+				</a>
+				</li>
+				<li  <#if topMenu == "userAdmin">class="active"</#if>>
+				<a id="usersmenuitem" href="findecomusers.admin">
+					<img src="resources/images/icon_users.png" alt="Users"/>
+					<!--<i class="icon-home"></i>-->
+					<span class="menu-text">&nbsp User Administration</span>
+				</a>
+
+				</li>
+				<#if SystemUtil.isPSOSuperAdmin(request) >
+					<li <#if topMenu == "admin">class="active open"</#if>>
+					<a href="#" class="dropdown-toggle">
+						<img src="resources/images/configuration.png" alt="Users"/>
+						<!--<i class="icon-home"></i>-->
+						<span class="menu-text">&nbsp Administration</span>
+						<b class="arrow icon-angle-down"></b>
+					</a>
+						<ul class="submenu">
+							<#if SystemUtil.isPSOSuperAdmin(request)>
+							<li <#if topMenu == "admin" && subMenu == "config">class="active" </#if>>
+								<a id="viewNodesandSites" title="Administration" href="viewnodesandsitesconfig.admin">
+									<i class="icon-double-angle-right"></i>
+									Node Configuration
+								</a>
+							</li>
+							</#if>
+							<li <#if topMenu == "admin" && subMenu == "userManagement">class="active"</#if>>
+								<a id="manageAdminUser" title="Admin User Management" href="viewecomadminusers.admin">
+									<i class="icon-double-angle-right"></i>
+									Admin User Management
+								</a>
+							</li>
+							<#if SystemUtil.isPSOSuperAdmin(request) || SystemUtil.isPSOTxAdmin(request) || SystemUtil.isPSOUserAdmin(request) || SystemUtil.isInternalUser(request)>
+							<li <#if topMenu == "admin" && subMenu == "errorLog">class="active"</#if>>
+								<a id="errorLog"  title="Error Log" href="viewErrorLog.admin">
+									<i class="icon-double-angle-right"></i>
+									Error log
+								</a>
+							</li>
+							</#if>
+							<#if SystemUtil.isPSOSuperAdmin(request)>
+							<li <#if topMenu == "admin" && subMenu == "refreshCache">class="active"</#if>>
+								<a id="refreshCache"  title="Refresh Cache" href="viewCaches.admin">
+									<i class="icon-double-angle-right"></i>
+									Refresh Cache Data
+								</a>
+							</li>
+							</#if>
+							<#if SystemUtil.isPSOSuperAdmin(request)>
+							<li <#if topMenu == "admin" && subMenu == "editEmail">class="active"</#if>>
+								<a id="editEmailTemplates"  title="Edit Email Templates" href="readEmailTemplate.admin">
+									<i class="icon-double-angle-right"></i>
+									Edit Email Templates
+								</a>
+							</li>
+							</#if>
+						</ul>
+					</li>
+					</#if>
+					<#if SystemUtil.isPSOSuperAdmin(request) || SystemUtil.isPSOTxAdmin(request) || request.isUserInRole("C_RECURRINGTX_ADMIN") ||
+						request.isUserInRole("C_WEBTX_ADMIN") || request.isUserInRole("C_OTCTX_ADMIN") || request.isUserInRole("C_REFUNDTX_ADMIN") || request.isUserInRole("C_PAYASUGOTX_ADMIN")>
+					<li <#if topMenu == "reports">class="active open"</#if>>
+						<a href="#" class="dropdown-toggle">
+							<img src="resources/images/report.png" alt="Users"/>
+							<span class="menu-text">&nbsp Reports</span>
+							<b class="arrow icon-angle-down"></b>
+						</a>
+							<ul class="submenu">
+								<#if SystemUtil.isPSOSuperAdmin(request) || SystemUtil.isPSOTxAdmin(request) || request.isUserInRole("C_RECURRINGTX_ADMIN")>
+									<li <#if topMenu == "reports" && subMenu == "recurringTrans">class="active"</#if>>
+										<a id="recurringTranHist"  title="View Recurring Transaction" href="viewrecurringtransactions.admin">
+											<i class="icon-double-angle-right"></i>
+											Recurring Transactions Report
+										</a>
+									</li>
+								</#if>
+								<#if SystemUtil.isPSOSuperAdmin(request) || SystemUtil.isPSOTxAdmin(request) || request.isUserInRole("C_PAYASUGOTX_ADMIN")>
+									<li <#if topMenu == "reports" && subMenu == "payAsUGoTrans">class="active"</#if>>
+										<a id="payasugoTranHist" title="View Pay As You Go Transactions" href="viewpayasugotransactions.admin">
+											<i class="icon-double-angle-right"></i>
+											Pay As You Go Transactions Report
+										</a>
+									</li>
+								</#if>
+								<#if SystemUtil.isPSOSuperAdmin(request) || SystemUtil.isPSOTxAdmin(request) || request.isUserInRole("C_PAYASUGOTX_ADMIN")>
+									<li <#if topMenu == "reports" && subMenu == "detailDocumentTrans">class="active"</#if>>
+										<a id="detailDocumentHist" title="View Detail Document Report" href="viewDetailDocumentTransactions.admin">
+										<i class="icon-angle-double-right"></i>
+										Detail Document Report
+										</a>
+									</li>
+								</#if>
+								<#if SystemUtil.isPSOSuperAdmin(request) || SystemUtil.isPSOTxAdmin(request) || request.isUserInRole("C_WEBTX_ADMIN")>
+									<li <#if topMenu == "reports" && subMenu == "webTrans">class="active"</#if>>
+										<a id="webTranHist" title="View Web Transactions" href="viewwebtransactions.admin">
+											<i class="icon-double-angle-right"></i>
+											Web Transactions Report
+										</a>
+									</li>
+								</#if>
+								<#if SystemUtil.isPSOSuperAdmin(request) || SystemUtil.isPSOTxAdmin(request) || request.isUserInRole("C_OTCTX_ADMIN")>
+									<li <#if topMenu == "reports" && subMenu == "OTCTrans">class="active"</#if>>
+										<a id="otcTranHist" title="View OTC Transactions" href="viewotctransactions.admin">
+											<i class="icon-double-angle-right"></i>
+											Over the Counter Transactions Report
+										</a>
+									</li>
+								</#if>
+
+								<#if SystemUtil.isPSOSuperAdmin(request) || SystemUtil.isPSOTxAdmin(request) || request.isUserInRole("C_RECURRINGTX_ADMIN") ||
+									 request.isUserInRole("C_WEBTX_ADMIN") || request.isUserInRole("C_OTCTX_ADMIN") || request.isUserInRole("C_PAYASUGOTX_ADMIN")>
+									<li <#if topMenu == "reports" && subMenu == "GTR">class="active"</#if>>
+										<a id="grandTotal" title="View Grand Total Report" href="viewgrandtotalreport.admin">
+											<i class="icon-double-angle-right"></i>
+											Grand Total Report
+										</a>
+									</li>
+								</#if>
+								<#if SystemUtil.isPSOSuperAdmin(request) || SystemUtil.isPSOTxAdmin(request) ||
+									 request.isUserInRole("C_REFUNDTX_ADMIN") || request.isUserInRole("C_WEBTX_ADMIN") || request.isUserInRole("C_PAYASUGOTX_ADMIN") ||
+									 request.isUserInRole("C_OTCTX_ADMIN") || request.isUserInRole("C_RECURRINGTX_ADMIN") >
+									<li <#if topMenu == "reports" && subMenu == "transLookup">class="active"</#if>>
+										<a id="refundTran" title="Search/Refund Transaction" href="searchtransaction.admin">
+											<i class="icon-double-angle-right"></i>
+											Transaction Lookup
+										</a>
+									</li>
+								</#if>
+							</ul>
+					</li>
+				</#if>
+				<#if SystemUtil.isPSOSuperAdmin(request) || request.isUserInRole("C_CHECKPRINT_ADMIN") || request.isUserInRole("C_CHECKHISTORY_ADMIN") || request.isUserInRole("C_ACHPAYMENT_ADMIN")>
+				<li <#if topMenu == "fundsTransfer">class="active open"</#if>>
+				<a href="#" class="dropdown-toggle">
+				<img src="resources/images/icon_cash.png" alt="Users"/>
+					<span class="menu-text">&nbsp Funds Transfer</span>
+				<b class="arrow icon-angle-down"></b>
+				</a>
+					<ul class="submenu">
+						<#if SystemUtil.isPSOSuperAdmin(request) || request.isUserInRole("C_CHECKPRINT_ADMIN")>
+							<li <#if topMenu == "fundsTransfer" && subMenu == "printCheck">class="active"</#if>><a id="printCheck"  title="Print Check" href="viewCheck.admin">
+									<i class="icon-double-angle-right"></i>Print Check</a></li>
+						</#if>
+						<#if SystemUtil.isPSOSuperAdmin(request) || request.isUserInRole("C_ACHPAYMENT_ADMIN")>
+							<li <#if topMenu == "fundsTransfer" && subMenu == "ACHFunds">class="active"</#if>><a id="achPayment"  title="ACH Fund Disbursement" href="achPayment.admin">
+									<i class="icon-double-angle-right"></i>ACH Fund Disbursement</a></li>
+						</#if>
+						<#if SystemUtil.isPSOSuperAdmin(request) || request.isUserInRole("C_CHECKHISTORY_ADMIN")>
+							<li <#if topMenu == "fundsTransfer" && subMenu == "viewHistory">class="active"</#if>><a id="viewCheckHistory"  title="View History" href="history_Check.admin">
+									<i class="icon-double-angle-right"></i>View History</a></li>
+							<li <#if topMenu == "fundsTransfer" && subMenu == "detailReport">class="active"</#if>><a id="viewCheckDeatils"  title="View Check Details" href="viewchecktransactiondetails.admin">
+									<i class="icon-double-angle-right"></i>Detail Report</a></li>
+						</#if>
+						<#if SystemUtil.isPSOSuperAdmin(request)>
+							<li <#if topMenu == "fundsTransfer" && subMenu == "reconciliationReport">class="active"</#if>><a id="CheckReconcReport"  title="Reconciliation Report" href="viewcheckreconciliationreport.admin">
+									<i class="icon-double-angle-right"></i>Reconciliation Report</a></li>
+						</#if>
+				   </ul>
+				  </li>
+				  </#if>
+			</ul><!-- /.nav-list -->
+
+
+			<div class="sidebar-collapse" id="sidebar-collapse">
+				<i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
+			</div>
+
+			<script type="text/javascript">
+				try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}
+			</script>
+</div>
+
+

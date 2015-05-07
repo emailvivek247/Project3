@@ -1,0 +1,109 @@
+#set( $title = $msg.get("title") )
+#set( $selectedMenu = 'dataset' )
+#set( $selectedToptab = "search" )
+#set( $selectedSubtab = "configDateWeightColumn" )
+
+<form name="f" method="post" action="configDateWeightColumn.do">
+<input type="hidden" name="indexName" value="$!{dc.name}">
+<input type="hidden" name="operation" value="save">
+<br />
+#errorMarkup()
+#messageMarkup()
+
+#openFieldset("Date-Time Configuration")
+<div class="help">
+<p>A column can be used for time-based weighting if:</p>
+<ul  class="ulstyle">
+  <li>Column Type is <b>Date</b> or <b>Timestamp</b> </li>
+  <li>Field Type is <b>Keyword</b></li>
+</ul>
+<p>You can change the types in <a href="configWorkingQueue.do?indexName=$indexName">SQL Queries</a> tab.
+<p>A server restart is needed.
+</div>
+Here is the graph for ranking boost of records. The x axis shows the log value of the time in seconds. The y axis shows the actual boosting value.
+<br/>
+<br/>
+<a href="#default_formula">The default formula</a> shows high ranking for recent records, and lower boost for older records.
+<br/>
+You can adjust the default ranking by modifying file WEB-INF/data/${dc.name}-dataset-config.xml file, &lt;date-weight-formula&gt; section. 
+You can add as many <time-weight> entries as you want for finer grained control.
+#closeFieldset()
+
+<br />
+<table id="columntable" class="xsearchtable">
+<tr><th>Column</th><th>Type</th><th>Field Type</th><th>Display Name</th></tr>
+#foreach ($c in $columns)
+    <tr>
+      <td><input type="radio" name="dateColumn" value="$!{c.columnName}"
+      #if ($dc.dateWeightColumnName == $c.columnName)
+        checked
+      #end
+      >$c.columnName</td>
+      <td align="center">$c.columnTypeShortName</td>
+      <td align="center">$c.indexFieldType</td>
+      <td align="center">$!{c.displayName}</td>
+    </tr>
+#end
+    <tr>
+      <td><input type="radio" name="dateColumn" value=""
+      #if (!$dc.dateWeightColumnName)
+        checked
+      #end
+      >Not enabled</td>
+      <td align="center">&nbsp;</td>
+      <td align="center">&nbsp;</td>
+      <td align="center">&nbsp;</td>
+    </tr>
+</table>
+<table align="center">
+<tr align="left"><td text-align="left">
+#actionSubmitButton( "f" "submitSave" $!msg.get("button.save") "save" )
+</td></tr>
+</table>
+</form>
+
+<br/>
+<br/>
+<br/>
+#*
+#openFieldset("Default Date Weight Formula?")
+<a name="default_formula"></a>
+<pre id="formula">
+10*MINUTE=12  //meaning anything with modified time less than 10 minutes will have a ranking boost by 12
+30*MINUTE=11
+1*HOUR=10
+6*HOUR=9
+12*HOUR=8
+1*DAY=7
+15*DAY=6
+1*MONTH=5
+2*MONTH=4
+3*MONTH=3
+6*MONTH=2
+1*YEAR=1.3
+2*YEAR=1.2
+3*YEAR=1.1
+4*YEAR=1.05
+5*YEAR=1.04
+6*YEAR=1.03
+7*YEAR=1.02
+10*YEAR=1.01
+</pre> 
+#closeFieldset()
+*#
+
+<!--[if IE]><script language="javascript" type="text/javascript" src="resources/javascripts/excanvas.js"></script><![endif]-->
+<script>
+function logTickGenerator(axis) {
+  var res = [], i = Math.ceil(Math.log(axis.min));
+  while (true) {
+    var v = i * Math.PI;
+    if (v > axis.max)
+      break;
+    res.push([v, '10<span style="margin-bottom:8px;font-size:8px;vertical-align:top;">'+i + '</span>sec']);
+    ++i;
+  }
+  return res;
+};
+
+</script>

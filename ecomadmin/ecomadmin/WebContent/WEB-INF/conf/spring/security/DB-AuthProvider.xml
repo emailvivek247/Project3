@@ -1,0 +1,33 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+   <bean id="jasyptPBEStringEncryptor" class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">
+    	<property name="config">
+            <bean class="org.jasypt.encryption.pbe.config.EnvironmentStringPBEConfig">
+                <property name="algorithm" value="PBEWITHSHA256AND256BITAES-CBC-BC" />
+                <property name="passwordEnvName" value="USER_AUTH_KEY" />
+            </bean>
+        </property>
+    	<property name="provider" ref="bouncyCastleProvider" />
+        <property name="stringOutputType" value = "HEXADECIMAL" />
+   </bean>
+
+	<bean id="passwordEncoder" class="org.jasypt.springsecurity3.authentication.encoding.PBEPasswordEncoder">
+    	<property name="pbeStringEncryptor">
+      		<ref bean="jasyptPBEStringEncryptor" />
+    	</property>
+    </bean>
+
+    <bean id="databaseAuthenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+        <property name="preAuthenticationChecks" ref="preAuthChecker" />
+    	<property name="userDetailsService" ref="eComAdminUserDetailsService" />
+		<property name="hideUserNotFoundExceptions" value="false" />
+		<property name="passwordEncoder" ref="passwordEncoder" />
+	</bean>
+
+	<bean id="preAuthChecker" class="com.fdt.security.spring.SDLPrePreAuthenticationChecker"/>
+
+</beans>

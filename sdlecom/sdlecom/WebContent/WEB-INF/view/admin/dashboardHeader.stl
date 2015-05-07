@@ -1,0 +1,55 @@
+<#macro basic title="Search Platform" css=[] js=[] menu="system" hasWizard=false>
+<#assign menus = menu?split("/")>
+<#if menus[0]?has_content >
+ <#assign selectedMenu   = menus[0] >
+</#if>
+<#if menus[1]?has_content >
+ <#assign selectedToptab = menus[1] >
+</#if>
+<#if menus[2]?has_content >
+ <#assign selectedSubtab = menus[2] >
+</#if>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+  <title>${title}</title>   
+    <meta http-equiv="content-type" content="text/html; charset=${WebserverStatic.getEncoding()}" />
+	<link rel="stylesheet" type="text/css" href="${request.getContextPath()}/resources/styles/application.css" />
+	<link rel="stylesheet" type="text/css" href="${request.getContextPath()}/resources/styles/prompt.css" />
+	<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/jquery-ui-1.8.11.base.css" />
+	<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/jquery-ui-custom-ext.css" />
+	<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.min.js"/></script>
+	<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery-ui.min.js"/></script>
+	<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.tablesorter.js"></script>
+	<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.tablesorter.pager.js"></script>
+	<script type="text/javascript" src="${request.getContextPath()}/smartcharts/js/SmartCharts.js"></script>
+	<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/prompt.js"></script>
+
+<link rel="shortcut icon" href="favicon.ico"/>
+  <#list js as file>
+   <script type="text/javascript" src="${file}"></script>
+  </#list>
+  <#list css as file>
+   <style type="text/css" media="all">@import ${path}${file};</style>
+  </#list>
+</head>
+<body link="#0000ff" vlink="#0000ff" bgcolor="white" leftmargin="4" topmargin="0" marginheight="4" marginwidth="4">
+       <#include "region/header.stl">
+<div>    
+<table id="mainContent" style="display: none;" border=0 style="height:100%; margin: 0 0 0 0" cellspacing=0 cellpadding=0 width="100%" align="center" valign="top">
+<TR>
+    <TD valign="middle">   
+        <#if !hasWizard >
+          <#nested>
+        <#else>
+           
+          <#nested>
+        </#if>
+    </TD>
+</TR>
+</table>
+</div>
+</body></html>
+</#macro>

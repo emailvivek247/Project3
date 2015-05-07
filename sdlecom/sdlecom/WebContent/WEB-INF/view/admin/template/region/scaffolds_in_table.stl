@@ -1,0 +1,12 @@
+<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/style.css" type="text/css" media="screen" charset="utf-8">
+   <#list scaffolds as s>
+   <div class="panel" id="panel_${s_index + 1}">
+        <div class="inside">
+           <a href="createTemplate.do?indexName=${dc.name}&scaffoldName=${s.longName}">
+                <img src="${request.getContextPath()}/${scaffoldManager.getPreviewImageSrc(s)}"  border="1" alt="${s.name}"/>
+           </a><br />
+            <b>Name: </b><a style="font-style:italic;" href="createTemplate.do?indexName=${dc.name}&scaffoldName=${s.longName}">${s.name}</a><br /><br />
+            <b>Description: </b>${s.description}
+        </div>
+   </div>
+   </#list>    

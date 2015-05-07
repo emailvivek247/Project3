@@ -1,0 +1,13 @@
+<scaffold order="8" >
+  <name>XML Search Results</name>
+  <description><![CDATA[Render Search Results in XML format, easily customizable]]></description>
+  <variables>  
+    <separator header="Column Configuration" position="start" status="open"/>
+    <columns-variable name="displayColumns">
+      <prompt>Included Columns</prompt>
+      <description>Select Columns to display.</description>
+      <columnSelector>isDisplayable</columnSelector>
+    </columns-variable>
+    <separator position="end"/>
+  </variables>
+</scaffold>

@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+          "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+
+<struts-config>
+
+	<form-beans>
+		<form-bean name="searchForm" type="org.apache.struts.action.DynaActionForm">
+		   	<form-property name="searchType" type="java.lang.String" initial="1"/>
+		   	<form-property name="searchQuery" type="java.lang.String" />
+		</form-bean>
+	</form-beans>
+	
+    <global-exceptions>
+		<exception key="error.message.404"  type="org.apache.struts.chain.commands.InvalidPathException"  path="/errorPage.do" />
+    </global-exceptions>	
+
+	<!-- ========== Global Forward Definitions ============================== -->
+	<global-forwards>
+		<forward name="welcome"  path="/admin/desktop.do"/>
+	</global-forwards>
+
+	<!-- ========== Action Mapping Definitions ============================== -->
+	<action-mappings>
+	
+	    <action path="/errorPage" forward= "/WEB-INF/view/admin/strutsError.stl" />
+  
+		<!-- ========== Registration ============================== -->
+		<action path="/admin/login" type="com.fdt.sdl.admin.ui.action.registration.LoginAction" scope="request">
+			<forward name="emptyPass" path="/WEB-INF/view/admin/registration/registration.stl" />
+			<forward name="success"   path="/admin/desktop.do" />
+			<forward name="continue"  path="/WEB-INF/view/admin/registration/login.stl" />
+		</action>    
+		
+		<action path="/admin/changeUserNamePassword" type="com.fdt.sdl.admin.ui.action.registration.ChangeUserNamePasswordAction" scope="request">
+			<forward name="continue" path="/WEB-INF/view/admin/registration/changeUserNamePassword.stl" />
+			<forward name="success"  path="/admin/desktop.do" />
+		</action>
+		
+		<action path="/admin/registration" type="com.fdt.sdl.admin.ui.action.registration.RegistrationAction" scope="request">
+			<forward name="continue" path="/WEB-INF/view/admin/registration/registration.stl" />
+			<forward name="success"  path="/admin/desktop.do" />
+		</action>
+
+		<action path="/admin/logout" type="com.fdt.sdl.admin.ui.action.registration.LogoutAction" scope="request">
+			<forward name="continue" path="/admin/login.do" redirect="false" />
+		</action>   
+		
+		<!-- ========== Search ============================== -->
+		<action path="/search" type="com.fdt.sdl.core.ui.action.search.SearchAction" name="searchForm" scope="request">
+			<forward name="continue"      path="/home.do"/>
+			<forward name="displayCached" path="/displayCached.do"/>
+			<forward name="error"         path="/displaySearchError.vm"/>
+		</action>
+		
+		<action path="/multiSearch" type="com.fdt.sdl.core.ui.action.search.MultiSearchAction" scope="request">
+			<forward name="continue" path="/templates/multiSearch/main.stl"/>
+			<forward name="error"    path="/displaySearchError.vm"/>
+		</action>
+		
+		<action path="/suggest" type="com.fdt.sdl.core.ui.action.search.SuggestAction" scope="request">
+			<forward name="continue" path="/WEB-INF/view/admin/suggest.stl"/>
+		</action>
+		
+		<action path="/multiSearchVm" type="com.fdt.sdl.core.ui.action.search.MultiSearchVmAction" scope="request">
+			<forward name="continue" path="/templates/multiSearchVm/multiSearch.vm"/>
+			<forward name="error"    path="/displaySearchError.vm"/>
+		</action>
+		
+		<action path="/composite" type="com.fdt.sdl.core.ui.action.search.CompositeTemplateAction" scope="request">
+			<forward name="continue" path="/searchAll.do"/>
+			<forward name="error"    path="/displaySearchError.vm"/>
+		</action>
+		
+		<action path="/home" type="com.fdt.sdl.core.ui.action.search.CompositeTemplateAction" name="searchForm" scope="session">
+			<forward name="continue"   path="/templates/index.stl"/>
+			<forward name="emptyIndex" path="/admin/login.do"/>
+			<forward name="error"      path="/displaySearchError.vm"/>
+		</action>
+		
+		<action path="/displayCached" type="com.fdt.sdl.core.ui.action.search.DisplayCachedAction" scope="request">
+			<forward name="continue" path="some page in search config xml file"/>
+			<forward name="error"    path="/displaySearchError.vm"/>
+		</action>
+		
+		<action path="/searchProtocolBuffer" type="com.fdt.sdl.core.ui.action.search.SearchProtocolBufferAction" scope="request">
+			<forward name="error" path="/displaySearchError.vm"/>
+		</action>
+	   
+		<!-- ========== Submit Document Create/Update/Delete ============================== --> 
+		<action path="/submit" type="com.fdt.sdl.core.ui.action.indexing.memory.SubmitAction" scope="request">
+			<forward name="continue" path="/actionResult.vm"/>
+		</action>
+		
+		<action path="/clearBuffer" type="com.fdt.sdl.core.ui.action.indexing.memory.ClearBufferAction" scope="request">
+			<forward name="continue" path="/actionResult.vm"/>
+		</action>
+
+	   <!--  ========== Index Document Delete ============================== --> 
+		<action path="/delete" type="com.fdt.sdl.core.ui.action.search.DeleteAction" scope="request">
+			<forward name="continue" path="/actionResult.vm"/>
+		</action>
+		<action path="/bulkDelete" type="com.fdt.sdl.core.ui.action.search.BulkDeleteAction" scope="request">
+			<forward name="continue" path="/actionResult.vm"/>
+		</action>
+		
+		<!-- ========== Index Managing ============================== -->
+		<action path="/admin/stopIndexing" type="com.fdt.sdl.core.ui.action.indexing.status.StopIndexingAction" scope="request">
+			<forward name="continue" path="/redirectToIndexLog.vm"/>
+		</action>
+		
+		<action path="/admin/scheduleAJob" type="com.fdt.sdl.core.ui.action.indexing.status.ScheduleAJobAction" scope="request">
+			<forward name="continue" path="/redirectToIndexLog.vm"/>
+		</action>
+		
+		<action path="/admin/refreshIndex" type="com.fdt.sdl.core.ui.action.indexing.status.RefreshIndexAction" scope="request">
+			<forward name="continue" path="/actionResult.vm"/>
+		</action>
+		
+		<action path="/admin/shutdownIndex" type="com.fdt.sdl.core.ui.action.indexing.status.ShutdownIndexAction" scope="request">
+			<forward name="continue" path="/actionResult.vm"/>
+		</action>
+		
+		<action path="/admin/startSpellCheckIndex" type="com.fdt.sdl.core.ui.action.indexing.status.StartSpellCheckIndexAction" scope="request">
+			<forward name="continue" path="/actionResult.vm"/>
+		</action>
+		
+		<action path="/admin/stopSpellCheckIndex" type="com.fdt.sdl.core.ui.action.indexing.status.StopSpellCheckIndexAction" scope="request">
+			<forward name="continue" path="/actionResult.vm"/>
+		</action>
+		   
+		<!-- ========== Status, show the content of the index ============================== -->
+		<action path="/admin/listDatasetConfigurations" type="com.fdt.sdl.core.ui.action.indexing.status.ListDatasetConfigurationsAction" scope="request">
+			<forward name="continue" path="/WEB-INF/view/admin/status/listDatasetConfigurations.stl"/>
+		</action>
+		
+		<action path="/admin/showIndexStatus" type="com.fdt.sdl.core.ui.action.indexing.status.ShowIndexStatusAction" scope="request">
+			<forward name="continue" path="/showIndexStatus.vm"/>
+		</action>
+		
+		<action path="/admin/showBufferContent" type="com.fdt.sdl.core.ui.action.indexing.status.ShowBufferContentAction" scope="request">
+			<forward name="continue" path="/showBufferContent.vm"/>
+		</action>
+		
+		<action path="/admin/showIndexContentByPK" type="com.fdt.sdl.core.ui.action.indexing.status.ShowIndexContentByPKAction" scope="request">
+			<forward name="continue" path="/showIndexStatus.vm"/>
+		</action>
+		
+		<action path="/admin/showIndexLog" type="com.fdt.sdl.core.ui.action.indexing.status.SetIndexContinueAction" scope="request">
+			<forward name="continue" path="/showIndexLog.vm"/>
+		</action>
+		
+		<action path="/admin/showIndexLogOnly" type="com.fdt.sdl.core.ui.action.indexing.status.SetIndexContinueAction" scope="request">
+			<forward name="continue" path="/showIndexLogOnly.vm"/>
+		</action>
+		
+		<action path="/admin/downloadLog" type="com.fdt.sdl.core.ui.action.indexing.status.SetIndexContinueAction" scope="request">
+			<forward name="continue" path="/downloadLog.vm"/>
+		</action>
+		
+		<action path="/admin/showIndexUsage" type="com.fdt.sdl.core.ui.action.indexing.status.ShowIndexUsageAction" scope="request">
+			<forward name="continue" path="/showIndexUsage.vm"/>
+		</action>
+		
+		<action path="/admin/showIndexUsageXML" type="com.fdt.sdl.core.ui.action.indexing.status.ShowIndexUsageAction" scope="request">
+			<forward name="continue" path="/showIndexUsageXML.vm"/>
+		</action>
+		
+		<action path="/admin/showFrequentTerms" type="com.fdt.sdl.core.ui.action.indexing.status.ShowFrequentTermsAction" scope="request">
+			<forward name="continue" path="/showFrequentTerms.vm"/>
+		</action>
+		
+		<action path="/admin/download" type="com.fdt.sdl.admin.ui.action.DownloadAction" scope="request">
+			<forward name="continue" path="/actionResult.vm"/>
+			<forward name="error" path="/actionResult.vm" />
+		</action>
+		
+		<action path="/admin/downloadIndex" type="com.fdt.sdl.core.ui.action.indexing.status.DownloadIndexAction" scope="request">
+			<forward name="error" path="/actionResult.vm" />
+		</action>
+		
+		<action path="/admin/upload" type="com.fdt.sdl.admin.ui.action.UploadAction" scope="request">
+			<forward name="continue" path="/admin/desktop.do"/>
+		</action>
+		
+		<action path="/admin/gc" type="com.fdt.sdl.core.ui.action.indexing.status.GarbageCollectionAction" scope="request">
+			<forward name="continue" path="/actionResult.vm"/>
+			<forward name="error"    path="/actionResult.vm" />
+		</action>
+		
+		<action path="/admin/ping" type="com.fdt.sdl.core.ui.action.indexing.status.PingAction" scope="request">
+			<forward name="continue" path="/ping.vm"/>
+			<forward name="key"      path="/pingKey.vm"/>
+		</action>
+
+		<!-- ========== Desktop ============================== -->
+		<action path="/admin/desktop" type="com.fdt.sdl.admin.ui.action.desktop.GoDashboardAction" scope="request">
+			<forward name="continue" path="/WEB-INF/view/admin/dashboard.stl"/>
+			<forward name="unauthenticated" path="/admin/login.do" />
+		</action>
+
+		<action path="/admin/createIndex" type="com.fdt.sdl.admin.ui.action.indexconfig.CreateIndexAction" scope="request">
+			<forward name="continue" path="/WEB-INF/view/admin/dashboard.stl"/>
+			<forward name="success"  path="/WEB-INF/view/admin/dataset/configBasic.stl"/>
+		</action>
+
+		<action path="/admin/preference" type="com.fdt.sdl.admin.ui.action.siteadmin.PreferenceAction" scope="request">
+			<forward name="continue" path="/WEB-INF/view/admin/preference.stl"/>
+		</action>
+
+		<action path="/admin/securityadministration" forward= "/WEB-INF/view/admin/securityAdministration.stl" />
+
+		<action path="/admin/configAlertSchedule" type="com.fdt.alerts.ui.action.ConfigAlertScheduleAction" scope="request">
+			<forward name="continue"                   path="/WEB-INF/view/admin/configAlertSchedule.stl"/>
+			<forward name="alertConfiguration"         path="/WEB-INF/view/admin/alertConfiguration.stl"/>
+			<forward name="configure_schedule_success" path="/admin/listSchedules.do" />
+		</action>
+		
+		<action path="/admin/instanceJob" type="com.fdt.sdl.admin.ui.action.siteadmin.ConfigInstanceJobAction" scope="request">
+			<forward name="continue"      path="/WEB-INF/view/admin/instanceJob.stl"/>
+			<forward name="listInstanceSchedules" path="/WEB-INF/view/admin/listInstanceSchedules.stl" />
+		</action>
+		
+
+		<action path="/admin/validateIndexName" type="com.fdt.sdl.admin.ui.action.AjaxValidationAction" scope="request">
+			<forward name="continue" path="/WEB-INF/view/admin/ajaxError.stl"/>
+		</action>
+		
+		<!-- ========== Configuration ============================== -->
+		<action path="/admin/configBasic" type="com.fdt.sdl.admin.ui.action.indexconfig.ConfigBasicAction" scope="request">
+			<forward name="continue" path="/WEB-INF/view/admin/dataset/configBasic.stl"/>
+		</action>
+		
+		<action path="/admin/configDataSource" type="com.fdt.sdl.admin.ui.action.indexconfig.ConfigSelectDataSourceTypeAction" scope="request">
+			<forward name="database" path="/admin/configConnection.do" redirect="true"/>
+			<forward name="fetcher"  path="/admin/configFetcher.do" redirect="true"/>
+		</action>
+		
+		<action path="/admin/configDataSelect" type="com.fdt.sdl.admin.ui.action.indexconfig.ConfigSelectDataSourceTypeAction" scope="request">
+			<forward name="database" path="/admin/configWorkingQueue.do" redirect="true"/>
+			<forward name="fetcher"  path="/admin/configFetchResult.do" redirect="true"/>
+		</action>
+		
+		<!-- ========== Database ============================== -->
+		<action path="/admin/configConnection" type="com.fdt.sdl.admin.ui.action.indexconfig.ConfigConnectionAction" scope="request">
+			<forward name="continue" path="/WEB-INF/view/admin/dataset/configConnection.stl"/>
+		</action>
+		
+		<action path="/admin/configWorkingQueue" type="com.fdt.sdl.admin.ui.action.indexconfig.ConfigWorkingQueueAction" scope="request">
+			<forward name="continue" path="/configWorkingQueue.vm"/>
+		</action>
+		
+		<action path="/admin/configContent" type="com.fdt.sdl.admin.ui.action.indexconfig.ConfigContentAction" scope="request">
+			<forward name="continue"      path="/configContent.vm"/>
+			<forward name="listContents"  path="/admin/configWorkingQueue.do" redirect="true"/>
+			<forward name="configContent" path="/admin/configContent.do" redirect="true"/>
+		</action>
+		
+		<!-- ========== Fetcher ============================== -->
+		<action path="/admin/configFetcher" type="com.fdt.sdl.admin.ui.action.indexconfig.ConfigFetcherAction" scope="request">
+			<forward name="continue" path="/WEB-INF/view/admin/dataset/configFetcher.stl"/>
+		</action>
+		
+		<action path="/admin/configFetchResult" type="com.fdt.sdl.admin.ui.action.indexconfig.ConfigFetchResultAction" scope="request">
+			<forward name="continue" path="/WEB-INF/view/admin/dataset/configFetchResult.stl"/>
+		</action>
+
+		<action path="/admin/configAnalyzer" type="com.fdt.sdl.admin.ui.action.indexconfig.ConfigAnalyzerAction" scope="request">
+			<forward name="continue" path="/configAnalyzer.vm"/>
+		</action>
+		
+		<action path="/admin/advancedQueries" type="com.fdt.sdl.admin.ui.action.indexconfig.AdvancedQueriesAction" scope="request">
+			<forward name="continue" path="/WEB-INF/view/admin/dataset/advancedQueries.stl"/>
+		</action>
+		
+		<action path="/admin/datasetOptions" type="com.fdt.sdl.admin.ui.action.indexconfig.DatasetOptionsAction" scope="request">
+			<forward name="continue" path="/WEB-INF/view/admin/datasetOptions.stl"/>
+		</action>
+
+		<!-- ========== Spell Check ============================== -->
+		<action path="/admin/configSpellCheck" type="com.fdt.sdl.admin.ui.action.indexconfig.ConfigSpellCheckAction" scope="request">
+			<forward name="continue" path="/WEB-INF/view/admin/dataset/configSpellCheck.stl"/>
+		</action>
+
+		<!-- ========== Schedule ============================== -->
+		<action path="/admin/listSchedules" type="com.fdt.sdl.admin.ui.action.indexconfig.ListSchedulesAction" scope="request">
+			<forward name="continue"      path="/WEB-INF/view/admin/dataset/listSchedules.stl"/>
+			<forward name="noSchedule"    path="/admin/configSchedule.do" />
+			<forward name="listSchedules" path="/admin/listSchedules.do" redirect="true"/>
+		</action>
+		
+		<action path="/admin/configSchedule" type="com.fdt.sdl.admin.ui.action.indexconfig.ConfigScheduleAction" scope="request">
+			<forward name="continue" path="/configSchedule.vm"/>
+			<forward name="configure_schedule_success" path="/admin/listSchedules.do" />
+		</action>
+
+		<!-- ========== Security ============================== -->
+		<action path="/admin/configSecurity" type="com.fdt.sdl.admin.ui.action.searchconfig.ConfigSecurityAction" scope="request">
+			<forward name="continue" path="/configSecurity.vm"/>
+		</action>
+
+		<!-- ========== Config Search ============================== -->
+		<action path="/admin/configSearchBasic" type="com.fdt.sdl.admin.ui.action.searchconfig.ConfigSearchBasicAction" scope="request">
+			<forward name="continue" path="/configSearchBasic.vm"/>
+		</action>
+		
+		<action path="/admin/configSearchInMemory" type="com.fdt.sdl.admin.ui.action.searchconfig.ConfigSearchInMemoryAction" scope="request">
+			<forward name="continue" path="/WEB-INF/view/admin/dataset/configSearchInMemory.stl"/>
+		</action>
+		
+		<action path="/admin/configWildcard" type="com.fdt.sdl.admin.ui.action.searchconfig.ConfigWildcardAction" scope="request">
+			<forward name="continue" path="/configWildcard.vm"/>
+		</action>
+		
+		<action path="/admin/configSortableColumns" type="com.fdt.sdl.admin.ui.action.searchconfig.ConfigSortableColumnsAction" scope="request">
+			<forward name="continue" path="/configSortableColumns.vm"/>
+		</action>
+		
+		<action path="/admin/configSearchableColumns" type="com.fdt.sdl.admin.ui.action.searchconfig.ConfigSearchableColumnsAction" scope="request">
+			<forward name="continue" path="/configSearchableColumns.vm"/>
+		</action>
+		
+		<action path="/admin/configFilterableColumns" type="com.fdt.sdl.admin.ui.action.searchconfig.ConfigFilterableColumnsAction" scope="request">
+			<forward name="continue" path="/configFilterableColumns.vm"/>
+		</action>
+		
+		<action path="/admin/configDateWeightColumn" type="com.fdt.sdl.admin.ui.action.searchconfig.ConfigDateWeightColumnAction" scope="request">
+			<forward name="continue" path="/configDateWeightColumn.vm"/>
+		</action>
+
+		<!-- ========== Template ============================== -->
+		<action path="/admin/listTemplates" type="com.fdt.sdl.admin.ui.action.template.ListTemplatesAction" scope="request">
+			<forward name="preview"  path="/search.do" redirect="true"/>
+			<forward name="continue" path="/listTemplates.vm"/>
+		</action>
+
+		<action path="/admin/listScaffolds" type="com.fdt.sdl.admin.ui.action.template.ListScaffoldsAction" scope="request">
+			<forward name="continue" path="/WEB-INF/view/admin/template/listScaffolds.stl"/>
+			<forward name="ajaxListDirectories" path="/WEB-INF/view/admin/template/ajaxListDirectories.stl"/>
+			<forward name="ajaxListScaffolds" path="/WEB-INF/view/admin/template/ajaxListScaffolds.stl"/>
+		</action>
+
+		<action path="/admin/editTemplate" type="com.fdt.sdl.admin.ui.action.template.EditTemplateAction" scope="request" parameter="action">
+			<forward name="velocity" path="/editTemplate.vm"/>
+			<forward name="continue" path="/admin/editTemplate.do" redirect="true"/>
+			<forward name="preview" path="/search.do" redirect="true"/>
+			<forward name="uploadFile" path="/admin/uploadFile.do" redirect="true"/>
+		</action>
+		
+		<action path="/admin/editTemplateFile" type="com.fdt.sdl.admin.ui.action.template.EditTemplateFileAction" scope="request">
+			<forward name="continue" path="/WEB-INF/view/admin/template/editTemplateFile.stl"/>
+		</action>
+
+		<action path="/admin/createTemplate" type="com.fdt.sdl.admin.ui.action.template.CreateTemplateAction" scope="request">
+			<forward name="continue" path="/WEB-INF/view/admin/template/createTemplate.stl"/>
+			<forward name="success"  path="/admin/listTemplates.do" redirect="true"/>
+			<forward name="preview"  path="/admin/exampleSearch.do" redirect="true"/>
+		</action>
+
+		<action path="/admin/listIndexFieldValues" type="com.fdt.sdl.admin.ui.action.template.IndexFieldValuesAction" scope="request">
+			<forward name="list"     path="/WEB-INF/view/admin/template/ajaxListIndexFieldValues.stl"/>
+			<forward name="continue" path="/WEB-INF/view/admin/template/ajaxListIndexFieldValues.stl"/>
+		</action>
+
+		<!-- ========== Common ============================== -->
+		<action path="/admin/uploadFile" type="com.fdt.sdl.admin.ui.action.UploadFileAction" scope="request">
+			<forward name="continue"     path="/uploadFile.vm"/>
+			<forward name="editTemplate" path="/admin/editTemplate.do" redirect="true"/>
+		</action>
+
+		<!-- ========== License ============================== -->
+		<!--<action path="/admin/viewLicense" type="com.fdt.sdl.admin.ui.action.license.ViewLicenseAction" scope="request">
+		   <forward name="sucess" path="/page/license/details.stl"/>      
+		</action>
+		
+		<action path="/admin/importLicense" type="com.fdt.sdl.admin.ui.action.license.ImportLicenseAction" scope="request" >
+		   <forward name="view" path="/page/license/import.stl"/>
+		   <forward name="continue" path="/page/license/import.stl"/>            
+		   <forward name="sucess" path="/viewLicense.do"/>
+		</action>
+		-->
+	</action-mappings>
+
+	<message-resources parameter="ApplicationResources"  null="false" />
+</struts-config>

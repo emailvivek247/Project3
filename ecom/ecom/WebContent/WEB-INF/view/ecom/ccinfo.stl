@@ -1,0 +1,349 @@
+<#include "/common/include.stl" />
+<@loginLayout encoding="utf-8">
+<#assign form  =JspTaglibs["http://www.springframework.org/tags/form"]>
+<#assign spring=JspTaglibs["http://www.springframework.org/tags"]>
+<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/validationEngine.jquery.css" type="text/css" />
+<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/login.css" />
+<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/jquery-ui-1.8.11.base.css" />
+<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/jquery-ui-custom-ext.css" />
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.min.js"/></script>
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery-ui.min.js"/></script>
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.validationEngine-en.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.validationEngine.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.cookie.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.idletimer.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.idletimeout.js"></script>
+
+<style>
+
+span.ADCSI_leftcol {
+	width: 170px;
+	text-align:right;
+	display: inline-block;
+}
+div.ADCSI_row {
+	margin-right: 20px;
+}
+#SUCCESS {
+	color:#00CC00;
+}
+#ERROR {
+	color:#F5144C;
+}
+span.loading {
+	background: #5F5964 url(resources/images/processing.gif) 100% 100% no-repeat;
+	width:60px;
+	height:20px;
+	text-align:center;
+	align:center;	
+}
+.ui-dialog {
+	font-size:80%;
+}
+.attention {
+	border-color:#F5144C;
+}
+</style>
+
+<div id="dialog" title="Your session is about to expire!">
+	<p>For security purposes you will be logged off in <span id="dialog-countdown"></span> seconds due to inactivity.</p>
+	<p>Do you need more time?</p>
+	<button id="btnResetTimer" style="display:none">Button #2</button>
+</div>
+
+	<div class="content">
+		<div style="width: 550px; margin-left: auto;margin-right:auto;">	
+			<div id="ADCSI" class="ADCSI" style="margin-top: 0px; margin-bottom: 12px;">
+			<div class="ADCSI_title" id="ADCSI_title">				
+				<span style="width:49%;text-align:left;display:inline-block;"><b><@spring.message code="form.name.creditCardInfo" /></b></span>
+				<span style="width:49%;text-align:right;display:inline-block;"></span>
+			</div>	
+			<@form.form id="frmccinfo" name="frmccinfo" action="" modelAttribute="creditCardForm" method="post" autocomplete="on">						
+			<table style="width:100%">
+				<tr>
+				<th><b><@spring.message code="form.name.paymentInformation" /></b></th>
+				</tr>
+				<tr>			
+					<td style="width:50%;vertical-align:top;">
+							<@form.input type="hidden" path="emailId" class="ADCSI_Input" />
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.ecommerce.accountName" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="accountName" class="validate[required,minSize[1],maxSize[50]] ADCSI_Input" spellcheck="false" tabindex="8" maxlength="50" autocomplete="on" />
+									<@form.errors path="accountName" cssClass="sverror hidden" />						
+								</span>
+							</span>
+							</div>			
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.ecommerce.accountNumber" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="number" class="validate[required,custom[creditCardVMAD],minSize[15],maxSize[16]] ADCSI_Input" spellcheck="false" tabindex="10" maxlength="16" autocomplete="off" />						
+								    <@form.errors path="number" cssClass="sverror hidden" />
+								</span>
+							</span>
+							</div>
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.ecommerce.accountExpirationMonth" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="expMonthS" style="width:45px" class="validate[required,custom[ccMonth],minSize[2],maxSize[2]] ADCSI_Input" spellcheck="false" tabindex="11" maxlength="2" autocomplete="off" />
+									<@form.errors path="expMonthS" cssClass="sverror hidden" />
+									&nbsp;&nbsp;<font style="font-weight: bold;"><@spring.message code="security.ecommerce.accountExpirationYear" /></font>
+									<@form.input path="expYear" style="width:60px" class="validate[required,custom[ccYear],minSize[4],maxSize[4]] ADCSI_Input" spellcheck="false" tabindex="12" maxlength="4" autocomplete="off" />
+									<@form.errors path="expYear" cssClass="sverror hidden" />						
+								</span>
+							</span>														
+							</div>							
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.ecommerce.accountSecurityCode" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="cvv" style="width:60px" class="validate[required,custom[numeric],minSize[1],maxSize[4]] ADCSI_Input" spellcheck="false" tabindex="13" maxlength="4" autocomplete="off" />&nbsp;&nbsp;<a href="publicsecuritycodehelp.admin" target="_blank"><@spring.message code="security.ecommerce.label.securityCodeHelp" /></a>
+									<@form.errors path="cvv" cssClass="sverror hidden" />						
+								</span>
+							</span>
+							</div>
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span style="display:inline;"><img title="Visa" src="${request.getContextPath()}/resources/images/visa.png" /></span><span style="display:inline;"><img title="Master Card" src="${request.getContextPath()}/resources/images/master.png" /></span><span style="display:inline;"><img title="American Express" src="${request.getContextPath()}/resources/images/amex.png" /></span><span style="display:inline;"><img title="Discover" src="${request.getContextPath()}/resources/images/discover.png" /></span>
+							</span>
+							</div>
+							<br />							
+							<div style="width:100%;text-align:center" ><b><@spring.message code="security.ecommerce.label.billingAddress" /></b></div>							
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.authentication.addressLine1" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="addressLine1" class="validate[required,custom[addressLine]minSize[1],maxSize[250]] ADCSI_Input" spellcheck="false" tabindex="15" maxlength="250" autocomplete="on" />
+									<@form.errors path="addressLine1" cssClass="sverror hidden" />							
+								</span>
+							</span>
+							</div>
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.authentication.addressLine2" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="addressLine2" class="ADCSI_Input" spellcheck="false" tabindex="16" maxlength="250" autocomplete="on" />						
+								    <@form.errors path="addressLine2" cssClass="sverror hidden" />	
+								</span>
+							</span>
+							</div>
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.authentication.city" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="city" class="validate[required,minSize[1],maxSize[50]] ADCSI_Input" spellcheck="false" tabindex="17" maxlength="50" autocomplete="on" />
+									<@form.errors path="city" cssClass="sverror hidden" />						
+								</span>
+							</span>
+							</div>
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.authentication.state" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="state" class="validate[required,custom[state],minSize[1],maxSize[2]] ADCSI_Input" spellcheck="false" tabindex="18" maxlength="2" style="width:45px" autocomplete="on" />
+									<@form.errors path="state" cssClass="sverror hidden" />						
+								</span>
+							</span>
+							</div>
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.authentication.zip" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="zip" style="width:100px" class="validate[required,custom[onlyNumberSp],minSize[5],maxSize[5]] ADCSI_Input" spellcheck="false" tabindex="19" maxlength="5" autocomplete="on" />
+									<@form.errors path="zip" cssClass="sverror hidden" />						
+								</span>
+							</span>
+							</div> 
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.ecommerce.phoneNumber" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="phoneNumber" style="width:150px" class="validate[required,custom[phone],custom[numeric],minSize[10],maxSize[10]] ADCSI_Input" spellcheck="false" tabindex="20" maxlength="10" autocomplete="on" />
+									<@form.errors path="phoneNumber" cssClass="sverror hidden" />
+								</span>
+							</span>
+							</div>
+					</td>
+				</tr>
+			</table>
+			<div style="text-align: center;padding-top: 30px;padding-bottom: 10px;">
+			    <img id="processing" src="${request.getContextPath()}/resources/images/processing.gif" style="display:none"><br />
+				<span id="ERROR"></span>
+				<span id="SUCCESS"></span>
+				<a href="${returnUrl}?isReAu=true">Return to Previous Page</a>&nbsp;&nbsp;
+				<input class="button" type="submit" id="btnUpdateAcct" name="btnUpdateAcct" tabindex="21" value='<@spring.message code="security.authentication.update"/>' />						
+			</div>
+			<br />
+			<div class="ADCSI_row">
+				<span>
+					<@spring.message code="security.ecommerce.label.creditcardUpdateMessage" /><br /><br />
+					<@spring.message code="security.ecommerce.label.creditcardUpdateSubscrption" />					
+				</span>
+			</div>
+			<br />
+			<br />
+		</@form.form>
+		<div class="ADCSI_title" id="ADCSI_title">
+			<div style="height:40px;">
+				<table>
+					<tr>
+						<td>			
+							<span><#if returnUrl?has_content><a href="${returnUrl}?isReAu=true">Return to Account Information</#if><img style="border:0px;;" src="${request.getContextPath()}/resources/images/accountInformation.png"/></a></span>					
+						</td>
+					</tr>
+				</table>
+		</div>		    			
+	</div>			
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+	    $("input:submit").button();
+	    $("img#processing").hide();
+        $('#frmccinfo').validationEngine();
+        $('#frmccinfo').validationEngine('hide');
+        if ($("number").val() == "as") {
+        	$("#number").validationEngine('showPrompt', "For Security reasons please reenter the credit card number.", 'fail', 'topRight', true);
+        }        		
+		jQuery('.sverror').each(function() {
+		    var currentElement = '#' + $(this).attr('id').split('.')[0];	     
+	        $(currentElement).validationEngine('showPrompt', $(this).html(), 'fail', 'topRight', true);
+		});
+		$("#dialog").dialog({
+			autoOpen: false,
+			modal: true,
+			width: 400,
+			height: 180,			
+			closeOnEscape: false,
+			draggable: false,
+			resizable: false,
+			buttons: {
+				'Yes, Keep me Logged In' : {
+			         text: "Yes, Keep me Logged In",
+			         id: "btnResetSessionTimeout",
+			         click: function(){
+			         	$(this).dialog('close');
+			         	$("#btnResetTimer").trigger('click');
+			         }   
+			    },
+			    'No, Logoff' : {
+			         text: "No, Logoff",
+			         id: "btnLogOffTimeout",
+			         click: function(){
+			            $.idleTimeout.options.onTimeout.call(this);
+			         }   
+			    }
+			}
+		});	
+		
+		$.idleTimeout('#dialog', 'div.ui-dialog-buttonpane button:first', {
+			idleAfter: 240, // user is considered idle after 5 minutes of no movement
+			pollingInterval: 40000, // a request to keepalive.php (below) will be sent to the server every minute
+			keepAliveURL: 'KeepAlive.admin',
+			serverResponseEquals: 'OK', // the response from keepalive.php must equal the text "OK"
+			warningLength: 30,
+			onTimeout: function(){
+		 		window.location = "${returnUrl}?isReAu=true";
+		 	},
+			onIdle: function(){
+		 		$(this).dialog("open");
+		 	},
+			onCountdown: function(counter){
+		 		$("#dialog-countdown").html(counter);
+		 	},
+			onResume: function(){
+		 		$.ajax({
+			      type: "POST",
+			      url: "KeepAlive.admin",
+			      error:(function() { }),
+			      statusCode: {
+			    	    901: function() {
+			    	      	window.location = "${returnUrl}?isReAu=true";
+			    	    }
+			      }
+			     });
+		 	}
+		});
+		
+		$(".button").click(function() {
+			$("#btnResetTimer").trigger('click');
+	    	$("#ERROR").children().remove();
+		    $("#SUCCESS").children().remove();
+		    frmErrors = $('div.formErrorContent');
+		    $('#processing').show();
+		    $('#btnUpdateAcct').hide();
+		    if (frmErrors.length > 0) $('#frmccinfo').validationEngine('hide');;
+		    var accountName = $("input#accountName").val();
+			var accountNumber = $("input#number").val();
+			var expMonthS = $("input#expMonthS").val();
+			var expYear = $("input#expYear").val();
+			var cvv = $("input#cvv").val();
+			var addressLine1 = $("input#addressLine1").val();
+			var addressLine2 = $("input#addressLine2").val();
+			var city = $("input#city").val();
+			var state = $("input#state").val();
+			var zip = $("input#zip").val();
+			var emailId = $("input#emailId").val();
+			var phoneNumber = $("input#phoneNumber").val();
+			var dataString = 'accountName='+ accountName + '&number=' + accountNumber + '&expMonthS=' + expMonthS + '&expYear=' + expYear + '&cvv=' + cvv + '&addressLine1=' + addressLine1 + '&addressLine2=' + addressLine2 + '&city=' + city + '&state=' + state + '&zip=' + zip + '&phoneNumber=' + phoneNumber + '&emailId=' + emailId;
+			var hasFormValidationErrors = false;
+		    var strFormValidationErrors = ""	
+			$.ajax({
+		      type: "POST",
+		      url: "updateAccountInformation.admin",
+		      data: dataString,      
+		      success: function(data) {
+		      	  $("input").removeClass('attention');	
+		          $.each(data, function(i,item){
+		    		 var elementID = "#" + item.code;
+		    		 if (item.code != "SUCCESS" && item.code!="ERROR_DATA" && item.code!="ERROR_EMAIL") {
+		    		 	 $("#ERROR").children().remove(); 
+		    		 	 $(elementID).addClass('attention');
+		    		 	 hasFormValidationErrors = true;
+		    		 	 strFormValidationErrors = strFormValidationErrors + '<br />' + item.description;		    		 	
+		    			 //$(elementID).validationEngine('showPrompt', item.description, 'fail', 'topRight', true);
+		    			 $("#btnUpdateAcct").show();
+		    		 } else if (item.code == "SUCCESS") {
+		    			 $("#ERROR").children().remove();
+		    			 $("#SUCCESS").children().remove();
+		    			 $("#SUCCESS").append('<p id="' + elementID + 'msg">' + item.description + '</p>'); 
+		    			 $("#btnUpdateAcct").hide();		    			 
+		    		 } else {
+		    			 $("#ERROR").children().remove();
+		    			 $("#SUCCESS").children().remove();
+		    			 $("#ERROR").append('<p id="' + elementID + 'msg">' + item.description + '</p>');		    		
+		    		 }
+		    		 if (hasFormValidationErrors) {
+		    		 	 $("#ERROR").children().remove(); 
+		    		 	 $("#ERROR").append('<p id="' + elementID + 'msg">' + 'Please fix the below errors.' + strFormValidationErrors + '</p>');
+		    		 }
+		    		 $('#processing').hide();		    		 
+		          });       
+		      },
+		      error:(function() { }),
+		      statusCode: {
+		    	    901: function() {
+						$("<div>Your Session Expired Due to Inactivity. You will be redirected to the account information page</div>").dialog({
+	                    	modal: true,
+	                     	buttons: {
+			                             Ok: function() {
+			                                   window.location = "${returnUrl}?isReAu=true";
+			                             }
+			                     }
+			             });
+		    	    }
+		      },
+		      complete: function(xhr, textStatus) {
+		          console.log(xhr.status);
+		      } 
+		     });
+		    return false;
+		});
+		
+	});
+</script>
+</@loginLayout>

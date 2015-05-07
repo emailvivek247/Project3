@@ -1,0 +1,101 @@
+#set( $title = $msg.get("title") )
+#set( $selectedMenu = 'dataset' )
+#set( $selectedToptab = "search" )
+#set( $selectedSubtab = "configFilterableColumns" )
+
+
+<form name="f" method="post" action="configFilterableColumns.do">
+<input type="hidden" name="indexName" value="$!{dc.name}">
+<input type="hidden" name="operation" value="save">
+<br />
+#errorMarkup()
+#messageMarkup()
+
+#openFieldset("Filterable Column Configuration")
+<div class="help">
+<p>Filterable Columns are used in "narrowBy.stl" when displaying search results.</p>
+<p>Filterable Columns can only be Field Type <b>Keyword</b>, <b>KeywordBoost</b>, <b>KeywordDateHierarchical</b>, or <b>Keywords</b>.</p>
+<p>You can change the types in <a href="configWorkingQueue.do?indexName=$indexName">SQL Queries</a> tab.</p>
+<p>Here you can choose to enable/disable some of them, to change the display order, or to set the display name.</p>
+<p>If a filterable column has a <b>Parent</b> Column, then this child column is displayed in "narrowBy.stl" only when the parent column is selected.<br />
+<p>If a filterable column has a <b>Sum</b> Column, the values in the <b>Sum</b> Column will be summed up.<br />
+</p>
+<p>Extra:
+<ul>
+ <li>If a filterable column has <b>Multiple Filterable Values</b>, like tags, or one product belongs to mulitple categories, please check the flag.<br />
+     If not checked, only one category will be counted when displaying the "narrowBy".
+ </li>
+<li>If a filterable column is number, you may want to group them into buckets and show them. There are many ways to group numbers.<br/>
+ To customize, please check <i>WEB-INF/conf/facet-types.xml</i> file. There are examples like <b>Price List</b>, <b>Years</b>. If you need to, you can adjust displays of the groups in narrowBy.stl.
+</li>
+</ul>
+</p>
+
+<p><b>Tag</b> field is provided for advanced users to programatically control rendering. So in ftl file, you can say: <pre>
+     &lt;&#35;if column.tag == "xyz"&gt;
+     ...
+     &lt;/&#35;if&gt;
+</pre>.
+</p>
+
+<p><b>Note:</b>Changes here will affect the created templates.</p>
+</div>
+#closeFieldset()
+
+<br />
+<table id="columntable" class="xsearchtable small_font">
+<tr align="center"><th>Display Order</th><th>Column</th><th>Type</th><th>Display Name</th><th>Parent</th><th>Sum</th><th>Filter</th><th>MultiValue</th><th>Group As</th><th>Order By</th><th>Tag(Optional)</th></tr>
+#macro( dropdownListColumn $__listName $__list $__selected )
+<select class="group_select" name=$__listName style="width:5em">
+  <option value="">None</option>
+  #foreach( $v in $__list )
+    <option value="$v.name"#if( $__selected == $v.name ) selected="selected"#end>$v.name</option>
+  #end
+</select>
+#end
+
+#foreach ($c in $columns)
+ <tr class="${c.indexFieldType} #if($c.isPrimaryKey)primaryKey#end">
+   <td><input type="text" style="width:3em" name="filterOrder_$c.columnName" value="$!{c.filterDisplayOrder}"></td>
+   <td>$c.columnName</td>
+   <td>${c.columnTypeShortName}(${c.indexFieldType})</td>
+   <td><input type="text" style="width:9em" name="name_$c.columnName" value="$!{c.displayName}"></td>
+   <td>#dropdownListColumn("parentColumnName_$c.columnName" $columns $c.filterParentColumnName)</td>
+   <td>#dropdownListColumn("sumColumnNames_$c.columnName" $sumColumns $U.nvl($c.sumColumnNames))</td>
+   <td><input type="checkbox" name="enable_${c.columnName}" value="Y" #if($c.isFilterable)checked="checked"#end></td>
+   <td nowrap><input type="checkbox" class="multiValue_checkbox" name="hasMultipleKeywords_${c.columnName}" value="Y" #if($c.getHasMultipleKeywords())checked="checked"#end></td>
+   <td nowrap>#dropdownListColumn("facetType_$c.columnName" $WebserverStatic.facetTypes.getFacetTypes($c) $c.filterFacetTypeName)</td>
+   <td>
+    <select name="sortFilterCountsBy_${c.columnName}" style="width:10em">
+     <option value="0"#if( $c.getSortFilterCountsBy()==0 ) selected="selected"#end>Count Desc</option>
+     <option value="1"#if( $c.getSortFilterCountsBy()==1 ) selected="selected"#end>${c.columnName} Desc</option>
+     <option value="2"#if( $c.getSortFilterCountsBy()==2 ) selected="selected"#end>${c.columnName} Asc</option>
+     <option value="3"#if( $c.getSortFilterCountsBy()==3 ) selected="selected"#end>Sum Desc</option>
+     <option value="4"#if( $c.getSortFilterCountsBy()==4 ) selected="selected"#end>Sum Asc</option>
+     <option value="5"#if( $c.getSortFilterCountsBy()==5 ) selected="selected"#end>Average Desc</option>
+     <option value="6"#if( $c.getSortFilterCountsBy()==6 ) selected="selected"#end>Average Asc</option>
+     <option value="100"#if( $c.getSortFilterCountsBy()==100 ) selected="selected"#end>No Sorting</option>
+    </select>
+   </td>
+   <td><input type="text" style="width:9em" name="tag_$c.columnName" value="$!{c.tag}"></td>
+ </tr>
+#end
+</table>
+<table align="center">
+<tr><td align=center>
+#actionSubmitButton( "f" "submitSave" $!msg.get("button.save") "save" )
+</td></tr>
+</table>
+</form>
+
+<script>
+$().ready(function() {
+  $(".KeywordDateHierarchical").find(".multiValue_checkbox").hide();
+  $(".primaryKey").find(".multiValue_checkbox").hide();
+  $(".group_select").each(function(){
+    if($(this).find('option').length<=1){
+      $(this).hide();
+    }
+  });
+});
+</script>

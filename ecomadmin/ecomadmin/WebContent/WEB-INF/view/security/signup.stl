@@ -1,0 +1,397 @@
+<#include "../lib/include.stl" />
+<head>
+<title>ACCEPT Sign Up</title>
+</head>
+<#assign form  =JspTaglibs["http://www.springframework.org/tags/form"]>
+<#assign spring=JspTaglibs["http://www.springframework.org/tags"]>
+
+
+<style>
+div.ADCSI {
+	width: 550px;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-size: 13px;
+}
+span.ADCSI_leftcol {
+	width: 116px;
+	text-align:right;
+	display: inline-block;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-size: 13px;
+}
+
+span.ADCSI_rightcol {
+
+	display: inline-block;
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-size: 13px;
+}
+
+
+#footerTable {
+font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+font-size: 13px;
+color: #FBFCFA;
+}
+.icon-lightbulb {
+color:#FFFFFF;
+}
+
+
+.login-container {
+width: 950px;
+margin: 0 auto;
+}
+#recaptcha_area, #recaptcha_table {
+width: 290px!important;
+}
+#arrowRight {
+color= #FFFFFF;
+
+}
+
+element.style {
+opacity: 0.87;
+position: absolute;
+top: 26px;
+left: 182px;
+margin-top: -5px;
+
+}
+.formError .formErrorContent {
+width: 100%;
+background: #ee0101;
+color: #fff;
+width: 150px;
+font-family: tahoma;
+font-size: 11px;
+border: 2px solid #ddd;
+box-shadow: 0px 0px 6px #000;
+-moz-box-shadow: 0px 0px 6px #000;
+-webkit-box-shadow: 0px 0px 6px #000;
+padding: 4px 10px 4px 10px;
+border-radius: 6px;
+-moz-border-radius: 6px;
+-webkit-border-radius: 6px;
+}
+.toolbar {
+background: rgb(118, 183, 116);
+border-top: 2px solid rgb(117, 151, 89);
+padding: 9px 18px;
+}
+
+.back-to-login-link {
+color: rgb(255, 238, 153);
+font-size: 14px;
+font-weight: bold;
+text-shadow: rgba(0, 0, 0, 0.247059) 1px 0px 1px;
+}
+#acceptTitle {font-size: 45px;margin: 20px 0;}
+
+</style>
+
+
+
+
+
+<body class="login-layout">
+		<div class="main-container">
+			<div class="main-content">
+				<div class="row">
+					<div class="col-sm-10 col-sm-offset-1">
+						<div class="login-container">
+							<div class="space-6"></div>
+
+								<div class="row-fluid" id="rowTop">
+									<div class="position-relative">
+
+									<!--Signup box has specific styling listed in this page-->
+									<div id="signup-box" class="visible widget-box no-border">
+										<div class="widget-main" style="background-color:white;">
+												<div id="acceptTitle" class="center">
+														<img src="resources/images/accept-logo.png">
+												</div>
+												<h4 class="header green lighter bigger" style="text-align:center;">
+												<i class="icon-user"></i>
+													New User Registration
+												</h4>
+												<div class="space-6" ></div>
+													<p>
+														Enter your details to begin:
+													</p>
+
+
+												<div id="register">
+													  <div id="registerContainer">
+													    <@form.form id="signup-form" name="signup" method="post" action="publicregisteruser.admin" modelAttribute="RegistrationForm" autocomplete="on">
+														<table style="text-align:center;vertical-align:top;" border="0" cellspacing="1" cellpadding="4">
+														<tr style="text-align:center;vertical-align:top;">
+														<td style="text-align:center;vertical-align:top;border-right: 1px solid #DDD;padding-right:20px;" >
+					
+														<!--Begin Left-Hand Column of the Form-->
+														<div class="ADCSI_row">
+														<span class="ADCSI_leftcol"><@spring.message code="security.authentication.username" /></span>
+														<span class="ADCSI_rightcol" style="width: 290px; display: inline-block; ">
+															<span>
+																<@form.input path="username" class="validate[required,custom[email],minSize[6],maxSize[50]] ADCSI_Input" spellcheck="false" tabindex="1" maxlength="50"/>
+																<@form.errors path="username" cssClass="sverror hidden" />
+															</span>
+														</span>
+														</div>
+														<div class="ADCSI_row">
+														<span class="ADCSI_leftcol"><@spring.message code="security.authentication.first" /></span>
+														<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+															<span>
+																<@form.input path="firstName" class="validate[required,maxSize[50]],custom[onlyLetterSp] ADCSI_Input" spellcheck="false" tabindex="2" maxlength="50"/>
+																<@form.errors path="firstName" cssClass="sverror hidden" />
+															</span>
+														</span>
+														</div>
+														<div class="ADCSI_row">
+														<span class="ADCSI_leftcol"><@spring.message code="security.authentication.last" /></span>
+														<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+															<span>
+																<@form.input path="lastName" class="validate[required,maxSize[50]],custom[onlyLetterSp] ADCSI_Input" spellcheck="false" tabindex="3" maxlength="50"/>
+																<@form.errors path="lastName" cssClass="sverror hidden" />
+															</span>
+														</span>
+														</div>
+														<div class="ADCSI_row">
+														<span class="ADCSI_leftcol"><@spring.message code="security.authentication.password" /></span>
+														<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+															<span>
+																<input class="validate[required,minSize[8],maxSize[20]] ADCSI_Input" type="password" id="password" name="password" tabindex="4" onkeyup="checkPassword('password')" maxlength="20" autocomplete="off">
+																<@form.errors path="password" cssClass="sverror hidden" />
+															</span>
+															<div id="strength"></div>
+														</span>
+														</div>
+														<div class="ADCSI_row">
+														<span class="ADCSI_leftcol"><@spring.message code="security.authentication.confirmPassword" /></span>
+														<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+															<span>
+																<input class="validate[required,minSize[8],maxSize[20],equals[password]] ADCSI_Input" type="password" id="confirmPassword" name="confirmPassword" tabindex="5" maxlength="20" autocomplete="off">
+																<@form.errors path="confirmPassword" cssClass="sverror hidden" />
+															</span>
+														</span>
+														</div>
+														<br /><br />
+														<div class="ui-widget-content ui-corner-all" id="hint" style="border:none; width:290px;"></div>
+														</td>
+														<td style="text-align:left;vertical-align:top;">
+					
+														<!--Begin Right-Hand Column of the Form-->
+														<div class="ADCSI_row">
+															<span class="ADCSI_leftcol"><@spring.message code="security.authentication.selectSite" /></span>
+															<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+					
+															  	<select id="siteId" name="siteId" class="k-widget k-dropdownlist" tabindex="6" style="width:235px;" >
+					
+																    	    <#foreach site in sites>
+																                    <option value="${site.id}"> ${site.description}</option>
+																    		</#foreach>
+					
+																</select>
+					
+															</span>
+														</div>
+														<div class="ADCSI_row">
+															<span class="ADCSI_leftcol"><@spring.message code="security.authentication.wordVerification" /></span>
+															<span class="ADCSI_rightcol" style="width: 250px; display: inline-block;"></span>
+														</div>
+														<div class="ADCSI_row ">
+															<span class="ADCSI_leftcol"></span>
+															<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+										                    <@form.errors path="recaptcha_response_field" cssClass="sverror hidden" />
+										                    <span>
+					
+										                        <span id="captchaContainer">
+										                            ${reCaptcha?string}
+										                        </span>
+										                    </span>
+										                    <@spring.message code="security.authentication.captchaPrompt" />
+															</span>
+														</div>
+														</td>
+														</tr>
+														</table>
+														<div>
+														<div class="ADCSI_row" style="padding-top: 30px;width:100%; font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-size:13px">
+															<span class="ADCSI_leftcol"><@spring.message code="security.authentication.termsPrompt" /></span>
+															<span class="ADCSI_rightcol" style="width: 700px; display: inline-block; ">
+					
+																<input type="radio" name="termsAccept" id="termsdecline" value="0" CHECKED>&nbsp;<@spring.message code="security.authentication.decline" /><br />
+																<input type="radio" name="termsAccept" id="termsAccept" value="1" tabindex="8">&nbsp;<@spring.message code="security.authentication.agree" /><a target="_blank" href="publicTerms.admin" class="noDecoration" id="s_terms">&nbsp;<@spring.message code="security.authentication.roamTerms" /></a>
+																<@form.errors path="termsAccept" cssClass="sverror hidden" />
+															</span>
+														</div>
+														<div class="ADCSI_row" style="width:100%;">
+															<span class="ADCSI_leftcol"></span>
+															<span class="ADCSI_rightcol" style="width: 700px; display: inline-block; ">
+																<font size="-1" face="Arial, sans-serif" color="#6f6f6f"><@spring.message code="security.authentication.readTermsPrompt" /></font>
+															</span>
+														</div>
+														<div style="text-align: center;padding-top: 30px;padding-bottom: 10px;">
+															<span><img id="processing" 	style="display:none;" src="resources/images/processing.gif" ><br /></span>
+															<input type="submit" name="signup" class="btn btn-small btn-success" id="btnSignUp" tabindex="9" value='<@spring.message code="security.authentication.signup"/>' />
+															<input type="reset" name="reset" class="btn btn-small" id="btnReset" value='<@spring.message code="security.authentication.reset" />' />
+														</div> </div>
+												      </@form.form>
+											    	</div> <!--registerContainer-->
+											    </div>	<!--End Register-->
+
+						    			</div><!--/widget-main-->
+
+											<div class="toolbar">
+												<a href="publiclogin.admin" onclick="show_box('login-box');" class="back-to-login-link" >
+													<i class="icon-arrow-left"></i>
+													Back to login
+												</a>
+											<div style="float:right;display:inline-block;font-size:20px;">	
+													<span>
+														<a  href="https://www.facebook.com/pages/AMCAD/193699310720652" >
+															<i class="icon-facebook white "></i>
+														</a>
+													</span>
+													<span>
+														<a href="https://twitter.com/AmCadLLC">
+															<i class="icon-twitter white"></i>
+														</a>
+													</span>	
+													<span>
+														<a href="http://www.linkedin.com/company/amcad?trk=tabs_biz_home" >
+															<i class="icon-linkedin white"></i>
+														</a>
+													</span>	
+													<span>
+														<a href="http://www.youtube.com/user/AMCADLLC">
+															<i class="icon-youtube white"></i>
+														</a>
+													</span>
+											</div>	
+											</div>
+								</div><!--/signup-box-->
+
+										<div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div>
+										<div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div>
+										<div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div>			
+										<div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div>
+										<div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div>
+										<div class="fill">&nbsp;</div><div class="fill">&nbsp;</div></div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div>
+										<div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div>
+										<div class="hr hr32 hr-dotted"></div>
+
+
+
+										<!--- Footer ---- Style is inherited from footerTable2 id--->
+										<div class="container-fluid" id="after-footer" width="50%">
+											<table border="0" width="100%" >
+											<tbody id="footerTable" style="color:#000;">
+									        	<tr>
+								               		<td align="center" style="vertical-align:top">
+								                    		<a href="http://www.amcad.com"><img src="resources/images/amcadLogo.png" alt="AMCAD"  height="42px" border="0" /></a><br>&nbsp; Copyright &copy;2014 (dba AmCad & AmCad Digital Conversions)
+								                	</td>
+								                	<div class="clear">
+									        	</tr>
+									        </tbody>
+									    	</table>
+									    </div><!-- end #after-footer -->
+								</div><!--/position-relative-->
+							</div><!--/row-fluid-->
+						
+						
+						</div><!--login container-->
+					</div><!--/span12-->
+				</div><!--/row-fluid-->
+			</div> <!--main-content-->
+		</div><!--/-container-fluid-->
+
+
+<script type="text/javascript">
+		window.jQuery || document.write("<script src='assets/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
+</script>
+
+
+<script type="text/javascript">
+	function show_box(id) {
+	 $('.widget-box.visible').removeClass('visible');
+	 $('#'+id).addClass('visible');
+	}
+</script>
+
+<script type="text/javascript">
+
+
+	var siteId = $("#siteId option:selected").val();
+	var siteName = $("#siteId option:selected").text();
+
+
+	$(document).ready(function(){
+		$("#siteId").kendoDropDownList();
+		$("#siteId").change(refreshVals);
+
+	    $('#recaptcha_response_field').addClass('validate[required]');
+        $('#recaptcha_response_field').addClass('ADCSI_Input');
+		$("img#processing").hide();
+		$('#btnSignUp').removeAttr("disabled");
+		$(':input:visible:enabled:first').focus();
+	 	$('#signup-form').validationEngine({binded:false});
+	 	$("#signup-form").bind("jqv.form.result", function(event, errorFound) {
+		  if(errorFound)
+			$("#processing").hide();
+			$("#btnSignUp").removeAttr("disabled");
+		});
+
+		$('#btnReset').click(function() {
+			$('#signup-form').validationEngine('hide');
+			$("img#processing").hide();
+		});
+
+		$('#refreshCaptcha').click(function() {
+			d = new Date();
+			$("#captchaimg").attr("src", "publiccaptcha.admin?"+d.getTime());
+		});
+
+		if ($('.sverror').length > 0){
+
+	 		$('.sverror').each(function() {
+	 		    var currentElement = '#' + $(this).attr('id').split('.')[0];
+			   	$(currentElement).validationEngine('showPrompt', $(this).html(), 'fail', 'topRight', true);
+			});
+		}
+
+		function refreshVals() {
+			siteId = $("#siteId option:selected").val();
+			siteName = $("#siteId option:selected").text();
+
+
+		}
+
+
+		$("#btnSignUp").click(function(){
+			if ($('input[name="termsAccept"]:checked', '#signup-form').val() == 0) {
+				$("#s_terms").validationEngine('showPrompt', 'Please accept the terms and conditions', 'fail', 'topRight', true);
+				return false;
+			}
+
+			if ($('#recaptcha_response_field').val() == "") {
+				$("#recaptcha_response_field").validationEngine('showPrompt', '*This field is required', 'fail', 'topRight', true);
+				return false;
+			}
+
+			if ($(".formError").length > 0 || $(".formErrorContent").length > 0) {
+	    		$("img#processing").hide();
+
+	    	} else {
+	    		$("img#processing").show();
+	    		$("#btnSignUp").attr('disabled', 'true')
+	    		$('#signup-form').submit();
+	    	}
+
+
+		});
+	});
+
+</script>
+
+</body>

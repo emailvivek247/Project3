@@ -1,0 +1,422 @@
+/** JavaCC code for the query lexical analyzer. */
+
+options {
+  STATIC = false;
+  USER_CHAR_STREAM = true;
+  UNICODE_INPUT = true;
+//DEBUG_TOKEN_MANAGER = true;
+}
+
+PARSER_BEGIN(QueryAnalysis)
+
+package net.javacoding.xsearch.search.analysis;
+
+import net.javacoding.xsearch.search.Query;
+
+import org.apache.lucene.analysis.StopFilter;
+import net.javacoding.xsearch.config.DatasetConfiguration;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.WhitespaceAnalyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+
+import org.apache.log4j.Logger;
+
+import java.io.*;
+import java.util.*;
+
+/** The JavaCC-generated Nutch lexical analyzer and query parser. */
+public class QueryAnalysis {
+  private static Logger logger = Logger.getLogger(QueryAnalysis.class.getName());
+  private DatasetConfiguration dc;
+  private Analyzer analyzer;
+  public boolean debug = false;
+
+  public QueryAnalysis(CharStream stream,DatasetConfiguration dc,Analyzer a) {
+    this(stream);
+    this.dc = dc;
+    //changing from a to WhitespaceAnalyzer is to prevent applying analyzer twice, especially SoundEx analyzer
+    //but this caused wildcard search not being stripped for cases when under minimal length, effectively allowing wildcard searches
+    this.analyzer = new WhitespaceAnalyzer();
+  }
+  private static final String[] STOP_WORDS = {};
+
+  public static final Set STOP_SET = StopFilter.makeStopSet(STOP_WORDS);
+
+  private String queryString;
+  /** True iff word is a stop word.  Stop words are only removed from queries.
+   * Every word is indexed.  */
+  public static boolean isStopWord(String word) {
+    return STOP_SET.contains(word);
+  }
+
+  /** Construct a query parser for the text in a reader. */
+  public static Query parseQuery(String queryString) throws ParseException {
+    QueryAnalysis parser =
+      new QueryAnalysis(new FastCharStream(new StringReader(queryString)));
+    parser.queryString = queryString;
+    return parser.parse();
+  }
+
+  /** Construct a query parser for the text in a reader.
+   * @throws IllegalAccessException
+   * @throws InstantiationException
+   * @throws ClassNotFoundException
+   */
+  public static Query parseQueryDebug(String queryString,DatasetConfiguration dc) throws ParseException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+    QueryAnalysis parser = new QueryAnalysis(new FastCharStream(new StringReader(queryString)),dc,dc.getAnalyzer());
+    parser.debug = true;
+    parser.queryString = queryString;
+    return parser.parse();
+  }
+  public static Query parseQueryDebug(String queryString,DatasetConfiguration dc, Analyzer a) throws ParseException {
+    QueryAnalysis parser = new QueryAnalysis(new FastCharStream(new StringReader(queryString)),dc,a);
+    parser.debug = true;
+    parser.queryString = queryString;
+    return parser.parse();
+  }
+
+
+/** Construct a query parser for the text in a reader. */
+  public static Query parseQuery(String queryString,DatasetConfiguration dc,Analyzer a) throws ParseException {
+    QueryAnalysis parser = new QueryAnalysis(new FastCharStream(new StringReader(queryString)),dc,a);
+    parser.queryString = queryString;
+    return parser.parse();
+  }
+  public static Query parseQuery(String queryString,DatasetConfiguration dc) throws ParseException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+    QueryAnalysis parser = new QueryAnalysis(new FastCharStream(new StringReader(queryString)),dc,dc.getAnalyzer());
+    parser.queryString = queryString;
+    return parser.parse();
+  }
+
+  /**
+ *  use dataset info and analyzer to process input
+*/
+private boolean invalidField(String field){
+ return (!Query.Clause.DEFAULT_FIELD.equals(field)&& dc!= null && dc.findColumn(field)==null);
+}
+private void customizedProcess(String input, String field, ArrayList result,boolean wildcard){
+    if (dc!= null && dc.isRawField(field))  {
+      result.clear();
+      result.add(input);
+    } else if (analyzer!=null){
+      try {
+        //if invalid field, restore the input and field
+        if (invalidField(field)) {
+            if (debug) logger.info(field+" is invalid");
+                input = field+":"+input;
+                field =Query.Clause.DEFAULT_FIELD;
+            if (debug) logger.info("input="+input);
+        }
+        result.clear();
+
+        //wild card case
+       if (( dc == null || dc.getIsWildcardAllowed())&& wildcard){
+           int prefix = 5;
+           if (dc!=null) prefix=dc.getMinWildcardPrefixLength();
+           int starIndex = input.indexOf("*");
+           int questionIndex =input.indexOf("?");
+           if (starIndex>=prefix&&questionIndex<0 || questionIndex>=prefix&&starIndex<0 ||questionIndex>=prefix&&starIndex>=prefix ){
+              if(dc!=null&&dc.getIsWildcardLowercaseNeeded()){
+                      result.add(input.toLowerCase());
+              }else{
+                      result.add(input);
+                  }
+              return;
+           }
+        }
+
+        String columnName = field;
+        if (!Query.Clause.DEFAULT_FIELD.equals(field)) {
+            columnName = dc.findColumn(field).getColumnName();
+        }
+        if (debug) logger.info("columnName="+columnName);
+        //regular case
+        TokenStream stream = analyzer.tokenStream(columnName, new StringReader(input));
+        while (true) {
+            org.apache.lucene.analysis.Token t = stream.next();
+            if (t == null) break;
+            if (debug) logger.info("token="+t.termText());
+            result.add(t.termText());
+        }
+      }catch (Exception e){
+        e.printStackTrace();
+      }
+    }
+}
+
+
+  /** For debugging. */
+  public static void main(String[] args) throws Exception {
+    BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+    Analyzer analyzer = new StandardAnalyzer();
+    while (true) {
+      System.out.print("Query: ");
+      String line = in.readLine();
+      System.out.println(parseQueryDebug(line,null, analyzer));
+    }
+  }
+
+}
+
+PARSER_END(QueryAnalysis)
+
+TOKEN_MGR_DECLS : {
+
+  /** Constructs a token manager for the provided Reader. */
+  public QueryAnalysisTokenManager(Reader reader) {
+    this(new FastCharStream(reader));
+  }
+
+}
+
+TOKEN : {                                          // token regular expressions
+
+  // basic word -- lowercase it
+//<WORD: (<LETTER>|<DIGIT>)(<LETTER>|<DIGIT>|<WORD_PUNCT>)*>
+<WORD: 
+  (<LETTER>|<DIGIT>|<SLASH>|<DOT>|<ATSIGN>|<APOSTROPHE>|<UNDERSCORE>|<AMPERSAND>|<STAR>|<QUESTIONMARK>)
+  (<LETTER>|<DIGIT>|<PLUS>|<MINUS>|<SLASH>|<DOT>|<ATSIGN>|<APOSTROPHE>|<UNDERSCORE>|<AMPERSAND>|<STAR>|<QUESTIONMARK>|<SLOP>)*>
+  { matchedToken.image = matchedToken.image.toLowerCase(); }
+|
+<INCHES: (<DIGIT>)* (<DOT>) (<DIGIT>)+ <QUOTE> >
+  { matchedToken.image = matchedToken.image.toLowerCase(); }
+
+|<NUMBER: (<DIGIT>)+>
+  // special handling for acronyms: U.S.A., I.B.M., etc: dots are removed
+| <ACRONYM: <LETTER> "." (<LETTER> ".")+ >
+    {                                             // remove dots
+      for (int i = 0; i < image.length(); i++) {
+        if (image.charAt(i) == '.')
+          image.deleteCharAt(i--);
+      }
+      matchedToken.image = image.toString().toLowerCase();
+    }
+
+// chinese, japanese and korean characters
+//| <SIGRAM: <CJK> >
+// concatenate the cjk characters and separate them by analyzers
+| <SIGRAM: (<CJK>)+ >
+
+  // query syntax characters
+| <PLUS: "+" >
+| <MINUS: "-" >
+| <QUOTE: "\"" >
+| <COLON: ":" >
+| <SLASH: "/" >
+| <DOT: "." >
+| <SLOP: "~" >
+| <ATSIGN: "@" >
+| <APOSTROPHE: "'" >
+| <UNDERSCORE: "_" >
+| <AMPERSAND: "&" >
+| <STAR: "*" >
+| <QUESTIONMARK: "?" >
+
+| <WHITE: ~[] >                                   // treat unrecognized chars
+                                                  // as whitespace
+
+// primitive, non-token patterns
+
+| <#WORD_PUNCT: ("_"|"&"|"/"|"-"|"+"|"."|"'"|"@"|"%"|"*"|"~"|"#")>                        // allowed anywhere in words
+//"("|")"|"["|"]"|"{"|"}"|"#"|"$"|"%"|"^"|"*"|"~"|"!")>                        // allowed anywhere in words
+
+| < #LETTER:                                          // alphabets
+    [
+        "\u0041"-"\u005a",
+        "\u0061"-"\u007a",
+        "\u00c0"-"\u00d6",
+        "\u00d8"-"\u00f6",
+        "\u00f8"-"\u00ff",
+        "\u0100"-"\u1fff"
+    ]
+    >
+|  < #CJK:                                        // non-alphabets
+      [
+       "\u3040"-"\u318f",
+       "\u3300"-"\u337f",
+       "\u3400"-"\u3d2d",
+       "\u4e00"-"\u9fff",
+       "\uf900"-"\ufaff"
+      ]
+    >
+
+| < #DIGIT:                                          // unicode digits
+      [
+       "\u0030"-"\u0039",
+       "\u0660"-"\u0669",
+       "\u06f0"-"\u06f9",
+       "\u0966"-"\u096f",
+       "\u09e6"-"\u09ef",
+       "\u0a66"-"\u0a6f",
+       "\u0ae6"-"\u0aef",
+       "\u0b66"-"\u0b6f",
+       "\u0be7"-"\u0bef",
+       "\u0c66"-"\u0c6f",
+       "\u0ce6"-"\u0cef",
+       "\u0d66"-"\u0d6f",
+       "\u0e50"-"\u0e59",
+       "\u0ed0"-"\u0ed9",
+       "\u1040"-"\u1049"
+      ]
+  >
+}
+
+
+/** Parse a query. */
+Query parse() :
+{
+  Query query = new Query();
+  ArrayList terms;
+  Token token;
+  String field;
+  boolean stop;
+  boolean prohibited;
+  boolean required;
+  String slop;
+
+}
+{
+  nonOpOrTerm()                                   // skip noise
+  (
+    { stop=true; required = false; prohibited=false; field = Query.Clause.DEFAULT_FIELD; slop=null;}
+
+                                                  // optional + or - operator
+    ( <PLUS> {stop=false;required=true;} | (<MINUS> { stop=false;prohibited=true; } ))?
+
+                                                  // optional field spec.
+    ( LOOKAHEAD(<WORD><COLON>(phrase(field)|compound(field)))
+      token=<WORD> <COLON> {
+      field = token.image;
+      if (debug) logger.info("field="+field);
+      } )?
+
+    (LOOKAHEAD(phrase(field))
+      terms=phrase(field) {stop=false;}
+      ( LOOKAHEAD (<SLOP><WORD>)
+        <SLOP> token=<WORD>{
+            if (debug)  logger.info("slop exist="+token.image );
+            slop = token.image;
+         })?
+      |         // quoted terms or
+      terms=compound(field))                      // single or compound term
+
+    nonOpOrTerm()                                 // skip noise
+
+    {
+      String[] array = (String[])terms.toArray(new String[terms.size()]);
+
+      if (stop && terms.size()==1 && isStopWord(array[0])) {
+        // ignore stop words only when single, unadorned terms
+      } else {
+       if (invalidField(field))
+           field = Query.Clause.DEFAULT_FIELD;
+       query.addPhrase(array, field, slop, required, prohibited);
+      }
+    }
+  )*
+  <EOF>                                           //added to prevent Out of memory issue
+  { return query; }
+
+}
+
+/** Parse an explcitly quoted phrase query.  Note that this may return a single
+ * term, a trivial phrase.*/
+ArrayList phrase(String field) :
+{
+  int start;
+  int end;
+  ArrayList result = new ArrayList();
+  String term;
+}
+{
+  <QUOTE>
+
+  { start = token.endColumn; }
+
+  (nonTerm())*                                    // skip noise
+  ( term = term() { result.add(term); }           // parse a term
+    (nonTerm())*)*                                // skip noise
+
+  { end = token.endColumn; }
+
+  ( <QUOTE> | <EOF> )
+  {
+    String phrase = queryString.substring(start, end);
+    if (debug)  logger.info("phrase="+ phrase);
+    customizedProcess(phrase,field,result,false);
+    return result;
+  }
+
+}
+
+/** Parse a compound term that is interpreted as an implicit phrase query.
+ * Compounds are a sequence of terms separated by infix characters.  Note that
+ * htis may return a single term, a trivial compound. */
+ArrayList compound(String field) :
+{
+  int start;
+  ArrayList result = new ArrayList();
+  String term;
+}
+{
+  { start = token.endColumn; }
+
+  term = term() { result.add(term); }
+  ( LOOKAHEAD( (infix())+ term() )
+    (infix())+
+    term = term() { result.add(term); })*
+
+  {
+    String compound = queryString.substring(start, token.endColumn);
+    if (debug)  logger.info("compound="+ compound);
+    customizedProcess(compound,field,result,true);
+    return result;
+  }
+
+}
+
+/** Parse a single term. */
+String term() :
+{
+  Token token;
+}
+{
+  ( token=<WORD> | token=<ACRONYM> | token=<SIGRAM> | token=<INCHES> )
+
+  {
+  // logger.info("term="+token.image);
+  return token.image; }
+}
+
+
+/** Parse anything but a term or a quote. */
+void nonTerm() :
+{}
+{
+  <WHITE> | infix() //| <EOF>
+}
+
+
+/** Parse anything but a term or an operator (plur or minus or quote). */
+void nonOpOrTerm() :
+{}
+{
+  (LOOKAHEAD(2) (<WHITE> | nonOpInfix() | ((<PLUS>|<MINUS>) nonTerm())))*
+}
+
+/** Characters which can be used to form compound terms. */
+void infix() :
+{}
+{
+  <PLUS> | <MINUS> | nonOpInfix()
+}
+
+/** Parse infix characters except plus and minus. */
+void nonOpInfix() :
+{}
+{
+  <COLON> | <SLOP> //|<SLASH>|<DOT>|<ATSIGN>|<APOSTROPHE>|<UNDERSCORE>|<AMPERSAND>
+
+}
+

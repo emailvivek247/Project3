@@ -1,0 +1,4 @@
+.demo { width:325px; float:left; margin:0; border:1px solid gray; background:white; overflow:auto; }
+.demo, .demo input, .jstree-dnd-helper, #vakata-contextmenu { font-size:10px; font-family:Verdana; }
+#demo_body .demo, #demo_body .code { clear:both; margin:10px auto; }
+

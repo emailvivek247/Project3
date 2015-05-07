@@ -1,0 +1,476 @@
+<script type="text/javascript" src="http://maps.google.com/maps?file=api&v=3&key=${mapKey}&sensor=true"></script>
+<#noparse>
+<script src="http://gmaps-utility-library.googlecode.com/svn/trunk/mapiconmaker/1.1/src/mapiconmaker.js"></script>
+<script src="http://gmaps-utility-library.googlecode.com/svn/trunk/markermanager/release/src/markermanager.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/LegendControl.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/markerManager.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/extstreetviewcontrol.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jshashtable.js"></script>
+</#noparse>
+<style type="text/css">
+        input.groovybutton
+        {
+           font-size:11px;
+           font-family:Arial,sans-serif;
+           text-align:left;
+           color:#444444;
+           width:90px;
+           margin:5px;
+           background-color:#DDDDDD;
+           filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=1,StartColorStr='#ffDDDDDD',EndColorStr='#ffFFFFFF');
+           border-style:none;   
+        }
+        #popup {
+            background:#EFEFEF;
+            border:1px solid #999999;
+            margin:0px;
+            padding:7px;            
+            text-align:left;
+        }
+        .bubble{
+            text-align:left; 
+            background:#EFEFEF;
+            border:1px solid #999;
+            padding:7px;
+            margin:0px;
+            width:${infoWindowWidth}px;
+            height:${infoWindowHeight}px;
+            font-family:arial,sans-serif
+            font-size:12px;
+         } 
+         .header{
+            font-family:arial,sans-serif;
+            font-size:12px;            
+         }
+         .footer{
+            font-family:arial,sans-serif;
+            text-align:right;
+            font-size:10px;           
+         }         
+</style>
+<div align="center" id="map_holder">
+<p style="width:90%" align="right"><input type="button" name="" id="toggleMap" value="Show Map"/></p>
+<div align="center" id="map_canvas" style="width: 100%; height: 400px;"></div>
+</div>
+
+<script type="text/javascript">
+    var gmap = new GMap2(document.getElementById("map_canvas"));
+    var icon0 = new GIcon();
+    var icon1 = new GIcon();
+    var icon2 = new GIcon();
+    var icon3 = new GIcon();
+    var icon4 = new GIcon();
+    var icon5 = new GIcon();
+    gmap.setCenter(new GLatLng(30.279, -97.700), 17);
+    var svc = new GStreetviewClient()
+    var mgr = new MarkerManager(gmap);
+    var bounds = new GLatLngBounds();
+    var typesHash = new Hashtable();
+    typesHash.clear();
+    var colors = {};
+    var legendValues = [];
+    var markerGroups = {};
+    var TYPE_CAT1 = 'CATEGORY1';
+    var TYPE_CAT2 = 'CATEGORY2';
+    var TYPE_CAT3 = 'CATEGORY3';
+    var TYPE_CAT4 = 'CATEGORY4';
+    var TYPE_CAT5 = 'CATEGORY5';
+    var PIN_WIDTH = 20;
+    var PIN_HEIGHT = 34;
+    var ZOOM_MIN = 0;
+    var ZOOM_MED = 8;
+    var ZOOM_MAX = 17;
+    var PIN_CATEGORY1_BIG = "";
+    var PIN_CATEGORY2_BIG = "";
+    var PIN_CATEGORY3_BIG = "";
+    var PIN_CATEGORY4_BIG = "";
+    var PIN_CATEGORY5_BIG = "";
+    var PIN_CATEGORY1_SMALL = "";
+    var PIN_CATEGORY2_SMALL = "";
+    var PIN_CATEGORY3_SMALL = "";
+    var PIN_CATEGORY4_SMALL = "";
+    var PIN_CATEGORY5_SMALL = "";
+    var ZOOM_MIN = 0;
+    var ZOOM_MED = 8;
+    var ZOOM_MAX = 17;
+    gmap.clearOverlays();
+    mgr.clearMarkers();
+<#if continuousZoom == "1" >
+    gmap.enableContinuousZoom();
+</#if>    
+<#if doubleClickZoom == "1" >
+    gmap.enableDoubleClickZoom();
+</#if> 
+<#if scrollWheelZoom == "1" >
+    gmap.enableScrollWheelZoom();
+</#if>
+    legendValues.length = 0; 
+    gmap.addControl(new GLargeMapControl3D());
+    gmap.addControl(new GMapTypeControl());
+    gmap.addMapType(G_PHYSICAL_MAP);
+    gmap.addMapType(G_SATELLITE_3D_MAP);
+    gmap.getPane(G_MAP_FLOAT_SHADOW_PANE).style.display = "none";
+    //------------------ For categories ------------------------
+    PIN_CATEGORY1_BIG = "images/mapicons/${selCustomPP1Icon}";
+    PIN_CATEGORY2_BIG = "images/mapicons/${selCustomPP2Icon}";
+    PIN_CATEGORY3_BIG = "images/mapicons/${selCustomPP3Icon}";
+    PIN_CATEGORY4_BIG = "images/mapicons/${selCustomPP4Icon}";
+    PIN_CATEGORY5_BIG = "images/mapicons/${selCustomPP5Icon}";
+    PIN_CATEGORY1_SMALL = "images/mapicons/small_${selCustomPP1Icon}";
+    PIN_CATEGORY2_SMALL = "images/mapicons/small_${selCustomPP2Icon}";
+    PIN_CATEGORY3_SMALL = "images/mapicons/small_${selCustomPP3Icon}";
+    PIN_CATEGORY4_SMALL = "images/mapicons/small_${selCustomPP4Icon}";
+    PIN_CATEGORY5_SMALL = "images/mapicons/small_${selCustomPP5Icon}";      
+    colors[TYPE_CAT1] = '#cc44ff';
+    colors[TYPE_CAT2] = '#ff8b16';
+    colors[TYPE_CAT3] = '#44aa00';
+    colors[TYPE_CAT4] = '#C31734';
+    colors[TYPE_CAT5] = '#192A9C';
+ <#if selDefaultIcon != "numberedIcons">
+ <#if selKeyColumn?has_content>
+   <#if selKeyCategoryType == "value">     
+     <#if txtCategory1_1?has_content>
+        legendValues.push({ type: TYPE_CAT1, description: "${txtCategory1_1}", pinSrc: PIN_CATEGORY1_SMALL });
+     </#if>
+     <#if txtCategory2_1?has_content>
+        legendValues.push({ type: TYPE_CAT2, description: "${txtCategory2_1}", pinSrc: PIN_CATEGORY2_SMALL });
+     </#if>
+     <#if txtCategory3_1?has_content>
+        legendValues.push({ type: TYPE_CAT3, description: "${txtCategory3_1}", pinSrc: PIN_CATEGORY3_SMALL });
+     </#if>
+     <#if txtCategory4_1?has_content>
+        legendValues.push({ type: TYPE_CAT4, description: "${txtCategory4_1}", pinSrc: PIN_CATEGORY4_SMALL });
+     </#if>
+     <#if txtCategory5_1?has_content>
+        legendValues.push({ type: TYPE_CAT5, description: "${txtCategory5_1}", pinSrc: PIN_CATEGORY5_SMALL });
+     </#if>
+    <#elseif selKeyCategoryType == "range">
+     <#if txtCategory1_1?has_content && txtCategory1_2?has_content>
+        legendValues.push({ type: TYPE_CAT1, description: "${txtCategory1_1} to ${txtCategory1_2}", pinSrc: PIN_CATEGORY1_SMALL });
+     </#if>
+     <#if txtCategory2_1?has_content && txtCategory2_2?has_content>
+        legendValues.push({ type: TYPE_CAT2, description: "${txtCategory2_1} to ${txtCategory2_2}", pinSrc: PIN_CATEGORY2_SMALL });
+     </#if>
+     <#if txtCategory3_1?has_content && txtCategory3_2?has_content>
+        legendValues.push({ type: TYPE_CAT3, description: "${txtCategory3_1} to ${txtCategory3_2}", pinSrc: PIN_CATEGORY3_SMALL });
+     </#if>
+     <#if txtCategory4_1?has_content && txtCategory4_2?has_content>
+        legendValues.push({ type: TYPE_CAT4, description: "${txtCategory4_1} to ${txtCategory4_2}", pinSrc: PIN_CATEGORY4_SMALL });
+     </#if>
+     <#if txtCategory5_1?has_content && txtCategory5_2?has_content>
+        legendValues.push({ type: TYPE_CAT5, description: "${txtCategory5_1} to ${txtCategory5_2}", pinSrc: PIN_CATEGORY5_SMALL });
+     </#if>    
+    </#if> 
+ </#if>
+ </#if>
+        var item;
+        for (item in legendValues) {
+            if ('function' !== typeof legendValues[item]) {
+                markerGroups[legendValues[item].type] = [];
+            }
+        }
+ <#if selKeyColumn?has_content>
+        gmap.addControl(new LegendControl({ mgr: mgr, markerGroups: markerGroups, legendValues: legendValues }));
+ </#if>       
+        //------------------ For categories ------------------------
+        icon0.iconAnchor = new GPoint(9, 34);
+        icon0.infoWindowAnchor = new GPoint(9, 2);
+        icon1.iconAnchor = new GPoint(9, 34);
+        icon1.infoWindowAnchor = new GPoint(9, 2);
+        icon2.iconAnchor = new GPoint(9, 34);
+        icon2.infoWindowAnchor = new GPoint(9, 2);
+        icon3.iconAnchor = new GPoint(9, 34);
+        icon3.infoWindowAnchor = new GPoint(9, 2);
+        icon4.iconAnchor = new GPoint(9, 34);
+        icon4.infoWindowAnchor = new GPoint(9, 2);
+        icon5.iconAnchor = new GPoint(9, 34);
+        icon5.infoWindowAnchor = new GPoint(9, 2);
+        icon0.image = "images/mapicons/${selDefaultIcon}";
+        icon1.image = PIN_CATEGORY1_BIG;
+        icon2.image = PIN_CATEGORY2_BIG;
+        icon3.image = PIN_CATEGORY3_BIG;
+        icon4.image = PIN_CATEGORY4_BIG;
+        icon5.image = PIN_CATEGORY5_BIG;
+
+        if (icon0.image.indexOf('dot') != -1) {
+            icon0.iconSize = new GSize(20, 34);
+            icon0.shadow = "images/mapicons/shadow-dot.png";
+        } else {
+            icon0.iconSize = new GSize(32, 32);
+            icon0.shadow = "";
+        }
+        if (icon1.image.indexOf('dot') != -1) {
+            icon1.iconSize = new GSize(20, 34);
+            icon1.shadow = "images/mapicons/shadow-dot.png";
+        } else {
+            icon1.iconSize = new GSize(32, 32);
+            icon1.shadow = "";
+        }
+        if (icon2.image.indexOf('dot') != -1) {
+            icon2.iconSize = new GSize(20, 34);
+            icon2.shadow = "images/mapicons/shadow-dot.png";
+        } else {
+            icon2.iconSize = new GSize(32, 32);
+            icon2.shadow = "";
+        }
+        if (icon3.image.indexOf('dot') != -1) {
+            icon3.iconSize = new GSize(20, 34);
+            icon3.shadow = "images/mapicons/shadow-dot.png";
+        } else {
+            icon3.iconSize = new GSize(32, 32);
+            icon3.shadow = "";
+        }
+        if (icon4.image.indexOf('dot') != -1) {
+            icon4.iconSize = new GSize(20, 34);
+            icon4.shadow = "images/mapicons/shadow-dot.png";
+        } else {
+            icon4.iconSize = new GSize(32, 32);
+            icon4.shadow = "";
+        }
+        if (icon5.image.indexOf('dot') != -1) {
+            icon5.iconSize = new GSize(20, 34);
+            icon5.shadow = "images/mapicons/shadow-dot.png";
+        } else {
+            icon5.iconSize = new GSize(32, 32);
+            icon5.shadow = "";
+        }
+       var url = '<#noparse>${request.getContextPath()}/search.do?${pageStyleUtil.addOrSetQuery(request.getQueryString()</#noparse>, "templateName", "${jsonTemplateName}")}';       
+       $.getJSON(url, function(data){
+           $.each(data.items, function(i,item){
+                var content = "";
+                var showStreetView = false;
+                <#if selPushPinTextSource == "IndexedFields">
+                    <#if selContentLine1?has_content>
+                        content = content + "<b>${txtContentLine1}</b> : " + item.${selContentLine1} + "<br>";                  
+                    </#if>
+                    <#if selContentLine2?has_content>
+                        content = content + "<b>${txtContentLine2}</b> : " + item.${selContentLine2} + "<br>";                  
+                    </#if>
+                    <#if selContentLine3?has_content>
+                        content = content + "<b>${txtContentLine3}</b> : " + item.${selContentLine3} + "<br>";                  
+                    </#if>
+                    <#if selContentLine4?has_content>
+                        content = content + "<b>${txtContentLine4}</b> : " + item.${selContentLine4} + "<br>";                  
+                    </#if>
+                    <#if selContentLine5?has_content>
+                        content = content + "<b>${txtContentLine5}</b> : " + item.${selContentLine5} + "<br>";                  
+                    </#if>
+                    <#if selContentLine6?has_content>
+                        content = content + "<b>${txtContentLine6}</b> : " + item.${selContentLine6} + "<br>";                  
+                    </#if>
+                    <#if selContentLine7?has_content>
+                        content = content + "<b>${txtContentLine7}</b> : " + item.${selContentLine7} + "<br>";                  
+                    </#if>
+                    <#if selContentLine8?has_content>
+                        content = content + "<b>${txtContentLine8}</b> : " + item.${selContentLine8} + "<br>";                  
+                    </#if>
+                    <#if selContentLine9?has_content>
+                        content = content + "<b>${txtContentLine9}</b> : " + item.${selContentLine9} + "<br>";                  
+                    </#if>
+                    <#if selContentLine10?has_content>
+                        content = content + "<b>${txtContentLine10}</b> : " + item.${selContentLine10} + "<br>";                  
+                    </#if> 
+                <#elseif selPushPinTextSource == "CustomMessage">
+                        content = "${txtCustomContent}";
+                <#elseif selPushPinTextSource == "ExternalURL">
+                        content = "<iframe width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"yes\" marginheight=\"0\" marginwidth=\"0\" src=\"${txtContentUrl}\"></iframe>";                
+                </#if>
+                <#if chkEnableStreetView == "1">
+                        showStreetView = true;
+                </#if>
+                <#if selLocationSource == "LatLng">                
+                    <#if selKeyColumn?has_content>
+                        maplocation(i, "", "", "", "", "", <#if selLatitude?has_content>item.${selLatitude}<#else>""</#if>, <#if selLongitude?has_content>item.${selLongitude}<#else>""</#if>, item.${selKeyColumn}, content, showStreetView);
+                    <#else>
+                        maplocation(i, "", "", "", "", "", <#if selLatitude?has_content>item.${selLatitude}<#else>""</#if>, <#if selLongitude?has_content>item.${selLongitude}<#else>""</#if>, "", content, showStreetView);
+                    </#if> 
+                <#elseif selLocationSource == "Address">
+                    <#if selKeyColumn?has_content>
+                        maplocation(i, <#if selAddressLine1?has_content>item.${selAddressLine1}<#else>""</#if>, <#if selAddressLine2?has_content>item.${selAddressLine2}<#else>""</#if>, <#if selCity?has_content>item.${selCity}<#else>""</#if>, <#if selState?has_content>item.${selState}<#else>""</#if>, <#if selZip?has_content>item.${selZip}<#else>""</#if>, "", "", item.${selKeyColumn}, content, showStreetView);
+                    <#else>
+                        maplocation(i, <#if selAddressLine1?has_content>item.${selAddressLine1}<#else>""</#if>, <#if selAddressLine2?has_content>item.${selAddressLine2}<#else>""</#if>, <#if selCity?has_content>item.${selCity}<#else>""</#if>, <#if selState?has_content>item.${selState}<#else>""</#if>, <#if selZip?has_content>item.${selZip}<#else>""</#if>, "", "", "", content, showStreetView);
+                    </#if>
+                <#elseif selLocationSource == "Both">
+                    <#if selKeyColumn?has_content>
+                        maplocation(i, <#if selAddressLine1?has_content>item.${selAddressLine1}<#else>""</#if>, <#if selAddressLine2?has_content>item.${selAddressLine2}<#else>""</#if>, <#if selCity?has_content>item.${selCity}<#else>""</#if>, <#if selState?has_content>item.${selState}<#else>""</#if>, <#if selZip?has_content>item.${selZip}<#else>""</#if>,  <#if selLatitude?has_content>item.${selLatitude}<#else>""</#if>,  <#if selLongitude?has_content>item.${selLongitude}<#else>""</#if>, item.${selKeyColumn}, content, showStreetView);
+                    <#else>
+                        maplocation(i, <#if selAddressLine1?has_content>item.${selAddressLine1}<#else>""</#if>, <#if selAddressLine2?has_content>item.${selAddressLine2}<#else>""</#if>, <#if selCity?has_content>item.${selCity}<#else>""</#if>, <#if selState?has_content>item.${selState}<#else>""</#if>, <#if selZip?has_content>item.${selZip}<#else>""</#if>,  <#if selLatitude?has_content>item.${selLatitude}<#else>""</#if>,  <#if selLongitude?has_content>item.${selLongitude}<#else>""</#if>, "", content, showStreetView);
+                    </#if>
+                </#if>
+           });
+       });             
+       function maplocation(id, addressLine1, addressLine2, city, state, zip, latitude, longitude, key, content, showStreetView) {
+            var gPoint, category;
+            if (latitude!="" && longitude!=""){
+                gPoint = new GLatLng(latitude, longitude);
+                popuphtml = content;
+                popuphtml = "<div id=\"popup\">" + popuphtml + "<\/div>";
+                marker = createMarker(id, gPoint, popuphtml, key, showStreetView);
+                bounds.extend(marker.getPoint());
+                mgr.addMarker(marker, ZOOM_MIN, ZOOM_MAX);
+                typesHash.put(id, marker);
+                pushAllMarkers();
+             } else {
+                var address = addressLine1 + " " + addressLine2 + ", " + city + ", " + state + " " + zip;
+                geoCode(id, address, content, category, key, showStreetView);
+            }            
+        }
+        function geoCode(id, address, content, category, key, showStreetView) {
+            var locpoint;
+            geocoder = new GClientGeocoder();
+            geocoder.getLocations(address, addToMap);
+            function addToMap(response) {
+                if (response && response.Status.code == 200) {
+                    var respPoint = response.Placemark[0];
+                    locpoint = new GLatLng(respPoint.Point.coordinates[1], respPoint.Point.coordinates[0]);
+                    popuphtml = content;                    
+                    popuphtml = "<div class=\"header\"><b></b></div>" + "<div class=\"bubble\" style=\"font-size:${infoWindowFontSize}px;\">" + popuphtml + "</div>" + "<div class=\"footer\"><b></b><br></div>";
+                    marker = createMarker(id, locpoint, popuphtml, key, showStreetView);
+                    bounds.extend(marker.getPoint());
+                    mgr.addMarker(marker, ZOOM_MIN, ZOOM_MAX);
+                    typesHash.put(id, marker);                    
+                    pushAllMarkers(); 
+                } else {
+                    locpoint = new GLatLng(0,0);
+                    popuphtml = "";
+                    marker = createMarker(id, locpoint, popuphtml, key, showStreetView);
+                    typesHash.put(id, marker);                    
+                }               
+            }           
+        }
+        function createMarker(id, point, popuphtml, key, showStreetView) {           
+            <#if selDefaultIcon == "numberedIcons">
+            var icon = new GIcon();
+            icon.iconAnchor = new GPoint(9, 34);
+            icon.infoWindowAnchor = new GPoint(9, 2);
+            icon.iconSize = new GSize(20, 34);
+            icon.shadow = "images/mapicons/shadow-dot.png";
+            icon.image = "images/mapicons/marker" + (id + 1).toString() + ".png";           
+            <#else>
+            var icon;
+            icon = icon0;            
+            </#if>
+            var objType = "";
+  <#if selKeyCategoryType == "value">     
+     <#if txtCategory1_1?has_content>
+            if (key != "" && key == "${txtCategory1_1}") {
+                icon = icon1;
+                objType = "CATEGORY1";
+            }
+     </#if>
+     <#if txtCategory2_1?has_content>
+            if (key != "" && key == "${txtCategory2_1}") {
+                icon = icon2;
+                objType = "CATEGORY2";
+            }
+     </#if>
+     <#if txtCategory3_1?has_content>
+            if (key != "" && key == "${txtCategory3_1}") {
+                icon = icon3;
+                objType = "CATEGORY3";
+            }
+     </#if>
+     <#if txtCategory4_1?has_content>
+            if (key != "" && key == "${txtCategory4_1}") {
+                icon = icon4;
+                objType = "CATEGORY4";
+            }
+     </#if>
+     <#if txtCategory5_1?has_content>
+            if (key != "" && key == "${txtCategory5_1}") {
+                icon = icon5;
+                objType = "CATEGORY5";
+            }
+     </#if>
+  <#elseif selKeyCategoryType == "range">
+    <#if txtCategory1_1?has_content && txtCategory1_2?has_content>
+            if (key != "" && parseFloat(key) >= ${txtCategory1_1} && parseFloat(key) <= ${txtCategory1_2}) {
+                icon = icon1;
+                objType = "CATEGORY1";
+            }
+     </#if>
+     <#if txtCategory2_1?has_content && txtCategory2_2?has_content>
+            if (key != "" && parseFloat(key) >= ${txtCategory2_1} && parseFloat(key) <= ${txtCategory2_2}) {
+                icon = icon2;
+                objType = "CATEGORY2";
+            }
+     </#if>
+     <#if txtCategory3_1?has_content && txtCategory3_2?has_content>
+            if (key != "" && parseFloat(key) >= ${txtCategory3_1} && parseFloat(key) <= ${txtCategory3_2}) {
+                icon = icon3;
+                objType = "CATEGORY3";
+            }
+     </#if>
+     <#if txtCategory4_1?has_content && txtCategory4_2?has_content>
+            if (key != "" && parseFloat(key) >= ${txtCategory4_1} && parseFloat(key) <= ${txtCategory4_2}) {
+                icon = icon4;
+                objType = "CATEGORY4";
+            }
+     </#if>
+     <#if txtCategory5_1?has_content && txtCategory5_2?has_content>
+            if (key != "" && parseFloat(key) >= ${txtCategory5_1} && parseFloat(key) <= ${txtCategory5_2}) {
+                icon = icon5;
+                objType = "CATEGORY5";
+            }
+     </#if>
+  </#if>      
+            var marker = new GMarker(point, icon);
+            if (showStreetView) {
+                GEvent.addListener(marker, "click", function() {
+                    NavigateToAddressWithSW(point);
+                });
+            }
+            marker.zoomMin = ZOOM_MIN;
+            marker.zoomMax = ZOOM_MAX;
+            GEvent.addListener(marker, "click", function() {
+                marker.openInfoWindowHtml(popuphtml);
+            });
+            if (objType != ""){
+               markerGroups[objType].push(marker);
+            }
+            return marker;
+        }
+        function pushAllMarkers() {
+            mgr.refresh();
+            gmap.setZoom(gmap.getBoundsZoomLevel(bounds));
+            gmap.setCenter(bounds.getCenter());
+        }
+        function NavigateToAddressWithSW(currentPoint) {
+            gmap.setCenter(currentPoint, 17);
+            svc.getNearestPanorama(currentPoint, function(reply) {
+                if (reply.code = 200) {
+                    if (reply.Location) { var html = "<div class=\"header\"><b>" + reply.Location.description + "</b></div>" + "<div class=\"bubble\" style=\"font-size:${infoWindowFontSize}px;\"><iframe width=\"100%\" height=\"90%\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" src=\"http://maps.google.com/maps/sv?cbp=1,479.7175735027764,,0,-3.50219513621329&amp;cbll=" + currentPoint.lat() + "," + currentPoint.lng() + "&amp;v=1&amp;panoid=" + reply.Location.panoId + "&amp;gl=&amp;hl=en\"></iframe></div>" + "<div class=\"footer\"><b>Copyright: " + reply.Data.copyright + "</b><br></div>"; var pp = new GLatLng(parseFloat(reply.Location.lat), parseFloat(reply.Location.lng)); gmap.openInfoWindowHtml(pp, html); } else { alert('Street View is not available for the address currently.');}
+                }
+            });
+        } 
+        function navigate(id, sw)
+        {
+            var currentMarker = typesHash.get(id);
+            var currentPoint = currentMarker.getLatLng();
+            if (currentMarker != null && currentPoint.x != 0 && currentPoint.y != 0) {            
+                if (sw){                    
+                    NavigateToAddressWithSW(currentPoint);
+                } else {                    
+                    GEvent.trigger(currentMarker, "click");
+                }
+            } else {
+                alert("This location could not be mapped.")
+            }            
+        }
+</script>
+
+<script type="text/javascript">
+	$(document).ready(function() {	
+	   $('#map_canvas').hide()	
+       $('#toggleMap').click(function() {
+       		$('#map_canvas').toggle();
+       		if ( $('#map_canvas').is(":visible") ) {
+				$('#toggleMap').val("Hide Map");
+			}
+			else
+			{
+				$('#toggleMap').val("Show Map");
+			}
+       });
+     });
+</script>

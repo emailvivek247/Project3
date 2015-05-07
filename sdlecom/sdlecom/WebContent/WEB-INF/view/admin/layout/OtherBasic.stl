@@ -1,0 +1,23 @@
+<#macro indexLayout(title="", encoding="utf-8")>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><title>Search Platform</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" charset=${encoding}" />
+<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/application.css" />
+<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/jquery-ui-1.8.11.base.css" />
+<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/jquery-ui-custom-ext.css" />
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.min.js"/></script>
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery-ui.min.js"/></script>
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.browser.js"></script>
+<link rel="shortcut icon" href="${request.getContextPath()}/favicon.ico"/>
+</head>
+<body>
+<div style="padding:10px 10px 0px 0px">
+<#include "loginMenu.stl">
+</div> 
+<br><br><br><br><br>
+<table width="100%" border="0"><tr><td valign="top">
+<#nested></td>
+</td></tr></table>
+</body></html>
+</#macro>

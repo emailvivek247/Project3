@@ -1,0 +1,52 @@
+##
+##  assumed in the context
+##         docNum // the document number
+##         dc // the datasetConfiguration
+##         totalCount// the total amount of documents
+##
+
+#set( $title= ${indexName} )
+#set( $selectedMenu = 'dataset' )
+#set( $selectedToptab = 'status' )
+#set( $selectedSubtab = 'frequent_terms' )
+
+<br />
+#errorMarkup()
+
+#openFieldset('Frequent Terms')
+<p>This is useful to find out stop words, and add them to the <i>WEB-INF/data/dictionary/stopwords.txt</i>.<br/>
+Some of the frequent terms are not useful, like "and", "can", "how", etc.  Moving them to the stopwords.txt can reduce the index size and memory requirement.
+</p>
+Note: In the URL, you can use fieldName=&lt;Some Field Name&gt; to check other non-tokenized fields.
+
+
+<table cellpadding="0" cellspacing="0" align="center" border="0" width="90%">
+  <tr>
+    <td align="center">Show Frequent Terms for: <a href="?indexName=$indexName">All Tokenized Fields</a>
+    #foreach( $cn in $columnNames )
+    , <a href="?indexName=$indexName&fieldName=${cn}">${cn}</a>
+    #end
+    </td>
+ </tr>
+</table>
+
+<br/>
+
+<table class="xsearchtable" style="width:80%" > 
+    <tr > 
+      <th align="center">&nbsp;</th>
+      <th align="center">Field</th>
+      <th align="center">Term</th>
+      <th align="center">Times</th>
+    </tr>
+    #foreach( $tf in $termFrequencies )
+    #if($velocityCount%2==1)<tr class="xsearchtable_odd">#else<tr class="xsearchtable_even">#end
+      <td width="15%">$velocityCount.</td>
+      <td width="25%"><a href="?indexName=$indexName&fieldName=${tf.term.field()}">${tf.term.field()}</a> &nbsp;&nbsp;</td>
+      <td width="30%">${tf.term.text()} &nbsp;&nbsp;</td>
+      <td width="30%">${tf.frequency} &nbsp;&nbsp;</td>
+    </tr>
+    #end
+</table>
+#closeFieldset()
+

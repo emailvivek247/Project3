@@ -1,0 +1,179 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <import resource="LDAP-AuthProvider.xml" />
+    <import resource="DB-AuthProvider.xml" />
+
+    <!-- This is Required for Spring Security to Read Message Resources. Properties File -->
+
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="/WEB-INF/conf/spring/properties/security_messages" />
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+
+    <bean id="springSecurityFilterChain" class="org.springframework.security.web.FilterChainProxy">
+        <constructor-arg>
+            <list>
+                <security:filter-chain pattern="/public*.admin"   filters="none" />
+                <security:filter-chain pattern="/resources/**"    filters="none" />
+                <security:filter-chain pattern="/logout.admin"    filters="logoutFilter" />
+                <security:filter-chain pattern="/**" filters="securityContextFilter, authenticationFilter, servletApiFilter,
+                sessionMgmtFilter, concurrencySessionFilter, exceptionTranslator, filterSecurityInterceptor" />
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="securityContextFilter" class="org.springframework.security.web.context.SecurityContextPersistenceFilter">
+        <constructor-arg ref="securityContextRepository" />
+    </bean>
+
+    <bean id="securityContextRepository" class="org.springframework.security.web.context.HttpSessionSecurityContextRepository" />
+
+    <!-- Logout Filter Start -->
+
+    <bean id="logoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+        <constructor-arg value="/publiclogin.admin" />
+        <constructor-arg>
+            <list>
+                <ref  bean="securityContextLogoutHandler"/>
+                <ref bean="cookieClearingLogoutHandler"/>
+            </list>
+        </constructor-arg>
+        <property name="filterProcessesUrl"  value="/logout.admin" />
+    </bean>
+
+    <bean id="securityContextLogoutHandler" class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
+
+    <bean id="cookieClearingLogoutHandler"  class="org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler" >
+        <constructor-arg value="JSESSIONID" />
+    </bean>
+
+    <!-- Logout Filter End -->
+
+    <bean id="csrfFilter" class="org.springframework.security.web.csrf.CsrfFilter" >
+        <constructor-arg ref ="csrfRepository" />
+    </bean>
+
+    <bean id="csrfRepository" class="org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository" />
+
+    <bean id="authenticationFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+        <property name="authenticationManager" ref="authenticationManager" />
+        <property name="authenticationSuccessHandler">
+            <bean class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+                <property name="defaultTargetUrl" value="/dashboard.admin" />
+                <property name="alwaysUseDefaultTargetUrl" value="true" />
+            </bean>
+        </property>
+        <property name="authenticationFailureHandler">
+            <bean class="com.fdt.security.spring.SDLSimpleUrlAuthenticationFailureHandler">
+                <property name="defaultFailureUrl" value="/publiclogin.admin" />
+                <property name="useForward" value="true" />
+            </bean>
+        </property>
+        <property name="sessionAuthenticationStrategy" ref="sessionControlStrategy" />
+    </bean>
+
+    <bean id="sessionControlStrategy" class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy" >
+        <constructor-arg ref="sessionRegistry" />
+        <property name="maximumSessions" value="1" />
+    </bean>
+
+    <bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl" />
+
+    <bean id="concurrencySessionFilter"  class="org.springframework.security.web.session.ConcurrentSessionFilter">
+        <constructor-arg ref="sessionRegistry" />
+        <constructor-arg name="expiredUrl" value="/publicMoreThanOneSessionForTheSameUser.admin" />
+    </bean>
+
+    <bean id="requestCacheFilter" class="org.springframework.security.web.savedrequest.RequestCacheAwareFilter" />
+
+    <bean id="servletApiFilter" class="org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter" />
+
+    <bean id="exceptionTranslator" class="org.springframework.security.web.access.ExceptionTranslationFilter">
+        <constructor-arg ref="authenticationEntryPoint" />
+        <property name="accessDeniedHandler">
+            <bean class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
+                <property name="errorPage" value="/accessdenied.admin" />
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="authenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+        <constructor-arg value="/publiclogin.admin" />
+    </bean>
+
+    <bean id="filterSecurityInterceptor" class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
+        <property name="securityMetadataSource">
+            <security:filter-security-metadata-source use-expressions="true">
+                <security:intercept-url pattern="/*.admin"                access="hasAnyRole('${role.psosuperadmin}','${role.psotxadmin}','${role.psouseradmin}','${role.psouser}', 'C_USER','C_USER_ADMIN','C_RECURRINGTX_ADMIN','C_WEBTX_ADMIN', 'C_PAYASUGOTX_ADMIN', 'C_OTCTX_ADMIN','C_REFUNDTX_ADMIN','C_CHECKPRINT_ADMIN','C_CHECKHISTORY_ADMIN')"/>
+                <security:intercept-url pattern="/*transactions.admin"    access="hasAnyRole('${role.psosuperadmin}','${role.psotxadmin}', 'C_SUPER_ADMIN', 'C_TX_ADMIN', 'C_RECURRINGTX_ADMIN', 'C_WEBTX_ADMIN', 'C_PAYASUGOTX_ADMIN', 'C_OTCTX_ADMIN', 'C_REFUNDTX_ADMIN')" />
+                <security:intercept-url pattern="/*ecomuser*.admin"       access="hasAnyRole('${role.psosuperadmin}','${role.psouseradmin}', 'C_USER_ADMIN')" />
+                <security:intercept-url pattern="/updatecreditcard.admin" access="hasRole('${role.psosuperadmin}','C_RECURRINGTX_ADMIN', 'C_WEBTX_ADMIN', 'C_PAYASUGOTX_ADMIN', 'C_OTCTX_ADMIN', 'C_REFUNDTX_ADMIN')" />
+                <security:intercept-url pattern="/*config.admin"          access="hasRole('${role.psosuperadmin}')" />
+                <security:intercept-url pattern="/*ecomadminuser*.admin"  access="hasRole('${role.psosuperadmin}')" />
+                <security:intercept-url pattern="/*Template*.admin"       access="hasRole('${role.psosuperadmin}')" />
+                <security:intercept-url pattern="/*Check.admin"           access="hasAnyRole('${role.psosuperadmin}','C_CHECKPRINT_ADMIN','C_CHECKHISTORY_ADMIN')" />
+            </security:filter-security-metadata-source>
+        </property>
+        <property name="authenticationManager" ref="authenticationManager" />
+        <property name="accessDecisionManager" ref="accessDecisionManager" />
+    </bean>
+
+    <bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager">
+        <constructor-arg>
+            <list>
+                <ref bean="adAuthenticationProvider" />
+                <ref bean="databaseAuthenticationProvider" />
+            </list>
+        </constructor-arg>
+        <property name="eraseCredentialsAfterAuthentication" value="false" />
+    </bean>
+
+    <bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+        <constructor-arg>
+            <list>
+                <ref bean="webExpressionVoter" />
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="webExpressionVoter" class="org.springframework.security.web.access.expression.WebExpressionVoter">
+        <property name="expressionHandler">
+            <bean class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"/>
+        </property>
+    </bean>
+
+    <!--
+        <bean class="org.springframework.security.access.vote.AuthenticatedVoter" />
+
+        <bean id="roleVoter" class="org.springframework.security.access.vote.RoleHierarchyVoter" >
+        <constructor-arg ref="roleHierarchy" />
+            <property name="rolePrefix" value="" />
+        </bean>
+     -->
+
+    <bean id="sessionMgmtFilter" class="org.springframework.security.web.session.SessionManagementFilter">
+        <constructor-arg ref="securityContextRepository" />
+    </bean>
+
+    <!--
+        <bean id="roleHierarchy" class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
+            <beans:property name="hierarchy">
+                <beans:value>
+                    DALLAS_ADMIN  > DALLAS_SEARCH
+                    DALLAS_SEARCH > DALLAS_FREE_SEARCH
+                </beans:value>
+                <beans:value>
+                    DALLAS_ADMIN  > DALLAS_SEARCH
+                    DALLAS_SEARCH > DALLAS_FREE_SEARCH
+
+                </beans:value>
+            </beans:property>
+        </bean>
+     -->
+</beans>

@@ -1,0 +1,261 @@
+## $Id: configSchedule.vm 5787 2009-07-07 06:28:25Z cylu $
+
+#set( $title = $msg.get("title") )
+#set( $selectedMenu = 'dataset' )
+#set( $selectedToptab = "dataset" )
+#set( $selectedSubtab = "schedule" )
+#set( $jumperAction = "listSchedules.do" )
+
+#macro( tableRowSingleLineInput $promptname $inputname $somevalue )
+  <tr>#promptTD($promptname)<td><input type="text" name="$inputname" id="$inputname" size="80" value="$!somevalue"></td></tr>
+#end
+
+#macro( tableRowComment $somevalue )
+  <tr><td>&nbsp;</td><td colspan="2">&nbsp;$!somevalue</td></tr>
+#end
+
+#macro( checkSelectAll $selectedValues )
+  #set($_selected = $defaultSelection )                  ##specified selection  
+  #foreach($oneValue in $selectedValues)
+    #if($oneValue == "*" )
+      #set($_selected = 0 )              ##select ALL
+    #end
+  #end
+#end
+#macro (pad $value)
+  #if ($value.toString().equals("1"))
+   $value&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  #else
+  $value
+  #end
+#end
+#macro( displayOption $selectedValues $optionValue $optionText )
+  #set($_s = false)
+  #foreach($oneValue in $selectedValues)
+    #if($oneValue == $optionValue.toString() )
+      #set($_s = true)
+    #end
+  #end
+<option value="$optionValue"#if($_s) selected#end>#pad($optionText)</option>
+#end
+#macro( _startSelect $prompt $_paraName $selectedValues)  ##display header and select all radio button
+  #checkSelectAll($selectedValues)
+  #set($div =0)
+  <table cellpadding="0" cellspacing="0"  border="0" width="100%" >
+  <tr><td style="BORDER-RIGHT: 0px; BORDER-TOP: 0px; VERTICAL-ALIGN: top; BORDER-LEFT: #ccc 0px solid; BORDER-BOTTOM: #ccc 0px solid">
+    <INPUT type=radio #if($_selected==$div) checked#end value=* onClick="switchDiv('${_paraName}',0);" name="${_paraName}_sel">Every $prompt
+  </td></tr>
+#end
+#macro (_listSelection $prompt $_paraName $selectedValues $displayValues $_startFrom)  ##display a radio button and a multi-selection box  
+  #set($div=$div+1)        
+  <tr><td style="BORDER-RIGHT: 0px; BORDER-TOP: 0px; VERTICAL-ALIGN: top; BORDER-LEFT: #ccc 0px solid; BORDER-BOTTOM: #ccc 0px solid">
+    <INPUT type=radio #if($_selected==$div) checked#end value='$div' onClick="switchDiv('${_paraName}','$div');" name="${_paraName}_sel">Selected ${prompt}(s) only
+  </td></tr>
+  <tr><td align="center" style="BORDER-RIGHT: 0px; BORDER-TOP: 0px; VERTICAL-ALIGN: top; BORDER-LEFT: #ccc 0px solid; BORDER-BOTTOM: 0px">
+  #set($_dplay="none")
+  #if($_selected==$div)
+    #set($_dplay="block")
+  #end        
+  <div id="${_paraName}_div$div" style="display:$_dplay;">
+  <SELECT multiple size=12 width=30 name="${_paraName}#if($div!=1)2#end" >  
+    #foreach($sLable in $displayValues )
+      #if($_startFrom == 0 )
+        #set($sValue = $velocityCount - 1 )
+      #else
+        #set($sValue = $velocityCount )
+      #end
+      #displayOption( $selectedValues $sValue $sLable )
+    #end
+  </SELECT>
+  </div>
+  </td></tr>
+#end
+#macro( _endSelect )    
+   </table>
+#end
+
+<script type="text/javascript">
+function switchDiv(sName,slot) {
+for (var i=0; i < 3; i++) {
+  var d = document.getElementById(sName+'_div'+i);
+  if(d != null) {
+     if (i==slot)
+       d.style.display = "block";
+     else
+       d.style.display = "none";
+  }
+}
+}
+function validateSelectAll(field) {
+    document.f.elements[field][1].checked = true;
+}
+function checkSumit() {
+    document.f.operation.value='save';
+    document.f.submit();
+    return true;
+}
+</script>
+<style> 
+.tdborder
+{
+border-TOP: #000000 1px solid;
+padding:20px 0px 10px 20px;
+text-align:left;
+} 
+.tdnoBorder
+{
+padding:10px 0px 10px 20px;
+text-align:left;
+}
+h4.sectionHeader {
+margin: 0px;
+}
+</style> 
+
+#set( $minutes = [0..59] )
+#set( $hours = [0..23] )
+#set( $daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] )
+#set( $daysOfMonth = [1..31] )
+#set( $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] )
+
+<form name="f"
+      method="post"
+      action="configSchedule.do?indexName=${indexName}">
+<input type="hidden" name="operation" value="list">
+<input type="hidden" name="scheduleId" value="${scheduleId}">
+<br />
+#errorMarkup()
+#messageMarkup()
+
+#macro(indexingModeRadio $_v)
+<input type="radio" name="indexingMode" value="$_v" #if($schedule.indexingMode == $_v )checked="checked"#end />
+#end
+#openFieldset('Timer Configuration')
+<table width="100%" cellpadding="5" cellspacing="0" border="0">
+  <tr><td class="tdborder" colspan="2"><h4 class="sectionHeader">Step 1: Enable/Disable Timer</h4><br /><input type="checkbox" name="isEnabled" id="isEnabled" value="1" #if(${schedule.isEnabled} )checked="checked"#end>Enable Timer for Indexing Action.</td></tr>
+  <tr class="trborder">
+    <td class="tdborder" colspan="2">
+      <h4 class="sectionHeader">Step 2: Select Indexing Action</h4><br />     
+      #indexingModeRadio("Incremental Indexing")<b>Incremental</b>: Retrieve contents newer than any existing ones.<br />
+      #* #indexingModeRadio("Incremental Indexing with Fast Deletion Detection")<b>Incremental+Fast Deletion</b>: Incremental indexing, and remove deleted documents <a href="advancedQueries.do?indexName=${indexName}">if deletion SQL is configured</a>. <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;There is a low possibility some indexed records may not be deleted if already deleted from the database.<br /> *#
+      #indexingModeRadio("Incremental Indexing with Thorough Deletion Detection")<b>Incremental + Deletion</b>: Incremental indexing and remove deleted documents.<br />
+     #* #indexingModeRadio("Incremental Indexing,Fast Deletion Detection,Spell Check Index")<b>Incremental+Fast Deletion+SpellCheck</b>: Incremental indexing, remove deleted documents, and update spell check index.<br /> *#
+      #indexingModeRadio("Re-create Index")<b>Re-create</b>: Create index from scratch.<br />
+      #indexingModeRadio("Re-create Spelling Dictionary")<b>Re-create Spell Check Dictionary</b>: Create dictionary for spell check from existing index <a href="configSpellCheck.do?indexName=${indexName}">if spell check is enabled</a>.<br />
+      #indexingModeRadio("Refresh Index")<b>Refresh Index</b>: Refresh Index. <br />
+      #indexingModeRadio("Subscribe Index")<b>Subscribe</b>: Subscribe to index generated by another server. <br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;URL:<input type="text" name="subscriptionUrl" id="subscriptionUrl" value="$!{dc.subscriptionUrl}" size="40" >&nbsp;&nbsp;format: <i>http://server[:port]/[directory/]</i>
+    </td>
+  </tr>
+  <tr>
+    <td class="tdborder" colspan="2" valign="top">
+    <h4 class="sectionHeader">Step 3:  Select Indexing Frequency</h4><br />
+    <INPUT type="radio" #if(${schedule.isInterval})CHECKED #end value="0" name="scheduleType">
+    Every <input type="text" name="interval" id="interval" size="10" value="$!{schedule.interval}"> Minutes</td>
+  </tr>
+ #tableRowComment( 'This is the time in minutes between last indexing and next indexing' )
+  <tr>
+    <td colspan="2" class="tdnoBorder" valign="top"><INPUT type=radio #if(!${schedule.isInterval} )CHECKED #end value="1" name="scheduleType">Run at selected times:
+            <TABLE class="xsearchLeftTable" style="width:60%">
+              <TR>
+                <TH>Minutes</TH>
+                <TH>Hours</TH>
+                <TH>Days</TH>
+                <TH>Months</TH>
+              </TR>
+              <TR>    
+                <TD style="vertical-align:top;">
+                  #set($defaultSelection=1)
+                  #_startSelect('minute' 'minute' $schedule.minutes)
+                    #_listSelection('minute' 'minute' $schedule.minutes $minutes 0)
+                  #_endSelect()
+                </TD>
+                <TD style="vertical-align:top;">
+                  #_startSelect('hour' 'hour' $schedule.hours)
+                    #_listSelection('hour' 'hour' $schedule.hours $hours 0)
+                  #_endSelect()
+                </TD>
+                <TD style="vertical-align:top;">
+                    #if (${schedule.isByDayOfWeek()})
+                      #set($dayList = $schedule.dayOfWeeks)
+                      #set($defaultSelection=1)
+                    #else
+                      #set($dayList = $schedule.dayOfMonths)
+                      #set($defaultSelection=2)
+                    #end
+                  #_startSelect('day' 'day' $dayList)
+                    #_listSelection('week day' 'day' $schedule.dayOfWeeks $daysOfWeek 1)
+                    #_listSelection('date' 'day' $schedule.dayOfMonths $daysOfMonth 1)
+                  #_endSelect()
+                  #set($defaultSelection=1)
+                </TD>
+                <TD style="vertical-align:top;">
+                  #_startSelect('month' 'month' $schedule.months)
+                    #_listSelection('month' 'month' $schedule.months $months 1)
+                  #_endSelect()
+                </TD>    
+              </TR>
+            </TABLE>
+    </td>
+  </tr>
+  <tr>
+      <td colspan="2" class="tdborder" valign="top">
+          <h4>Step 4: Select Indexes </h4>
+            <div class="modulecontainer sidebar" style="width:40%;">
+                  <div class="first">
+                        <span class="first"></span><span class="last"></span>
+                  </div>
+                  <div>
+                        <table border="0" id="working_queue_query_hint" style="display: block;">
+                              <tbody>
+                                  <tr><td><input type="radio" name="saveMode" value="C" checked>Use this Timer Configuration for the current index only</td></tr>
+                                    <tr><td><input type="radio" name="saveMode" value="A">Use this Timer Configuration for all the indexes</td></tr>         
+                                    <tr><td><input type="radio" name="saveMode" value="S">Use this Timer Configuration for the below selected indexes<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;
+                                              <select style="min-width:100px;" MULTIPLE SIZE=10 name="indexes" id="indexes">
+                                                #foreach( $indexConfig in $indexConfigs )
+                                                    <option value="$indexConfig.name">$indexConfig.name</option>
+                                                #end                                              
+                                              </select>
+                                          </td>
+                                    </tr>
+                              </tbody>
+                        </table>
+                  </div>
+                  <div class="last"><span class="first"></span><span class="last"></span></div>
+            </div>
+      </td>
+  </tr>
+</table>
+
+<table align="center">
+      <tr>
+            <td><button class="general" type="reset" name="reset" >Reset</button></td>
+            <td><button class="general" type="submit" name="save"  onclick="checkSumit()">Save</button></td>             
+      </tr>
+</table>
+<script>
+$(document).ready(function() {
+        if ($("input:radio[name=saveMode]").val() != "S") {
+        	$("#indexes").hide();
+        }
+});
+$("#indexes").click(function() { 
+    if ($(this).val() != "") {        
+    	$('input[name=saveMode]:eq(2)').attr('checked', 'checked');
+    }
+});
+$("input:radio[name=saveMode]").click(function() {
+	if ($(this).val() != "S") {	    
+		$("#indexes option:selected").attr("selected", false);
+		$("#indexes").hide();
+	} else {
+		$("#indexes").show();
+	} 
+	 
+});
+
+</script>
+#closeFieldset()
+  <P>
+  </P>
+</FORM>

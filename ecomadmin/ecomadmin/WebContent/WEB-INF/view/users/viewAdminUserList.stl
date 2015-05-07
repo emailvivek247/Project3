@@ -1,0 +1,171 @@
+<#include "../lib/layout.stl" />
+<@dashboardLayout>
+
+
+<meta charset="utf-8" />
+
+<style>
+
+   .k-readonly
+            {
+                color: gray;
+            }
+		</style>
+
+
+<div id="page-content" class="clearfix">
+	<div id="example2" class="gridMargins">
+		<div id="grid">
+	 	</div>
+			</br>
+		<div id="divUserDetails">
+		</div>
+	</div>
+</div>
+
+<br class="clear"/><br class="clear"/><br class="clear"/>
+<script>
+
+    <!--INITIALIZE KENDO GRID-->
+    $(document).ready(function() {
+    	var loadedFromDatabase = false;
+
+        $("#grid").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                    		url: function(){
+                    				loadedFromDatabase = true;
+                    				return "getEcomadminusers.admin";
+                    			},
+                    		dataType: "json",
+				    		type: "GET"
+				    }
+                },
+
+
+                schema: {
+                    model: {
+                        fields: {
+                            name: { type: "object"},
+                            lastName: { type: "string" },
+                          	firstName: { type: "string"},
+                            username: { type: "string" },
+                            active: { type: "BooleanVal"},
+                            accountNonLocked: { type: "BooleanVal" },
+
+
+                        }
+                    }
+                },
+				group: [{ field: "sites[0].name", dir: "asc" }],
+                pageSize: 5,
+
+            },  //DATASOURCE
+
+            filterable: true,
+            sortable: true,
+            pageable: true,
+            selectable: 'row',
+            navigatable: true,
+            groupable: true,
+            columns: [
+            	{
+                    field:"sites[0].name",
+                    title: "Site",
+
+
+                },
+                {
+                    field:"username",
+                    title: "Email",
+
+                },
+                {
+                    field:"firstName",
+                    title: "First Name",
+                    template: function(e){ return toCamelCase(e.firstName); }
+
+                },
+
+                {
+                    field:"lastName",
+                    title: "Last Name",
+                    template: function(e){ return toCamelCase(e.lastName); }
+
+                },
+
+                {
+                    field:"active",
+                    title: "Active",
+                    template: "#= (active) ? 'Yes' : 'No' #",
+
+                },
+
+                {
+                    field:"accountNonLocked",
+                    title: "Account Locked",
+                    template: "#= (accountNonLocked) ? 'No' : 'Yes' #",
+
+                }
+            ],
+            change: function (e) {
+			       if (e != null && e != "" && e != undefined) {
+			            var data = this.dataItem(this.select());
+			            rowUserName = data.username;//IMP
+
+			        }
+			        else {
+			             rowUserName = $('table tbody tr:first td:first').text();
+
+			        }
+					getUserDetails(rowUserName);
+			},
+			  dataBound: function () {
+			  if(loadedFromDatabase == true){
+					var grid = $("#grid").data("kendoGrid");
+					grid.select("tr:eq(2)");
+					loadedFromDatabase = false;
+			  }
+			}
+        });  //GRID
+    });	//DOCUMENT.READY
+
+
+		function getUserDetails(username) {
+	        $.ajax({
+	        	cache: false,
+	            type: "GET",
+	            url: "viewecomadminuserdetails.admin?username=" + username,
+	            success: function(response) {
+
+	                $("#divUserDetails").html( response );
+	                $("#tabstrip").kendoTabStrip({
+	                        animation:  {
+	                            open: {
+	                                effects: "fadeIn"
+                            	}
+                        	}
+                    });
+	            }
+	        });  //GET_USER_DETAILS
+
+	    }
+
+	    function toCamelCase(str) {
+			str = str.toLowerCase();
+		    return str.replace(/(?:^|\s)\w/g, function(match) {
+		        return match.toUpperCase();
+		    });
+	    }
+
+
+</script>
+        <!--input type="button" value="GO!" onclick="getSiteDetails(1);" /-->
+
+
+
+<!-- End one column window -->
+
+</@dashboardLayout>

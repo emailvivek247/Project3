@@ -1,0 +1,634 @@
+/*************************************************************************
+*
+* ADOBE CONFIDENTIAL
+* ___________________
+*
+*  Copyright 2011 Adobe Systems Incorporated
+*  All Rights Reserved.
+*
+* NOTICE:  All information contained herein is, and remains
+* the property of Adobe Systems Incorporated and its suppliers,
+* if any.  The intellectual and technical concepts contained
+* herein are proprietary to Adobe Systems Incorporated and its
+* suppliers and may be covered by U.S. and Foreign Patents,
+* patents in process, and are protected by trade secret or copyright law.
+* Dissemination of this information or reproduction of this material
+* is strictly forbidden unless prior written permission is obtained
+* from Adobe Systems Incorporated.
+**************************************************************************/
+
+body {
+	background: #fff;
+	font-family:"Ubuntu", Arial;
+}
+
+
+div.ADCSI_Container {
+   position: absolute;
+   width: 100%;
+   height: 1px;
+   overflow: display;
+   top: 0px;
+}
+
+div.ADCSI {
+	margin-top: 80px;
+	margin-left:auto;
+	margin-right: auto;
+	border: 1px solid #CDCDCD;
+	background-color: #FFFFFF;	
+	font-family: Adobe Clean, Arial, Helvetica, Verdana, Arial, Tahoma, _sans;
+	font-size: 90%;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	-webkit-box-shadow: 0px 1px 5px #999999;
+	-moz-box-shadow: 0px 1px 5px #999999;
+	box-shadow: 0px 1px 5px #999999;
+	color: #333333;
+}
+
+div.ADCSI a {
+	color: #457099;	
+	text-decoration: none;
+}
+
+div.ADCSI a:hover {
+	text-decoration: underline;	
+}
+
+/*
+div.ADCSI div {
+  padding: 2px;
+}
+*/
+div.ADCSI_title {
+  font-size: 14px;
+  font-weight: normal;
+  color: #666666;
+  background-repeat: repeat-x;
+  background-position: top;
+  padding-top: 10px;
+  padding-bottom: 9px;
+  padding-left: 10px;
+  padding-right: 30px;
+  margin-right: 0px;
+  border-bottom: solid 1px #c7c7c7;
+}
+
+
+div.ADCSI_title a {
+	text-decoration:none;	
+	color: #457099;
+}
+
+div.ADCSI_error {
+   background-color:#FFD9D9;
+   color: #333333;
+   font-size: 14px;
+   margin-top: 1px;
+   margin-left: 1px;
+   margin-right: 1px;
+   padding-left: 20px;
+   /* If the top and bottom padding change, ADCSI_Accordion() must change as well */
+   padding-top: 20px;
+   padding-bottom: 20px;
+   padding-right: 20px;
+}
+
+div.ADCSI_rememberWarning {
+	margin-left: 20px;
+	font-size: 14px;
+	padding-right: 25px;
+}
+
+
+
+span.ADCSI_button_IE_1 {
+    background-color: white; 
+    filter:alpha(opacity=00);
+    width:100px; 
+    height: 30px;
+    position: absolute; 
+    left:0px;
+    top:0px;
+    text-align:center; 
+    display:inline-block;
+}
+
+span.ADCSI_button {
+	color: white;
+	font-weight: bold;
+	font-size: 14px;
+	background-color: #999;
+	height: 30px;
+	line-height: 30px;
+	text-shadow: #333333 0px -1px 0px;
+	display: inline-block;
+	width: 100px;
+	margin-right: 10px;
+	text-align: center;
+	background-image: url('images/button_skin.png');
+	background-repeat: no-repeat;
+	background-position: left top;
+	margin-bottom: 30px;
+}
+
+span.ADCSI_button_cancel {
+	color: #333333;
+	font-weight: normal;
+	font-size: 14px;
+	text-align: center;
+	display: inline-block;
+	width: 100px;
+	margin-right: 20px;
+	background-image: url('images/cancel_button_skin.png');
+	background-repeat: no-repeat;
+	background-position: left top;
+	text-shadow: #FFFFFF 0px 1px 0px;
+	margin-bottom: 30px;
+	height: 30px;
+	line-height: 30px;
+}   
+
+span.ADCSI_button:hover {
+  background-image: url('images/button_over_skin.png');
+  cursor: hand;
+  cursor: pointer;
+}    
+
+span.ADCSI_button_cancel:hover {
+  background-image: url('images/cancel_button_skin_over.png');
+  cursor: hand;
+  cursor: pointer;
+}    
+
+span.ADCSI_link {
+	color: #457099;
+	font-size: 14px;
+	margin-right: 30px;
+	text-decoration:none;	
+}
+
+span.ADCSI_link:hover {
+  color: #457099;
+  text-decoration: underline;
+  cursor: hand;
+  cursor: pointer;
+}    
+
+span.ADCSI_leftcol {
+	display: inline-block;
+	vertical-align:middle;
+	font-size: 14px;
+	font-weight: bold;
+	color: #333333;
+}
+
+span.ADCSI_rightcol {
+  position: relative;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-right: 0px;
+  text-align:left;
+  display: inline-block;
+  vertical-align:middle;
+}
+
+span.ADCSI_checkcol {
+  position: relative;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-right: 0px;
+}
+
+div.ADCSI_row {
+	margin-right: 0px;
+}
+
+span.ADCSI_hint {
+  position: absolute;
+  top: 7px;
+  left: 10px;
+  color: #999999;
+  font-size: 12px;
+  line-height: 25px;
+  height: 25px;
+}
+
+
+.ADCSI_hidden_hint {
+  display: none;
+}
+
+
+
+span.ADCSI_Spinner {
+	width: 45px;
+	height: 28px;
+	display: inline-block;
+	position: relative;
+	top: 10px;
+	background-image: url('images/spinner.gif');
+	background-repeat: no-repeat;
+}
+
+
+.ADCSI_ForgotBtn {
+	padding-top: 10px;
+	text-align: right;
+	padding-right: 0px;
+	margin-bottom: -28px;
+}
+
+.ADCSI_Checkbox {
+	margin-top: 5px;
+	margin-left: 0px;
+	height: 14px;
+	width: 14px;
+	text-align:left;
+}
+
+.ADCSI_select {
+	font-family: Adobe Clean, Arial, Helvetica, Verdana, Arial, Tahoma, _sans;
+	margin-right: 0px;
+}
+
+
+.ADCSI_Input {
+	width: 100%;
+	height: 25px;
+	line-height: 25px;
+	font-family: Adobe Clean, Arial, Helvetica, Verdana, Arial, Tahoma, _sans;
+	font-size: 12px;
+	margin-right: 0px;
+	text-indent: 5px;
+	border-style: solid;
+	border-color: #afafaf;
+	border-width: 1px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	-webkit-box-shadow: inset 0px 0px 5px #CFCFCF;
+	-moz-box-shadow: inset 0px 0px 5px #CFCFCF;
+	box-shadow: inset 0px 0px 5px #CFCFCF;
+}
+
+
+.ADCSI_error_highlight {
+	border-color: #FF0000;
+	border-width: 2px;
+	border-style: solid;
+  background-color: #FFD9D9;
+  
+}
+
+
+/* ---- Lang picker ---- */
+
+div.ADCLang {
+	position: static;
+	margin-left: 40px;
+	width: 200px;
+	height: 30px;
+        z-index: 1000;
+}
+
+div.ADCLangCurrent {
+	font-size: 11px;
+	font-family: Adobe Clean, Arial, Helvetica, Verdana, Arial, Tahoma, _sans;
+	background-image: url('images/globe.png');
+	text-indent: 40px;
+	background-repeat: no-repeat;
+	color: #447099;
+	font-weight: bold;
+	cursor: pointer;
+	height: 20px;
+	padding-top: 2px;
+	overflow:visible;
+}
+
+div.ADCLangMenu {
+	position: relative;
+	left: -20px;
+	top: -30px;
+	width: 300px;
+	padding-bottom: 20px;
+	background-color: #FFFFFF;	
+	-webkit-box-shadow: #666 0px 3px 10px;
+	-moz-box-shadow: #666 0px 3px 10px;
+	box-shadow: #666 0px 3px 10px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #CCC;
+	visibility: hidden;
+	background-image: url('images/globe_black.gif');
+	background-repeat:no-repeat;
+	background-position:left top;
+        z-index: 1000;
+}
+
+div.ADCLangMenuItem {
+	font-family: Adobe Clean, Arial, Helvetica, Verdana, Arial, Tahoma, _sans;
+	color: #3d3d3d;
+	font-size: 12px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	cursor: pointer;
+	margin-left: 60px;
+}
+
+div.ADCLangMenuItem:hover {
+	color: #447099;
+}
+
+div.ADCLangMenuItem_JP {
+	cursor: pointer;
+	margin-left: 60px;
+	height: 16px;
+	background-image: url('images/japanese.png');
+	background-repeat: no-repeat;
+	background-position: left top;
+	margin-top: 3px;
+}
+
+div.ADCLangMenuItem_JP:hover {
+	background-image: url('images/japanese_hover.png');
+}
+
+div.ADCLangTitle {
+	font-family: Adobe Clean, Arial, Helvetica, Verdana, Arial, Tahoma, _sans;
+	font-size: 20px;
+	color: #4b4849;
+	cursor: pointer;
+	padding-bottom: 10px;
+	margin-top: 8px;
+	padding-top: 12px;
+	margin-left: 60px;
+	margin-right: 8px;
+	background-image: url('images/close_x.png');
+	background-repeat:no-repeat;
+	background-position:right top;
+}
+
+div.FlashErrorDiv
+{
+  font-size: 14pt;
+  line-height: 17pt;
+  padding: 14px;
+  text-align: center;
+}
+
+div.FlashErrorGetItDiv a
+{
+  color: #DF6821;
+}
+.hidden {
+	display:none;	
+}
+
+input[type="submit"]:hover, input[type="button"]:hover, input[type="button"].right_switch:hover, input[type="button"].left_switch:hover, input[type="button"].middle_switch:hover {
+border: 1px solid #666;
+background: #999 url("../images/bt_gh.png") repeat-x;
+cursor:pointer;
+}
+
+input[type="submit"], input[type="button"], input[type="reset"] {
+background: #CCC url("../images/bt_g.png") repeat-x;
+margin: 0;
+border: 1px solid #999;
+font-weight: bold;
+padding: 7px 10px 7px 10px;
+-moz-border-radius: 5px;
+-webkit-border-radius: 5px;
+-khtml-border-bottom-right-radius: 5px/*{cornerRadius}*/;
+-khtml-border-bottom-top-radius: 5px/*{cornerRadius}*/;
+-khtml-border-bottom-bottom-radius: 5px/*{cornerRadius}*/;
+-khtml-border-bottom-left-radius: 5px/*{cornerRadius}*/;
+-moz-box-shadow: 0 1px 2px #444;
+-webkit-box-shadow: 0 1px 2px #444;
+box-shadow: 0 1px 2px #444;
+text-shadow: 1px 0 0 #CCC;
+color: #333;
+cursor:pointer;
+}
+
+
+
+.noDecoration{
+	text-decoration:none;
+	color:#457099;
+}
+
+#container {
+	width: 970px;
+	height:auto;
+	margin: 150px auto 0px auto;	
+	box-shadow: -4px 4px 6px #a6a6a6; 
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+}
+
+#login{background:#fff;margin-top:40px;clear:both;}
+#loginContainer{
+	position:relative;
+	left:200px;
+}
+
+#registerContainer{
+	padding-top:30px;
+}
+#register{background:#fff;margin-top:40px;clear:both;}
+
+.container940{width:900px; margin:0 auto;}
+
+.fill{
+	background:#fff;
+	height:50px;
+}
+
+/*** TOP ***/
+#top{
+}
+
+#topContainer{
+	/***KEEP FOR FUTURE LOGO USE
+		background:url(../images/accept-logo-login.png) no-repeat;
+	***/
+}
+/*** TOP MENU ***/
+#nav{
+	position:relative;
+	z-index:9000;
+	margin:50px 28px 0 0;
+}
+
+#topnav{
+	margin:0;
+	padding:0;
+	list-style-type:none;
+	overflow:visible;
+	position:relative;	
+	font-size:14px;
+	font-family:'Ubuntu',  Arial;
+	}
+.sf-menu a {
+	text-decoration:none!important;
+	display:		block;
+	position:		relative;
+	padding: 		0 12px 0 12px !important;
+	text-decoration:none;
+	font-weight:bold;
+	text-transform:uppercase;
+	color:#333;
+
+}
+.sf-menu a:hover, .sf-menu li a.current{color:#dc6a4d;}
+.sf-menu li.sfHover a:hover{color:#dc6a4d;}
+
+.menuItems{
+	background:#ebebeb;
+	border-style:solid solid solid solid;
+	border-width:1px;
+	border-color:#D6D6D6 #D6D6D6 #ebebeb #D6D6D6;
+}
+
+.selectedTab{
+	background:#fff;
+	border-style:solid;border-width:1px;
+	border-color:#fff;
+}
+
+/* Drop down menu */
+
+.sf-menu, .sf-menu * {
+	margin:			0;
+	padding:		0;
+	list-style:		none;
+	font-size:13px;
+	
+}
+.sf-menu {
+	line-height:100%;
+	position:absolute;
+	right:0;
+	bottom:0;
+	float:left;
+}
+
+.sf-menu ul li {
+	width:			100%;
+}
+.sf-menu li:hover {
+	visibility:		inherit; /* fixes IE7 'sticky bug' */
+}
+.sf-menu li {
+	float:			left;
+	position:		relative;
+	margin:0;
+}
+
+.usernameformError {z-index:9000;}
+
+/*** AFTER FOOTER ***/
+#after-footer{background:url(../images/accept-banner-dark.jpg) no-repeat; height:80px;}
+#footertext{padding:15px 0 0 0;color:#aaaaaa;font-family: "Ubuntu", Arial;font-size:.8em;}
+#sn{float:right; padding:25px 0 0 0}
+#sn ul{margin:0; padding:0; list-style-type:none;}
+#sn ul li{float:left; margin-left:8px;}
+
+.left {
+	float:left;
+}
+.right {
+	float:right;
+}
+
+img { border-style: none; }
+
+#errorDiv{
+	margin-bottom: 20px;
+	 overflow-x: hidden;
+	 overflow-y: hidden;
+	 text-align:center;
+}
+
+/*** RESEND ACTIVATION EMAIL TEMPLATE SPECIFIC ***/
+#actEmailContainer{
+	background:#fff;
+	margin-top:50px;
+	clear:both;
+}
+
+/*** TERMS AND CONDITIONS TEMPLATE SPECIFIC ***/
+#terms{
+	background:#fff;
+	margin-top:50px;
+	clear:both;
+}
+
+/*** GENERAL ERROR TEMPLATE SPECIFIC ***/
+#genError{
+	background:#fff;
+	margin-top:50px;
+	clear:both;
+}
+
+/*** SUCCESS TEMPLATE SPECIFIC ***/
+#successCont{
+	background:#fff;
+	margin-top:50px;
+	clear:both;
+}
+
+/*** PASSWORD RESET CONFIRMATION TEMPLATE SPECIFIC ***/
+#passResetConfirmation{
+	background:#fff;
+	margin-top:50px;
+	clear:both;
+}
+
+/*** ACCESS DENIED TEMPLATE SPECIFIC ***/
+#accessDeniedCont{
+	background:#fff;
+	margin-top:50px;
+	clear:both;
+}
+
+
+/*** SESSION EXPIRED TEMPLATE SPECIFIC ***/
+#expSession{
+	background:#fff;
+	margin-top:50px;
+	clear:both;
+}
+
+#topAccBannerContainer{
+	width: 1020px;
+	height:80px;
+	margin: 0px auto 0px auto;
+	background:url(../images/acc-bnr-bg.png) no-repeat;
+	
+	
+}
+
+#topAccBanner1{
+	width: 300px;
+	/*background:url(../images/accept-banner-dark.jpg) no-repeat;*/
+	background:#fff;
+	height:70px;
+	-moz-border-radius: 150px;
+    border-radius: 150px;
+    border:3px solid #114285;
+}
+#topAccBanner{
+	width: 300px;
+	/*background:url(../images/accept-banner-dark.jpg) no-repeat;*/
+	background:#fff;
+	height:70px;
+	-moz-border-radius: 150px;
+    border-radius: 150px;
+    border:3px solid #114285;
+}

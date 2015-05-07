@@ -1,0 +1,213 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><title>Amcad - Accept</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Expires" content="-1">
+<link rel="shortcut icon" href="/favicon.ico"/>
+</head>
+<body>
+<#assign form  =JspTaglibs["http://www.springframework.org/tags/form"]>
+<#assign spring=JspTaglibs["http://www.springframework.org/tags"]>
+<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/validationEngine.jquery.css" type="text/css" />
+<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/jquery-ui-1.8.11.base.css" />
+<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/jquery-ui-custom-ext.css" />
+<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/payment.css" />
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.min.js"/></script>
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery-ui.min.js"/></script>
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.validationEngine-en.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.validationEngine.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.printElement.min.js"/></script>
+<div class="content">
+		<div style="width: 700px; margin-left: auto;margin-right:auto;">
+			<div id="ADCSI" class="ADCSI" style="margin-top: 0px; margin-bottom: 12px;">
+<style>
+div.ADCSI {
+	width: 700px;
+}
+span.ADCSI_leftcol {
+	width: 150px;
+	text-align:right;
+	display: inline-block;
+}
+span.ADCSI_leftcol_extended {
+	width: 250px;
+}
+div.ADCSI_row {
+	margin-right: 20px;
+}
+#pay {
+	background: #55a003 url(resources/styles/images/greenGrad.png) 50% 50% repeat-x;
+	color: white;
+}
+#pay:hover {
+	background: #55a003 url(resources/styles/images/greenGrad.png) 50% 50% repeat-x;
+	color: white;
+}
+#btnPayNow {
+	background: #55a003 url(resources/styles/images/greenGrad.png) 50% 50% repeat-x;
+	color: #ffffff;
+}
+#btnPayNow:hover {
+	background: #55a003 url(resources/styles/images/greenGrad.png) 50% 50% repeat-x;
+	color: #F0E6E8;
+}
+.unPaid {
+	color: #ED1C43;
+}
+.top {
+	vertical-align:top;
+}
+.seperator {
+	border-bottom: 1px #CCC solid;
+	padding-bottom:5px;
+	padding-top:5px;
+}
+.header {
+	background: #EEE;
+}
+.spacer {
+	padding-right:10px;
+}
+table {
+	cell-padding:0px;
+	border-spacing: 0px;
+}
+table.miniCart {
+	margin-left:auto;
+	margin-right:auto;
+	font-size:small;
+}
+#cardDetails {
+    min-height: 600px;
+    height: 600px;
+}
+
+body>#cardDetails {
+    height: auto;
+}
+div#logo {
+	height: 100px;
+	position: relative;
+	overflow: hidden;
+	border: 2px solid white;
+	background-color: white;
+	background-repeat: no-repeat;
+	background-position: left;
+}
+div#logo img.image {
+	position: absolute;
+	padding: 5px 0;
+}
+td.border {
+	border: 1px #CCC solid;
+	padding: 10px;
+}
+.center {
+	text-align:center;
+}
+.right {
+	text-align:right;
+}
+.left {
+	text-align:left;
+}
+</style>
+			<img class="centerAlign" src="<#if image_url?has_content>${image_url}<#else></#if>" />
+			<#if webTransaction?has_content>
+				<div>
+					<h2>Payment Receipt</h2>
+				</div>
+				<div>
+					<b>Receipt ID</b><br />
+					${webTransaction.txRefNum}
+				</div>
+				<br />
+				<div>
+					<#if loc_name?has_content>${loc_name}<br /></#if>
+					<#if loc_addr_l1?has_content>${loc_addr_l1}<br /></#if>
+					<#if loc_addr_l2?has_content>${loc_addr_l2}<br /></#if>
+					<#if loc_city?has_content>${loc_city}</#if>
+					<#if loc_state?has_content>${loc_state}</#if>
+					<#if loc_zip?has_content>${loc_zip}<br /></#if>
+					<#if loc_phone?has_content>${loc_phone}<br /></#if>
+					<#if loc_comments1?has_content>${loc_comments1}<br /></#if>
+					<#if loc_comments2?has_content>${loc_comments2}<br /></#if>
+				</div>
+				<div>
+					<br /><br /><b>Purchased Items</b><br /><br />
+					<table width="100%" class="miniCart" >
+						<tr class="center">
+							<th class="center header">Description</th>
+							<th class="center header">Price</th>
+							<th class="center header">Quantity</th>
+							<th class="center header">Amount</th>
+							<th class="center header">Tax</th>
+							<th class="center header">Service Fee</th>
+							<th class="center header">Total</th>
+						</tr>
+						<#if webTransaction.getWebTxItems()?has_content>
+							<#list webTransaction.getWebTxItems() as item >
+								<tr>
+									<td class="left border">${item.itemName}</td>
+									<td class="right border">${item.baseAmount?string.currency}</td>
+									<td class="right border">${item.itemQuantity}</td>
+									<td class="right border">${item.baseAmount?string.currency}</td>
+									<td class="right border">${item.tax?string.currency}</td>
+									<td class="right border">${item.serviceFee?string.currency}</td>
+									<td class="right border">${item.totalTxAmount?string.currency}</td>
+								</td>
+							</tr>
+							</#list>
+						</#if>
+						<tr>
+							<td colspan="6" class="right border"><b>Total Transaction Amount:</b></td>
+							<td class="right border"><b>${webTransaction.totalTxAmount?string.currency}</b></td>
+						</tr>
+					</table>
+				</div>
+			<#else>
+				<#if ERROR?has_content>
+					${ERROR}
+				</#if>
+
+			</#if>
+			</div>
+		<table width="100%" class="miniCart" >
+			<tr>
+
+			<#if return_url?has_content && return_url?contains("?")>
+				<#assign prefix = return_url + '&'>
+				<#if webTransaction?has_content>
+					<#assign prefix = prefix + 'ref='+ webTransaction.txRefNum>
+				</#if>
+			<#else>
+				<#assign prefix = return_url>
+				<#if webTransaction?has_content>
+					<#assign prefix = prefix + '?ref='+ webTransaction.txRefNum>
+				</#if>
+			</#if>
+				<#if return_url?has_content><td style="text-align:left;"><a href="<#if prefix?has_content>${prefix}</#if>"><#if return_text?has_content>${return_text}<#else>Return to Merchant Site</#if></a></#if></td>
+				<td style="text-align:right;"><div style="text-align:center;padding-right:20px"><a id="printRecepit" style="cursor:pointer;"><img src="resources/images/print.png" /><@spring.message code="security.ecommerce.label.printReceipt" /></a></div></td>
+			</tr>
+		</table>
+		<#--FOOTER-->
+	    <div style="margin-left:100px;"><#if footer_url?has_content><img src="${footer_url}"/></#if></div>
+		</div>
+	</div>
+
+
+
+<script type="text/javascript">
+		$(document).ready(function(){
+			 $("#printRecepit").click(function() {
+             	printElem({pageTitle:'<@spring.message code="security.ecommerce.label.paymentConfirmation" />' });
+         	});
+			$( "#accordion" ).accordion();
+		});
+		function printElem(options){
+	    	$('#ADCSI').printElement(options);
+	 	}
+</script>
+</body>
+</html>

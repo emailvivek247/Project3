@@ -1,0 +1,118 @@
+<#include "../lib/layout.stl" />
+<@dashboardLayout>
+
+<style>
+div.ui-datepicker {
+	font-size:11px;
+}
+.ui-datepicker .ui-datepicker-title select {
+	font-size:11px;
+}
+div.subHeader {
+	text-align:center;
+	width:100%;
+	font-weight:bold;
+	color:#ffffff;
+	background-color:#029642;
+	line-height:50px;
+}
+#content .inner {
+    min-width:100%;
+	width:auto;
+}
+</style>
+<#if txRefundResponse?has_content>
+	<#if txRefundResponse.getTxRefNum()?has_content>
+		<div class="subHeader">
+			<span>
+				The transaction you are trying to refund is successfully processed. The refund transaction details are below.
+				<#if paymentChannel == "RECURRING">
+				<br />
+				<font style="color:red">* If this is a refund for a recurring subscription make sure you take appropriate action on the user subscription.</font>
+				</#if>
+			</span>
+		</div>
+		<br class="clear"/><br class="clear"/>
+		<div class="onecolumn">
+			<div class="header">
+				<span>Refund Successful</span>
+			</div>
+			<br class="clear"/>
+			<div class="content">	
+				<table>
+					<tr>	
+						<td class="right">Refund Transaction Reference Number: </td>
+						<td class="left"><#if txRefundResponse.getTxRefNum()?has_content><b>${txRefundResponse.getTxRefNum()}</b></#if></td>
+					</tr>
+					<tr>	
+						<td class="right">Charged Transaction Reference Number: </td>
+						<td class="left"><#if txRefundResponse.getReferencedtxRefNum()?has_content><b>${txRefundResponse.getReferencedtxRefNum()}</b></#if></td>
+					</tr>
+					<tr>	
+						<td class="right">Amount Refunded: </td>
+						<td class="left"><#if txRefundResponse.getTxAmount()?has_content><b>${txRefundResponse.getTxAmount()?string.currency}</b></#if></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	<#else>
+		<div class="subHeader">
+				<span>The refund could not be processed. </span>
+		</div>
+		<br class="clear"/><br class="clear"/>
+		<div class="onecolumn">
+			<div class="header">
+				<span>Refund Unsuccessful</span>
+			</div>
+			<br class="clear"/>
+			<div class="content">	
+				<table>
+					<tr>
+						<td class="right"><b>Charged Transaction Reference Number: </b></td>
+						<td class="left"><#if txRefundResponse.getReferencedtxRefNum()?has_content>${txRefundResponse.getReferencedtxRefNum()}</#if></td>					
+					</tr>
+					<tr>	
+						<td class="right"><b>Error Description: </b></td>
+						<td class="left"><#if txRefundResponse.getErrorDesc()?has_content>${txRefundResponse.getErrorDesc()}</#if></td>
+					</tr>					
+				</table>
+			</div>
+		</div>
+	</#if>
+<#else>
+	<#if referenceTransaction?has_content>
+		<div class="subHeader">
+			<span>The refund could not be processed. </span>
+		</div>
+		<br class="clear"/><br class="clear"/>
+		<div class="onecolumn">
+			<div class="header">
+				<span>Refund Unsuccessful</span>
+			</div>
+			<br class="clear"/>
+			<div class="content">	
+				<table>
+					<tr>	
+						<td class="right"><b>Error Description: </b></td>						
+						<#if referenceTransaction.getOrigTxRefNum()?has_content && referenceTransaction.getOrigTxRefNum() == transactionRefNum>
+						<#if paymentChannel == "RECURRING" ||  paymentChannel == "OTC">
+							<td class="left">The transaction you are trying to refund is already refunded. Please check the transaction you want to refund and try again</td>
+						<#else>
+							<td class="left">The transaction you are trying to refund is already refunded or some items within the transaction are refunded. Please check the transaction you want to refund and try again</td>
+						</#if>
+						<#elseif referenceTransaction.getTxRefNum()?has_content && referenceTransaction.getTxRefNum() == transactionRefNum>
+							<td class="left">Invalid transaction reference number. The transaction reference number you provided is for a refund transaction. </td>						
+						</#if>
+					</tr>
+					<tr>
+						<td class="right"><b>Transaction Reference Number: </b></td>
+						<td class="left"><#if transaction.getTxRefNum()?has_content>${transactionRefNum}</#if></td>					
+					</tr>
+				</table>
+			</div>
+		</div>	
+	</#if>	
+</#if>		
+
+
+</@dashboardLayout>

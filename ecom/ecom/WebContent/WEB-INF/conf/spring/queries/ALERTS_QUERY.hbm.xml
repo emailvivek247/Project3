@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+<sql-query name="GET_USER_ALERTS_FOR_NODE">
+    <![CDATA[
+  SELECT 
+       userAlert.ID                AS userAlert_ID
+      ,userAlert.USER_ID           AS userAlert_USER_ID
+      ,users.EMAIL_ID              AS users_EMAIL_ID
+      ,users.FIRST_NAME            AS users_FIRST_NAME
+      ,users.LAST_NAME             AS users_LAST_NAME
+      ,userAlert.NODE_NAME         AS userAlert_NODE_NAME
+      ,userAlert.ALERT_NAME        AS userAlert_ALERT_NAME
+      ,userAlert.BASE_URL          AS userAlert_BASE_URL
+      ,userAlert.INDEX_NAME        AS userAlert_INDEX_NAME
+      ,userAlert.TEMPLATE_NAME     AS userAlert_TEMPLATE_NAME
+      ,userAlert.ALERT_QUERY       AS userAlert_ALERT_QUERY
+      ,userAlert.DATE_TIME_CREATED AS userAlert_DATE_TIME_CREATED
+      ,userAlert.DATE_TIME_MOD     AS userAlert_DATE_TIME_MOD
+      ,userAlert.MOD_USER_ID       AS userAlert_MOD_USER_ID
+      ,userAlert.ACTIVE            AS userAlert_ACTIVE
+      ,userAlert.SITE_NAME         AS userAlert_SITE_NAME
+      ,userAlert.COMMENTS          AS userAlert_COMMENTS
+      ,userAlert.CREATED_BY        AS userAlert_CREATED_BY
+  FROM 
+    AUTH_USERS_ALERTS userAlert INNER JOIN AUTH_USERS users 
+  ON users.ID = userAlert.USER_ID 
+  WHERE 
+        userAlert.NODE_NAME = :nodeName 
+  AND   userAlert.USER_ID IN :userIdList
+    ]]> 
+</sql-query>
+
+<sql-query name="GET_NUMBER_OF_ALERTS_FOR_A_USER">
+    <![CDATA[
+    SELECT 
+        userAlerts.USER_ID AS userAlerts_USER_ID, 
+        COUNT(*) 
+    FROM 
+        AUTH_USERS_ALERTS userAlerts
+    WHERE 
+        userAlerts.NODE_NAME = :nodeName
+    GROUP BY 
+        userAlerts.USER_ID
+    ]]> 
+</sql-query>
+
+<sql-query name="GET_USER_ALERTS_FOR_USER">
+    <![CDATA[
+   SELECT userAlert.ID AS userAlert_ID
+      ,userAlert.USER_ID AS userAlert_USER_ID
+      ,userAlert.NODE_NAME AS userAlert_NODE_NAME
+      ,userAlert.ALERT_NAME AS userAlert_ALERT_NAME
+      ,userAlert.BASE_URL AS userAlert_BASE_URL
+      ,userAlert.INDEX_NAME AS userAlert_INDEX_NAME
+      ,userAlert.TEMPLATE_NAME AS userAlert_TEMPLATE_NAME
+      ,userAlert.ALERT_QUERY AS userAlert_ALERT_QUERY
+      ,userAlert.DATE_TIME_CREATED AS userAlert_DATE_TIME_CREATED
+      ,userAlert.DATE_TIME_MOD AS userAlert_DATE_TIME_MOD
+      ,userAlert.MOD_USER_ID AS userAlert_MOD_USER_ID
+      ,userAlert.ACTIVE AS userAlert_ACTIVE
+      ,userAlert.SITE_NAME AS userAlert_SITE_NAME
+      ,userAlert.COMMENTS AS userAlert_COMMENTS
+  FROM AUTH_USERS_ALERTS userAlert
+  INNER JOIN AUTH_USERS USERS ON USERS.ID = userAlert.USER_ID
+  WHERE userAlert.NODE_NAME = :nodeName AND
+        USERS.EMAIL_ID = :userName
+    ]]> 
+</sql-query>
+
+<sql-query name="INSERT_USER_ALERT">
+    <![CDATA[
+    INSERT INTO AUTH_USERS_ALERTS
+              (USER_ID
+              ,NODE_NAME
+              ,ALERT_NAME
+              ,BASE_URL
+              ,INDEX_NAME
+              ,TEMPLATE_NAME
+              ,ALERT_QUERY
+              ,DATE_TIME_CREATED
+              ,DATE_TIME_MOD
+              ,MOD_USER_ID
+              ,ACTIVE
+              ,SITE_NAME
+              ,COMMENTS
+              ,CREATED_BY)
+        VALUES
+              ((SELECT ID FROM AUTH_USERS WHERE EMAIL_ID = :userName),
+              :nodeName,
+              :alertName,
+              :baseURL,
+              :indexName,
+              :templateName,
+              :alertQuery,
+              :createdDate,
+              :modifiedDate,
+              :modifiedUserName,
+              :isActive,
+              :siteName,
+              :comments,
+              :modifiedUserName)
+    ]]> 
+</sql-query>
+
+<sql-query name="DELETE_USER_ALERTS_BY_USER_NAME_AND_ALERT_ID_LIST">
+    <![CDATA[
+    DELETE FROM 
+            AUTH_USERS_ALERTS
+    WHERE 
+            ID IN :userAlertIdList 
+    AND 
+            USER_ID = (SELECT USERS.ID as userId FROM AUTH_USERS USERS WHERE USERS.EMAIL_ID = :userName)
+    ]]> 
+</sql-query>
+
+<sql-query name="IS_DUPLICATE_ALERT">
+    <![CDATA[
+        SELECT TOP 1
+            1 
+        FROM 
+            AUTH_USERS_ALERTS userAlert
+            INNER JOIN AUTH_USERS users ON userAlert.USER_ID = users.ID
+        WHERE
+            users.EMAIL_ID =:userName  AND
+            userAlert.ALERT_NAME =:alertName AND 
+            userAlert.ACTIVE = 'Y' AND
+            users.ACTIVE = 'Y'
+    ]]> 
+</sql-query>
+
+</hibernate-mapping>

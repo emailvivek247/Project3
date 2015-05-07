@@ -1,0 +1,321 @@
+<#include "../lib/layout.stl" />
+<@dashboardLayout>
+
+<style>
+div.ui-datepicker {
+	font-size:11px;
+}
+.ui-datepicker .ui-datepicker-title select {
+	font-size:11px;
+}
+div.subHeader {
+	text-align:center;
+	width:100%;
+	font-weight:bold;
+	color:#ffffff;
+	background-color:#CF0A3B;
+	line-height:50px;
+}
+#content .inner {
+    min-width:100%;
+	width:auto;
+}
+.btn-search {
+padding: 0 8px;
+line-height: 24px;
+border-width: 4px;
+font-size: 13px;
+}
+</style>
+<#if referencedTransaction?has_content>
+	<div class="subHeader">
+		<span>The transaction you are trying to refund is already processed. The refund transaction details are below,</span>
+	</div>
+
+	<div class="row-fluid">
+		<div class="col-xs-12">
+			<div class="widget-box">
+				<div class="widget-header">
+					<h4>Refund Transaction Information</h4>
+					<div class="widget-toolbar">
+						<a href="#" data-action="collapse">
+							<i class="icon-chevron-up"></i>
+						</a>
+					</div><!-- end widget toolbar-->
+				</div><!-- end widget header-->
+				<div class="widget-body">
+					<div class="widget-main">
+						<div class="row-fluid">
+							<div class="col-xs-4">
+							</div>
+							<div class="col-xs-8">
+								<div class="form-horizontal">
+									<div class="widget-box transparent">
+										<div class="widget-body">
+											<div class="widget-main">
+												
+												<div class="row-fluid">
+													<table cellspacing="5">
+														<tr>
+															<td class="right"><b>Transaction Reference Number: </b></td>
+															<td class="left"><#if referencedTransaction.getTxRefNum()?has_content>${referencedTransaction.getTxRefNum()}</#if></td>
+														</tr>
+														<tr>
+															<td class="right"><b>Original Transaction Reference Number: </b></td>
+															<td class="left"><#if referencedTransaction.getOrigTxRefNum()?has_content>${referencedTransaction.getOrigTxRefNum()}<#else>N/A</#if></td>
+														</tr>
+														<tr>	
+															<td class="right"><b>Transaction Date: </b></td>
+															<td class="left"><#if referencedTransaction.getTransactionDate()?has_content>${referencedTransaction.getTransactionDate()?date}</#if></td>
+														</tr>
+														<tr>	
+															<td class="right"><b>Transaction Type: </b></td>
+															<td class="left"><#if referencedTransaction.getTransactionType()?has_content>${referencedTransaction.getTransactionType()}</#if></td>
+														</tr>
+														<tr>	
+															<td class="right"><b>Site Name: </b></td>
+															<td class="left"><#if referencedTransaction.getSite().getName()?has_content>${referencedTransaction.getSite().getName()}</#if></td>
+														</tr>
+													</table>
+												</div><!--/span-->
+	
+											</div><!--/widget-main-->
+										</div><!--/widget-body-->
+									</div><!--/widget-box-->
+								</div>
+							</div><!--/span-->
+						</div> <!--row Fluid-->
+					</div> <!--end widget main-->
+				</div><!--End widget body-->
+			</div><!-- end widget box-->
+		</div><!-- end span-->
+	</div><!--/row fluid-->
+	<div class="row-fluid">
+		<div class="col-xs-12">
+			<div class="widget-box">
+				<div class="widget-header">
+					<h4>Refund Amount Details</h4>
+					<div class="widget-toolbar">
+						<a href="#" data-action="collapse">
+							<i class="icon-chevron-up"></i>
+						</a>
+					</div><!-- end widget toolbar-->
+				</div><!-- end widget header-->
+				<div class="widget-body">
+					<div class="widget-main">
+						<div class="row-fluid">
+							<div class="col-xs-4">
+							</div>
+							<div class="col-xs-8">
+								<div class="form-horizontal">
+									<div class="widget-box transparent">
+										<div class="widget-body">
+											<div class="widget-main">
+												
+												<div class="row-fluid">
+													<table cellspacing="5">
+														<tr>	
+															<td class="right"><b>Credit Card credited: </b></td>
+															<td class="left"><#if referencedTransaction.getCardNumber()?has_content>********${referencedTransaction.getCardNumber()}</#if></td>
+														</tr>
+														<tr>	
+															<td class="right"><b>Name on Card: </b></td>
+															<td class="left"><#if referencedTransaction.getAccountName()?has_content>${referencedTransaction.getAccountName()}</#if></td>
+														</tr>
+														<tr>	
+															<td class="right"><b>Amount: </b></td>
+															<td class="right"><#if referencedTransaction.getBaseAmount()?has_content>${referencedTransaction.getBaseAmount()?string.currency}</#if></td>
+														</tr>
+														<tr>	
+															<td class="right"><b>Service Fee: </b></td>
+															<td class="right"><#if referencedTransaction.getServiceFee()?has_content>${referencedTransaction.getServiceFee()?string.currency}</#if></td>
+														</tr>
+														<tr>	
+															<td class="right"><b>Total Amount: </b></td>
+															<td class="right"><#if referencedTransaction.getTotalTxAmount()?has_content>${referencedTransaction.getTotalTxAmount()?string.currency}</#if></td>
+														</tr>
+													</table>
+												</div><!--/span-->
+	
+											</div><!--/widget-main-->
+										</div><!--/widget-body-->
+									</div><!--/widget-box-->
+								</div>
+							</div><!--/span-->
+						</div> <!--row Fluid-->
+					</div> <!--end widget main-->
+				</div><!--End widget body-->
+			</div><!-- end widget box-->
+		</div><!-- end span-->
+	</div><!--/row fluid-->
+	<div class="row-fluid">
+		<div class="col-xs-12">
+			<div class="widget-box">
+				<div class="widget-header">
+					<h4>Additional Transaction Information</h4>
+					<div class="widget-toolbar">
+						<a href="#" data-action="collapse">
+							<i class="icon-chevron-up"></i>
+						</a>
+					</div><!-- end widget toolbar-->
+				</div><!-- end widget header-->
+				<div class="widget-body">
+					<div class="widget-main">
+						<div class="row-fluid">
+							<div class="col-xs-4">
+							</div>
+							<div class="col-xs-8">
+								<div class="form-horizontal">
+									<div class="widget-box transparent">
+										<div class="widget-body">
+											<div class="widget-main">
+												
+												<div class="row-fluid">	
+													<table>
+														<tr>	
+															<td class="right"><b>Client Machine Name: </b></td>
+															<td class="left"><#if referencedTransaction.getMachineName()?has_content>${referencedTransaction.getMachineName()}</#if></td>				
+														</tr>
+														<tr>	
+															<td class="right"><b>Logged By: </b></td>
+															<td class="left"><#if referencedTransaction.getModifiedBy()?has_content>${referencedTransaction.getModifiedBy()}</#if></td>
+														</tr>
+														<tr>	
+															<td class="right"><b>Comments: </b></td>
+															<td class="left"><#if referencedTransaction.getComments()?has_content>${referencedTransaction.getComments()}</#if></td>
+														</tr>
+														
+													</table>
+												</div><!--/span-->
+	
+											</div><!--/widget-main-->
+										</div><!--/widget-body-->
+									</div><!--/widget-box-->
+								</div>
+							</div><!--/span-->
+						</div> <!--row Fluid-->
+					</div> <!--end widget main-->
+				</div><!--End widget body-->
+			</div><!-- end widget box-->
+		</div><!-- end span-->
+	</div><!--/row fluid-->
+<#else>
+	<#if transaction?has_content>
+		<#if transactionType?has_content && transactionType == "PAYASUGO">
+			<#if (transaction.getPayAsUGoTxItems()?size > 0)>
+				<#assign purchasedItem = transaction.getPayAsUGoTxItems()?first>
+			</#if>
+		</#if>
+		<#if transactionType?has_content && transactionType == "WEB">
+			
+			<#if (transaction.getWebTxItems()?size > 0) > 0>
+				<#assign purchasedItem = transaction.getWebTxItems()?first>
+			</#if>
+		</#if>
+		<#if purchasedItem?has_content>
+	<div class="row-fluid">
+		<div class="col-xs-12">
+			<div class="widget-box">
+				<div class="widget-header">
+					<h4>Review Transaction Information to be refunded</h4>
+					<div class="widget-toolbar">
+						<a href="#" data-action="collapse">
+							<i class="icon-chevron-up"></i>
+						</a>
+					</div><!-- end widget toolbar-->
+				</div><!-- end widget header-->
+				<div class="widget-body">
+					<div class="widget-main">
+						<div class="row-fluid">
+							<div class="col-xs-4">
+							</div>
+							<div class="col-xs-8">
+								<div class="form-horizontal">
+									<div class="widget-box transparent">
+										<div class="widget-body">
+											<div class="widget-main">
+												
+												<div class="row-fluid">
+													<form id="partialRefundFrm" name="partialRefundFrm" action="processpartialrefund.admin" method="post" autocomplete="off">	
+													 <input type="hidden" name="itemId" value="${itemId}"/><br />		 
+													 <input type="hidden" name="paymentChannel" value="${paymentChannel}"/><br />
+														<table>
+															<tr>
+																<td class="right"><b>Original Transaction Reference Number: </b></td>
+																<td class="right"><#if transaction.getTxRefNum()?has_content>${transaction.getTxRefNum()}</#if></td>
+															</tr>
+															<tr>	
+																<td class="right"><b>Credit Card: </b></td>
+																<td class="right"><#if transaction.getCardNumber()?has_content>************${transaction.getCardNumber()}</#if></td>
+															</tr>
+															<tr>	
+																<td class="right"><b>Name on Card: </b></td>
+																<td class="left"><#if transaction.getAccountName()?has_content>${transaction.getAccountName()}</#if></td>
+															</tr>
+															<tr>	
+																<td class="right"><b>Amount: </b></td>
+																<td class="right"><#if purchasedItem.getBaseAmount()?has_content>${purchasedItem.getBaseAmount()?string.currency}</#if></td>
+															</tr>
+															<tr>	
+																<td class="right"><b>Service Fee: </b></td>
+																<td class="right"><#if purchasedItem.getServiceFee()?has_content>${purchasedItem.getServiceFee()?string.currency}</#if></td>
+															</tr>
+															<tr>	
+																<td class="right"><b>Total Amount: </b></td>
+																<td class="right"><#if purchasedItem.getTotalTxAmount()?has_content>${purchasedItem.getTotalTxAmount()?string.currency}</#if></td>
+															</tr>
+															<tr>
+																<br class="clear"/>	<br class="clear"/>
+																<td colspan="2" class="center">
+																Add Comments Below <span class="red">*required</span>
+																<br class="clear"/> 		
+																<textarea id="comments" class="validate[required,maxSize[2000]]" name="comments" rows="5" cols="50" ></textarea>
+																</td>
+															</tr>
+															<tr>
+																<td colspan="2" class="center">
+																<img id="processing" src="resources/images/processing.gif" style="display:none" />
+																</td>	
+															</tr>
+															<tr>
+																<td colspan="2" class="center">
+																<span class="input-icon" >
+																	<input class="btn btn-success btn-search" type="submit" id="btnSubmit" value="Confirm Refund" /><br class="clear"/><br class="clear"/>
+																	<i class="icon-undo white"></i>
+																</span>	
+																</td>	
+															</tr>
+														</table>
+													</form>	
+												</div><!--/span-->
+	
+											</div><!--/widget-main-->
+										</div><!--/widget-body-->
+									</div><!--/widget-box-->
+								</div>
+							</div><!--/span-->
+						</div> <!--row Fluid-->
+					</div> <!--end widget main-->
+				</div><!--End widget body-->
+			</div><!-- end widget box-->
+		</div><!-- end span-->
+	</div><!--/row fluid-->
+	</#if> 
+	</#if>
+</#if>	
+<script type="text/javascript">
+	$(document).ready(function(){  
+		$('#partialRefundFrm').validationEngine();
+        $('#partialRefundFrm').validationEngine('hide');		
+		
+		$('#processing').hide();
+	 	$('#btnSubmit').show();	
+    });
+    $('#btnSubmit').click(function() {
+    	if ($('#comments').val() != "" && $('#comments').length() <= 2000) {
+		  $('#processing').show();
+		  $('#btnSubmit').hide();	  
+		}
+	});
+</script> 
+</@dashboardLayout>

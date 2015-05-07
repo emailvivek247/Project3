@@ -1,0 +1,184 @@
+<#include "../../lib/layout.stl" />
+<@dashboardLayout>
+<#assign form  =JspTaglibs["http://www.springframework.org/tags/form"]>
+<#assign spring=JspTaglibs["http://www.springframework.org/tags"]>
+<style>
+.btn-search {
+padding: 0 8px;
+line-height: 24px;
+border-width: 4px;
+font-size: 13px;
+}
+
+</style>
+<div class="row-fluid">
+<div class="span12">
+	<div class="widget-box">
+		<div class="widget-header">
+			<h4>Check Print</h4>
+			<div class="widget-toolbar">
+				<a href="#" data-action="collapse">
+					<i class="icon-chevron-up"></i>
+				</a>
+			</div><!-- end widget toolbar-->
+		</div><!-- end widget header-->
+		<div class="widget-body">
+			<div class="widget-main">
+				<div class="row-fluid">
+					<div class="span4">
+					</div>
+					<div class="span8">
+					<form id="CheckPrintForm" action="displayViewCheck.admin" class="form-horizontal" method="post" autocomplete="off" >
+						<div class="widget-box transparent">
+							<div class="widget-body">
+								<div class="widget-main">
+
+									<div class="row-fluid">
+					                    <label class="control-label boldText k-tooltip-validation" for="siteId" style="float: left;width: 168px;padding-top: 5px;text-align: right;font-weight:bold;margin-bottom:8px;">Site :&nbsp; </label>
+					                     <div class="">
+											 <select id="siteId" name="siteId" tabindex="1" class="k-widget k-dropdownlist" class="validate[required]" style="width:230px" required validationMessage="Please select site">
+					                    		<option value="" <#if (!selectedSiteId?has_content)>selected</#if>>Select Site</option>
+					                        	<#if sites?has_content>
+					                        			<#foreach site in sites>
+					                                       <#if (selectedSiteId?has_content)>
+					                                        <#if (selectedSiteId == site.id)>
+					                                            <option value="${site.id}" selected> ${site.description}</option>
+					                                        <#else>
+					                                            <option value="${site.id}"> ${site.description}</option>
+					                                        </#if>
+					                                       <#else>
+					                                            <option value="${site.id}"> ${site.description}</option>
+					                                       </#if>
+					                            		</#foreach>
+					                    		</#if>
+					             			</select>
+										</div>
+					                 </div>
+
+					                 <div class="row-fluid">
+					                    <label class="control-label boldText k-tooltip-validation" for="paymentType" style="float: left;width: 168px;padding-top: 5px;text-align: right;font-weight:bold;margin-bottom:8px;">Payment Type :&nbsp; </label>
+					                     <div class="">
+											<select id="paymentType" name="paymentType" class="k-widget k-dropdownlist" tabindex="2" class="validate[required]" required validationMessage="Please select payment type">
+					                        	<option value="" <#if (!selectedPaymentType?has_content)>selected</#if>>Select Payment Type</option>
+					                            <#foreach paymentType in paymentTypes>
+					                               <#if (paymentType?has_content)>
+														<#if (selectedPaymentType?has_content && selectedPaymentType == paymentType)>
+														    <option value="${paymentType}" selected> ${paymentType}</option>
+														<#else>
+														    <option value="${paymentType}"> ${paymentType}</option>
+														</#if>
+					                               </#if>
+					                             </#foreach>
+					                        </select>
+										</div>
+					                 </div>
+
+					                 <div class="row-fluid">
+					                 	<label class="control-label required" style="float: left;width: 168px;padding-top: 5px;text-align: right;font-weight:bold;"></label>
+                						<div class="">
+									        <span class="input-icon">
+												<input type="submit" id="btnPrintCheck" class="btn btn-small btn-info btn-search"  tabindex="3" value="Generate Check"/>
+												<i class="icon-check white"></i>
+											</span>
+										</div>
+									 </div><!--/span-->
+
+									</div><!--/widget-main-->
+								</div><!--/widget-body-->
+							</div><!--/widget-box-->
+						</div><!--/span-->
+					</form>
+				</div> <!--row Fluid-->
+			</div> <!--end widget main-->
+		</div><!--End widget body-->
+	</div><!-- end widget box-->
+</div><!-- end span-->
+</div><!--/row fluid-->
+
+
+<div class="row-fluid">
+	<div class="span12">
+		<div class="widget-box transparent ">
+			<div class="widget-body">
+				<div class="row-fluid">
+					<div class="k-content">
+
+							<#if displayFlag = true>
+					        <APPLET  CODE = "com.fdt.ecomadmin.applet.CheckPrintApplet.class" CODEBASE = "applets" ARCHIVE = "ReportApplet.jar, servlet-api.jar, commons-lang-2.6.jar, jasperreports-applet-5.5.0.jar, jasperreports-fonts-5.5.0.jar, iText-2.1.7.jar, poi-3.6.jar, poi-ooxml-3.6-20091214.jar, commons-logging-1.1.1.jar, commons-collections-3.2.1.jar, commons-digester-1.7.jar" width="100%" height="600"></XMP>
+						        <PARAM NAME="type" VALUE="application/x-java-applet;version=1.2.2">
+						        <PARAM NAME="scriptable" VALUE="false">
+						        <PARAM NAME = CODE VALUE = "com.fdt.ecomadmin.applet.CheckPrintApplet.class" >
+						        <PARAM NAME = CODEBASE VALUE = "applets" >
+						        <PARAM NAME = ARCHIVE VALUE = "ReportApplet.jar, servlet-api.jar, commons-lang-2.6.jar, jasperreports-applet-5.5.0.jar, jasperreports-fonts-5.5.0.jar, iText-2.1.7.jar, poi-3.6.jar, poi-ooxml-3.6-20091214.jar, commons-logging-1.1.1.jar, commons-collections-3.2.1.jar, commons-digester-1.7.jar" >
+						        <PARAM NAME = "REPORT_URL" VALUE="<#if reportURL?has_content >${reportURL}</#if>renderCheck.admin" />
+						        <PARAM NAME = "REQUEST_URL" VALUE="<#if reportURL?has_content >${reportURL}</#if>" />
+						        <PARAM NAME = "JSESSIONID" VALUE="<#if sessionId?has_content >${sessionId}</#if>">
+						        <PARAM NAME = "SITE_ID" VALUE="<#if selectedSiteId?has_content >${selectedSiteId}</#if>">
+						        <PARAM NAME = "PAYMENT_TYPE" VALUE="<#if selectedPaymentType?has_content >${selectedPaymentType}</#if>">
+						        <PARAM NAME = "MOD_USER_ID" VALUE="<#if modUserId?has_content >${modUserId}</#if>">
+						        <PARAM NAME = "IP_ADDRESS" VALUE="<#if machineName?has_content >${machineName}</#if>">
+					    	</APPLET>
+					        </#if>
+
+					</div> <!--End k-content-->
+				</div> <!--end row-fluid-->
+
+			</div><!--End widget body-->
+		</div><!-- end widget box-->
+	</div><!-- end span-->
+</div><!-- end row-fluid-->
+
+<script src="http://www.java.com/js/deployJava.js"></script>
+<script>
+    if (deployJava.versionCheck('1.7+') == false) {
+        var isCheckDone = "N";
+        if (isCheckDone == "N") {
+        	userInput = confirm("You need the latest Java(TM) Runtime Environment. Would you like to update now?");
+        }
+        if (userInput == true) {
+            deployJava.returnPage = location.href;
+            // Install latest JRE or redirect user to another page to get JRE
+            deployJava.installLatestJRE();
+            isCheckDone = "Y";
+        }
+    }
+</script>
+
+ <script type="text/javascript">
+
+ function sortDropDownListByText() {
+    // Loop for each select element on the page.
+    $("select").each(function() {
+
+        // Keep track of the selected option.
+        var selectedValue = $(this).val();
+
+        // Sort all the options by text. I could easily sort these by val.
+
+        // Select one option.
+        $(this).val(selectedValue);
+    });
+}
+
+
+	$(document).ready(function(){
+	    $("#siteId").kendoDropDownList();
+	    $("#paymentType").kendoDropDownList();
+	    sortDropDownListByText();
+	    $('#CheckPrintForm').validationEngine();
+		$('#CheckPrintForm').validationEngine('hide');
+
+		var validator = $("#CheckPrintForm").kendoValidator().data("kendoValidator");
+
+        $("#btnPrintCheck").click(function() {
+        	if (validator.validate()) {
+
+        	} else {
+        		return false;
+        	}
+        });
+
+	});
+</script>
+
+</@dashboardLayout>

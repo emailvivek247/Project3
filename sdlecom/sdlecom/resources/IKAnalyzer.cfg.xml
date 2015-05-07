@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">  
+<properties>  
+	<comment>IK Analyzer extension configuration</comment>
+	<!--
+	  configure your extension dictionary. 
+	  The dictionary files should be UTF encoded, and each line has one word.
+	  The files should be on the classpath. You can just use WEB-INF/classes directory.
+	  
+	<entry key="ext_dict">/mydict.dic; /mypack/mydict2.dic ; /com/mycompany/dic/mydict3.dic ;</entry> 
+	 --> 
+	 <!--configure your extended stop words here
+	<entry key="ext_stopwords">/ext_stopword.dic</entry> 
+	-->
+</properties>

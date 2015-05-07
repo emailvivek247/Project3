@@ -1,0 +1,20 @@
+#set( $layout = "Empty.vm" )
+<index-usage-report>
+#set($QueryLogAnalyzer   = $toolLoader.load("net.javacoding.xsearch.status.QueryLogAnalyzer"))
+#set($indexName = ${request.getParameter("indexName")})
+#set($period = ${request.getParameter("period")})
+#if (!$period) 
+	#set($period = 0)	
+#end
+#set($operation = ${request.getParameter("operation")})
+#if ("refresh" == $operation) 
+  $QueryLogAnalyzer.refresh()
+#end
+#set($queryReport= $QueryLogAnalyzer.getReport($indexName,$period))
+#set($report = $queryReport)
+
+  <total-queries>$!{queryReport.recordCount}</total-queries>
+  <average-query-time>$!{queryReport.avgSearchingTime}</average-query-time>
+
+#parse("/WEB-INF/velocity/region/report/reportXML.vm")
+</index-usage-report>

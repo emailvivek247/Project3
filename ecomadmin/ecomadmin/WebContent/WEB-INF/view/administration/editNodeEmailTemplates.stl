@@ -1,0 +1,145 @@
+<#include "../lib/layout.stl" />
+<@dashboardLayout>
+<#assign form  =JspTaglibs["http://www.springframework.org/tags/form"]>
+<#assign spring=JspTaglibs["http://www.springframework.org/tags"]>
+<link href="resources/plugins/tree/themes/treeStyles.css" rel="stylesheet" type="text/css" media="all">
+<script type="text/javascript" src="resources/plugins/tree/jquery.jstree.js"></script>
+<script type="text/javascript" src="resources/plugins/tree/jquery.hotkeys.js"></script>
+<script type="text/javascript" src="resources/plugins/tree/images/file.png"></script>
+
+<style>
+.left {
+	text-align:left;
+}
+.right {
+	text-align:right;
+}
+.center {
+	text-align:center;
+}
+ table#table_email {
+	
+	margin-left: 15%;
+	
+}
+.bold {
+	font-weight:bold;
+}
+</style>
+<!-- Begin one column window -->
+
+<div id="page-content" class="clearfix">
+	<#if successmsg?has_content>
+		<p style="padding:10px;">${successmsg}</p>
+		<br class="clear"/>
+	<#elseif errormsg?has_content>
+		<p style="padding:10px;">${errormsg}</p>
+		<br class="clear"/>
+	</#if>
+	<div class="onecolumn">
+		<div class="row-fluid">
+			<div class="span12">
+				<div class="widget-box transparent">
+					<div class="widget-header">
+						<h4>Email Template Configuration</h4>
+						<div class="widget-toolbar">
+							<!--a href="#" data-action="collapse">
+								<i class="icon-chevron-up"></i>
+							</a-->
+						</div><!-- end widget toolbar-->  
+					</div><!-- end widget header-->
+
+					<div class="widget-body"> 
+						<div  class="row-fluid">
+						<br>
+							<table id="table_email">
+								<tr>
+									<td><b>File Navigation</b></td>
+									<td><b>File Contents</b></td>
+								</tr>
+								<tr>
+									<td style="width:325px;vertical-align:top;">
+										<div id="fileMap" class="demo" style="width:325px;">
+											${treeXML}
+										</div>
+										<form id="fileDetails" name="fileDetails" action="readEmailTemplate.admin" method="post">
+										<input type="hidden" id="filePathReq" name="filePathReq" value="<#if filePathReq?has_content>${filePathReq}</#if>">
+										<input type="hidden" id="fileIdReq" name="fileIdReq" value="<#if fileIdReq?has_content>${fileIdReq}</#if>">
+										</form>	
+									</td>
+									<td style="width:725px;vertical-align:top;">	
+									 	<#if isFileAccessed?has_content>
+										<form id="fileContents" name="fileContents" method="post" action="saveEmailTemplate.admin">
+										<input type="hidden" id="filePath" name="filePath" value="<#if filePath?has_content>${filePath}</#if>">
+										<input type="hidden" id="fileId" name="fileId" value="<#if fileId?has_content>${fileId}</#if>">
+										<textarea style="width:725px;" rows="25" name="fileContent" cols="100">${fileContent?if_exists?html}</textarea>	
+										<br /><input type="submit" value="Save" />				
+										</form>
+										</#if>			
+									</td>
+								</tr>
+							</table> <br><br>	
+						</div></div></div></div>
+					</div><!--End widget body-->
+				</div><!-- end widget box-->  
+			</div><!-- end span-->
+		</div><!-- end row-fluid-->	
+
+<script type="text/javascript">
+ $(document).ready(function() {
+
+	$('#fileMap').bind('select_node.jstree', function(e,data) {
+	    
+	});
+
+	$("#fileMap")
+		.jstree({
+			"plugins" : ["themes", "html_data", "ui", "hotkeys", "types"],
+			"types" : {
+		    "valid_children" : [ "folder" ],
+		    "types" : {
+		        "folder" : {
+			            "valid_children" : [ "file" ],
+			            "icon" : { "image" : "resources/plugins/tree/images/folder.png"},
+			            "max_depth" : 1
+			        },
+			
+			        "file" : {
+			            "valid_children" : [ "none" ],
+			            "icon" : { "image" : "resources/plugins/tree/images/file.png" },
+			        }
+		    	}
+			},
+			<#if fileIdReq?has_content>
+				"ui" : {"initially_select" : [ "${fileIdReq}" ]},
+				"core" : { "initially_open" : [ "${fileIdReq}" ] }
+			<#else>
+				"ui" : {"initially_select" : [ "1" ]},
+				"core" : { "initially_open" : [ "1" ] }
+			</#if>
+			
+			})
+		.bind("loaded.jstree", function (event, data) {
+			$(".jstree-leaf a").on("click", function(e) {			     			     
+				 var url = $(this).attr('href');				 
+				 var id = $(this).parent().attr('id');				 
+				 $("#filePathReq").val(url);				 
+				 $("#fileIdReq").val(id);		 				 
+				 if (url != "" && url != "#" ) {
+				 		 $('#fileDetails').submit();
+				 } else {	
+				 	return false;
+				 } 
+			})
+			
+			$('li[rel="folder"] a').on("click", function(e) {				
+				$('[name="fileContent"]').val('');
+				return false;
+			})
+		});
+ });
+ 
+
+
+</script>
+</@dashboardLayout>

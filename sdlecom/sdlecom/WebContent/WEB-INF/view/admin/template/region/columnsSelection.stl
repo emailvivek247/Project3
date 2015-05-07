@@ -1,0 +1,19 @@
+<#macro columnList(count, columns)>
+ <select name="variable${count}" id="variable${count}" multiple="multiple" size="6" >
+  <#foreach c in columns>
+    <option value="${c.columnName}" <#if c.isSelected>selected="selected"</#if>>
+     ${c.columnName} ...... (${dc.getColumn(c.columnName).columnTypeShortName})
+    </option>
+  </#foreach>
+ </select>
+</#macro>
+
+<#assign count = variableCounter>
+
+<@columnList count, v.defaultValue.columns />
+
+<script type="text/javascript">
+$(function(){
+  $('#variable${count}').comboselect({ sort: 'left', addbtn: 'Add >>',  rembtn: '<< Remove' });   
+});
+</script>

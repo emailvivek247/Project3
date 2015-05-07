@@ -1,0 +1,133 @@
+<#noparse>
+<#--
+displayFilterColumnCount:
+  display an entry in a to-be-filtered column. Each entry has a column value and a count value.
+-->
+<#macro displayFilterColumnCount(column count)>
+ <#assign t1 = pageStyleUtil.addOrSetQuery(searchResult.queryString, "start", null)>
+ <#if (!count.isFiltered)>
+  <#assign t2 = pageStyleUtil.appendQuery(t1, "q", column.name + ":\"" + count.columnValue?if_exists + "\"")>
+    <li><a href="?${t2}">${count.columnValue}</a>(<span>${count.value}</span>)</li>
+ </#if>
+</#macro>
+
+<#--
+
+The real rendering is here. Actually, still render it almost similar to a normal narrowBy search
+
+-->
+
+</#noparse>
+<#if !mergeTagCloud >
+  <#foreach columnName in tagCloudColumns><#noparse>
+   <#assign filterColumn = searchResult.filterResult.getFilterColumn("</#noparse>${columnName}<#noparse>")>
+   <#assign c = filterColumn.setRendered().column>
+   <div class="box">
+    <h2>Narrow By ${c.displayName}
+      <#foreach filteredColumn in searchResult.filterResult.filteredColumns>
+        <#if filteredColumn.column.name == c.name>
+          > <a href="?${filteredColumn.removeSelf(searchResult.request)}">${filteredColumn.value}</a>
+        </#if>
+      </#foreach><span class="active"></span>
+    </h2>
+    <div class="multi_select" id="tagCloud_${c.name}">
+      <ul>
+        <#foreach cCount in filterColumn.getTopCounts(20)>
+          <@displayFilterColumnCount c, cCount/>
+        </#foreach>
+      </ul>
+    </div>
+   </div>
+  </#noparse></#foreach>
+<#else>
+  <div class="box">
+    <div>Tags
+  <#foreach columnName in tagCloudColumns><#noparse>
+    <#assign filterColumn = searchResult.filterResult.getFilterColumn("</#noparse>${columnName}<#noparse>")>
+    <#assign c = filterColumn.setRendered().column>
+    <#foreach filteredColumn in searchResult.filterResult.filteredColumns>
+      <#if filteredColumn.column.name == c.name>
+        <a href="?${filteredColumn.removeSelf(searchResult.request)}">${filteredColumn.value}</a>
+      </#if>
+    </#foreach>
+  </#noparse></#foreach>
+    </div>
+    <div class="tagCloud">
+      <ul>
+  <#foreach columnName in tagCloudColumns><#noparse>
+    <#assign filterColumn = searchResult.filterResult.getFilterColumn("</#noparse>${columnName}<#noparse>")>
+    <#assign c = filterColumn.setRendered().column>
+        <#foreach cCount in filterColumn.getTopCounts(20)>
+          <@displayFilterColumnCount c, cCount/>
+        </#foreach>
+  </#noparse></#foreach>
+      </ul>
+    </div>
+  </div>
+</#if>
+
+<#noparse>
+
+
+
+<br/>
+
+<#--
+
+Now put in some javascript magic. We use jQuery here. However, the code is simple enough to switch to any other javascript library.
+
+-->
+
+<style>
+.tagCloud {
+  padding: 5px;
+  border:1px solid #D2E4FC;
+  font-family:Georgia,Serif;
+  font-size:120%;
+}
+.tagCloud a:link, .tagCloud a:visited {
+  text-decoration: none; 
+}
+
+</style>
+<script>
+jQuery.fn.tagCloud = function(){this.each(function(){
+ // get an array of all the <li>'s
+ var categories = $(this).find('ul li');
+ var cloudMarkup = '';
+ // set maxPercent/minPercent preferences
+ var maxPercent = 200, minPercent = 100;
+ // note that max is initialized to a number that I know is lower than the max count
+ // and that min is set to a number larger than the known min count
+ var max = 1, min = 999, count = 0;
+ // loop through each li and calculate statistics
+ categories.each(function(i) {
+  count = parseInt($(this).find('span').text());
+  max = (count > max ? count : max);
+  min = (min > count ? count : min);
+ });
+ var total, link, size;
+ var multiplier = (maxPercent-minPercent)/(max-min);
+ // loop through each li and generate the markup for the new tag cloud
+ categories.each(function(i) {
+  count = parseInt($(this).find('span').text());
+  link = $(this).find('a');
+  size = minPercent + ((max-(max-(count-min)))*multiplier) + '%';
+  cloudMarkup += '<a class="cloud_link" style="font-size:' + size + '" href="' + link.attr('href') + '">' + link.text() + '</a> ';
+ });
+ // replace the html content of the parent container with the new tag cloud
+ $(this).html(cloudMarkup);
+});}
+$().ready(function(){
+ </#noparse>
+ <#if !mergeTagCloud >
+  <#foreach columnName in tagCloudColumns>
+   $("#tagCloud_${columnName}").tagCloud();
+  </#foreach>
+ <#else>
+   $(".tagCloud").tagCloud();
+ </#if>
+ <#noparse>
+});
+</script>
+</#noparse>

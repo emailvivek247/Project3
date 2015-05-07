@@ -1,0 +1,437 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><title>ACCEPT Log In</title>
+	<meta http-equiv="content-type" content="text/html; charset="" />
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Expires" content="-1">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	<link rel="icon" href="resources/images/favicon.ico">
+<#assign form  =JspTaglibs["http://www.springframework.org/tags/form"]>
+<#assign spring=JspTaglibs["http://www.springframework.org/tags"]>
+</head>
+
+<#include "../lib/include.stl" />
+<style>
+div.ADCSI {
+	width: 550px;
+}
+span.ADCSI_leftcol {
+	width: 120px;
+	text-align:right;
+	display: inline-block;
+}
+input[type=checkbox], input[type=radio] {
+opacity: 1;
+z-index: 12;
+width: 18px;
+height: 18px;
+}
+#footerTable2 {
+font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+font-size: 13px;
+color: #FBFCFA;
+}
+.icon-lightbulb {
+color:#FFFFFF;
+}
+.login-layout .widget-box .widget-main {
+padding: 16px 36px 36px;
+background: #fff;
+}
+
+div.formErrorContent {
+opacity: 0.87; 
+position: absolute; 
+top: 0px; 
+left: -41px; 
+margin-top: -26px;
+
+}
+
+.formError {
+position: absolute;
+top: 300px;
+left: 300px;
+padding-bottom: 55px;
+display: block;
+z-index: 5000;
+margin-top: 5px;
+}
+.formError .formErrorContent {
+width: 100%;
+background: #ee0101;
+color: #fff;
+width: 120px;
+font-family: tahoma;
+font-size: 11px;
+border: 2px solid #ddd;
+box-shadow: 0px 0px 6px #000;
+-moz-box-shadow: 0px 0px 6px #000;
+-webkit-box-shadow: 0px 0px 6px #000;
+padding: 4px 10px 4px 10px;
+border-radius: 6px;
+-moz-border-radius: 6px;
+-webkit-border-radius: 6px;
+}
+
+#login-box{
+	-webkit-box-shadow: 0px 0px 5px rgba(50, 50, 50, .3);
+	-moz-box-shadow:    0px 0px 5px rgba(50, 50, 50, .3);
+	box-shadow:         0px 0px 5px rgba(50, 50, 50, .3);
+	
+}
+#rowTop{margin-top:75px;}
+#menuContainer{width:100%;height:70px;background-color:#5090c1;}
+.badge {
+position: relative;
+top: -4px;
+left: 2px;
+padding-right: 5px;
+padding-left: 5px;
+}
+
+.badge {
+text-shadow: none;
+font-size: 12px;
+padding-top: 1px;
+padding-bottom: 3px;
+font-weight: normal;
+line-height: 15px;
+background-color: rgb(171, 186, 195);
+}
+#acceptTitle {font-size: 45px;margin: 20px 0;}
+.login-container{margin-top:75px;}
+</style>
+
+
+<body class="login-layout">
+		<div class="main-container">
+			<div class="main-content">
+				<div class="row">
+					<div class="col-sm-10 col-sm-offset-1" >
+						<div class="login-container">
+							<div class="fill">&nbsp;</div><div class="fill">&nbsp;</div>
+							<div class="position-relative">
+								<div id="login-box" class="login-box visible widget-box no-border" >
+									<div class="widget-body" style="padding: 0 0px 0 0px;">
+										<div class="widget-main" style="background-color:white;">
+											<h2>
+												<div id="acceptTitle" class="center">
+														<img src="resources/images/accept-logo.png">
+												</div>
+											</h2>
+														<h5 class="header blue lighter bigger" style="font-size: 18px;">
+															<i class="icon-user"></i>
+	
+															Please Enter Your Information
+	
+															<!--Error Message to appear in red if invalid username/ password-->
+															<#if AUTHENTICATION_ERROR_MESSAGE?has_content>
+														    	<h6 class="header red lighter bigger">
+														    			${AUTHENTICATION_ERROR_MESSAGE}  <br>
+														    	</h6>
+													    	</#if>
+														</h5>
+
+											<div class="space-6"></div>
+
+											<form id="login-form" action="j_spring_security_check"  method="post" autocomplete="off" >
+												<fieldset>
+													<label class="block clearfix">
+														<span class="block input-icon input-icon-right">
+															<input type="text" class="form-control validate[required,minSize[2],maxSize[50]] ADCSI_Input" id="j_username" name="j_username" spellcheck="false" tabindex="1" maxlength="50" autocomplete="on" placeholder="Username/Email"  />
+															<i class="icon-user"></i>
+															
+														</span>
+													</label>
+
+													<label class="block clearfix">
+														<span class="block input-icon input-icon-right">
+															<input type="password" class="form-control validate[required] ADCSI_Input" type="password" style="font-family: Arial, Helvetica, sans;" id="j_password" name="j_password" tabindex="2" maxlength="20" autocomplete="off" placeholder="Password" />
+															<i class="icon-lock"></i>
+														</span>
+													</label>
+
+													<div class="space"></div>
+				
+													<div class="clearfix">
+														<!--start of Remember Me checkbox-->
+														<label class="inline" style="margin-right:60px;vertical-align:middle;">
+															<spring:message code="security.authentication.remember" var="rememberAuthent" />
+															<input type="checkbox" class="ace" id="rememberme" name="rememberme"  title="rememberAuthent" />
+															<span class="lbl"> Remember Me</span>
+														</label>
+														<!--end of Remember Me checkbox-->
+															<spring:message code="security.authentication.loginHeader"  var="loginAuthent" />
+															<span class="inline input-icon input-icon-right" style="vertical-align:middle;">
+																<input type="submit" name="login" value="Login" id="btnLogin" style="font-size:15px;padding:2px 25px 2px 12px;width:98px;" class="pull-right btn btn-small btn-primary"  />					
+																<i id="iconKey" class="icon-key" style="color:white;"></i>
+															</span>
+														
+													</div>
+
+													<div class="space-4"></div>
+												</fieldset>
+											</form>
+			
+										</div><!-- /widget-main -->
+
+										<div class="toolbar clearfix" style="white-space:nowrap;">
+											<div id="menuSub1" style="padding:5px 0;display:inline-block;width:55%;background-color:#5090c1;">
+												&nbsp;
+												<a href="publicsignUp.admin" class="forgot-password-link" >
+													<i class="icon-arrow-left"></i>
+													Create a new account
+												</a> <br>
+												&nbsp;
+												<a href="publicviewresetpasswordrequest.admin" class="forgot-password-link">
+													<i class="icon-arrow-left"></i>
+													I forgot my password
+												</a>		<br>
+												&nbsp;
+												<a href="publicviewresendactivation.admin"  class="forgot-password-link">
+													<i class="icon-arrow-left"></i>
+													Resend activation email 
+												</a>						
+											</div> <!--end menuSub1-->
+											<div id="menuSub2" style=	"font-size:25px;float:right;display:inline-block;width:37%;padding-right:10px;background-color:#5090c1;color:white;">			
+												<div class="social-login center">
+													<span>
+														<a  href="https://www.facebook.com/pages/AMCAD/193699310720652" >
+															<i class="icon-facebook white "></i>
+														</a>
+													</span>
+													<span>
+														<a href="https://twitter.com/AmCadLLC">
+															<i class="icon-twitter white"></i>
+														</a>
+													</span>	
+													<span>
+														<a href="http://www.linkedin.com/company/amcad?trk=tabs_biz_home" >
+															<i class="icon-linkedin white"></i>
+														</a>
+													</span>	
+													<span>
+														<a href="http://www.youtube.com/user/AMCADLLC">
+															<i class="icon-youtube white"></i>
+														</a>
+													</span>
+												</div>  <!--end social login-->
+											</div>  <!--end menuSub2--->
+										</div>  <!--/toolbar clearfix--->
+									</div><!-- /widget-body -->
+								</div><!-- /login-box -->
+
+								<div id="forgot-box" class="forgot-box widget-box no-border">
+									<div class="widget-body">
+										<div class="widget-main">
+											<h4 class="header red lighter bigger">
+												<i class="icon-key"></i>
+												Retrieve Password
+											</h4>
+
+											<div class="space-6"></div>
+											<p>
+												Enter your email and to receive instructions
+											</p>
+
+											<form>
+												<fieldset>
+													<label class="block clearfix">
+														<span class="block input-icon input-icon-right">
+															<input type="email" class="form-control" placeholder="Email" />
+															<i class="icon-envelope"></i>
+														</span>
+													</label>
+
+													<div class="clearfix">
+														<button type="button" class="width-35 pull-right btn btn-sm btn-danger">
+															<i class="icon-lightbulb"></i>
+															Send Me!
+														</button>
+													</div>
+												</fieldset>
+											</form>
+										</div><!-- /widget-main -->
+
+										<div class="toolbar center">
+											<a href="#" onclick="show_box('login-box'); return false;" class="back-to-login-link">
+												Back to login
+												<i class="icon-arrow-right"></i>
+											</a>
+										</div>
+									</div><!-- /widget-body -->
+								</div><!-- /forgot-box -->
+
+								<div id="signup-box" class="signup-box widget-box no-border">
+									<div class="widget-body">
+										<div class="widget-main">
+											<h4 class="header green lighter bigger">
+												<i class="icon-group blue"></i>
+												New User Registration
+											</h4>
+
+											<div class="space-6"></div>
+											<p> Enter your details to begin: </p>
+
+											<form>
+												<fieldset>
+													<label class="block clearfix">
+														<span class="block input-icon input-icon-right">
+															<input type="email" class="form-control" placeholder="Email" />
+															<i class="icon-envelope"></i>
+														</span>
+													</label>
+
+													<label class="block clearfix">
+														<span class="block input-icon input-icon-right">
+															<input type="text" class="form-control" placeholder="Username" />
+															<i class="icon-user"></i>
+														</span>
+													</label>
+
+													<label class="block clearfix">
+														<span class="block input-icon input-icon-right">
+															<input type="password" class="form-control" placeholder="Password" />
+															<i class="icon-lock"></i>
+														</span>
+													</label>
+
+													<label class="block clearfix">
+														<span class="block input-icon input-icon-right">
+															<input type="password" class="form-control" placeholder="Repeat password" />
+															<i class="icon-retweet"></i>
+														</span>
+													</label>
+
+													<label class="block">
+														<input type="checkbox" class="ace" />
+														<span class="lbl">
+															I accept the
+															<a href="#">User Agreement</a>
+														</span>
+													</label>
+
+													<div class="space-24"></div>
+
+													<div class="clearfix">
+														<button type="reset" class="width-30 pull-left btn btn-sm">
+															<i class="icon-refresh"></i>
+															Reset
+														</button>
+			
+														<button type="button" class="width-65 pull-right btn btn-sm btn-success">
+															Register
+															<i class="icon-arrow-right icon-on-right"></i>
+														</button>
+													</div>
+												</fieldset>
+											</form>
+										</div>
+
+										<div class="toolbar center">
+											<a href="#" onclick="show_box('login-box'); return false;" class="back-to-login-link">
+												<i class="icon-arrow-left"></i>
+												Back to login
+											</a>
+										</div>
+									</div><!-- /widget-body -->
+								</div><!-- /signup-box -->
+								
+								
+										<div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div>
+										<div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div>
+										<div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div>
+										<div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div>
+										<div class="fill">&nbsp;</div><div class="fill">&nbsp;</div><div class="fill">&nbsp;</div>
+										<div class="hr hr32 hr-dotted"></div>
+								
+								
+										
+								
+								
+							</div><!-- /position-relative -->
+						</div>
+					</div><!-- /.col -->
+				</div><!-- /.row -->
+			</div>
+		</div><!-- /.main-container -->
+		<!--- Footer ---- Style is inherited from footerTable2 id--->
+		<div class="container-fluid center">
+			<span>
+				<a href="http://www.amcad.com"><img src="resources/images/amcadLogo.png" alt="AMCAD"  height="42px" border="0" style="vertical-align:baseline;margin-left:10px;"/></a>
+			</span>
+			</br>	
+			<span>
+		    	Copyright &copy;2014 American Cadastre LLC (dba AMCAD). All Rights Reserved
+		    </span>
+		    </br>
+		    <span>
+		    	&nbsp;Build Version : ${buildVersion}&nbsp;Build Date : ${buildDate}
+		    </span>	
+        </div><!-- end #after-footer -->
+		<!-- basic scripts -->
+
+		<!--[if !IE]> -->
+	<#--<div style="position: fixed;bottom: 0;right: 0;">
+			<span>Build Version : ${buildVersion}&nbsp;Build Date : ${buildDate}</span>
+	</div>-->
+		<script type="text/javascript">
+			window.jQuery || document.write("<script src='assets/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
+		</script>
+
+		<!-- <![endif]-->
+
+		<!--[if IE]>
+<script type="text/javascript">
+ window.jQuery || document.write("<script src='assets/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
+</script>
+<![endif]-->
+
+		<script type="text/javascript">
+			if("ontouchend" in document) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+		</script>
+
+		<!-- inline scripts related to this page -->
+
+		<script type="text/javascript">
+			function show_box(id) {
+			 jQuery('.widget-box.visible').removeClass('visible');
+			 jQuery('#'+id).addClass('visible');
+			}
+			
+			
+			
+		$(document).ready(function(){
+		$(':input:visible:enabled:first').focus();
+		$("#j_username").val($.cookie("username"));
+		if ($.cookie("username") != "") {
+			$('#rememberme').attr('checked', true);
+		}
+       	$('#login-form').validationEngine();
+        $('#login-form').validationEngine('hide');
+		$('#btnLogin').click(function() {
+			if ($('#rememberme').is(':checked')) {
+				$.cookie("username", $("#j_username").val(), { expires : 10 });
+			}
+			else {
+				$.cookie("username", "", { expires : 10 });
+			}
+		});
+		$('#btnReset').click(function() {
+			$('#login-form').validationEngine('hide');
+		});
+		$('.sverror').each(function() {
+		    var currentElement = '#' + $(this).attr('id').split('.')[0];
+	        $(currentElement).validationEngine('showPrompt', $(this).html(), 'fail', 'topRight', true);
+		});
+	});
+		</script>
+	</body>
+
+
+
+
+
+

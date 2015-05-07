@@ -1,0 +1,3 @@
+<#if suggestions?has_content><#foreach s in suggestions>
+${s}
+</#foreach></#if>

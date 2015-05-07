@@ -1,0 +1,25 @@
+<#-- Renders top-level and sub-level tabs -->
+<#if !indexName?exists && dc?exists ><#assign indexname = dc.getName()></#if>
+<#macro displayTab(selectedTab, linkShortName, link, text, imageName, isNewWindow)>
+  <#if isNewWindow == "true">
+ 	 <li class="headlink"><a class="noBorder headlink_text" href="${link}" target="_blank">
+  <#else>
+  	<li class="headlink"><a class="noBorder headlink_text"  href="${link}">
+  </#if>
+  <#if imageName != "">
+    <img src="images/${imageName}" width="24" height="24" border="0" alt=""/><br/>
+ </#if>
+ <#if selectedTab == linkShortName><b></#if>
+ ${text}<#if selectedTab == linkShortName></b></#if></a></li>  
+</#macro>
+<ul id="cssdropdown"> 
+<@displayTab selectedToptab, "dashboard", "desktop.do", "Desktop", "", "false"/>
+<@displayTab selectedToptab, "siteAdmin", "preference.do", "Site Administration", "", "false"/>
+<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "true">
+	<@displayTab selectedToptab, "securityAdministration", "securityadministration.do", "Security", "", "false"/>
+	<#if request.getServletContext().getInitParameter("isAlertsEnabled") == "true">
+		<@displayTab selectedToptab, "alertAdministration", "configAlertSchedule.do", "Alerts", "", "false"/> 
+	</#if>
+</#if>	
+<@displayTab selectedToptab, "instanceJob", "instanceJob.do", "Instance Timer", "", "false"/>
+</ul>

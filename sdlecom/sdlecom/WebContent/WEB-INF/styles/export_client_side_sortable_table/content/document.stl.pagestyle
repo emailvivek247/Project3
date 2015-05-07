@@ -1,0 +1,106 @@
+<#noparse>
+  </#noparse>
+  <#foreach c in displayColumns>
+    <#assign column = dc.getColumn(c)>
+    <#if column.getAnalyzerName() = "com.fdt.sdl.core.analyzer.DateAnalyzer">
+      <#noparse>
+		      <@display.column media="html" indexColumnName="</#noparse>${c}<#noparse>" title="${searchResult.datasetConfiguration.getColumn(\"</#noparse>${c}<#noparse>\").displayName}">
+		      	<#if doc.get("</#noparse>${c}<#noparse>")?has_content>
+					${pageStyleUtil.format(doc.get("</#noparse>${c}<#noparse>"), "yyyymmdd", "mm/dd/yyyy")}
+				</#if>			   	
+			  </@display.column>
+			  <@display.column media="rtf excel pdf" indexColumnName="</#noparse>${c}<#noparse>" title="${searchResult.datasetConfiguration.getColumn(\"</#noparse>${c}<#noparse>\").displayName}">
+			  	<#if doc.get("</#noparse>${c}<#noparse>")?has_content>
+				   	${pageStyleUtil.format(doc.get("</#noparse>${c}<#noparse>"), "yyyymmdd", "mm/dd/yyyy")}
+				</#if>   	
+			  </@display.column>
+      </#noparse>
+    <#elseif column.isNumber>
+      <#noparse>
+		  <@display.column media="html" indexColumnName="</#noparse>${c}<#noparse>" title="${searchResult.datasetConfiguration.getColumn(\"</#noparse>${c}<#noparse>\").displayName}">
+		   		${number.format("###0.##",doc.get("</#noparse>${c}<#noparse>"))}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="</#noparse>${c}<#noparse>" title="${searchResult.datasetConfiguration.getColumn(\"</#noparse>${c}<#noparse>\").displayName}">
+		   		${number.format("###0.##",doc.get("</#noparse>${c}<#noparse>"))}
+		  </@display.column>
+      </#noparse>
+  	<#elseif column.isDate>
+      <#noparse>
+		  <@display.column media="html" indexColumnName="</#noparse>${c}<#noparse>" title="${searchResult.datasetConfiguration.getColumn(\"</#noparse>${c}<#noparse>\").displayName}">
+		   		${date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("</#noparse>${c}<#noparse>"))}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="</#noparse>${c}<#noparse>" title="${searchResult.datasetConfiguration.getColumn(\"</#noparse>${c}<#noparse>\").displayName}">
+		   		${date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("</#noparse>${c}<#noparse>"))}
+		  </@display.column>
+      </#noparse>      
+    <#else>
+      <#noparse>
+		  <@display.column media="html" indexColumnName="</#noparse>${c}<#noparse>" title="${searchResult.datasetConfiguration.getColumn(\"</#noparse>${c}<#noparse>\").displayName}">
+		   	${searchResult.highlight(doc, "</#noparse>${c}<#noparse>")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="</#noparse>${c}<#noparse>" title="${searchResult.datasetConfiguration.getColumn(\"</#noparse>${c}<#noparse>\").displayName}">
+		   	${doc.get("</#noparse>${c}<#noparse>")}
+		  </@display.column>
+      </#noparse>
+    </#if>
+  </#foreach>
+  <#if includeScoreColumn>
+    <#noparse>
+		  <@display.column title="Score">
+		   	${doc.score?string("0.###")}
+		  </@display.column>
+    </#noparse>
+  </#if>
+  <#if includeMapNavigation>
+    <#noparse>  
+        <@display.column title="Locate on Map">
+            <input type="button" class="groovybutton" OnClick="navigate(${ResultId}, false)" value="View on map">
+            <input type="button" class="groovybutton" OnClick="navigate(${ResultId}, true)" value="Show Property">
+        </@display.column>
+        <#assign ResultId = ResultId  + 1>
+    </#noparse>   
+   </#if>  
+  <#if includeBriefcase && idColumn?has_content && titleColumn?has_content>  
+   	  <#noparse>  
+	  <@display.column  media="html" title="Add to Briefcase">
+	   </#noparse>  
+	  <#if brifcaseSize?has_content>
+  	<#assign size = brifcaseSize>
+  <#else>
+  	<#assign size = "10">
+  </#if>	
+  <#assign addToCartText = "<a href=\"javascript:;\" onclick=\"addToCart(" >
+  <#assign idColumnName =  '${idColumn?replace("doc.get(", "")?replace("$", "")?replace("{", "")?replace("}", "")?replace(")", "")}' >
+  <#assign idColumnName = idColumnName?replace("\"", "")>  
+  <#assign addToCartText = addToCartText + "'" + "indexName" + '?=?$' + "{indexName}" + "?=?$" + "{dc.displayName}', " >
+  <#assign titleColumnName =  '${titleColumn?replace("doc.get(", "")?replace("$", "")?replace("{", "")?replace("}", "")?replace(")", "")}' >
+  <#assign titleColumnName = titleColumnName?replace("\"", "")>  
+  <#assign content = "">																							   
+  <#assign content = content + "'" + idColumnName + '?=?' + "${idColumn}">
+  <#assign content = content + "?con?" + titleColumnName + '?=?' + '${titleColumn?replace("}", "")}' + "?replace(\"'\", \"\\\\'\")?replace(\"\\\"\", \"\\\\\\\"\")}">
+      <#foreach c in briefcaseColumns> 
+        <#if content?has_content>
+        	<#assign content = content + "?con?">
+        <#else>
+        	<#assign content = content + "'">
+        </#if>  
+	    <#assign column = dc.getColumn(c)>	    
+	    <#if column.getAnalyzerName() = "com.fdt.sdl.core.analyzer.DateAnalyzer">
+	            <#assign content = content + "$" + "{searchResult.datasetConfiguration.getColumn(\"${c}\").displayName}" + "?=?" + "<#if doc.get(\"${c}\")?has_content>" + "$" + "{pageStyleUtil.format(doc.get(\"${c}\"), \"yyyymmdd\", \"mm/dd/yyyy\")}<#else>&nbsp</#if>">	            
+	   <#elseif column.isNumber>
+	   			 <#assign content = content + "$" + "{searchResult.datasetConfiguration.getColumn(\"${c}\").displayName}" + "?=?$" + "{number.format(\"###0.##\",doc.get(\"${c}\"))}">	  		     
+	   <#elseif column.isDate>
+	   			 <#assign content = content + "$" + "{searchResult.datasetConfiguration.getColumn(\"${c}\").displayName}" + "?=?$" + "{date.format(\"yyyy/MM/dd HH:mm:ss z\",doc.getDate(\"${c}\"))}">	             
+	    <#else>
+	    	     <#assign content = content + "$" + "{searchResult.datasetConfiguration.getColumn(\"${c}\").displayName}" + "?=?$" + "{doc.get(\"${c}\")" + "?replace(\"'\", \"\\\\'\")?replace(\"\\\"\", \"\\\\\\\"\")?trim}">
+	    </#if>	  
+	  </#foreach>
+	  <#assign addToCartText = addToCartText + content + "', 'imagepath', '" + size + "');\" >Add to Briefcase</a>" >
+	  ${addToCartText}
+		  <#noparse> 
+	  </@display.column>
+	  </#noparse> 
+  </#if>   
+  <#noparse>
+</#noparse>
+ 

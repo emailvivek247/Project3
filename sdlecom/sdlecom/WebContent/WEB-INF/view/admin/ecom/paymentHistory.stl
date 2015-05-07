@@ -1,0 +1,471 @@
+<#include "/admin/lib/include.stl" />
+<@loginLayout encoding="utf-8">
+
+
+<link rel="stylesheet" href="resources/styles/validationEngine.jquery.css" type="text/css" />
+<link rel="stylesheet" href="resources/styles/login.css" />
+<link rel="stylesheet" href="resources/styles/jquery-ui-1.8.11.base.css" />
+<link rel="stylesheet" href="resources/styles/jquery-ui-custom-ext.css" />
+<link rel="stylesheet" href="resources/styles/tablesorter_blue/style.css" />
+
+<link href="resources/styles/kendoui/kendo.common.min.css" rel="stylesheet">
+<link href="resources/styles/kendoui/kendo.default.min.css" rel="stylesheet">
+
+
+
+<script type="text/javascript" src="resources/javascripts/jquery.min.js"/></script>
+<script type="text/javascript" src="resources/javascripts/jquery-ui.min.js"/></script>
+<script type="text/javascript" src="resources/javascripts/jquery.printElement.min.js"/></script>
+<script type="text/javascript" src="resources/javascripts/jquery.tablesorter.js"></script>
+<script type="text/javascript" src="resources/javascripts/jquery.tablesorter.pager.js"></script>
+<script type="text/javascript" src="resources/javascripts/jquery.cookie.js"></script>
+<script src="resources/javascripts/kendoui/kendo.all.min.js"></script>
+
+<style>
+ul { 
+	list-style-type: square; 
+}
+.paid {	
+	color: #527838;
+}
+
+.unPaid {	
+	color: #ED1C43;
+}
+td.center {
+	text-align:center;
+}
+td.right {
+	text-align:right;
+}
+td.left {
+	text-align:left;
+}
+div.headerLabel	 {
+	  width:100%;	
+	  font-weight:bold;
+	  padding: 20px;
+	  text-align:center; 
+}
+.currency {
+	text-align:right; 
+}
+</style>
+	<div class="content">
+	
+		<div style="width:100%;min-width:1024px;margin-left:auto;margin-right:auto;margin-top:100px;">
+			<div id="ADCSI" class="ADCSI" style="margin-top:0px; margin-bottom: 12px;">
+			<div class="ADCSI_title" id="ADCSI_title">				
+				<span style="width:49%;text-align:left;display:inline-block;"><i class="fa fa-clock-o blue" style="font-size:18px;"></i>&nbsp;<b><@spring.message code="security.ecommerce.label.paymentHistory" /></b></span>
+				<span style="width:49%;text-align:right;display:inline-block;">
+						<a href="accountInformation.admin"><i class="fa fa-info-circle blue" style="font-size:18px;"></i>&nbsp;<@spring.message code="security.ecommerce.label.returnToAccountInfo" /></a> |
+						<a href="checkSubscription.admin"><i class="fa fa-search blue" style="font-size:18px;"></i>&nbsp;<@spring.message code="security.ecommerce.label.continueToSearchPage" /></a> |
+						<a href="logout.admin"><@spring.message code="security.authentication.logout" /></a>&nbsp;(${user.username})</a>
+				</span>
+			</div>
+			<#if (recurTxHistory) || (payAsUGoTxHistory)>		
+			<div id="tabs">
+			<input type="hidden" name="selectedTab" id="selectedTab" value="" />
+			<ul>
+				<#if (recurTxHistory)>
+					<li><a href="#recurringPaymentHistory">Recurring Payment History</a></li>
+				</#if>
+				<#if payAsUGoTxHistory>
+					<li><a href="#webPaymentHistory">Pay As You Go Payment History</a></li>
+				</#if>				
+			</ul>
+			<#if (recurTxHistory)>
+			
+				<div id="recurringPaymentHistory">
+					<div class="headerLabel"><@spring.message code="security.ecommerce.label.recurringPaymentHistory" /></div>
+						<!-- Begin:  Define Grid for Recurring History -->
+						<div id="recurringHistDiv" class="k-content">
+				            <div id="recurringGrid"></div>
+					            <script>
+						             $(document).ready(function () {
+							            var recurDataSource = new kendo.data.DataSource({
+							   				 transport: {
+							        			read: {
+							        					url: 'recurringPaymentHistory.admin',
+											            dataType: "json",
+											            type: "GET"
+										        }
+						                 	},
+													
+							    			// describe the result format
+							    			schema: {
+							    					data: "",
+							    					errors : "error",
+						                            model: {
+						                                    fields:  {
+						                                        transactionDateString: { },
+						                                        transactionDate: { },
+						                                        txRefNum: { },
+						                                        SiteName: { },
+						                                        Subscription: { } ,
+						                                        cardNumber: { },
+						                                        accountName: { },
+						                                        transactionType: {},
+						                                        totalTxAmount: {type: "number"}
+						                                    }
+						                                }
+						                         },
+					                         pageSize: 10,
+ 											group: [
+ 															{ field: "SiteName",  dir: "asc" },
+ 															{ field: "Subscription", dir: "asc" } 
+		                                        	],   
+					                 		batch: false
+						                });
+								                
+						                 var recurringGrid = $("#recurringGrid").kendoGrid({
+						                        dataSource: recurDataSource,
+						                        scrollable: true,
+						                        navigatable: true,
+						                        pageable: {
+						                        		refresh: true,
+						                        		pageSizes: true,
+						                        		pageSize: true,                        		
+						                        		numeric: true,
+						                        		info: true,
+						                        		input: true
+						                        },
+						                        
+						                        columns: [
+						                            { field: "transactionDateString", title: "Payment Date",  width: 170 },
+						                            { field: "txRefNum", title: "Transaction Reference Number", width: 125 },
+						                            { field: "cardNumber", title: "Card Charged", width: 132 },
+						                            { field: "accountName", title: "Name on Card", width: 132 },
+						                            { field: "transactionType", title: "Transaction Type", width: 132, template: function(e){ return toCamelCase(e.transactionType); } }, 
+						                            { field: "totalTxAmount", title: "Amount", format: "{0:c}", width: 132 },
+						                            { field: "txRefNum", title: "Action", width: 60,	template: function(e){
+						                            	return '<a href="viewRecurringPaymentDetails.admin?recurTxRefNum=' + e.txRefNum + '"><img src="resources/images/icon_info.png" alt="View Details" class="help" original-title="View Details">';
+						                            }}
+						                            ], 
+		
+							                 });
+											$("#recurringGrid .k-pager-wrap").append('<a href="#" onClick="exportRecurringExcel()"><img src="resources/images/excel.png" alt="Export To Excel" class="help" original-title="Export To Excel"/>');
+											$("#recurringGrid .k-pager-wrap").append('<a href="#" onClick="exportRecurringPdf()"><img src="resources/images/pdf.png" alt="Export To PDF" class="help" original-title="Export To PDF">');
+								                 
+					                    
+								});
+						            
+						                 
+						            </script>
+							             <style scoped>
+							             
+							                #grid .k-toolbar
+							                {
+							                    min-height: 27px;
+							                    padding: 1.3em;
+							                }
+							                <!-- Wrap the grid headers -->
+							                .k-grid .k-grid-header .k-header .k-link {height: auto;}
+											.k-grid .k-grid-header .k-header {white-space: normal;}
+							                
+							                
+							            </style>
+						        </div>							
+						
+						<!-- End:    Define Grid for Recurring History -->
+					
+					
+						<div id="chart_wrapper" class="chart_wrapper"></div>
+					<!-- End bar chart table-->
+				</div>
+				</#if> 
+				<#if payAsUGoTxHistory>	
+				<div id="webPaymentHistory">
+					<div class="headerLabel"><@spring.message code="security.ecommerce.label.webPaymentHistory" /></div>
+				    	<table>
+   							<tr>
+						    </tr>
+							<tr rowspan="2">
+						        <td>  &nbsp; </td>
+						        <td>  &nbsp; </td>
+						        <td align="center">  <label class="control-label required"><@spring.message code="security.ecommerce.label.fromDate"/>&nbsp;&nbsp;</label>  </td>
+								<td><input type="date" class="textbox" id="fromDate_payg" name="fromDate_payg" 	maxlength="10" data-date-msg="Date format is not valid"/></td>   						        
+						        <td align="center">  <label class="control-label required"><@spring.message code="security.ecommerce.label.toDate"/>&nbsp;&nbsp;</label>  </td>
+						        <td><input type="date" class="textbox" id="toDate_payg" name="toDate_payg" 	maxlength="10" data-date-msg="Date format is not valid"/></td>
+						        <td align="right" colspan=4>  <button id="payAsUGoSerachButton"  onClick="serachPayAsUGoTransactions(); return false" ><@spring.message code="security.ecommerce.label.search"/></button></td>
+						    </tr>
+							<tr>
+						        <td>  &nbsp; </td>
+						        <td>  &nbsp; </td>
+						    </tr>
+				    	</table>
+						<!-- Begin:  Define Grid for PayAsUGo  History -->
+	
+						<div id="payAsUGoHistDiv" >
+				            <div id="payAsUGoHistGrid"></div>
+					            <script>
+						             $(document).ready(function () {
+						             	function startChange() {
+					                        var startDate = start.value(),
+					                        endDate = end.value();
+					
+					                        if (startDate) {
+					                            startDate = new Date(startDate);
+					                            startDate.setDate(startDate.getDate());
+					                            end.min(startDate);
+					                        } else if (endDate) {
+					                            start.max(new Date(endDate));
+					                        } else {
+					                            endDate = new Date();
+					                            start.max(endDate);
+					                            end.min(endDate);
+					                        }
+					                    }
+					
+					                    function endChange() {
+					                        var endDate = end.value(),
+					                        startDate = start.value();
+					
+					                        if (endDate) {
+					                            endDate = new Date(endDate);
+					                            endDate.setDate(endDate.getDate());
+					                            start.max(endDate);
+					                        } else if (startDate) {
+					                            end.min(new Date(startDate));
+					                        } else {
+					                            endDate = new Date();
+					                            start.max(endDate);
+					                            end.min(endDate);
+					                        }
+					                    }
+					
+					                    var start = $("#fromDate_payg").kendoDatePicker({
+					                        change: startChange
+					                    }).data("kendoDatePicker");
+					
+					                    var end = $("#toDate_payg").kendoDatePicker({
+					                        change: endChange
+					                    }).data("kendoDatePicker");
+					
+					                    start.max(end.value());
+					                    end.min(start.value());
+						             	
+						             
+							            var payAsUGoDataSource = new kendo.data.DataSource({
+							   				 transport: {
+							        			read: {
+							        					url: function() {
+							        							var url = 'payAsUGoPaymentHistory.admin?';
+						        								if($('#fromDate_payg').val() != ''){ 
+						        									url = url +'fromDate='+  $('#fromDate_payg').val();
+						        								} 
+						        								if($('#toDate_payg').val() != ''){
+						        									// if from date was added then we need '&' character before key-value
+						        									if($('#fromDate_payg').val() != ''){
+						        										url = url + '&';
+						        									} 
+					        										url = url + 'toDate=' + $('#toDate_payg').val();
+						        								}
+							        							return url;
+							        						},  
+											            dataType: "json"
+											            
+										        }
+						                 	},
+						                 	
+													
+							    			// describe the result format
+							    			schema: {
+							    					data: "",
+						                            model: {
+						                            		id: "payAsUGoTxId",
+						                                    fields:  {
+						                                        transactionDateString: { },
+						                                        transactionDate: { },
+						                                        txRefNum: { },
+						                                        Subscription: { } ,
+						                                        cardNumber: { },
+						                                        accountName: { },
+						                                        transactionType: {},
+						                                        certified: {},
+						                                        User: { },
+						                                        Site: { },
+						                                        itemsPurchased: {},
+						                                        totalTxAmount: {type: "number"}
+						                                    }
+						                                },
+						                                data: "records",
+                        								total: "recordCount"
+						                         },
+		                                        pageSize: 10,
+ 												group: [
+ 															{ field: "Site", dir: "asc" },
+ 															{ field: "Subscription", dir: "asc" }, 
+		                                        		 	{ field: "User", dir: "asc"} 
+		                                        	],   
+								                serverPaging: true,
+												batch: false
+						                });
+								                
+						                 var payAsUGoHistGrid = $("#payAsUGoHistGrid").kendoGrid({
+						                        dataSource: payAsUGoDataSource,
+						                        autoBind: true,
+						                        scrollable: false,
+						                        navigatable: true,
+						                        pageable: {
+						                        		refresh: true,
+						                        		pageSizes: true,
+						                        		pageSize: true,                        		
+						                        		numeric: true,
+						                        		info: true,
+						                        		input: true
+						                        },  
+		
+						                        columns: [
+						                            { field: "transactionDateString", title: "Payment Date",  width: 120 },
+						                            { field: "txRefNum", title: "Transaction Reference Number", width: 70 },
+						                            { field: "transactionType", title: "Transaction Type", width: 75, template: function(e){ return toCamelCase(e.transactionType); } },
+						                            { field: "certified", title: "Certified Document", width: 75, template: "#= certified ? 'Yes' : 'No' #"},
+						                            { field: "itemsPurchased", title: "Documents Purchased", width: 70},
+						                            { field: "cardNumber", title: "Card Charged", width: 65 },
+						                            { field: "accountName", title: "Name on Card", width: 65 },
+						                            { field: "totalTxAmount", title: "Amount", format: "{0:c}", width: 60 },
+						                            { field: "txRefNum", title: "Action", width: 75,	template: function(e){
+						                            	if(e.transactionType == 'CHARGE'){
+						                            		return '<a href="viewPayAsUGoPaymentDetails.admin?userName=' + e.User + '&webTxId=' + e.payAsUGoTxId + '&isRefund=N"><img src="resources/images/icon_info.png" alt="View Details" class="help" original-title="View Details">';
+						                            	} else {
+						                            		return '<a href="viewPayAsUGoPaymentDetails.admin?userName=' + e.User + '&webTxId=' + e.payAsUGoTxId + '&isRefund=Y"><img src="resources/images/icon_info.png" alt="View Details" class="help" original-title="View Details">';
+						                            	}
+						                            }}
+						                            ],
+		
+							                 });
+												$("#payAsUGoHistGrid .k-pager-wrap").append('<a href="#" onClick="exportPayAsUGoExcel()"><img src="resources/images/excel.png" alt="Export To Excel" class="help" original-title="Export To Excel"/>');
+												$("#payAsUGoHistGrid .k-pager-wrap").append('<a href="#" onClick="exportPayAsUGoPdf()"><img src="resources/images/pdf.png" alt="Export To PDF" class="help" original-title="Export To PDF">');
+								});
+						            
+						                 
+						            </script>
+							             <style scoped>
+							             
+							                #grid .k-toolbar
+							                {
+							                    min-height: 27px;S
+							                    padding: 1.3em;
+							                }
+							                <!-- Wrap the grid headers -->
+							                .k-grid .k-grid-header .k-header .k-link {height: auto;}
+											.k-grid .k-grid-header .k-header {white-space: normal;}
+											.k-grid {    font-size: 12px; }
+											.k-grid td {line-height: 1.5em;}
+											.k-grid .k-grouping-row{font-weight:bold;}
+											.k-group, .k-grouping-row td, td.k-group-cell {
+													background-color: #F2F2F2; border-width: 0px;
+											}
+											.k-grid-footer {display: none;}
+							                
+							            </style>
+						        </div>							
+						
+						<!-- End:    Define Grid for PayAsUGO History -->
+					
+					
+						<div id="chart_wrapper" class="chart_wrapper"></div>
+					<!-- End bar chart table-->
+				</div>
+				</#if> 
+			</div>
+			<#else>
+			<br /><br />
+				<div class="headerLabel" style="text-align:center;padding:15px"><@spring.message code="security.ecommerce.label.noPaymentHistory" /></div>
+			</#if>					
+			<br /><br />
+			<div class="headerLabel unPaid" style="text-align:center;padding:15px"><i class="fa fa-exclamation-circle red" style="font-size:18px;"></i>&nbsp;<@spring.message code="security.ecommerce.message.purchaseHistoryNote" /></div>
+			<div style="text-align:right;padding:15px"><a target="_blank" href="http://get.adobe.com/reader/otherversions/"><img src="resources/images/pdf.png" /><@spring.message code="generalMessages.getAdobeReader" /></a></div>
+			<br /><br />
+		</div>
+	</div>
+	
+	
+	
+	
+		
+	<script type="text/javascript">
+	
+	function exportRecurringExcel(){
+	
+		var grid = $('#recurringGrid').data('kendoGrid');
+		if(grid.dataSource.total() == 0){
+			alert('No Records Found');
+			return;
+		}		
+		location.href = 'recurringPaymentHistoryExport.admin?exportType=excel';	
+	}
+
+	function exportRecurringPdf(){
+		var grid = $('#recurringGrid').data('kendoGrid');
+		if(grid.dataSource.total() == 0){
+			alert('No Records Found');
+			return;
+		}	
+		location.href = 'recurringPaymentHistoryExport.admin?exportType=pdf';	
+	}
+
+	function exportPayAsUGoExcel(){
+		var grid = $('#payAsUGoHistGrid').data('kendoGrid');
+		if(grid.dataSource.total() == 0){
+			alert('No Records Found');
+			return;
+		}	
+		var url = 'payAsUGoPaymentHistoryExport.admin?exportType=excel';
+		if($('#fromDate_payg').val() != ''){ 
+			url = url +'&fromDate='+  $('#fromDate_payg').val();
+		} 
+		if($('#toDate_payg').val() != ''){
+			url = url + '&toDate=' + $('#toDate_payg').val();
+		}	
+		location.href = url;	
+	}
+
+	function exportPayAsUGoPdf(){
+		var grid = $('#payAsUGoHistGrid').data('kendoGrid');
+		if(grid.dataSource.total() == 0){
+			alert('No Records Found');
+			return;
+		}	
+		var url = 'payAsUGoPaymentHistoryExport.admin?exportType=pdf';
+		if($('#fromDate_payg').val() != ''){ 
+			url = url +'&fromDate='+  $('#fromDate_payg').val();
+		} 
+		if($('#toDate_payg').val() != ''){
+			url = url + '&toDate=' + $('#toDate_payg').val();
+		}	
+		location.href = url;	
+	}
+
+		function toCamelCase(str) {
+			str = str.toLowerCase();
+		    return str.replace(/(?:^|\s)\w/g, function(match) {
+		        return match.toUpperCase();
+		    });
+	    }	
+	
+		function serachPayAsUGoTransactions(){
+			var grid = $('#payAsUGoHistGrid').data('kendoGrid');
+			grid.dataSource.read();		
+			return false;
+		}
+		
+		
+       $(document).ready(function() {
+         $( "#tabs" ).tabs({
+                active : ($.cookie("selectedTab") || 0),
+                activate: function (event, ui) {                    
+                    $.cookie("selectedTab", ui.newTab.index(), { expires : 1 });
+                    if(ui.newTab.index() == 0){
+						var grid = $('#recurringGrid').data('kendoGrid');
+						grid.dataSource.read();
+                    } else {
+						var grid = $('#payAsUGoHistGrid').data('kendoGrid');
+						grid.dataSource.read();
+					}		
+                }
+            });      
+       });
+	</script>
+</@loginLayout>

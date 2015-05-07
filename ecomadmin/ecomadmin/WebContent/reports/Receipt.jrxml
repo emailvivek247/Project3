@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version last-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Receipt" language="groovy" pageWidth="612" pageHeight="792" columnWidth="592" leftMargin="10" rightMargin="10" topMargin="20" bottomMargin="11" uuid="3e961a0a-3f9b-4203-94c1-9ce22325261a">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Ecommerce"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="com.fdt.common.util.JasperUtil"/>
+	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
+	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true" pdfFontName="Times-Roman"/>
+	<style name="Detail" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman"/>
+	<style name="Row" mode="Transparent" fontName="Times New Roman" pdfFontName="Times-Roman">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F0EFEF"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="TX_REF_NUM" class="java.lang.String"/>
+	<parameter name="SITE_ID" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REQUEST_URL" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[EXEC SP_OTC_GET_RECEIPT_DETAILS_RPT $P{TX_REF_NUM}, $P{SITE_ID}]]>
+	</queryString>
+	<field name="BUSINESSNAME" class="java.lang.String"/>
+	<field name="ADDRESS_LINE_1" class="java.lang.String"/>
+	<field name="ADDRESS_LINE_2" class="java.lang.String"/>
+	<field name="CITY" class="java.lang.String"/>
+	<field name="STATE" class="java.lang.String"/>
+	<field name="ZIP" class="java.lang.String"/>
+	<field name="PHONE" class="java.lang.String"/>
+	<field name="COMMENTS_1" class="java.lang.String"/>
+	<field name="COMMENTS_2" class="java.lang.String"/>
+	<field name="TX_REFERENCE_NUM" class="java.lang.String"/>
+	<field name="CARD_NUMBER" class="java.lang.String"/>
+	<field name="AMOUNT" class="java.math.BigDecimal"/>
+	<field name="SERVICE_FEE" class="java.math.BigDecimal"/>
+	<field name="TX_AMOUNT" class="java.math.BigDecimal"/>
+	<field name="COMMENTS" class="java.lang.String"/>
+	<field name="TX_TYPE" class="java.lang.String"/>
+	<field name="CHECKNUM" class="java.lang.String"/>
+	<field name="ACCOUNTNAME" class="java.lang.String"/>
+	<field name="MACHINENAME" class="java.lang.String"/>
+	<field name="TX_DATE" class="java.sql.Timestamp"/>
+	<field name="ORG_REF_NUM" class="java.lang.String"/>
+	<field name="MOD_USER_ID" class="java.lang.String"/>
+	<field name="SIGNATURE" class="java.io.InputStream"/>
+	<field name="AUTH_CODE" class="java.lang.String"/>
+	<field name="CARD_TYPE" class="java.lang.String"/>
+	<field name="TIMEZONE" class="java.lang.String"/>
+	<title>
+		<band height="81" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="10" width="183" height="16" uuid="90831043-ac80-48ca-985c-55c8468fc50c"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BUSINESSNAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="31" width="183" height="13" uuid="41175460-5179-4fba-a15b-12d6223b2e5c"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ADDRESS_LINE_1} + ", " + $F{ADDRESS_LINE_2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="44" width="183" height="13" uuid="fe640e61-651f-4464-8aa6-c682b503e625"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CITY} + ", " + $F{STATE} + " " + $F{ZIP}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="57" width="183" height="13" uuid="be34ed4b-d899-4679-b965-2fa5ca2a428a"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PHONE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="360" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="23" y="0" width="160" height="13" uuid="a74a1052-bf12-4d65-bd31-c43c63668bc6"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[JasperUtil.getDateInTimezone($F{TX_DATE},$F{TIMEZONE})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="23" height="13" uuid="7c89436f-0a1e-44aa-b152-721def0d561f"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Date :]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="37" y="13" width="146" height="13" uuid="b59c4f2d-a486-4375-8349-9b9d242fc2dd"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MOD_USER_ID}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="13" width="37" height="13" uuid="6d0bcbb9-f510-4909-914f-5c3c51e9e543"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Operator :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="26" width="37" height="13" uuid="d8647c65-5ac9-4021-99eb-19345b8085ec"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Machine :]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="37" y="26" width="146" height="13" uuid="b785fe86-b714-426b-9300-0404e8da4325"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MACHINENAME}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="54" y="39" width="129" height="13" uuid="e40a0234-cbc4-42cd-960a-4c749891d8cf"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CARD_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="39" width="54" height="13" uuid="b25bb4f4-f45e-41dd-b219-21e776b16f36"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Card Number :]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="58" y="52" width="125" height="13" uuid="f1321270-66af-431d-a4bd-3023f0640d07"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[JasperUtil.convertCamelCase($F{ACCOUNTNAME})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="52" width="58" height="13" uuid="87c52d36-cabf-4ab7-842a-5e20a8f5f051"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Name on Card :]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="44" y="65" width="139" height="13" uuid="884195cc-d822-422f-a664-56643b80ebec"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[JasperUtil.convertCamelCase($F{CARD_TYPE})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="65" width="44" height="13" uuid="fea95b3a-d9a9-4fb4-8e38-d06915e33b64"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Card Type :]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="50" y="78" width="133" height="13" uuid="b1e6b402-666f-4579-9540-10fb101a136a"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TX_REFERENCE_NUM}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="78" width="50" height="13" uuid="82dad729-395b-4fbe-ad74-dec1bfb454a0"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Reference # : ]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="74" y="91" width="109" height="13" uuid="d6dc4e2f-c046-489a-9a86-9bcd9a9f32f1"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{AUTH_CODE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="91" width="74" height="13" uuid="7d6a587b-4e2d-41bf-8512-f143e5b6ede8"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Authorization Code : ]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="117" width="183" height="20" uuid="0b35e6ce-449f-4da5-862e-95cb37b88d28"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left">
+					<font fontName="Times New Roman" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COMMENTS}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement x="76" y="147" width="107" height="13" uuid="3c3e30c0-b1ff-4e09-a7b9-dfa19676d436"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{AMOUNT}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-1" y="147" width="40" height="13" uuid="622ea010-8636-4d8d-8533-d7c7c1832b70"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Sub Total : ]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement x="76" y="160" width="107" height="13" uuid="67a83cee-11e5-40fe-8546-cfcbf20b0296"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SERVICE_FEE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-1" y="160" width="50" height="13" uuid="5b7598f1-abc9-49c9-b96b-3c6678dd06d1"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Service Fee :]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement x="76" y="175" width="107" height="13" uuid="9348e9ba-7fa1-46ee-9cb5-31c19b7a34d1"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TX_AMOUNT}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-1" y="173" width="74" height="15" uuid="02c9a86c-fbfd-4444-8eec-b547fdb5c9d8"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total :]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="300" width="183" height="20" uuid="36614020-87d0-4208-9f2d-9f1704d2767f"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left">
+					<font fontName="Times New Roman" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COMMENTS_1}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="322" width="183" height="20" uuid="eac18fc0-4565-409a-a93e-9f9cc08650b6"/>
+				<box leftPadding="3"/>
+				<textElement textAlignment="Left">
+					<font fontName="Times New Roman" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COMMENTS_2}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-1" y="203" width="184" height="13" uuid="0aac3f3e-1a94-4bca-bf30-a4669aa095bb"/>
+				<box>
+					<topPen lineWidth="0.1" lineStyle="Dotted" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Customer's Signature]]></text>
+			</staticText>
+			<image hAlign="Center" isUsingCache="false">
+				<reportElement x="0" y="216" width="183" height="79" uuid="980f6392-ebbb-400f-88dc-1d2681982af1"/>
+				<imageExpression><![CDATA[$F{SIGNATURE}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="-1" y="346" width="184" height="13" uuid="0d2d81b8-03bc-4dc7-9e7c-bdc03e875712"/>
+				<box>
+					<topPen lineWidth="0.1" lineStyle="Dotted" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Merchant Copy]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

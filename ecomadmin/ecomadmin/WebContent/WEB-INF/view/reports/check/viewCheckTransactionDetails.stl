@@ -1,0 +1,263 @@
+<#include "../../lib/layout.stl" />
+<@dashboardLayout>
+<#assign form  =JspTaglibs["http://www.springframework.org/tags/form"]>
+<#assign spring=JspTaglibs["http://www.springframework.org/tags"]>
+
+<style>
+.left {
+    text-align:left;
+}
+.right {
+    text-align:right;
+}
+.center {
+    text-align:center;
+}
+table.data tr td, table.data tr th {
+	border:none;
+}
+#content .inner {
+    min-width:100%;
+	width:auto;
+}
+div.ui-datepicker {
+	font-size:11px;
+}
+.ui-datepicker .ui-datepicker-title select {
+	font-size:11px;
+}
+
+table#table_checkDetails {
+  margin-left:30%;
+}
+
+div.formErrorContent {
+opacity: 0.87;
+position: absolute;
+top: 0px;
+left: -41px;
+margin-top: -11px;
+
+}
+input[readonly] {
+width:185px; height: 27px;
+}
+.formError {
+position: absolute;
+top: 300px;
+left: 300px;
+padding-bottom: 55px;
+display: block;
+z-index: 5000;
+margin-top: 5px;
+}
+.formError .formErrorContent {
+width: 100%;
+background: #ee0101;
+color: #fff;
+width: 120px;
+font-family: tahoma;
+font-size: 11px;
+border: 2px solid #ddd;
+box-shadow: 0px 0px 6px #000;
+-moz-box-shadow: 0px 0px 6px #000;
+-webkit-box-shadow: 0px 0px 6px #000;
+padding: 4px 10px 4px 10px;
+border-radius: 6px;
+-moz-border-radius: 6px;
+-webkit-border-radius: 6px;
+}
+
+.daterangepicker .ranges .input-mini {
+background-color: #eee;
+border: 1px solid #ccc;
+border-radius: 4px;
+color: #555;
+display: block;
+font-size: 11px;
+height: 30px;
+line-height: 30px;
+vertical-align: middle;
+margin: 0 0 10px 0;
+padding: 0 6px;
+width: 137px;
+}
+.btn-search {
+padding: 0 8px;
+line-height: 24px;
+border-width: 4px;
+font-size: 13px;
+}
+</style>
+<script src="http://www.java.com/js/deployJava.js"></script>
+<script>
+    if (deployJava.versionCheck('1.7+') == false) {
+        var isCheckDone = "N";
+        if (isCheckDone == "N") {
+        	userInput = confirm("You need the latest Java(TM) Runtime Environment. Would you like to update now?");
+        }
+        if (userInput == true) {
+            deployJava.returnPage = location.href;
+            // Install latest JRE or redirect user to another page to get JRE
+            deployJava.installLatestJRE();
+            isCheckDone = "Y";
+        }
+    }
+</script>
+<#assign jmesa=JspTaglibs["http://code.google.com/p/jmesa"]>
+
+<!-- Begin one column window -->
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="widget-box">
+					<div class="widget-header">
+						<h4>Transaction Details</h4>
+
+						<div class="widget-toolbar">
+							<a href="#" data-action="collapse">
+								<i class="icon-chevron-up"></i>
+							</a>
+						</div><!-- end widget toolbar-->
+					</div><!-- end widget header-->
+
+				<div class="widget-body">
+					<div class="row-fluid">
+				        <div class="k-content">
+					        <form id="CheckTransactionDetailsForm" action="searchchecktransactiondetailsapp.admin" method="post" autocomplete="off">
+					        <input type="hidden" id="setDefaultDates" name="setDefaultDates" value="Y">
+					        <table id= "table_checkDetails" cellspacing="5">
+					        	 	<input type="hidden" id="pageIndex" name="pageIndex" value="0">
+					        	 <tr>  <br>
+								    <td class="right"><label class="control-label boldText" for="dateRange"><b>Date Range :&nbsp;</b>
+				                    </label></td>
+								    <td class="left">
+								    <div class="control-group">
+										<div class="input-group" >
+											<span class="input-group-addon" >
+												<i class="icon-calendar"></i>
+											</span>
+											<input type="text" style="height:28px; width:175px;" class="validate[groupRequired[payments]]"  name="dateRange" tabindex="5" id="dateRange" />
+										</div>
+									</div>
+							 	    </td>
+								</tr>
+								 <tr>
+									 <td class="right"><b>Site :&nbsp;</b></td>
+									 <td class="left" colspan="3">
+									 	<select id="siteId" name="siteId" class="k-widget k-dropdownlist" style="width:200px" tabindex="1">
+									 		<#if sites?has_content && sites?size &gt; 1>
+							                     <option value="" selected>All Sites</option>
+											</#if>
+									 		    <#if sites?has_content>
+										            <#foreach site in sites>
+										               <#if (selectedSiteId?has_content)>
+								                                <#if (selectedSiteId == site.id)>
+								                                    <option value="${site.id}" selected> ${site.description}</option>
+								                                <#else>
+								                                    <option value="${site.id}"> ${site.description}</option>
+								                                </#if>
+								                       <#else>
+								                            <option value="${site.id}"> ${site.description}</option>
+								                       </#if>
+								                    </#foreach>
+							                    </#if>
+							             </select>
+							          </td>
+						         </tr>
+						         <tr>
+										<td class="right"></td>
+										<td class="left">OR</td>
+								 </tr>
+								 <tr>
+										<td class="right"><b>Check Number :&nbsp;</b></td>
+									 	<td class="left"><input type="number" id="checkNum" name="checkNum" tabindex="2" maxlength="10" autocomplete="off" value="<#if checkNum?has_content >${checkNum}</#if>"/></td>
+								 </tr>
+								 <tr>
+								 <td class="center"></td>
+								 	<td class="left" colspan="3"> <br>
+									 	<span class="input-icon">
+										 	<input type="submit" class="btn btn-small btn-info btn-search" id="GenerateReport" value="Generate Report" />
+										 	<i class="icon-table white"></i>
+									 	</span>
+								     </td>
+							     </tr>
+							     </table>
+								 <br class="clear"/><br class="clear"/>
+						 </form>
+					    </div> <!--k-content-->
+					    <div style="text-align:left;padding:0 0 2px 5px;"><i class="icon-exclamation-sign red" style="font-size:15px;"></i>&nbsp;Note: Details for a voided check are not shown.</div>
+         			</div> <!--end row-fluid-->
+				</div><!--End widget body-->
+			</div><!-- end widget box-->
+		</div><!-- end span-->
+	</div><!-- end row-fluid-->
+
+        <#if displayFlag = true>
+         <table width="100%">
+	         <tr>
+		         <td style="text-align:left;">
+		            <a href="viewchecktransactiondetailspdf.admin?siteId=<#if selectedSiteId?has_content >${selectedSiteId}</#if>&dateRange=<#if fromDate?has_content >${fromDate}</#if><#if toDate?has_content > - ${toDate}</#if>&checkNum=<#if checkNum?has_content >${checkNum}</#if>"><img src="resources/images/pdf.png" /></a>
+		        	<a href="viewchecktransactiondetailsxls.admin?siteId=<#if selectedSiteId?has_content >${selectedSiteId}</#if>&dateRange=<#if fromDate?has_content >${fromDate}</#if><#if toDate?has_content > - ${toDate}</#if>&checkNum=<#if checkNum?has_content >${checkNum}</#if>"><img src="resources/images/excel.png" /></a>
+		        	<a href="viewchecktransactiondetailsrtf.admin?siteId=<#if selectedSiteId?has_content >${selectedSiteId}</#if>&dateRange=<#if fromDate?has_content >${fromDate}</#if><#if toDate?has_content > - ${toDate}</#if>&checkNum=<#if checkNum?has_content >${checkNum}</#if>"><img src="resources/images/rtf.png" /></a>
+		     	</td>
+			     <td style="text-align:right;">
+			        Problem Viewing this Report?<a href="searchchecktransactiondetails.admin?siteId=<#if selectedSiteId?has_content >${selectedSiteId}</#if>&dateRange=<#if fromDate?has_content >${fromDate}</#if><#if toDate?has_content > - ${toDate}</#if>&checkNum=<#if checkNum?has_content >${checkNum}</#if>&pageIndex=0">View in HTML Mode<img src="resources/images/html.png" /></a>
+			     </td>
+	     	</tr>
+    	 </table>
+        <APPLET  CODE = "com.fdt.ecomadmin.applet.CheckTransactionDetailApplet.class" CODEBASE = "applets" ARCHIVE = "ReportApplet.jar, servlet-api.jar, commons-lang-2.6.jar, jasperreports-applet-5.5.0.jar,iText-2.1.7.jar,poi-3.6.jar,poi-ooxml-3.6-20091214.jar, commons-logging-1.1.1.jar, commons-collections-3.2.1.jar, commons-digester-1.7.jar" width="100%" height="600"></XMP>
+        <PARAM NAME="type" VALUE="application/x-java-applet;version=1.2.2">
+        <PARAM NAME="scriptable" VALUE="false">
+        <PARAM NAME = CODE VALUE = "com.fdt.ecomadmin.applet.CheckTransactionDetailApplet.class" >
+        <PARAM NAME = CODEBASE VALUE = "applets" >
+        <PARAM NAME = ARCHIVE VALUE = "ReportApplet.jar, servlet-api.jar, commons-lang-2.6.jar, jasperreports-applet-5.5.0.jar,iText-2.1.7.jar,poi-3.6.jar,poi-ooxml-3.6-20091214.jar, commons-logging-1.1.1.jar, commons-collections-3.2.1.jar, commons-digester-1.7.jar" >
+        <PARAM NAME = "REPORT_URL" VALUE="<#if reportURL?has_content >${reportURL}</#if>viewchecktransactiondetailsreport.admin" />
+        <PARAM NAME = "REQUEST_URL" VALUE="<#if reportURL?has_content >${requestUrl}</#if>" />
+        <PARAM NAME = "JSESSIONID" VALUE="<#if sessionId?has_content >${sessionId}</#if>">
+        <PARAM NAME = "SITE_ID" VALUE="<#if selectedSiteId?has_content >${selectedSiteId}</#if>">
+        <PARAM NAME = "FROM_DATE" VALUE="<#if fromDate?has_content >${fromDate}</#if>">
+        <PARAM NAME = "TO_DATE" VALUE="<#if toDate?has_content >${toDate}</#if>">
+        <PARAM NAME = "CHECKNUM" VALUE="<#if checkNum?has_content >${checkNum}</#if>">
+    </APPLET>
+        </#if>
+        <div style="text-align:center;">Note: Details for a voided check are not shown.</div>
+        </div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+
+		$('#dateRange').daterangepicker(
+		    {
+		      ranges: {
+		         'Today': [moment(), moment()],
+		         'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
+		         'Last 7 Days': [moment().subtract('days', 6), moment()],
+		         'Last 30 Days': [moment().subtract('days', 29), moment()],
+		         'This Month': [moment().startOf('month'), moment().endOf('month')],
+		         'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+		      },
+		      startDate: moment().subtract('days', 0),
+		      endDate: moment()
+		    }
+		);
+		<#if fromDate?has_content && fromDate != "" && toDate?has_content && toDate != "">
+			$('#dateRange').val('${fromDate}' + ' - ' + '${toDate}');
+		<#else>
+			$('#dateRange').val(moment().subtract('days', 1).format('MM/DD/YYYY') + ' - ' + moment().format('MM/DD/YYYY'));
+		</#if>
+
+
+		var checkNumBox = $("#checkNum").kendoNumericTextBox({
+	        format: "#",
+	        decimals: 0
+	    }).data("kendoNumericTextBox");;
+
+	     checkNumBox.wrapper
+	       .find(".k-numeric-wrap")
+	       .addClass("expand-padding")
+	       .find(".k-select").hide();
+
+    });
+</script>
+
+</@dashboardLayout>

@@ -1,0 +1,125 @@
+#macro(oneRow $_prompt $_value)
+#if($_odd)#set($_odd = false ) #else #set($_odd = true) #end
+#if($_odd)<tr class="xsearchtable_odd">#else<tr class="xsearchtable_even">#end<td align="right"><b>$_prompt</b>&nbsp;</td><td>$_value</td></tr>
+#end
+
+<script type="text/javascript">
+      $(function() {
+            $("#tabs").tabs();
+      });
+</script>
+
+<div id="compGroupA" class="demo">
+  <div id="tabs">
+        <ul>
+            <li><a href="#tp1">Summary</a></li>
+            <li><a href="#topIp">Top IP visited</a></li>
+            <li><a href="#topKeyword">Top Search Keyword</a></li>
+            <li><a href="#topNoResultSearch">Top No Result Search</a></li>
+            <li><a href="#avgHits">24 Hours Hits Statistics</a></li>
+        </ul>
+		<div id="tp1">
+			<table class="xsearchBaseTable" width="90%">	 
+				#oneRow('Total Queries' $!{queryReport.recordCount} )
+				#oneRow('Avg Time/Query' "$!{queryReport.avgSearchingTime} milliseconds" )
+				#oneRow('Maximum Active Searchers' "$dc.searcherMaxactive" )
+				#oneRow('Maximum Idle Searchers' "$dc.searcherMaxidle" )
+			</table>
+		</div>
+		<div id="topIp">	
+			<table class="xsearchBaseTable" width="90%">	 
+			       <tr> 
+				      <th>&nbsp;</th>
+				      <th>IP Address</th>
+				      <th>Times</th>
+				    </tr>
+			    #foreach( $keyWord in $report.topIps )
+			    	#if($velocityCount%2==1)<tr class="xsearchtable_odd">#else<tr class="xsearchtable_even">#end
+				      <td width="15%">$velocityCount.</td>
+				      <td width="55%" nowrap>$keyWord.key &nbsp;&nbsp;</td>
+				      <td width="30%" >$keyWord.hitNumber &nbsp;&nbsp;</td>
+				    </tr>
+			    #end
+		     </table>
+		</div>
+
+		<div id="topKeyword">	
+			<table class="xsearchBaseTable" width="90%">	 
+			       <tr> 
+				      <th>&nbsp;</th>
+				      <th>Query</th>
+				      <th>Times</th>
+				    </tr>
+			    #foreach( $keyWord in $report.topKeyWords )
+			    	#if($velocityCount%2==1)<tr class="xsearchtable_odd">#else<tr class="xsearchtable_even">#end
+				      <td width="15%">$velocityCount.</td>
+				      <td width="55%" wrap=true>$keyWord.key &nbsp;&nbsp;</td>
+				      <td width="30%">$keyWord.hitNumber &nbsp;&nbsp;</td>
+				    </tr>
+			    #end
+		     </table>
+		</div>
+
+		<div id="topNoResultSearch">
+		<table class="xsearchBaseTable" width="90%"> 
+		       <tr> 
+		      <th>&nbsp;</th>
+		      <th>Query</th>
+		      <th>Times</th>
+		    </tr>
+		    #foreach( $keyWord in $report.topNoResultSearches )
+		    #if($velocityCount%2==1)<tr class="xsearchtable_odd">#else<tr class="xsearchtable_even">#end
+		      <td width="15%">$velocityCount.</td>
+		      <td width="55%" wrap=true>$keyWord.key &nbsp;&nbsp;</td>
+		      <td width="30%">$keyWord.hitNumber &nbsp;&nbsp;</td>
+		    </tr>
+		    #end
+		     </table>
+		</div>
+
+		<div id="avgHits">	 
+			<table class="xsearchtable" style="width:90%" >	 
+			       <tr>
+			          <th>Hour</th> 
+			          <th>Hits Distribution</th>
+			          <th>Total Hits</th>
+				      <th>Avg Hits/Hour</th> 			      
+				   </tr>
+		    #set ($topHits = $report.topHits)	    
+		    #set ($totalHits = $report.recordCount)
+			#set ($prevHour = '12 AM')
+			#foreach($hourHit in $report.hourHits)
+				<tr><td align="right" nowrap>
+				#if ($velocityCount<12)
+		 		   #set ($currentHour = "$velocityCount AM")
+				#elseif ($velocityCount == 12)
+		 		   #set ($currentHour = "$velocityCount PM")
+				#elseif ($velocityCount == 24)
+		 		   #set ($currentHour = "12 AM")
+			    #else
+			       #set($h = $velocityCount - 12)
+		 		   #set ($currentHour = "$h PM")
+			    #end
+		 		$prevHour ~ $currentHour
+				#set ($prevHour = $currentHour)
+		        &nbsp;&nbsp;</td>
+		        #set($percent = $math.mul(80,$math.div($hourHit.avgHits, $topHits)) )
+		        #set($percent2 = $math.mul(100,$math.div($hourHit.totalHits, $totalHits)) )
+		        <td align="left" width="70%">
+		            &nbsp;<img src="../resources/images/color_bar.gif" height="10" width="$percent%">&nbsp;$math.roundTo(1,$percent2)%&nbsp;
+		        </td>
+		        <td align="right" width="10%">
+		            $hourHit.totalHits&nbsp;
+		        </td>
+		        <td align="right" width="10%">
+		            $math.roundTo(2,$hourHit.avgHits)&nbsp;
+		        </td>
+			    </tr>
+			#end
+		    </table>
+		</div>
+
+	</div>
+</div>	
+
+

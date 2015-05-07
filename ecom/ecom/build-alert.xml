@@ -1,0 +1,78 @@
+<project name="CXF wsdl2java" default="buildwar" basedir="." >   
+	<property file="build.properties"/>
+    <property name="dist" value="dist"/>
+    <property name="java.clientStub.src" value="${dist}/ecomWSClient"/>
+    <property name="java.clientStub.bin" value="${dist}/bin"/>
+    <property name="alertservicewsdl" value="${alertservicewsdl}"/>
+    <property name="lib" value="WebContent\WEB-INF\lib"/>
+    <property name="WSlib" value="WSJars"/>
+	<property name="webcontent" value="${basedir}/WebContent/"/>
+	<property name="webcontent.web-inf" value="${webcontent}/WEB-INF/"/>
+	
+    <target name="clean">
+         <delete dir="${dist}"/>
+     </target>
+	
+    <target name="init" depends="clean">
+        <mkdir dir="${dist}" />
+        <mkdir dir="${java.clientStub.src}" />
+        <mkdir dir="${java.clientStub.bin}" />
+    </target>
+    
+    <path id="cxf.classpath">
+      <fileset dir="${lib}">
+         <include name="**/*.jar" />
+      	<include name="${basedir}\WebContent\WEB-INF\lib\cxf-2.7.0.jar" />
+      </fileset>
+        <fileset dir="${WSlib}">
+           <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <target name="cxfWSDLToJava"  depends="init">
+      <java classname="org.apache.cxf.tools.wsdlto.WSDLToJava" fork="true">
+         <arg value="-client"/>
+         <arg value="-b"/>
+         <arg value="binding-alert.xml"/>
+         <arg value="-d"/>
+         <arg value="${java.clientStub.src}"/>
+         <arg value="-compile" /> 
+         <arg value="${alertservicewsdl}"/>
+         <classpath>
+            <path refid="cxf.classpath"/>
+         </classpath>
+      </java>
+   </target>
+    
+    <target name="buildEcomWSClientStubJar" depends="cxfWSDLToJava">
+        <jar destfile="${dist}/alertws-stub.jar" basedir="${java.clientStub.src}" compress="true" excludes="**/*.java" />
+         <jar destfile="${dist}/alertws-stub-sources.jar" basedir="${java.clientStub.src}" compress="true" />
+    </target>
+	
+	<target name="buildjar" depends="buildEcomWSClientStubJar" >
+        <tstamp>
+            <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
+        </tstamp>      
+        <jar jarfile="dist\lib\ecom.jar" compress="true">
+            <fileset dir="${webcontent.web-inf}/classes">
+                <include name="**/*.class" />
+            </fileset>
+        </jar>              
+	</target>
+	
+	<target name="buildwar" depends="buildjar">
+	    <war destfile="dist/ecom.war" webxml="${webcontent.web-inf}/web.xml">
+	        <fileset dir="${webcontent}" >
+	        	<include name="WEB-INF/classes/**/*.properties" />
+	            <include name="WEB-INF/lib/*.jar" />
+	        	<include name="WEB-INF/conf/**/*.*" />
+	        </fileset>      
+	        <lib dir="dist/lib" >
+	        	 <include name="ecom.jar" />
+	        </lib>	
+	    </war>
+        <delete dir="${java.clientStub.src}"/>
+        <delete dir="${java.clientStub.bin}"/>
+	</target>
+	
+</project>

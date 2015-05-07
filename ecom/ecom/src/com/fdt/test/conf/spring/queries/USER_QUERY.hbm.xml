@@ -1,0 +1,550 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+ <sql-query callable="true" name="GET_USER_DETAILS">
+ 		{call SP_USER_GET_DETAILS (:username, :nodeName) }
+    </sql-query>
+ <sql-query name="GET_FIRM_USERS">
+			SELECT DISTINCT 
+				childUser.ID AS childUser_ID,
+				childUser.EMAIL_ID AS childUser_USERNAME,
+				childUser.FIRST_NAME AS childUser_FIRST_NAME,
+				childUser.LAST_NAME AS childUser_LAST_NAME,
+				childUser.PHONE AS childUser_PHONE,
+				childUser.ACCOUNT_NONLOCKED as userNonLocked,
+				childUser.REGISTERED_NODE as nodeName
+			FROM	AUTH_USERS childUser,
+				AUTH_USERS parentUser,
+				AUTH_USERS_ACCESS parentAUA,
+				AUTH_USERS_ACCESS childAUA
+			WHERE 
+				childUser.id = childAUA.USER_ID AND
+				parentAUA.ID = childAUA.FIRM_ADMIN_USER_ACCESS_ID AND
+				parentUser.EMAIL_ID = :adminUserName AND
+				parentUser.ID = parentAUA.user_id AND
+				parentAUA.IS_DELETED = 'N' AND
+				childAUA.IS_DELETED = 'N'     
+    </sql-query>
+ <sql-query name="GET_FIRM_USERS_BY_USERNAME_AND_SUBSCRIPTION">
+ 			 SELECT USERS.ID AS id,				   
+				   USERS.EMAIL_ID as userName,
+				   USERS.FIRST_NAME as firstName,
+				   USERS.LAST_NAME as lastName,
+				   USERS.PHONE as phone,				   
+				   USERS.FIRM_NAME as firmName,
+				   USERS.FIRM_NUMBER as firmNumber,
+				   USERS.BAR_NUMBER as barNumber,
+				   AUA.IS_FIRM_ACCESS_ADMIN as isFirmAccessAdmin,
+				   AUA.ACTIVE AS userAccessStatus,
+				   USERS.ACCOUNT_NONLOCKED AS userNonLocked,
+				   AUA.ID AS userAccessId,
+				   AUA.ACCESS_ID as accessId,
+				   USERS.REGISTERED_NODE AS nodeName
+			FROM AUTH_USERS USERS
+			INNER JOIN AUTH_USERS_ACCESS AUA ON (AUA.USER_ID = USERS.ID AND AUA.IS_DELETED = 'N')
+			INNER JOIN (SELECT 
+							FIRM_ADMIN_USER_ACCESS_ID, USERACCESS.ID 
+			 			FROM 
+			 				AUTH_USERS_ACCESS USERACCESS
+			 				INNER JOIN AUTH_USERS AUTHUSER ON (USERACCESS.USER_ID = AUTHUSER.ID AND USERACCESS.IS_DELETED = 'N')
+			 			WHERE 
+			 				AUTHUSER.EMAIL_ID = :userName AND ACCESS_ID = :accessId
+						) CTE 
+							ON CTE.FIRM_ADMIN_USER_ACCESS_ID = AUA.FIRM_ADMIN_USER_ACCESS_ID OR 
+							  AUA.ID = CTE.FIRM_ADMIN_USER_ACCESS_ID OR 
+							  AUA.FIRM_ADMIN_USER_ACCESS_ID = CTE.ID OR
+							  AUA.ID = CTE.ID
+		    WHERE USERS.EMAIL_ID &lt;&gt; :userName
+	    </sql-query>
+ <sql-query name="GET_FIRM_USERS_BY_SUBSCRIPTION">
+ 			SELECT
+ 				childUser.ID AS childUser_ID,
+				childUser.EMAIL_ID AS childUser_USERNAME,
+				childUser.FIRST_NAME AS childUser_FIRST_NAME,
+				childUser.LAST_NAME AS childUser_LAST_NAME,
+				childUser.PHONE AS childUser_PHONE,
+				CASE
+					WHEN EXISTS (SELECT
+							  payAsUGoTx.ID
+							  FROM ECOMM_PAYASUGO_TX payAsUGoTx
+							  WHERE 
+							  payAsUGoTx.USER_ID = childUser.ID AND 
+							  payAsUGoTx.ACCESS_ID = :accessId) 
+					THEN 'Y' ELSE 'N'
+				END AS childUser_PURCHASED_DOCUMENTS,
+				CASE
+					WHEN EXISTS (SELECT
+							recurringHist.ID
+							FROM ECOMM_RECUR_TX_HIST_INFO recurringHist
+							WHERE 
+							recurringHist.USER_ID = childUser.ID AND
+							recurringHist.ACCESS_ID = :accessId) 
+					THEN 'Y' ELSE 'N'
+				END AS childUser_PAID_RECURRING_FEE,
+				childAUA.id as childAUA_ID,
+				childAUA.active as childUser_ACCESS_STATUS,
+				childUser.ACCOUNT_NONLOCKED as userNonLocked,
+				childUser.REGISTERED_NODE as nodeName
+			FROM	AUTH_USERS childUser,
+				AUTH_USERS parentUser,
+				AUTH_USERS_ACCESS parentAUA,
+				AUTH_USERS_ACCESS childAUA
+			WHERE 
+				parentUser.EMAIL_ID = :adminUserName AND
+				parentUser.ID = parentAUA.user_id   AND
+				parentAUA.ID = childAUA.FIRM_ADMIN_USER_ACCESS_ID AND
+				childAUA.FIRM_ADMIN_USER_ACCESS_ID  is not null AND
+				childUser.id = childAUA.USER_ID AND
+				childAUA.ACCESS_ID = :accessId AND
+				parentAUA.IS_DELETED = 'N' AND
+				childAUA.IS_DELETED = 'N'     
+	    </sql-query>
+ <sql-query callable="true" name="GET_USER_DETAILS_FOR_ADMIN">
+        {call SP_USER_GET_DETAILS_FOR_ADMIN (:username) }
+    </sql-query>
+ <sql-query name="GET_ACCESS">
+		Select
+			AA.ID AS AA_ID,
+			AA.ACCESS_CD AS AA_ACCESS_CD,
+			AA.ACCESS_DESCR AS AA_ACCESS_DESCR,
+			AA.GUEST_FLG AS AA_GUEST_FLG,
+			CL.CATEGORY AS CL_CATEGORY,
+			AA.IS_AUTHORIZATION_REQUIRED AS AA_IS_AUTHORIZATION_REQUIRED,
+			AA.IS_FIRM_LEVEL_ACCESS AS AA_IS_FIRM_LEVEL_ACCESS,
+			AA.MAX_USERS_ALLOWED AS AA_MAX_USERS_ALLOWED,
+			AA.MAX_DOCUMENTS_ALLOWED AS AA_MAX_DOCUMENTS_ALLOWED,
+			FEE.FEE AS SUBSCRIPTION_FEE
+		FROM
+			AUTH_ACCESS AA
+			LEFT OUTER JOIN ECOMM_SITE_ACCESS ESA ON AA.ID = ESA.ACCESS_ID
+			LEFT OUTER JOIN ECOMM_SITE S  ON ESA.SITE_ID = S.ID
+			LEFT OUTER JOIN ECOMM_SUBSCRIPTIONFEE FEE ON FEE.SITEACCESS_ID = ESA.ID
+			LEFT JOIN CODELOOKUP CL ON CL.ID= FEE.SUBSCRIPTION_TYP_ID
+		WHERE
+			(AA.ACTIVE  = 'Y'  OR AA.ACTIVE IS NULL) AND
+			(S.ACTIVE   = 'Y'  OR S.ACTIVE IS NULL) AND
+			(CL.ACTIVE  = 'Y'  OR CL.ACTIVE IS NULL)AND
+			(FEE.ACTIVE = 'Y'  OR FEE.ACTIVE IS NULL)
+    </sql-query>
+ <sql-query name="GET_SITES_FOR_USER">
+		SELECT 
+			SITE.DESCRIPTION AS SITEDESCRIPTION
+		FROM     
+			ECOMM_SITE SITE
+			INNER JOIN ECOMM_SITE_ACCESS SITEACCESS ON SITEACCESS.SITE_ID = SITE.ID
+			INNER JOIN AUTH_ACCESS ACCESS ON ACCESS.ID = SITEACCESS.ACCESS_ID
+			INNER JOIN AUTH_USERS_ACCESS USERACCESS ON USERACCESS.ACCESS_ID = ACCESS.ID
+			INNER JOIN AUTH_USERS USERS ON USERACCESS.USER_ID = USERS.ID
+		WHERE 
+			USERS.EMAIL_ID = :userName AND
+			USERACCESS.IS_DELETED = 'N'
+    </sql-query>
+ <sql-query name="IS_USER_ARCHIVABLE">
+		SELECT 1
+			FROM AUTH_USERS AUTH_USER
+		WHERE
+			NOT EXISTS (SELECT USER_ID FROM ECOMM_RECUR_TX_HIST_INFO RECUR WHERE RECUR.USER_ID = AUTH_USER.ID) AND
+			NOT EXISTS (SELECT USER_ID FROM ECOMM_PAYASUGO_TX WEB WHERE WEB.USER_ID = AUTH_USER.ID) AND
+			NOT EXISTS (SELECT USER_ID FROM AUTH_USERS_ALERTS ALERTS WHERE ALERTS.USER_ID = AUTH_USER.ID) AND
+			NOT EXISTS (SELECT USER_ID FROM ECOMM_USERS_PURCHASES PURCHASES WHERE PURCHASES.USER_ID = AUTH_USER.ID) AND
+		AUTH_USER.EMAIL_ID =:userName
+    </sql-query>
+ <sql-query callable="true" name="ARCHIVE_USER">
+        {call SP_USER_DELETE (:userName, :comments, :modifiedBy, :machineName)}
+    </sql-query>
+ <sql-query callable="true" name="ARCHIVE_ADMIN_USER">
+        {call SP_ADMIN_DELETE_USER (:userName, :comments, :modifiedBy, :machineName)}
+    </sql-query>
+ <sql-query name="GET_NEW_TERMS_FOR_USER">
+	 	SELECT DISTINCT
+			AT.ID AS AT_ID, 
+			AT.TERM_DESC AS AT_TERM_DESC,
+			SITE.ID AS SITE_ID,
+			SITE.DESCRIPTION AS SITE_DESCRIPTION
+		FROM 
+			AUTH_TERMS AT 
+		INNER JOIN ECOMM_SITE SITE ON AT.SITE_ID = SITE.ID 
+		INNER JOIN ECOMM_NODE NODE ON SITE.NODE_ID = NODE.ID 
+		INNER JOIN ECOMM_SITE_ACCESS SITEACCESS ON SITEACCESS.SITE_ID = SITE.ID
+		INNER JOIN AUTH_ACCESS ACCESS ON ACCESS.ID = SITEACCESS.ACCESS_ID
+		INNER JOIN AUTH_USERS_ACCESS USERACCESS ON USERACCESS.ACCESS_ID = ACCESS.ID
+		INNER JOIN AUTH_USERS USERS ON USERS.ID = USERACCESS.USER_ID 
+		LEFT OUTER JOIN AUTH_USERS_TERMS AUT ON AUT.TERM_ID = AT.ID AND USERS.ID = AUT.USER_ID
+		WHERE 
+			AUT.ID IS NULL
+		AND USERS.EMAIL_ID =:userName
+		AND NODE.NAME =:nodeName 
+		AND AT.ACTIVE ='Y' AND
+		USERACCESS.IS_DELETED = 'N'
+    </sql-query>
+ <sql-query name="GET_INACTIVE_USERS">
+ <![CDATA[
+		SELECT
+			USERS.ID AS USERS_ID,
+			USERS.EMAIL_ID,
+			USERS.FIRST_NAME,
+			USERS.LAST_NAME,
+			USERS.REGISTERED_NODE,
+			USERS.CREATED_BY,
+			USERS.CURRENT_LOGIN_TIME,
+			USERS.DATE_TIME_CREATED,
+			USERS.CURRENT_LOGIN_TIME + (SELECT ISNULL(MAX(USER_RETENTION_DAYS),30) FROM ECOMM_SITE SITE
+			INNER JOIN ECOMM_SITE_ACCESS SITEACCESS ON SITEACCESS.SITE_ID = SITE.ID
+			INNER JOIN AUTH_ACCESS ACCESS ON ACCESS.ID = SITEACCESS.ACCESS_ID
+			INNER JOIN AUTH_USERS_ACCESS USERACCESS ON (USERACCESS.ACCESS_ID = ACCESS.ID AND USERACCESS.USER_ID =  USERS.ID))
+			AS ACCOUNT_DELETION_DATE ,
+			USERS.FIRM_NUMBER,
+			USERS.FIRM_NAME,
+			USERS.BAR_NUMBER,
+			AUA.IS_ACCESS_OVERRIDDEN AS AUA_IS_ACCESS_OVERRIDDEN,
+			AA.ACCESS_CD,
+			AA.ACCESS_DESCR						 
+		FROM AUTH_USERS USERS
+		INNER JOIN AUTH_USERS_ACCESS AUA ON AUA.USER_ID = USERS.ID
+		INNER JOIN AUTH_ACCESS AA ON AUA.ACCESS_ID =AA.ID 
+		WHERE
+			NOT EXISTS (SELECT USER_ID FROM ECOMM_RECUR_TX_HIST_INFO RECUR WHERE RECUR.USER_ID = USERS.ID) AND
+			NOT EXISTS (SELECT USER_ID FROM ECOMM_PAYASUGO_TX WEB WHERE WEB.USER_ID = USERS.ID) AND
+			NOT EXISTS (SELECT USER_ID FROM AUTH_USERS_ALERTS ALERTS WHERE ALERTS.USER_ID = USERS.ID) AND
+			NOT EXISTS (SELECT USER_ID FROM ECOMM_USERS_PURCHASES PURCHASES WHERE PURCHASES.USER_ID = USERS.ID) AND
+		    (USERS.CURRENT_LOGIN_TIME < GETDATE() - (SELECT MAX(USER_RETENTION_DAYS) - 3 FROM ECOMM_SITE SITE
+										  INNER JOIN ECOMM_SITE_ACCESS SITEACCESS ON SITEACCESS.SITE_ID = SITE.ID
+										  INNER JOIN AUTH_ACCESS ACCESS ON ACCESS.ID = SITEACCESS.ACCESS_ID
+										  INNER JOIN AUTH_USERS_ACCESS USERACCESS ON (USERACCESS.ACCESS_ID = ACCESS.ID AND USERACCESS.USER_ID =  USERS.ID))
+										  OR
+			USERS.CURRENT_LOGIN_TIME < GETDATE() - 30) AND
+			USERS.ACTIVE = 'Y' AND
+			AA.GUEST_FLG = 'N' AND
+			IS_EMAIL_NOTIFICATION_SENT = 'N' AND
+		    USERS.EMAIL_ID NOT LIKE '%admin@roam.com' AND
+		    USERS.EMAIL_ID NOT LIKE '%admin@amcad.com'			    
+		    ]]>		
+    </sql-query>
+ <sql-query name="GET_FIRM_USERS_COUNT">
+		SELECT
+			COUNT(USER_ID) AS USERS_COUNT
+		FROM AUTH_USERS_ACCESS
+		WHERE ACCESS_ID = :accessId AND  
+			IS_DELETED = 'N' AND
+			 FIRM_ADMIN_USER_ACCESS_ID = (SELECT
+							  		ID
+								  FROM AUTH_USERS_ACCESS
+								  WHERE USER_ID = :adminUserId AND
+										ACCESS_ID = :accessId AND
+										IS_DELETED = 'N'
+									)
+    </sql-query>
+ <sql-query callable="true" name="FIND_USERS">
+             SELECT DISTINCT
+				USER_ID,
+				EMAIL_ID,
+				FIRST_NAME,
+				LAST_NAME,
+				ACCOUNT_NONLOCKED,
+				LAST_LOGIN_TIME,
+				DATE_TIME_CREATED,
+				DATE_TIME_MOD,
+				PHONE,
+				CASE
+					WHEN SUM(CASE
+						WHEN ISNULL(ACTIVE, 'N') = 'Y' THEN 0 ELSE 1
+					END) = 0 THEN 'Y' ELSE 'N'
+				END AS ACTIVE,
+				CASE
+					WHEN SUM(CASE
+						WHEN ISNULL(ISAUTHORIZED, 'Y') = 'N' THEN 1 ELSE 0
+					END) = 1 THEN 'Y' ELSE 'N'
+				END AS WAITINGFORAUTHORIZATION,
+				CASE
+					WHEN SUM(CASE
+						WHEN ISNULL(HASOVERRIDENACCESS, 'N') = 'Y' THEN 0 ELSE 1
+					END) = 0 THEN 'Y' ELSE 'N'
+				END AS HASOVERRIDENACCESS,
+				CASE
+					WHEN SUM(CASE
+						WHEN ISNULL(ISPAIDUSER, 'N') = 'Y' THEN 0 ELSE 1
+					END) = 0 THEN 'Y' ELSE 'N'
+				END AS ISPAIDUSER,
+				FIRM_NAME AS FIRM_NAME,
+				FIRM_NUMBER AS FIRM_NUMBER,
+				BAR_NUMBER AS BAR_NUMBER,
+				CASE
+					WHEN SUM(CASE
+						WHEN ISNULL(USERACCESS_ACTIVE, 'N') = 'Y' THEN 0 ELSE 1
+					END) = 0 THEN 'Y' ELSE 'N'
+				END AS USERACCESS_ACTIVE
+			FROM V_GET_USERS_FOR_ADMIN
+			WHERE EMAIL_ID LIKE :userName AND
+			FIRST_NAME LIKE :firstName AND
+			LAST_NAME LIKE :lastName AND
+			SITE_ID LIKE :siteId AND
+			ACCESS_ID LIKE :accessId AND
+			ACTIVE LIKE :active AND
+			ISAUTHORIZED LIKE :pendingAuth AND
+			HASOVERRIDENACCESS LIKE :overriddenAccess AND
+			ISPAIDUSER LIKE :paidUser AND
+			IS_AUTHORIZED LIKE :authorized AND
+			USERACCESS_ACTIVE LIKE :useraccessActive AND
+			FIRM_NAME LIKE :firmName AND
+			FIRM_NUMBER LIKE :firmNumber AND
+			BAR_NUMBER LIKE :barNumber
+			GROUP BY	USER_ID,
+					EMAIL_ID,
+					FIRST_NAME,
+					LAST_NAME,
+					ACCOUNT_NONLOCKED,
+					LAST_LOGIN_TIME,
+					DATE_TIME_CREATED,
+					DATE_TIME_MOD,
+					PHONE,
+					FIRM_NAME,
+					FIRM_NUMBER,
+					BAR_NUMBER
+			ORDER BY DATE_TIME_CREATED DESC
+			OFFSET :offsetRows ROWS
+			FETCH NEXT :numberOfRows ROWS ONLY
+	    </sql-query>
+ <sql-query callable="true" name="FIND_USERS_COUNT">
+             SELECT COUNT(DISTINCT USER_ID)
+			 FROM V_GET_USERS_FOR_ADMIN	
+			 WHERE
+                EMAIL_ID LIKE :userName AND
+                FIRST_NAME LIKE :firstName AND
+                LAST_NAME LIKE :lastName AND
+                SITE_ID LIKE :siteId AND
+                ACCESS_ID LIKE :accessId AND
+                ACTIVE LIKE :active AND
+                ISAUTHORIZED LIKE :pendingAuth AND               
+                HASOVERRIDENACCESS LIKE :overriddenAccess AND
+                ISPAIDUSER LIKE :paidUser AND
+                IS_AUTHORIZED LIKE :authorized AND
+                USERACCESS_ACTIVE LIKE :useraccessActive AND
+                FIRM_NAME LIKE :firmName AND
+                FIRM_NUMBER LIKE :firmNumber AND
+                BAR_NUMBER LIKE :barNumber
+    </sql-query>
+ <sql-query name="GET_USER_INFO_FOR_ADMIN">
+        SELECT *
+        FROM dbo.V_GETUSERDETAILS_FOR_ADMIN
+        WHERE USERS_EMAIL_ID = :userName        
+        AND (SITE_NAME LIKE :siteName OR SITE_ID IS NULL)
+    </sql-query>
+ <sql-query name="GET_FIRM_LEVEL_USER_ACCESS">
+			SELECT 
+			childAUA.ID,
+			childAUA.ACCESS_ID,
+			childAUA.USER_ID,
+			childUser.EMAIL_ID,
+			childAUA.ACTIVE,
+			childAUA.IS_ACCESS_OVERRIDDEN,
+			childAUA.IS_AUTHORIZED,
+			childAUA.IS_FIRM_ACCESS_ADMIN,
+			childAUA.FIRM_ADMIN_USER_ACCESS_ID
+			FROM
+			AUTH_USERS_ACCESS childAUA
+			INNER JOIN AUTH_USERS_ACCESS parentAUA ON parentAUA.ID = childAUA.FIRM_ADMIN_USER_ACCESS_ID
+			INNER JOIN AUTH_USERS childUser ON childUser.ID = childAUA.USER_ID
+			WHERE 
+			parentAUA.USER_ID = :adminUserId AND
+			parentAUA.ACCESS_ID = :accessId AND
+			childAUA.ACCESS_ID = :accessId AND
+			parentAUA.ACTIVE = 'Y' AND
+			parentAUA.IS_FIRM_ACCESS_ADMIN = 'Y' AND
+			parentAUA.FIRM_ADMIN_USER_ACCESS_ID IS NULL AND
+			childAUA.IS_FIRM_ACCESS_ADMIN = 'N' AND
+			childAUA.IS_DELETED = 'N' AND
+			parentAUA.IS_DELETED = 'N'
+	    </sql-query>
+ <sql-query name="GET_USER">
+ 					SELECT
+					AU.ID as userId,
+					AU.EMAIL_ID as userName,
+					AU.FIRST_NAME as firstName,
+					AU.LAST_NAME as lastName,
+					AU.PHONE as phone,
+					AU.ACCOUNT_NONEXPIRED as accountNonExpired,
+					AU.ACCOUNT_NONLOCKED as accountNonLocked,
+					AU.ACTIVE as user_active,
+					AU.PASSWORD as password,
+					AUA.ID as userAccessId,
+					AUA.ACTIVE  as userAccessActive,
+					AUA.IS_ACCESS_OVERRIDDEN as accessOverridden,
+					AUA.IS_FIRM_ACCESS_ADMIN as isFirmAccessAdmin,
+					AUA.FIRM_ADMIN_USER_ACCESS_ID as firmAdminUserAccessId,
+					AUA.ACCESS_ID as accessId,
+					AA.ACCESS_CD as code,
+					AA.ACCESS_DESCR as description,
+					AA.GUEST_FLG as guestFlg,
+					AA.MAX_USERS_ALLOWED as maxUsersAllowed,
+					AA.IS_FIRM_LEVEL_ACCESS as isFirmLevelAccess,
+					AA.IS_AUTHORIZATION_REQUIRED AS isAuthorizationRequired,
+					ESA.SITE_ID as siteId,
+					ES.NAME as siteName,
+					ES.DESCRIPTION as siteDescription
+				FROM
+				AUTH_USERS AU
+				INNER JOIN AUTH_USERS_ACCESS AUA ON AUA.USER_ID = AU.ID
+				INNER JOIN AUTH_ACCESS AA ON AA.ID = AUA.ACCESS_ID AND AA.ACTIVE = 'Y'
+				LEFT OUTER JOIN ECOMM_SITE_ACCESS ESA ON ESA.ACCESS_ID = AA.ID AND ESA.ACTIVE = 'Y'
+				LEFT OUTER JOIN ECOMM_SITE ES ON ES.ID = ESA.SITE_ID and ES.ACTIVE = 'Y'
+				WHERE
+				AU.EMAIL_ID = :userName AND
+				AUA.IS_DELETED = 'N'
+	    </sql-query>
+	    
+ <sql-query name="GET_FIRM_ADMIN_USER">
+			SELECT
+					AU.ID as userId,
+					AU.EMAIL_ID as userName,
+					AU.FIRST_NAME as firstName,
+					AU.LAST_NAME as lastName,
+					AU.PHONE as phone,
+					AU.ACCOUNT_NONEXPIRED as accountNonExpired,
+					AU.ACCOUNT_NONLOCKED as accountNonLocked,
+					AU.ACTIVE as user_active,
+					AU.PASSWORD as password,
+					AUA.ID as userAccessId,
+					AUA.ACTIVE  as userAccessActive,
+					AUA.IS_ACCESS_OVERRIDDEN as accessOverridden,
+					AUA.IS_FIRM_ACCESS_ADMIN as isFirmAccessAdmin,
+					AUA.FIRM_ADMIN_USER_ACCESS_ID as firmAdminUserAccessId,
+					AUA.ACCESS_ID as accessId,
+					AA.ACCESS_CD as code,
+					AA.ACCESS_DESCR as description,
+					AA.GUEST_FLG as guestFlg,
+					AA.MAX_USERS_ALLOWED as maxUsersAllowed,
+					AA.IS_FIRM_LEVEL_ACCESS as isFirmLevelAccess,
+					AA.IS_AUTHORIZATION_REQUIRED AS isAuthorizationRequired,
+					ESA.SITE_ID as siteId,
+					ES.NAME as siteName,
+					ES.DESCRIPTION as siteDescription
+				FROM
+				AUTH_USERS AU
+				INNER JOIN AUTH_USERS_ACCESS AUA ON AUA.USER_ID = AU.ID
+				INNER JOIN AUTH_ACCESS AA ON AA.ID = AUA.ACCESS_ID AND AA.ACTIVE = 'Y'
+				LEFT OUTER JOIN ECOMM_SITE_ACCESS ESA ON ESA.ACCESS_ID = AA.ID AND ESA.ACTIVE = 'Y'
+				LEFT OUTER JOIN ECOMM_SITE ES ON ES.ID = ESA.SITE_ID and ES.ACTIVE = 'Y'
+				WHERE
+				AUA.ID IN (
+						SELECT
+							AUA1.FIRM_ADMIN_USER_ACCESS_ID
+						FROM 
+							AUTH_USERS AU1, AUTH_USERS_ACCESS AUA1
+						WHERE
+							AU1.EMAIL_ID = :firmUserName
+							AND AUA1.USER_ID = AU1.ID
+							AND AUA1.ACCESS_ID = :accessId
+							AND AUA1.IS_DELETED = 'N'
+						)
+				AND	AUA.IS_DELETED = 'N'	    
+ </sql-query>	    
+	    
+ <sql-query name="GET_CREDIT_CARD_DETAILS">
+	        SELECT cc.ID AS cc_ID
+	          ,cc.ACCOUNTNAME AS cc_ACCOUNTNAME
+	          ,cc.ACCOUNTNUMBER AS cc_ACCOUNTNUMBER
+	          ,cc.EXPMON AS cc_EXPMON
+	          ,cc.EXPYEAR AS cc_EXPYEAR
+	          ,cc.ADDRESS_1 AS cc_ADDRESS_1
+	          ,cc.ADDRESS_2 AS cc_ADDRESS_2
+	          ,cc.CITY AS cc_CITY
+	          ,cc.STATE AS cc_STATE
+	          ,cc.ZIP AS cc_ZIP
+	          ,cc.PHONE AS cc_PHONE
+	          ,cc.ACTIVE AS cc_ACTIVE
+	          ,cc.DATE_TIME_CREATED AS cc_DATE_TIME_CREATED
+	          ,cc.DATE_TIME_MOD AS cc_DATE_TIME_MOD
+	          ,cc.MOD_USER_ID AS cc_MOD_USER_ID
+	          ,cc.USER_ID AS cc_USER_ID
+	          ,cc.CREATED_BY AS cc_CREATED_BY
+	        FROM
+	            ECOMM_CCINFO cc,
+	            AUTH_USERS users
+	        WHERE
+	            cc.USER_ID = users.ID AND
+	            users.EMAIL_ID = :userName
+  </sql-query>
+ <sql-query name="GET_CREDIT_CARD_DETAILS_BY_USERID">
+	        SELECT cc.ID AS cc_ID
+	          ,cc.ACCOUNTNAME AS cc_ACCOUNTNAME
+	          ,cc.ACCOUNTNUMBER AS cc_ACCOUNTNUMBER
+	          ,cc.EXPMON AS cc_EXPMON
+	          ,cc.EXPYEAR AS cc_EXPYEAR
+	          ,cc.ADDRESS_1 AS cc_ADDRESS_1
+	          ,cc.ADDRESS_2 AS cc_ADDRESS_2
+	          ,cc.CITY AS cc_CITY
+	          ,cc.STATE AS cc_STATE
+	          ,cc.ZIP AS cc_ZIP
+	          ,cc.PHONE AS cc_PHONE
+	          ,cc.ACTIVE AS cc_ACTIVE
+	          ,cc.DATE_TIME_CREATED AS cc_DATE_TIME_CREATED
+	          ,cc.DATE_TIME_MOD AS cc_DATE_TIME_MOD
+	          ,cc.MOD_USER_ID AS cc_MOD_USER_ID
+	          ,cc.USER_ID AS cc_USER_ID
+	          ,cc.CREATED_BY AS cc_CREATED_BY
+	        FROM
+	            ECOMM_CCINFO cc
+	        WHERE
+	            cc.USER_ID = :userId
+	        </sql-query>
+ <sql-query name="GET_FIRM_CREDIT_CARD_DETAILS">
+			SELECT DISTINCT
+				firmCC.ID AS cc_ID
+	          ,firmCC.ACCOUNTNAME AS cc_ACCOUNTNAME
+	          ,firmCC.ACCOUNTNUMBER AS cc_ACCOUNTNUMBER
+	          ,firmCC.EXPMON AS cc_EXPMON
+	          ,firmCC.EXPYEAR AS cc_EXPYEAR
+	          ,firmCC.ADDRESS_1 AS cc_ADDRESS_1
+	          ,firmCC.ADDRESS_2 AS cc_ADDRESS_2
+	          ,firmCC.CITY AS cc_CITY
+	          ,firmCC.STATE AS cc_STATE
+	          ,firmCC.ZIP AS cc_ZIP
+	          ,firmCC.PHONE AS cc_PHONE
+	          ,firmCC.ACTIVE AS cc_ACTIVE
+	          ,firmCC.DATE_TIME_CREATED AS cc_DATE_TIME_CREATED
+	          ,firmCC.DATE_TIME_MOD AS cc_DATE_TIME_MOD
+	          ,firmCC.MOD_USER_ID AS cc_MOD_USER_ID
+	          ,firmCC.USER_ID AS cc_USER_ID
+	          ,firmCC.CREATED_BY AS cc_CREATED_BY
+			FROM	AUTH_USERS_ACCESS firmUserAccess,
+				AUTH_USERS_ACCESS adminUserAccess,
+				ECOMM_CCINFO firmCC,
+				AUTH_USERS users
+			WHERE users.EMAIL_ID = :userName AND
+			firmUserAccess.USER_ID = users.ID AND
+			firmUserAccess.FIRM_ADMIN_USER_ACCESS_ID = adminUserAccess.ID AND
+			firmCC.USER_ID = adminUserAccess.USER_ID AND
+			firmUserAccess.IS_DELETED = 'N' AND
+			adminUserAccess.IS_DELETED = 'N' 
+	    </sql-query>
+ <sql-query name="GET_USER_BY_USER_ACCESS_ID">SELECT
+	users.EMAIL_ID AS userName
+				,users.ID AS userId
+				,userAccess.ACCESS_ID  AS accessId
+				,userAccess.IS_FIRM_ACCESS_ADMIN as isFirmAccessAdmin
+				,access.IS_FIRM_LEVEL_ACCESS as isFirmLevelAccess
+			FROM	
+				AUTH_USERS_ACCESS userAccess,
+				AUTH_USERS users, 
+				AUTH_ACCESS access
+			WHERE
+			userAccess.ID = :userAccessId
+			AND users.ID = userAccess.USER_ID 
+			AND userAccess.IS_DELETED = 'N' 
+			AND access.ID = userAccess.ACCESS_ID
+</sql-query>
+
+ <sql-query name="UPDATE_USER_ACCESS">
+		UPDATE AUTH_USERS_ACCESS 
+			SET DATE_TIME_MOD = :modifiedDate,
+				MOD_USER_ID = :modifiedBy,
+				COMMENTS = :comments,
+				USER_ID = :userId
+			WHERE 
+				ID = :userAccessId
+				                                
+  </sql-query>
+
+
+</hibernate-mapping>

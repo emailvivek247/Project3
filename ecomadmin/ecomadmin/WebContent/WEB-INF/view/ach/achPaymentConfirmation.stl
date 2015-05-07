@@ -1,0 +1,192 @@
+<#include "../lib/layout.stl" />
+<@dashboardLayout>
+<link href="resources/css/jmesa/jmesa-pdf.css" rel="stylesheet" type="text/css" media="all">
+<link href="resources/css/jmesa/jmesa.css" rel="stylesheet" type="text/css" media="all">
+<link rel="stylesheet" href="resources/css/validationEngine.jquery.css" type="text/css" />
+<script type="text/javascript" src="resources/js/jmesa/jmesa.js"></script>
+<script type="text/javascript" src="resources/js/jmesa/jquery.jmesa.js"></script>
+<script type="text/javascript" src="resources/js/jquery.validationEngine-en.js"></script>
+<script type="text/javascript" src="resources/js/jquery.validationEngine.js"></script>
+<style>
+div.ui-datepicker {
+	font-size:11px;
+}
+.ui-datepicker .ui-datepicker-title select {
+	font-size:11px;
+}
+div.subHeader {
+	text-align:center;
+	width:100%;
+	font-weight:bold;
+	color:#ffffff;
+	background-color:#CF0A3B;
+	line-height:50px;
+}
+div.subHeader2 {
+	text-align:center;
+	width:100%;
+	font-weight:bold;
+	color:#948E8F;
+	line-height:25px;
+}
+.nowrap {
+	white-space: nowrap;
+}
+.right {
+	text-align:right;
+}
+.left {
+	text-align:left;
+}
+.center {
+	text-align:center;
+}
+td {
+	white-space: nowrap;
+}
+.refreshCacheLi {
+	cursor:pointer;
+}
+div.subHeader {
+	text-align:center;
+	width:100%;
+	font-weight:bold;
+	color:#ffffff;
+	line-height:50px;
+}
+div.error {
+	background-color:#CF0A3B;
+}
+div.success {
+	background-color:#029642;
+}
+</style>
+<!-- Begin one column window -->
+<div class="onecolumn" style="width:100%">
+	<div class="header">
+		<span>ACH Payment Confirmation</span>
+	</div>
+	<br class="clear"/>
+	<#if ERROR?has_content>
+		<div class="subHeader error">
+			<span>${ERROR}</span>
+		</div>
+	<#else>
+		<div class="subHeader success">
+			<span>Balance Transferred Successfully.</span>
+		</div>
+		<div class="content">
+				<#if achResponse?has_content>
+	            	<table cellspacing="5">
+	            	<tr>
+		            	<td class="right">Client :</td>
+		            	<td class="left">${achResponse.getSiteName()}</td>
+	            	</tr>
+	            	<tr>
+		            	<td class="right">Amount Transferred :</td>
+		            	<td class="left">${achResponse.getTxAmount()?string.currency} </td>
+	            	</tr>
+	            	<tr>
+		            	<td class="right">Transaction Count :</td>
+		            	<td class="left">${achResponse.getTotalTransactions()}</td>
+	            	</tr>
+	            	<tr>
+		            	<td class="right">E-Check Number :</td>
+		            	<td class="left">${achResponse.getCheckNumber()}</td>
+	            	</tr>
+	            	<tr>
+		            	<td class="right">Transaction Reference Number :</td>
+		            	<td class="left">${achResponse.getTxRefNumber()}</td>
+	            	</tr>
+	            	<tr>
+		            	<td class="right">Date Range :</td>
+		            	<td class="left">${achResponse.getStartTxDate()?string("MM/dd/yyyy")} - ${achResponse.getTxCutOffTime()?string("MM/dd/yyyy")}</td>
+	            	</tr>
+	                </table>
+	     		</#if>
+		</div>
+	</#if>
+</div>
+<!-- End one column window -->
+
+<script type="text/javascript">
+
+function OnButton1()
+{
+    document.achPaymentForm.action = "achPayment.admin"
+    document.achPaymentForm.submit();
+    return true;
+}
+
+function OnButton2()
+{
+    document.achPaymentForm.action = "processAchPayment.admin"
+    document.achPaymentForm.submit();
+    return true;
+}
+
+
+	$(document).ready(function(){
+
+        $('#achPaymentForm').validationEngine();
+        $('#achPaymentForm').validationEngine('hide');
+		$('.refreshCacheLi').click(function() {
+			var cacheNametxt = $(this).attr('alt');
+			$(this).hide();
+			var processingImageName = "#processing_" + cacheNametxt + "";
+			var successImageName = "#success_" + cacheNametxt + "";
+			var errorImageName = "#error_" + cacheNametxt + "";
+			$(processingImageName).show();
+
+			if (cacheNametxt == "ALL") {
+				$.ajax({
+					cache: false,
+				    type: 'POST',
+				    url: "refreshAllCaches.admin",
+				    data: {
+				       cacheName: cacheNametxt,
+				    },
+				    success: function(data, textStatus, jqXHR) {
+					  $.each(data, function(i,item){
+			    		 var elementID = "#" + item.code;
+			    		 if (item.code == "SUCCESS") {
+			    		 	 $(".refreshCacheLi").hide()
+			    			 $(processingImageName).hide();
+					    	 $(successImageName).show();
+					    	 $(".successImg").show();
+			    		 } else {
+			    			 $(".refreshCacheLi").hide()
+			    			 $(processingImageName).hide();
+					    	 $(errorImageName).show();
+					    	 $(".errorImg").show();
+			    		 }
+			          });
+				    }
+				});
+			}
+			else {
+				$.ajax({
+					cache: false,
+				    type: 'POST',
+				    url: "refreshCache.admin",
+				    data: {
+				       cacheName: cacheNametxt,
+				    },
+				    success: function(data, textStatus, jqXHR) {
+					  $.each(data, function(i,item){
+			    		 var elementID = "#" + item.code;
+			    		 if (item.code == "SUCCESS") {
+			    			 $(processingImageName).hide();
+					    	 $(successImageName).show();
+			    		 } else {
+			    			 $(processingImageName).hide();
+					    	 $(errorImageName).show();
+			    		 }
+			          });
+				    }
+				});
+			}
+		});
+    });
+</script>
+</@dashboardLayout>

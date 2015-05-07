@@ -1,0 +1,74 @@
+.widget-header {color:#0b6cbc;vertical-align:middle;margin:auto;line-height: 38px;}
+.breadcrumb > li > a {color:#0b6cbc;}
+label{cursor:default;}
+.widget-body{padding-right:5px;padding-top:10px}
+label{margin-right:10px;}
+.form-horizontal .control-group {margin-bottom:5px;}
+.tabbable {margin-bottom: 25px;}
+#sidebar {background-color:none;}
+.hide {display:none;}
+table tbody tr:hover {cursor:pointer;}
+.success {color:#7ba065}
+.error {color:#d16e6c}    
+.accept, .status {padding-left: 90px;}
+.valid {color: green;}
+.invalid {color: red;}
+span.k-tooltip {margin-left: 6px;}
+span.k-tooltip {display: block;width: 100%;border: 1px solid #adff2f;padding-top: 5px;top: 36px;left: -1px;color: green;}
+label.required {color: #d16e6c;}
+span.help-inline {color: #d16e6c;}
+.k-grid .k-grid-header .k-header .k-link {height: auto;}
+.k-grid .k-grid-header .k-header {white-space: normal;}
+
+.left {text-align:left !important;}
+.k-header .k-link {text-align: center;}
+.k-readonly{color: gray;}
+.right{text-align:right}
+.left{text-align:left}
+.center{text-align:center;}
+#page-content{padding:0}
+.widget-body{padding: 0 10px 0 10px;}
+.capitalize { text-transform: capitalize; }
+.k-add-excel{background-image:url('../images/excel.png');}
+.k-add-pdf{background-image: url('../images/pdf.png');}
+.k-add-excel:hover{background-image:url('../images/excel.png');}
+.k-add-pdf:hover{background-image: url('../images/pdf.png');}
+.k-custom-icon{height:20px;width:20px;}
+.center-table{margin: auto;}
+.hidden{display:none;}
+.nav-list>li .submenu>li.active {background-color:#E4E8ED;}
+.nowrap{white-space: nowrap;}
+@media screen and (max-width:480px){
+   body {
+     font-size:6pt; !important;
+   }
+}
+
+
+@media screen and (max-width:1024px){
+   body {
+     font-size:12pt; !important;
+   }
+}
+
+
+@media screen and (max-width:1920px){
+   body {
+     font-size:10pt; !important;
+   }
+}
+
+.boldText{font-weight:bold;}
+.btn-search {
+padding: 0 8px;
+line-height: 24px;
+border-width: 4px;
+font-size: 13px;
+}
+.footer {
+border: 0;
+position: absolute;
+right: 2px;
+bottom: 2px;
+padding: 10px;
+}

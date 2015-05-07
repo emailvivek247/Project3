@@ -1,0 +1,22 @@
+#macro(periodOption $periodId $text )
+#if($indexName)
+<option value="?indexName=$indexName&period=$periodId" #if($periodId==$period) selected #end > $text</option>
+#else
+<option value="?period=$periodId" #if($periodId==$period) selected #end > $text</option>
+#end
+#end
+##
+##
+##
+<select class="jumpmenu" name="period" id="period" onChange="location=options[selectedIndex].value;">
+   #periodOption('0' 'All')
+   #periodOption('10' 'Last 10 Minutes')
+   #periodOption('60' 'Last 1 hour')
+   #periodOption('360' 'Last 6 hour')
+   #periodOption('720' 'Last 12 hours')
+   #periodOption('1440' 'Last 1 day')
+   #periodOption('10080' 'Last 1 week')
+   #periodOption('43200' 'Last 30 days')
+   #periodOption('129600' 'Last 90 days')
+   #periodOption('525600' 'Last 1 year')
+</select>

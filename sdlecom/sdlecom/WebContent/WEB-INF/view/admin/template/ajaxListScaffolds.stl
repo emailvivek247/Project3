@@ -1,0 +1,50 @@
+<#assign scaffoldManager = new("com.fdt.sdl.styledesigner.ScaffoldManager")>
+<script type="text/javascript">
+      $(function() {
+            $("#tabs").tabs();
+      });
+</script>
+<div id="compGroupA" class="demo" width="100%">
+  <div id="tabs" width="100%">
+      <ul>
+            <li><a href="#tabs-1">Page Styles</a></li>
+            <li><a href="#tabs-2">Style Enhancements</a></li>
+      </ul>
+      <div id="tabs-1" width="100%">
+		  <#assign scaffolds = full_scaffolds>
+		   <script src="${request.getContextPath()}/resources/javascripts/jquery.mousewheel.min.js" type="text/javascript" charset="utf-8"></script>
+		    <script src="${request.getContextPath()}/resources/javascripts/slider1.js" type="text/javascript" charset="utf-8"></script>  
+		    <div id="wrapper1">
+                <div id="slidert1">
+                    <img id="leftt1" class="scrollButtons left" src="${request.getContextPath()}/resources/images/leftarrow.png" alt="Left Scroll Arrow">
+                    <div style="overflow: hidden;" class="scroll" id="scrollt1">    
+                        <div class="scrollContainer" id="scrollContainert1">
+  		                    <#include 'region/scaffolds_in_table.stl'>
+  		                </div>
+                        <div id="left-shadow"></div>
+                        <div id="right-shadow"></div>
+                    </div>
+                    <img id="rightt1" class="scrollButtons right" src="${request.getContextPath()}/resources/images/rightarrow.png" alt="Right Scroll Arrow">
+                </div>        
+             </div>
+	  </div>
+      <div id="tabs-2" width="100%">
+ 		  <#assign scaffolds = partial_scaffolds>
+          <script src="${request.getContextPath()}/resources/javascripts/slider2.js" type="text/javascript" charset="utf-8"></script>  
+            <div id="wrapper2">
+                <div id="slidert2">
+                    <img id="leftt2" class="scrollButtons left" src="${request.getContextPath()}/resources/images/leftarrow.png" alt="Left Scroll Arrow">
+                    <div style="overflow: hidden;" class="scroll" id="scrollt2">    
+                        <div class="scrollContainer" id="scrollContainert2">
+                            <#include 'region/scaffolds_in_table.stl'>
+                        </div>
+                        <div id="left-shadow"></div>
+                        <div id="right-shadow"></div>
+                    </div>
+                    <img id="rightt2" class="scrollButtons right" src="${request.getContextPath()}/resources/images/rightarrow.png" alt="Right Scroll Arrow">
+                </div>        
+             </div>
+      </div>
+  </div>
+</div>	  	
+

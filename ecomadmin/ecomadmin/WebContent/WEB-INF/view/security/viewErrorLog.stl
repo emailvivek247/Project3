@@ -1,0 +1,312 @@
+<#include "../lib/layout.stl" />
+<@dashboardLayout>
+<style>
+       table td, table th {padding: 5px;}
+
+.form-horizontal .control-group {
+width:800px;
+
+}
+input[readonly] {
+width:195px; height: 27px;
+}
+.daterangepicker .ranges .input-mini {
+background-color: #eee;
+border: 1px solid #ccc;
+border-radius: 4px;
+color: #555;
+display: block;
+font-size: 11px;
+height: 30px;
+line-height: 30px;
+vertical-align: middle;
+margin: 0 0 10px 0;
+padding: 0 6px;
+width: 137px;
+}
+.btn-search {
+padding: 0 8px;
+line-height: 24px;
+border-width: 4px;
+font-size: 13px;
+}
+</style>
+
+<div class="row-fluid">
+<div class="col-xs-12" style="padding:0px;">
+       <div class="widget-box">
+              <div class="widget-header">
+                     <h4>Error Log</h4>
+                     <div class="widget-toolbar">
+                           <a href="#" data-action="collapse">
+                                  <i class="icon-chevron-up"></i>
+                           </a>
+                     </div><!-- end widget toolbar-->
+              </div><!-- end widget header-->
+              <div class="widget-body">
+                     <div class="widget-main">
+                           <div class="row-fluid">
+                                  <div class="col-xs-3">&nbsp;</div>
+                                  <div class="col-xs-7">
+                                  <div id="errorForm" name="errorForm" class="form-horizontal">
+                                         <div class="widget-box transparent">
+                                                <div class="widget-body">
+                                                       <div class="widget-main" >
+
+
+                                                               <div class="row-fluid" style="margin-bottom:5px;">
+                                                                  <label id="errorStatusLabel">&nbsp;</Label></br>
+                                                                  <label class="control-label boldText k-tooltip-validation" for="dateRange" style="float: left;width: 168px;padding-top: 5px;text-align: right;"><b>Date Range :&nbsp; </b></label>
+                                                                  <div class="control-group">
+                                                                           <div class="input-group" >
+                                                                                  <span class="input-group-addon" >
+                                                                                         <i class="icon-calendar"></i>
+                                                                                  </span>
+                                                                                  <input type="text" style="height:28px; width:170px;" class="validate[groupRequired[payments]]"  name="dateRange" tabindex="5" id="dateRange"/>
+                                                                           </div>
+                                                                     </div>
+                                                              </div>
+                                                              <div class="row-fluid">
+                                                      		  		<label class="control-label boldText k-tooltip-validation" for="dateRange" style="float: left;width: 168px;padding-top: 5px;text-align: right;margin-bottom: 5px;"><b>User Name :&nbsp; </b></label>
+                                                       		  		<div class="">
+                                                                           <input type="k-textbox" id="userName" name="userName"  tabindex="2" maxlength="50"  style="width:210px" autocomplete="off" value="<#if userName?has_content >${userName}</#if>"/>
+                                                                     </div>
+                                                  		 	  </div>
+															  <div class="row-fluid">
+                                                                    <label class="control-label required" style="float: left;width: 168px;padding-top: 5px;text-align: right;"></label>
+                                                                     <div class="">
+                                                                      <span class="input-icon">
+                                                                                  <input type="submit" id="btnSearchErrorLog" class="btn btn-small btn-info btn-search" style="font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;" tabindex="3" value="Submit" />
+                                                                                  <i class="icon-search" style="color:white;"></i>
+                                                                           </span>
+                                                                     </div>
+                                                              </div><!--/span-->
+
+                                                       </div><!--/widget-main-->
+                                                </div><!--/widget-body-->
+                                         </div><!--/widget-box-->
+                                  </div>
+                                  </div><!--/span-->
+                           </div> <!--row Fluid-->
+                     </div> <!--end widget main-->
+              </div><!--End widget body-->
+       </div><!-- end widget box-->
+</div><!-- end span-->
+</div><!--/row fluid-->
+
+<#if !errorList?has_content>
+       <div class="row-fluid gridMargins">
+              <div class="span12">
+                     <div id="grid_error"></div>
+              </div><!-- end span-->
+       </div><!-- end row-fluid-->
+<#else>
+       <div class="row-fluid center"><h4>No Records Found</h4></div>
+</#if>
+
+
+<script type="text/javascript">
+
+<!--INITIALIZE KENDO GRID-->
+    $(document).ready(function() {
+
+              $('#dateRange').daterangepicker(
+                  {
+                    ranges: {
+                       'Today': [moment(), moment()],
+                       'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
+                       'Last 7 Days': [moment().subtract('days', 6), moment()],
+                       'Last 30 Days': [moment().subtract('days', 29), moment()],
+                       'This Month': [moment().startOf('month'), moment().endOf('month')],
+                       'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+                    },
+                    startDate: moment().subtract('days', 0),
+                    endDate: moment()
+                 }
+              );
+              <#if fromDate?has_content && fromDate != "" && toDate?has_content && toDate != "">
+                     $('#dateRange').val('${fromDate}' + ' - ' + '${toDate}');
+              <#else>
+                     $('#dateRange').val(moment().subtract('days', 0).format('MM/DD/YYYY') + ' - ' + moment().format('MM/DD/YYYY'));
+              </#if>
+
+              kendo.data.binders.widget.max = kendo.data.Binder.extend({
+            init: function(widget, bindings, options) {
+                //call the base constructor
+                kendo.data.Binder.fn.init.call(this, widget.element[0], bindings, options);
+            },
+            refresh: function() {
+                var that = this,
+                value = that.bindings["max"].get(); //get the value from the View-Model
+                $(that.element).data("kendoDatePicker").max(value); //update the widget
+            }
+        });
+
+              //set max date as today's date
+              var viewModel = kendo.observable({
+            value: new Date(),
+            maxDate: new Date()
+        });
+        kendo.bind($(document.body), viewModel);
+
+       $("#btnSearchErrorLog").click(function() {
+                     //alert("Please Enter a Date Range");
+                     searchErrors();
+              });
+
+
+       $("input:submit, a, button", ".demo" ).button();
+
+              $('#errorLogForm').validationEngine();
+              $('#errorLogForm').validationEngine('hide');
+
+
+    });  //DOCUMENT READY
+
+
+             function searchErrors(){
+                     var dataSource = new kendo.data.DataSource({
+                     transport: {
+                     read: {
+                                  url: function(e){
+                                                var url = "searchErrorLog.admin?";
+                                                url = url + getFormParameters();
+                                                return url;
+                                   },
+                                   dataType: "json",
+                                   type: "GET"
+                           }
+              },
+              schema: {
+                        model: {
+                           id: "id",
+                            fields: {
+                                   createdDate: {},
+                                   code: {},
+                                 description: {},
+                                   moduleName: {},
+                                   functionName: {},
+                                   userName: {},
+                                   modifiedBy: {},
+                                   Actions: {}
+
+                               }
+                        },
+                        data: "records",
+                        total: "recordCount"
+
+                 },
+                 pageSize: 5,
+                 serverPaging: true,
+                 serverSorting: true
+
+              });
+
+                     var errorGrid = $("#grid_error").kendoGrid({
+                         dataSource: dataSource,
+                           pageable: {
+                     refresh: true,
+                     pageSizes: true,
+                     pageSize: true,
+                     numeric: true,
+                     info: true,
+                     input: true
+                },
+                           selectable: 'row',
+                         navigatable: true,
+                         groupable: false,
+                         //toolbar: kendo.template($("#template").html()),
+                         columns: [
+                                         { field: "createdDate", title: "Date & Time", template: '#= kendo.toString(new Date(createdDate), "M/d/yyyy h:mm tt") #', sortable: true},
+                                 { field: "code", title: "Error Code", sortable: true},
+                                 { field: "description", title: "Description", sortable: false},
+                                 { field: "moduleName", title: "Module Name"},
+                                 { field: "functionName", title: "Function Name"},
+                                 { field: "userName", title: "User Name"},
+                                 { field: "modifiedBy", title: "Modified By", sortable: true },
+                                 { field: "Actions", title: "Actions", sortable: false,
+                                          template: function(e){
+                                                              return '<a onClick="deleteErrorLog(' + e.id + ', \'' + e.uid + '\'); return false;"><img src="resources/images/trash.png" alt="Delete Error Log" class="help" original-title="Delete Error Log">';
+                                   }
+                                         }
+                              ]
+                     }).data("kendoGrid");
+              }
+
+             function getFormParameters(){
+                     var url = '';
+
+                     if ($("#userName").val() != "") {
+                           var userName = $("#userName").val();
+                           url = url + '&userName=' + userName;
+                     }
+
+                     if($("#dateRange").val() != ''){
+                           var fromDate = $("#dateRange").val().split("-")[0].trim();
+                           url = url + '&fromDate=' + fromDate;
+                           var toDate = $("#dateRange").val().split("-")[1].trim();
+                           url = url + '&toDate=' + toDate;
+                     }
+
+                     return url;
+              }
+
+              function deleteErrorLog(errorLogId, uid){
+                     var url = "deleteErrorLog.admin?errorLogId=" + errorLogId;
+                     $.ajax({
+                     cache: false,
+                      url: url,
+                      type: "GET",
+                      dataType: "json",
+                      success: function (results) {
+                              if(results){
+                                  if(results.errorCode == 'SUCCESS'){
+                                  // Refresh the grid
+                                  $('#grid_error').data("kendoGrid").dataSource.read();
+                                                       // Display Success message
+                                                      displaySuccessMessage('Successfully Deleted the Error Log');
+                                               }  else {
+                                                      // There were errors on server side display it
+                                                      displayErrorMessage(getJsonError(results));
+                                               }
+                            }
+                      },
+
+                      // Error occured on server
+                      error: function (xhr, ajaxOptions, thrownError) {
+                            var response = JSON.parse(xhr.responseText);
+                            displayErrorMessage(getJsonError(response));
+                      }
+                  });
+              }
+
+              function getJsonError(results){
+                     var errorString = '';
+                     for(var k in results.errors){
+                           errorString = errorString + results.errors[k] + '</br>';
+                     }
+                     return errorString = errorString + '</br>';
+              }
+
+       function displayErrorMessage(message){
+              var statusElem = document.getElementById('errorStatusLabel');
+              var statusLabelText = '<font color="red" size=4>' + message + '</font>';
+              statusElem.innerHTML  = statusLabelText;
+       }
+
+       function displaySuccessMessage(message){
+              var statusElem = document.getElementById('errorStatusLabel');
+              var statusLabelText = '<font color="green" size=4>' + message + '</font>';
+              statusElem.innerHTML  = statusLabelText;
+       }
+
+
+</script>
+<script type="text/x-kendo-template" id="template">
+    <div class="toolbar">
+         <a href="${request.getContextPath()}/deleteErrorLog.admin?fromDate=<#if fromDate?has_content >${fromDate}</#if>&toDate=<#if toDate?has_content >${toDate}</#if>&userName=<#if userName?has_content >${userName}</#if>&errorLogId=-1">
+               <img src="${request.getContextPath()}/resources/images/trash.png" alt="View Details" class="help" original-title="Clear Error Log">
+            </a>
+    </div>
+</script>
+</@dashboardLayout>

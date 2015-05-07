@@ -1,0 +1,281 @@
+<#include "../lib/layout.stl" />
+<@dashboardLayout>
+<link href="resources/css/validationEngine.jquery.css" rel="stylesheet" type="text/css" media="all">
+<script type="text/javascript" src="${request.getContextPath()}/resources/bitools/js/FusionCharts.js"></script>
+<style>	
+	.widget-body-inner {text-align:center;}
+	.chartContainer{text-align:center;height:300px;min-width:450px;}
+</style>
+	<#if isInternalUser>
+		<div class="row-fluid"> 
+		<div class="col-xs-12">		  
+			<div class="widget-box transparent">				
+				<div class="widget-body">						
+						<div class="widget-main">
+	               			 <div class="row-fluid">
+	                            <div class="">
+	                                <b>Select Site:</b> 
+	                                <select id="siteList" name="siteId" class="k-widget k-dropdownlist" tabindex="1" width="auto">
+							            	<#if sites?has_content>
+							            		<option value="" selected>All Sites</option>
+							            	    <#foreach site in sites>
+							                            <option value="${site.id}"> ${site.description}</option>
+							            		</#foreach>
+							        		</#if>
+							 		</select>	
+	                            </div>
+	                         </div>               			 
+						</div><!--/widget-main-->						
+				</div><!--/widget-body-->
+			</div><!--/widget-box-->
+		</div><!--/span-->	
+		</div>
+	<#else>
+		<div style="font-size:15px;">
+            <b>Site:</b> 
+            <#if sites?has_content>
+            	<#foreach site in sites>
+            		 ${site.description}
+             	</#foreach>
+	 		</#if>	
+        </div>		
+	</#if>
+	<div class="row-fluid">
+	<#if isInternalUser>
+		<div class="col-xs-6">
+			<div class="widget-box gridMargins">
+				<div class="widget-header">
+					<h4>	
+						<i class="icon-group"></i>							
+						User Distribution By Site
+					</h4>
+
+					<div class="widget-toolbar">
+						<a href="#" data-action="collapse">
+							<i class="icon-chevron-up"></i>
+						</a>
+					</div>
+				</div>
+
+				<div class="widget-body"><div class="widget-body-inner" style="display: block;">
+					<div class="widget-main no-padding">
+						<div id="userDistSite" class="chartContainer"></div>
+					</div><!--/widget-main-->
+				</div></div><!--/widget-body-->
+			</div><!--/widget-box-->
+		</div><!--/span-->
+	</#if>
+		<div class="col-xs-6">
+			<div class="widget-box gridMarginsTopOnly">
+				<div class="widget-header">
+					<h4>
+						<i class="icon-group"></i>
+						User Distribution By Site and Subscription
+					</h4>
+
+					<div class="widget-toolbar">
+						<a href="#" data-action="collapse">
+							<i class="icon-chevron-up"></i>
+						</a>
+					</div>
+				</div>
+
+				<div class="widget-body"><div class="widget-body-inner">
+					<div class="widget-main padding-0">
+						<div id="userCountSubscription" class="chartContainer"></div>
+					</div><!--/widget-main-->
+				</div></div><!--/widget-body-->
+			</div><!--/widget-box-->
+		</div><!--/span-->
+	
+		<#if isInternalUser>
+		<div class="row-fluid"></div>
+			<div class="col-xs-12">
+		<#else>
+			<div class="col-xs-6">
+		</#if>
+			<div class="widget-box gridMarginsTopOnly">
+				<div class="widget-header">
+					<h4>
+						<i class="icon-group"></i>
+						User Distribution for Selected Subscription and Selected Site
+					</h4>
+
+					<div class="widget-toolbar">
+						<a href="#" data-action="collapse">
+							<i class="icon-chevron-up"></i>
+						</a>
+					</div>
+				</div>
+
+				<div class="widget-body">
+					<div class="widget-body-inner">
+						<div class="widget-main padding-0">
+							<div id="userDistSubscription" class="chartContainer"></div>
+						</div><!--/widget-main-->
+					</div></div><!--/widget-body-->
+				</div><!--/widget-box-->
+			</div><!--/span-->
+					
+		
+
+<script type="text/javascript">
+
+	var siteId = "";
+	var siteName = "All Sites";
+	var accessId = "";
+	var accessName = "All Subscriptions";
+	
+	var GALLERY_RENDERER = "flash";
+	var tmpChart = new FusionCharts("Column2D.swf", "tmpChartId", "560", "400", "0", "0");
+	var NO_FLASH = tmpChart.options.renderer=="javascript";
+	tmpChart.dispose();
+	tmpFlash = null;
+	
+	if(NO_FLASH || /GALLERY_RENDERER=javascript/i.test(document.cookie) )
+	{
+		GALLERY_RENDERER = 'javascript';
+		
+	}
+	// Enable below line to render charts in html5 always
+	//GALLERY_RENDERER = 'javascript';
+	
+	if (GALLERY_RENDERER && GALLERY_RENDERER.search(/javascript|flash/i)==0)  FusionCharts.setCurrentRenderer(GALLERY_RENDERER); 
+	
+$(document).ready(function(){
+
+	$("#siteList").kendoDropDownList();
+	<#if isInternalUser>
+		loadUserCountsBySite(siteId);
+		$("#siteList").change(refreshVals);
+	<#else>
+		loadUserCountsBySubscription(siteId);
+		$("#siteList").change(refreshVals);
+	</#if>
+});
+
+<#if isInternalUser>
+	function refreshVals() {
+		siteId = $("#siteList option:selected").val();
+		siteName = $("#siteList option:selected").text();
+		if (siteId = "") {
+			siteName = "All Sites"
+		}
+		else
+		{ 	siteId = $("#siteList option:selected").val();
+			siteName = $("#siteList option:selected").text();
+		}
+		if  (FusionCharts("SiteDistribution"))  FusionCharts("SiteDistribution").dispose();
+		if  (FusionCharts("SubscriptionDistribution"))  FusionCharts("SubscriptionDistribution").dispose();
+		if  (FusionCharts("UserDistribution"))  FusionCharts("UserDistribution").dispose();	
+		loadUserCountsBySite(siteId);
+	}
+
+		
+<#else>
+
+	function refreshVals() {
+		siteId = $("#siteList option:selected").val();
+		siteName = $("#siteList option:selected").text();
+		loadUserCountsBySubscription(siteId);
+		
+	}
+
+</#if>
+
+function loadUserCountsBySite(siteId){	
+	<#if !isInternalUser>
+	    loadUserCountsBySubscription(siteId);
+	</#if>
+    var doctypeDataXML = "";
+    var url = "getUserCountsBySite.admin?siteId=" + siteId;
+    $.ajaxSetup({ cache: false });
+        $.getJSON(url,
+        function(data){
+            $.each(data, function(i,item){
+                   var link = "j-loadUserCountsBySubscription-" + item.key + "|" + item.description.toUpperCase();
+                   doctypeDataXML = doctypeDataXML + "<set label='" + item.description.toUpperCase().replace(/'/g,'&apos;') + "' value='" + item.userCount + "' link='" + link + "'/>";
+            });
+        var chartCaption = "User Distribution by Site";
+        var chart = new FusionCharts("${request.getContextPath()}/resources/bitools/Charts/Pie3D.swf?noCache="+new Date().toGMTString(), "SiteDistribution", 500, 300, "0", "1");
+        chart.setDataXML("<chart caption='" + chartCaption + "'  xAxisName='Site Name' yAxisName='Users' showPercentValues='1' showPercentInToolTip='0' formatNumberScale='0' enableSmartLabels='1' manageLabelOverflow='1' showAboutMenuItem='1'>" + doctypeDataXML + "</chart>?currTime=" + getTimeForURL());
+        chart.render('userDistSite');
+      });
+}
+
+function getTimeForURL(){
+  var dt = new Date();
+  var strOutput = "";
+  strOutput = dt.getHours() + "_" + dt.getMinutes() + "_" + dt.getSeconds() + "_" + dt.getMilliseconds();
+  return strOutput;
+ }
+
+function loadUserCountsBySubscription(siteIdAndSiteName){
+        if  (FusionCharts("SubscriptionDistribution"))  FusionCharts("SubscriptionDistribution").dispose();
+        if  (FusionCharts("UserDistribution"))  FusionCharts("UserDistribution").dispose();	
+		var siteId = "";
+		var siteName = "";
+		if (siteIdAndSiteName.length > 0) {
+        	siteId = siteIdAndSiteName.split("|")[0].replace("=undefined","");
+        	siteName = siteIdAndSiteName.split("|")[1].replace("=undefined","");
+        }
+        var doctypeDataXML = "";
+        var url = "getUserCountsBySubscription.admin?siteId=" + siteId;
+            $.getJSON(url,
+            function(data){
+                $.each(data, function(i,item){
+                       var link = "j-loadUserDistributionBySubscription-" + item.key + "|" + siteId + "|" + item.description.toUpperCase().replace(/'/g,'&apos;') + "|" + siteName;
+                       doctypeDataXML = doctypeDataXML + "<set label='" + item.description.toUpperCase().replace(/'/g,'&apos;') + "' value='" + item.userCount + "' link='" + link + "'/>";
+                });
+            if (siteName.length > 0) {
+            	var chartCaption = "Users Distribution By Subscription for " + siteName;
+            } else {
+            	var chartCaption = "Users Distribution By Subscription";
+            }
+            <#if isInternalUser>
+            	var chart = new FusionCharts("${request.getContextPath()}/resources/bitools/Charts/Pie3D.swf?noCache="+new Date().toGMTString(), "SubscriptionDistribution", 500, 300, "0", "1");
+            <#else>
+            	var chart = new FusionCharts("${request.getContextPath()}/resources/bitools/Charts/Pie3D.swf?noCache="+new Date().toGMTString(), "SubscriptionDistribution", 500, 300, "0", "1");
+            </#if>
+            chart.setDataXML("<chart caption='" + chartCaption + "'  xAxisName='Subscription' yAxisName='Users' showPercentValues='1' showPercentInToolTip='0' formatNumberScale='0' enableSmartLabels='1' manageLabelOverflow='1' showAboutMenuItem='1'>" + doctypeDataXML + "</chart>");
+            chart.render('userCountSubscription');
+          });
+}
+
+function loadUserDistributionBySubscription(accessIdAndSiteIdAndAccessNameAndSitename){		
+        if  (FusionCharts("UserDistribution"))  FusionCharts("UserDistribution").dispose();	
+        var accessId = accessIdAndSiteIdAndAccessNameAndSitename.split("|")[0].replace("=undefined","");
+        var siteId = accessIdAndSiteIdAndAccessNameAndSitename.split("|")[1].replace("=undefined","");
+        var accessName = accessIdAndSiteIdAndAccessNameAndSitename.split("|")[2].replace("=undefined","").replace(/'/g,'&apos;');
+        var siteName = accessIdAndSiteIdAndAccessNameAndSitename.split("|")[3].replace("=undefined","").replace(/'/g,'&apos;');
+        var doctypeDataXML = "";
+        var url = "getUserDistributionBySubscription.admin?siteId=" + siteId + "&accessId=" + accessId;
+            $.getJSON(url,
+            function(data){
+                $.each(data, function(i,item){
+                	   var color = 'F6BD0F';
+                	   if (item.description == "ACTIVE") {
+                	   	  color = '8BBA00';
+                	   } else if (item.description == "INACTIVE") {
+                	   	  color = 'D64646';
+                	   }
+                       doctypeDataXML = doctypeDataXML + "<set label='" + item.description.toUpperCase().replace(/'/g,'&apos;') + "' value='" + item.userCount + "' color='" + color + "'/>";
+                });
+            if (siteName.length > 0) {
+            	var chartCaption = "User Distribution for " + accessName + " - " + siteName;
+            } else {
+            	var chartCaption = "User Distribution for " + accessName;
+            }
+            <#if isInternalUser>
+            	var chart = new FusionCharts("${request.getContextPath()}/resources/bitools/Charts/Pie3D.swf?noCache="+new Date().toGMTString(), "UserDistribution", 500, 300, "0", "1");
+            <#else>
+            	var chart = new FusionCharts("${request.getContextPath()}/resources/bitools/Charts/Pie3D.swf?noCache="+new Date().toGMTString(), "UserDistribution", 500, 300, "0", "1");
+            </#if>
+            chart.setDataXML("<chart caption='" + chartCaption + "'  xAxisName='Subscription' yAxisName='Users' showPercentValues='1' showPercentInToolTip='0' formatNumberScale='0' enableSmartLabels='1' manageLabelOverflow='1' showAboutMenuItem='1'>" + doctypeDataXML + "</chart>");
+            chart.render('userDistSubscription');
+          });
+}
+
+</script>
+
+</@dashboardLayout>

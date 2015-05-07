@@ -1,0 +1,41 @@
+##
+##  assumed in the context
+##         docNum // the document number
+##         dc // the datasetConfiguration
+##         totalCount// the total amount of documents
+##
+
+#set( $title= ${indexName} )
+#set( $selectedMenu = 'dataset' )
+#set( $selectedToptab = 'status' )
+#set( $selectedSubtab = 'usage' )
+
+
+
+<form name="f" method="post"">
+<input type="hidden" name="operation" value="report">
+
+<br />
+#errorMarkup()
+
+#set($QueryLogAnalyzer   = $toolLoader.load("net.javacoding.xsearch.status.QueryLogAnalyzer"))
+#set($indexName = ${request.getParameter("indexName")})
+#set($period = ${request.getParameter("period")})
+#if (!$period) 
+	#set($period = 0)	
+#end
+#set($operation = ${request.getParameter("operation")})
+#if ("refresh" == $operation) 
+  $QueryLogAnalyzer.refresh()
+#end
+#set($queryReport= $QueryLogAnalyzer.getReport($indexName,$period))
+#set($report = $queryReport)
+
+#parse("/WEB-INF/velocity/region/report/controlHeader.vm")
+
+<br/>		
+
+#parse("/WEB-INF/velocity/region/report/report.vm")
+
+
+</form>
