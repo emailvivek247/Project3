@@ -1,5 +1,6 @@
 package net.javacoding.xsearch.search.result.filter;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -38,8 +39,29 @@ public class Count {
     public boolean isFiltered = false;
     
     public boolean isRangeSearch = false;
+    
+    
+    
+    
 
-    public Count(Column column, Integer columnValue) {
+    public Count(String columnName, String columnValue,
+			int value) {
+		super();
+		this.columnName = columnName;
+		this.columnValue = columnValue;
+		this.value = value;		
+	}
+    
+	@Override
+	public String toString() {
+		return "Count [columnName=" + columnName + ", columnValue="
+				+ columnValue + ", columnEndValue=" + columnEndValue
+				+ ", value=" + value + ", hasSum=" + hasSum + ", sumColumns="
+				+ sumColumns + ", sums=" + Arrays.toString(sums)
+				+ ", isFiltered=" + isFiltered + ", isRangeSearch="
+				+ isRangeSearch + "]";
+	}
+	public Count(Column column, Integer columnValue) {
         this.columnName = column.getColumnName();
         this.columnValue = Integer.toString(columnValue).intern();
         this.isRangeSearch = false;

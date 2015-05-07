@@ -1,6 +1,11 @@
 <#assign form  =JspTaglibs["http://www.springframework.org/tags/form"]>
 <#assign spring=JspTaglibs["http://www.springframework.org/tags"]>
 <script type="text/javascript" src="resources/js/jquery/plugins/jquery.form.js"></script>
+<style>
+#overridden_date_picker{
+	width:220px;
+}
+</style>
 <#if user?has_content>
 		<br class="clear"/>
 		<#if ERROR_ADD_SUBSCRIPTION?has_content>
@@ -171,6 +176,7 @@
 									<th data-field="subscribedOn" class="left" filter='false'>Subscribed On</th>
 									<th data-field="modifiedOn" class="left" filter='false'>Subscription Modified On</th>
 									<th data-field="accountModificationDate" class="left" filter='false'>Account Modified On</th>
+									<th data-field="overriddenUntillDate" class="left" filter='false'>Subscription Overridden Until</th>
 									<th data-field="modifiedBy" class="left" filter='false'>Modified By</th>
 									<th data-field="authorizedOn" class="left" filter='false'>Authorized On</th>
 									<th data-field="authorizedBy" class="left" filter='false'>Authorized By</th>
@@ -234,6 +240,7 @@
 									<td class="left"><#if subscription.getCreatedDate()?has_content && !subscription.accessOverridden>${subscription.getCreatedDate()?string("MM/dd/yyyy hh:mm a zzz")}<#else>N/A</#if></td>
 									<td class="left"><#if subscription.getModifiedDate()?has_content>${subscription.getModifiedDate()?string("MM/dd/yyyy hh:mm a zzz")}<#else>N/A</#if></td>
 									<td class="left"><#if subscription.getAccountModifiedDate()?has_content>${subscription.getAccountModifiedDate()?string("MM/dd/yyyy hh:mm a zzz")}<#else>N/A</#if></td>
+									<td class="left"><#if subscription.getOverriddenUntillDate()?has_content>${subscription.getOverriddenUntillDate()?string("MM/dd/yyyy hh:mm a zzz")}<#else><#if !subscription.accessOverridden>N/A<#else>Perpetual</#if></#if></td>
 									<td class="left" style="word-wrap:break-word;"><#if subscription.getModifiedBy()?has_content>${subscription.getModifiedBy()}<#else>N/A</#if></td>
 									<td class="left"><#if subscription.getAuthorizationDate()?has_content>${subscription.getAuthorizationDate()?string("MM/dd/yyyy hh:mm a zzz")}<#else>N/A</#if></td>
 									<td class="left"><#if subscription.getAuthorizedBy()?has_content>${subscription.getAuthorizedBy()}<#else>N/A</#if></td>
@@ -476,6 +483,7 @@
 											subscribedOn: {},
 											modifiedOn: {},
 											accountModificationDate: {},
+											overriddenUntillDate: {},
 											modifiedBy: {},
 											authorizedOn: {},
 											authorizedBy: {},
@@ -498,6 +506,7 @@
                         { field: "subscribedOn", title: "Subscribed On"},
                         { field: "modifiedOn", title: "Subscription Modified On"},
                         { field: "accountModificationDate", title: "Account Modified On"},
+						{ field: "overriddenUntillDate", title: "Subscription Overridden Until"},
                         { field: "modifiedBy", title: "Modified By"},
                         { field: "authorizedOn", title: "Authorized On"},
                         { field: "authorizedBy", title: "Authorized By"},
@@ -690,7 +699,7 @@
 			    $(".zebraTable tr:even").addClass("stripe");
 
 			    $("#btnArchieve").click(function() {
-			 		var txt = 'Do you want to delete the user? <br /> If yes, enter any comments :<br /><textarea rows="7" cols="40" id="promptComments" name="promptComments" class="validate[required]"></textarea><br />(Upto 250 Characters allowed including spaces)<br /><label style="color:red">Note: Deleting the user will delete all the data associated with the user. Only users without any transactions can be deleted. This Action is irreversible.</label>';
+			 		var txt = 'Do you want to delete the user? <br /> If yes, enter any comments :<br /><textarea rows="7" cols="30" id="promptComments" name="promptComments" class="validate[required]"></textarea><br />(Upto 250 Characters allowed including spaces)<br /><label style="color:red">Note: Deleting the user will delete all the data associated with the user. Only users without any transactions can be deleted. This Action is irreversible.</label>';
 					$.prompt(txt,{
 					   buttons:[
 							{title: 'Delete User',value:true},
@@ -719,7 +728,7 @@
 
 
 			 	$("#btnsubmit").click(function() {
-			 		var txt = 'Do you want to Notify the user? <br /> If yes, enter any comments you want to send:<br /><textarea rows="7" cols="40" id="promptComments" name="promptComments"></textarea><br />(Upto 250 Characters allowed including spaces)';
+			 		var txt = 'Do you want to Notify the user? <br /> If yes, enter any comments you want to send:<br /><textarea rows="7" cols="30" id="promptComments" name="promptComments"></textarea><br />(Upto 250 Characters allowed including spaces)';
 					$.prompt(txt,{
 					   buttons:[
 							{title: 'Notify User',value:true},
@@ -1101,7 +1110,7 @@
 	}
 
 	$(".enableAccess").click(function() {
- 		var txt = 'Do you want to enable the access for the user? <br /><br /> If Yes, please enter comments and click on Enable Access to enable the access for the user. <br /><br />The page refreshes once the access is enabled/disabled to reflect the changes.<br /><textarea rows="10" cols="40" id="enableComments" name="enableComments"></textarea><input name="enableuseraccessid" type="hidden" value=' + $(this).attr("name") + '>';
+ 		var txt = 'Do you want to enable the access for the user? <br /><br /> If Yes, please select expiration date, enter comments and click on Enable Access to enable the access for the user. If you do not select any expiration date, the user will get  perpetual access to this subscription. <br /><br /> Until Date: <input id="overridden_date_picker" name="overridden_date_picker" type="text" /> <br /><br /> The page refreshes once the access is enabled/disabled to reflect the changes.<br /><textarea rows="10" cols="30" id="enableComments" name="enableComments"></textarea><input name="enableuseraccessid" type="hidden" value=' + $(this).attr("name") + '>';
 		$.prompt(txt,{
 		   buttons:[
 				{title: 'Enable Access',value:true}
@@ -1117,6 +1126,7 @@
 					enableAccess(v, f);
 			}
 		});
+		$('#overridden_date_picker').datepicker();
 	});
 
 	function enableAccess(sendNotification, f) {
@@ -1124,6 +1134,7 @@
 		var nodenametxt="${user.getRegisteredNode()}";
 		var useraccessidtxt=f.enableuseraccessid;
 		var commentstxt=f.enableComments;
+		var overridden_date_pickertxt=f.overridden_date_picker;
 		$.ajax({
 			cache: false,
 			cache: false,
@@ -1134,7 +1145,8 @@
 		       nodename: nodenametxt,
 		       useraccessid: useraccessidtxt,
 		       comments: commentstxt,
-		       enableaccess: true
+		       enableaccess: true,
+		       endDate: overridden_date_pickertxt
 		    },
 		    success: function (data) {
 		       $.each(data, function(i,item){
@@ -1152,7 +1164,7 @@
 	}
 
 	$(".disableAccess").click(function() {
- 		var txt = 'Do you want to disable the access for the user? <br /><br /> If Yes, please enter Comments and click on Disable Access to disable the access for the user. <br /><br />The page refreshes once the access is enabled/disabled to reflect the changes.<br /><textarea rows="10" cols="40" id="enableComments" name="enableComments"></textarea><br />(Upto 250 Characters allowed including spaces)<br /><input name="enableuseraccessid" type="hidden" value=' + $(this).attr("name") + '>';
+ 		var txt = 'Do you want to disable the access for the user? <br /><br /> If Yes, please enter Comments and click on Disable Access to disable the access for the user. <br /><br />The page refreshes once the access is enabled/disabled to reflect the changes.<br /><textarea rows="10" cols="30" id="enableComments" name="enableComments"></textarea><br />(Upto 250 Characters allowed including spaces)<br /><input name="enableuseraccessid" type="hidden" value=' + $(this).attr("name") + '>';
 		$.prompt(txt,{
 		   buttons:[
 				{title: 'Disable Access',value:true}
@@ -1202,7 +1214,7 @@
 	}
 
 	$(".removeAccess").click(function() {
- 		var txt = 'Do you want to permanently remove the access for the user? <br /><br /> If Yes, please enter Comments and click on Remove to permanently remove the access for the user.<br /><br />The page refreshes once the access is removed to reflect the changes.<br /><textarea rows="10" cols="40" id="removeComments" name="removeComments"></textarea><br />(Upto 250 Characters allowed including spaces)<br /><input name="removeuseraccessid" type="hidden" value=' + $(this).attr("name") + '>';
+ 		var txt = 'Do you want to permanently remove the access for the user? <br /><br /> If Yes, please enter Comments and click on Remove to permanently remove the access for the user.<br /><br />The page refreshes once the access is removed to reflect the changes.<br /><textarea rows="10" cols="30" id="removeComments" name="removeComments"></textarea><br />(Upto 250 Characters allowed including spaces)<br /><input name="removeuseraccessid" type="hidden" value=' + $(this).attr("name") + '>';
 		$.prompt(txt,{
 		   buttons:[
 				{title: 'Remove Access',value:true}

@@ -99,8 +99,8 @@ public class PayAsUGoTxAdminServiceImpl implements PayAsUGoTxAdminService {
         PayPalDTO paymentTxResponseDTO = null;
         PayAsUGoTx payAsUGoTransaction = this.getPayAsUGoTransactionItemByItemId(payAsUGoTxItemId, siteName);
 
-        if (Days.daysBetween(new DateTime(payAsUGoTransaction.getTransactionDate()).toDateMidnight(),
-                new DateTime().toDateMidnight()).getDays()  > Integer.valueOf(txValidityPeriod)) {
+        if (Days.daysBetween(new DateTime(payAsUGoTransaction.getTransactionDate()).withTimeAtStartOfDay(),
+                new DateTime().withTimeAtStartOfDay()).getDays()  > Integer.valueOf(txValidityPeriod)) {
             throw new SDLBusinessException(this.getMessage("web.trans.txDatePastValidityPeriod", new Object[]{payAsUGoTransaction.getTxRefNum(),
                             SystemUtil.format(payAsUGoTransaction.getTransactionDate().toString()), txValidityPeriod}));
         }

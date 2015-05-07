@@ -161,6 +161,7 @@ public class UserServiceImpl implements UserService {
                 userAccess.setCreatedDate(new Date());
                 if(existingAccess.isFirmLevelAccess() && existingAccess.getSubscriptionFee().getFee() == 0.0){
                 	userAccess.setFirmAccessAdmin(true);
+                	userAccess.setActive(true);
                 }
                 
                 userAccessList.add(userAccess);

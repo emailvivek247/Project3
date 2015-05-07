@@ -7,6 +7,7 @@ import com.fdt.common.dto.PageRecordsDTO;
 import com.fdt.common.exception.SDLBusinessException;
 import com.fdt.ecom.entity.Location;
 import com.fdt.ecom.entity.ShoppingCartItem;
+import com.fdt.ecom.entity.Site;
 import com.fdt.payasugotx.dto.PayAsUSubDTO;
 import com.fdt.payasugotx.entity.PayAsUGoTx;
 import com.fdt.payasugotx.entity.PayAsUGoTxItem;
@@ -51,9 +52,9 @@ public interface PayAsUGoTxService {
      * @throws SDLBusinessException
      */
     public PayAsUGoTxItem getPayAsUGoTxIdForPurchasedDoc(String userName, String productKey, String uniqueIdentifier);
-    
+
     /** This Method Is Used To Get ShoppingBasket Items For The User.
-     * 
+     *
      * @param userName EmailId of the User Logged In.
      * @param nodeName Node Name.
      * @return the list of ShoppingCart Items.
@@ -79,15 +80,16 @@ public interface PayAsUGoTxService {
      * @param nodeName Node Name.
      * @return The List Of WebTransactions.
      */
-    public List<PayAsUGoTxView> getPayAsUGoTxByNode(String userName, String nodeName, Date fromDate, Date toDate) ;
-    
+    public List<PayAsUGoTxView> getPayAsUGoTxByNode(String userName, String nodeName, String comments, Date fromDate,
+    		Date toDate) ;
+
     /** This Method Returns All The PayAsUGo Transactions Made By The User For A Particular Node.
      * @param userName EmailId of the User Logged In.
      * @param nodeName Node Name.
      * @return The List Of PayAsUGoTransactions.
      */
-    public PageRecordsDTO getPayAsUGoTxByNodePerPage(String userName, String nodeName, Date fromDate, Date toDate,
-    		int startingFrom, int numberOfRecords);
+    public PageRecordsDTO getPayAsUGoTxByNodePerPage(String userName, String nodeName, String comments, Date fromDate,
+    		Date toDate, int startingFrom, int numberOfRecords);
 
     /** This Method Returns All The Information About PayAsUGotransaction Made By The User.
      * @param userName EmailId of the User Logged In.
@@ -126,13 +128,20 @@ public interface PayAsUGoTxService {
     public PayAsUGoTx getPayAsUGoTxByTxRefNum(String txRefNumber, String siteName);
 
 	public void updateShoppingCartComments(Long shoppingCartId, String comments);
-	
+
 	public List<Location> getLocationsBySiteId(Long siteId);
-	
+
 	public Location getLocationByNameAndAccessName(String locationName, String accessName);
-	
+
 	public Location getLocationSignatureById(Long locationId);
 
 	public Location getLocationSealById(Long locationId);
+
+	public void archivePayAsUGoTransactions(String archivedBy, String archiveComments);
+	
+	public boolean isThresholdReached(Site site, Double txAmount);
+
+
+	public String getDocumentIdByCertifiedDocumentNumber(String certifiedDocumentNumber, String siteName);
 
 }

@@ -11,6 +11,9 @@ import java.util.Map;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
@@ -313,12 +316,14 @@ public class SubDAOImpl extends AbstractBaseDAOImpl implements SubDAO {
                 site.setName(this.getString(row[1]));
                 site.setDescription(this.getString(row[34]));
                 site.setEnableMicroTxWeb(this.getBoolean(row[2]));
+                site.setRevenueThresholdAmount(this.getDoubleFromBigDecimal(row[35]));
+                site.setRevenueThresholdStartDate(this.getDate(row[36]));
                 subscriptionFee.setFee(this.getDoubleFromBigDecimal(row[3]));
                 subscriptionFee.setTerm(this.getLongFromInteger(row[4]));
                 Code subscriptionType =  new Code();
                 subscriptionType.setCode(this.getString(row[5]));
                 subscriptionFee.setPaymentPeriod(subscriptionType);
-                merchant.setId(this.getLongFromInteger(20));
+                merchant.setId(this.getLongFromInteger(row[20]));
                 merchant.setUserName(this.getString(row[6]));
                 merchant.setPassword( row[7] == null ? null : this.getPbeStringEncryptor().decrypt(row[7].toString()));
                 merchant.setVendorName(this.getString(row[8]));
@@ -462,6 +467,7 @@ public class SubDAOImpl extends AbstractBaseDAOImpl implements SubDAO {
 	            CreditUsageFee creditUsageFee =  new CreditUsageFee();
 	            SubscriptionFee subscriptionFee =  new SubscriptionFee();
 	            site.setName(this.getString(row[0]));
+	            site.setDescription(this.getString(row[33]));
 	            site.setId(this.getLongFromInteger(row[16]));
 	            site.setTimeZone(this.getString(row[26]));
 	            subscriptionFee.setFee(this.getDoubleFromBigDecimal(row[1]));
@@ -489,11 +495,13 @@ public class SubDAOImpl extends AbstractBaseDAOImpl implements SubDAO {
 	            creditUsageFee.setFlatFeeCutOff(this.getDoubleFromBigDecimal(row[9]));
 	            creditUsageFee.setFlatFee(this.getDoubleFromBigDecimal(row[10]));
 	            creditUsageFee.setDowngradeFee(this.getDoubleFromBigDecimal(row[15]));
-	            creditUsageFee.setMicroTxFeeCutOff(this.getDoubleFromBigDecimal(row[29]));
+	            creditUsageFee.setMicroTxFeeCutOff(this.getDoubleFromBigDecimal(row[31]));
 	            site.setCardUsageFee(creditUsageFee);
 	            site.addMerchant(merchant);
 	            site.setEnableMicroTxOTC(this.getBoolean(row[27]));
 	            site.setEnableMicroTxWeb(this.getBoolean(row[28]));
+	            site.setRevenueThresholdAmount(this.getDoubleFromBigDecimal(row[29]));
+                site.setRevenueThresholdStartDate(this.getDate(row[30]));
 	            Access access = new Access();
 	            List<Access> accessList = new LinkedList<Access>();
 	            access.setId(this.getLongFromInteger(row[11]));
@@ -504,7 +512,7 @@ public class SubDAOImpl extends AbstractBaseDAOImpl implements SubDAO {
 	            access.setAuthorizationRequired(this.getBoolean(row[18]));
 	            access.setClientShare(this.getDoubleFromBigDecimal(row[21]));
 	            access.setVisible(this.getBoolean(row[24]));
-	            access.setFirmLevelAccess(this.getBoolean(row[30]));
+	            access.setFirmLevelAccess(this.getBoolean(row[32]));
 	            accessDetailDTO.setSubFee(subscriptionFee);
 	            accessList.add(access);
 	            site.setAccess(accessList);
@@ -639,8 +647,11 @@ public class SubDAOImpl extends AbstractBaseDAOImpl implements SubDAO {
                     //Previously not there
                     site =  new Site();
                     site.setId(siteId);
-                    site.setName(this.getString(row[6]));
+                    site.setDescription(this.getString(row[6]));
                     site.setTimeZone(this.getString(row[4]));
+                    site.setRevenueThresholdAmount(this.getDoubleFromBigDecimal(row[41]));
+                    site.setRevenueThresholdStartDate(this.getDate(row[42]));
+                    site.setName(this.getString(row[43]));
                     siteList.add(site);
                     uniqueSites.put(siteId, site);
                 } else {
@@ -949,5 +960,24 @@ public class SubDAOImpl extends AbstractBaseDAOImpl implements SubDAO {
         }
         return user;
     }
+
+	
+	public Double getGranicusRevenueFromRecurTx(Site site) {
+		Double granicusRevenue = 0.0d;
+		if(site!=null && site.getRevenueThresholdStartDate() != null && site.getName()!= null) {
+			DateTime dateTime = new DateTime(site.getRevenueThresholdStartDate());
+	    	DateTimeFormatter format = DateTimeFormat.forPattern("MM/dd/yyyy");
+	    	String revenueThresholdStartDate = format.print(dateTime);
+	    	Session session = currentSession();    	
+	    	Query sqlQuery  = session.getNamedQuery("GET_GRANICUS_REVENUE_FROM_RECUR_TX")
+	        							.setParameter("siteName", site.getName())
+	        							.setParameter("revenueThresholdStartDate", revenueThresholdStartDate);
+	        List<Object> resultList = sqlQuery.list();
+	        if (resultList.size() > 0) {
+	        	granicusRevenue = this.getDoubleFromBigDecimal(resultList.get(0));
+	        }
+		}
+		return granicusRevenue;
+	}
 
 }

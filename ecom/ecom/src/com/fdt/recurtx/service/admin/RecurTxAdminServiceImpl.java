@@ -41,11 +41,13 @@ import com.fdt.ecom.entity.enums.TransactionType;
 import com.fdt.ecom.service.EComService;
 import com.fdt.ecom.util.CreditCardUtil;
 import com.fdt.email.EmailProducer;
+import com.fdt.payasugotx.service.PayAsUGoTxService;
 import com.fdt.paymentgateway.dto.PayPalDTO;
 import com.fdt.paymentgateway.exception.PaymentGatewaySystemException;
 import com.fdt.paymentgateway.exception.PaymentGatewayUserException;
 import com.fdt.paymentgateway.service.PaymentGatewayService;
 import com.fdt.recurtx.dao.RecurTxDAO;
+import com.fdt.recurtx.dto.ExpiredOverriddenSubscriptionDTO;
 import com.fdt.recurtx.dto.RecurTxSchedulerDTO;
 import com.fdt.recurtx.entity.RecurTx;
 import com.fdt.security.dao.UserDAO;
@@ -96,6 +98,9 @@ public class RecurTxAdminServiceImpl implements RecurTxAdminService {
     @Value("${tx.ValidityPeriod}")
     /* Default Value is 60 Days */
     private String txValidityPeriod = "60";
+    
+    @Autowired
+    private PayAsUGoTxService payAsUGoSubService = null;
 
 
     /** This Method Is Used To do A Reference Credit For Recurring Transactions.
@@ -131,8 +136,8 @@ public class RecurTxAdminServiceImpl implements RecurTxAdminService {
                 recurTransaction = transaction;
             }
         }
-        if (Days.daysBetween(new DateTime(recurTransaction.getTransactionDate()).toDateMidnight(),
-                new DateTime().toDateMidnight()).getDays()  > Integer.valueOf(txValidityPeriod)) {
+        if (Days.daysBetween(new DateTime(recurTransaction.getTransactionDate()).withTimeAtStartOfDay(),
+                new DateTime().withTimeAtStartOfDay()).getDays()  > Integer.valueOf(txValidityPeriod)) {
             throw new SDLBusinessException(this.getMessage("web.trans.txDatePastValidityPeriod",
                 new Object[]{recurTransaction.getTxRefNum(), SystemUtil.format(recurTransaction.getTransactionDate()
                     .toString()), txValidityPeriod}));
@@ -349,6 +354,14 @@ public class RecurTxAdminServiceImpl implements RecurTxAdminService {
             recurTransaction.setCardType(cardType);
             recurTransaction.setTxFeePercent(txFeePercent);
             recurTransaction.setTxFeeFlat(txFeeFlat);
+            Double amtToChargeAfterTransactionFee = amtToCharge - (amtToCharge*txFeePercent/100) + txFeeFlat;
+            Double graniusShare = amtToChargeAfterTransactionFee * (1.0d - payPalSchedulerDTO.getClientShare());
+            boolean thresholdReached = this.payAsUGoSubService.isThresholdReached(site, graniusShare);                    
+            if(thresholdReached){
+            	clientShare = 1.0d;
+            } else {
+            	clientShare = payPalSchedulerDTO.getClientShare();
+            }
             recurTransaction.setClientShare(clientShare);
             recurTransaction.setModifiedBy(PAYPAL_SCHEDULER);
             recurTransaction.setCreatedBy(PAYPAL_SCHEDULER);
@@ -398,6 +411,26 @@ public class RecurTxAdminServiceImpl implements RecurTxAdminService {
         }
         return recurTxHistInfoList;
     }
+    
+    @Transactional(readOnly = true)
+	public List<ExpiredOverriddenSubscriptionDTO> getExpiredOverriddenSubscriptions() {
+		return this.recurTxDAO.getExpiredOverriddenSubscriptions();
+	}
+
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor= Throwable.class)
+	public void disableOverriddenSubscription(ExpiredOverriddenSubscriptionDTO expiredOverriddenSubscriptionDTO) {
+    	this.recurTxDAO.disableOverriddenSubscription(expiredOverriddenSubscriptionDTO);
+    	Map<String, Object> emailData = new HashMap<String, Object>();
+        emailData.put("customerName", expiredOverriddenSubscriptionDTO.getFirstName() + " " + expiredOverriddenSubscriptionDTO.getLastName());
+        emailData.put("currentDate", new Date());
+        emailData.put("serverUrl", this.ecomServerURL);
+        emailData.put("subcriptionName", expiredOverriddenSubscriptionDTO.getAccessDescription());
+    	this.emailProducer.sendMailUsingTemplate(expiredOverriddenSubscriptionDTO.getFromEmailAddress(),
+    			expiredOverriddenSubscriptionDTO.getEmailId(), expiredOverriddenSubscriptionDTO.getExpiredOverriddenSubscriptionNotificationSubject(),
+    			expiredOverriddenSubscriptionDTO.getEmailTemplateFolder() + expiredOverriddenSubscriptionDTO.getExpiredOverriddenSubscriptionNotificationTemplate(),
+                        emailData);
+		
+	}
 
     private void disableUserAccountAndSendFailedPaymentEmail(RecurTxSchedulerDTO payPalSchedulerDTO,
     		RecurTx recurTransaction,
@@ -453,7 +486,7 @@ public class RecurTxAdminServiceImpl implements RecurTxAdminService {
      * @param comments
      */
     private void disableUserAccesses(List<Long> accessIds, String modifiedBy, String comments) {
-        int recordsModUserAccess = this.userDAO.enableDisableUserAccesses(accessIds, false, modifiedBy, comments, false);
+        int recordsModUserAccess = this.userDAO.enableDisableUserAccesses(accessIds, false, modifiedBy, comments, false, null);
         if (recordsModUserAccess == 0) {
             logger.error("The User Access is not Disabled");
             throw new RuntimeException("The User Access is not Disabled");
@@ -484,4 +517,6 @@ public class RecurTxAdminServiceImpl implements RecurTxAdminService {
     private String getMessage(String messageKey, Object[] object) {
         return this.messages.getMessage(messageKey, object, new Locale("en"));
     }
+
+	
 }

@@ -63,7 +63,8 @@ public interface EComAdminFacadeServiceRS {
         @WebParam(name="isEnable")           boolean isEnable,
         @WebParam(name="modifiedBy")         String modifiedBy,
         @WebParam(name="comments")           String comments,
-        @WebParam(name="isAccessOverridden") boolean isAccessOverridden);
+        @WebParam(name="isAccessOverridden") boolean isAccessOverridden,
+        @WebParam(name="endDate")           String endDate);
 
     @WebMethod
     public PayPalDTO removeSubscription(

@@ -202,22 +202,25 @@ public class ServiceStubWS implements ServiceStub, ApplicationContextAware {
         return this.getService().getRecurTxDetail(userName, recurTxRefNum);
     }
 
-    public List<PayAsUGoTxView> getPayAsUGoTransactionsByNode(String userName, String nodeName, Date fromDate, Date toDate) {
+    public List<PayAsUGoTxView> getPayAsUGoTransactionsByNode(String userName, String nodeName, String comments,
+    		Date fromDate, Date toDate) {
 		TransactionRequestDTO request = new TransactionRequestDTO();
 		request.setUserName(userName);
 		request.setNodeName(nodeName);
 		request.setFromDate(fromDate);
 		request.setToDate(toDate);
+		request.setComments(comments);
         return this.getService().getPayAsUGoTransactionsByNode(request);
     }
 
-    public PageRecordsDTO getPayAsUGoTransactionsByNodePerPage(String userName, String nodeName, Date fromDate, Date toDate,
-    		Integer startingFrom, Integer numberOfRecords) {
+    public PageRecordsDTO getPayAsUGoTransactionsByNodePerPage(String userName, String nodeName, String comments,
+    		Date fromDate, Date toDate,	Integer startingFrom, Integer numberOfRecords) {
 		TransactionRequestDTO request = new TransactionRequestDTO();
 		request.setUserName(userName);
 		request.setNodeName(nodeName);
 		request.setFromDate(fromDate);
 		request.setToDate(toDate);
+		request.setComments(comments);
 		request.setStartingFrom(startingFrom);
 		request.setNumberOfRecords(numberOfRecords);
         return this.getService().getPayAsUGoTransactionsByNodePerPage(request);
@@ -334,5 +337,10 @@ public class ServiceStubWS implements ServiceStub, ApplicationContextAware {
 
     public Location getLocationByNameAndAccessName(String locationName, String accessName){
     	return this.getService().getLocationByNameAndAccessName(locationName, accessName);
+	}
+
+	@Override
+	public String getDocumentIdByCertifiedDocumentNumber(String certifiedDocumentNumber, String siteName) {
+		return this.getService().getDocumentIdByCertifiedDocumentNumber(certifiedDocumentNumber, siteName);
 	}
 }

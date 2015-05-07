@@ -19,14 +19,14 @@
 
     <bean name="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl"
       p:host    ="${emailservice.emailserver}"
-      p:port    ="${emailservice.emailport}"  />
-<!--  p:username="${emailservice.username}"
+      p:port    ="${emailservice.emailport}"  
+      p:username="${emailservice.username}"
       p:password="${emailservice.password}"
       p:javaMailProperties-ref="javaMailProperties"/>
 
     <util:properties id="javaMailProperties">
         <prop key="mail.smtp.auth">true</prop>
-    </util:properties> -->
+    </util:properties> 
 
     <bean id="serverMessageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
         <property name="basename"        value="classpath:servermessages" />

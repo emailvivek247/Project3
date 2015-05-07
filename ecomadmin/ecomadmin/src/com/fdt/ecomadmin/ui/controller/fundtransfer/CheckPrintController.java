@@ -368,8 +368,10 @@ public class CheckPrintController extends AbstractBaseController {
 			if (!reportFile.exists()) {
 				throw new JRRuntimeException("The report design must be compiled first.");
 			}
-			InputStream logoImage = this.getClass().getResourceAsStream("/signature.png");
-			reportParameters.put("SIGNATURE", logoImage);
+			InputStream signature = this.getClass().getResourceAsStream("/signature.png");
+			InputStream logoImage = this.getClass().getResourceAsStream("/logo.gif");
+			reportParameters.put("SIGNATURE", signature);
+			reportParameters.put("BANKLOGO", logoImage);
 			reportParameters.put("REQUEST_URL", this.requestURL);
 			reportParameters.put("BaseDir", reportFile.getParentFile());
 			reportParameters.put("SITE_ID", siteId);

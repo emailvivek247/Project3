@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version last-->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PayAsYouGoTransactionReport" language="groovy" pageWidth="1008" pageHeight="612" columnWidth="968" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7f7ddc2e-af71-496f-a273-868e5ad5751f">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="271"/>
 	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.1" value="title"/>
 	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.2" value="pageHeader"/>
 	<property name="net.sf.jasperreports.export.csv.exclude.origin.keep.first.band.1" value="pageHeader"/>
@@ -280,8 +279,9 @@
 		<parameter name="EXPORTFORMAT" class="java.lang.String">
 			<parameterDescription><![CDATA[]]></parameterDescription>
 		</parameter>
+		<parameter name="IS_CERTIFIED" class="java.lang.String"/>
 		<queryString>
-			<![CDATA[EXEC SP_DETAIL_DOCUMENTS_GET_TX_HIST_RPT $P{SITE_ID},$P{FROM_DATE},$P{TO_DATE},$P{TRAN_TYPE},$P{LOCATION_ID}]]>
+			<![CDATA[EXEC SP_DETAIL_DOCUMENTS_GET_TX_HIST_RPT $P{SITE_ID},$P{FROM_DATE},$P{TO_DATE},$P{TRAN_TYPE},$P{LOCATION_ID},$P{IS_CERTIFIED}]]>
 		</queryString>
 		<field name="SITE_NAME" class="java.lang.String"/>
 		<field name="TX_REFERENCE_NUM" class="java.lang.String"/>
@@ -303,7 +303,7 @@
 		<variable name="ITEM_COUNT_BY_LOCATION" class="java.lang.Integer" resetType="Group" resetGroup="LOCATION_NAME" calculation="Sum">
 			<variableExpression><![CDATA[JasperUtil.getDocumentsPurchased($F{TX_TYPE} == "CHARGE" ? $F{ITEM_QUANTITY} : -$F{ITEM_QUANTITY})]]></variableExpression>
 		</variable>
-		<variable name="TOTAL_AMOUNT" class="java.lang.Integer" resetType="Group" resetGroup="LOCATION_NAME" calculation="Sum">
+		<variable name="TOTAL_AMOUNT" class="java.lang.Double" resetType="Group" resetGroup="LOCATION_NAME" calculation="Sum">
 			<variableExpression><![CDATA[$F{AMOUNT}]]></variableExpression>
 		</variable>
 		<group name="SITE_NAME">
@@ -335,6 +335,7 @@
 	<parameter name="EXPORTFORMAT" class="java.lang.String" isForPrompting="false">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 	</parameter>
+	<parameter name="IS_CERTIFIED" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT 1 AS F1]]>
 	</queryString>

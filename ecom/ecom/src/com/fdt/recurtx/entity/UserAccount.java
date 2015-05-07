@@ -27,11 +27,11 @@ public class UserAccount extends AbstractBaseEntity {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "LAST_BILLING_DATE")
-    private Date lastBillingDate = new DateTime().toDateMidnight().toDateTime().toDate();
+    private Date lastBillingDate = new DateTime().withTimeAtStartOfDay().toDateTime().toDate();
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "NEXT_BILLING_DATE")
-    private Date nextBillingDate = new DateTime().toDateMidnight().toDateTime().toDate();
+    private Date nextBillingDate = new DateTime().withTimeAtStartOfDay().toDateTime().toDate();
 
     @Column(name = "MARK_FOR_CANCELLATION")
     @Type(type="yes_no")

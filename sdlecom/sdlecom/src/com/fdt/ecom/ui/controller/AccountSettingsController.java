@@ -188,11 +188,10 @@ public class AccountSettingsController extends AbstractBaseController {
 					break;
 				} else if ((AccessType.NON_RECURRING_SUBSCRIPTION.equals(access.getAccessType()) ||
 						   AccessType.RECURRING_SUBSCRIPTION.equals(access.getAccessType())) && access.getSite().getName().equalsIgnoreCase(this.clientName)) {
-					if (access.isActive() && !access.isAccessOverridden()) {
+					if (access.isActive()) {
 						hasActivePaidAcccess = true;
 					}
 				}
-
 			}
 			if (hasFreeAccess) {
 				modelAndView.addObject("hasFreeAccess", hasFreeAccess);
@@ -540,7 +539,9 @@ public class AccountSettingsController extends AbstractBaseController {
 	public PageRecordsDTO getPayAsUGoPaymentHistory(HttpServletRequest request, @RequestParam(required=false) Date fromDate,
 			@RequestParam(required=false)  Date toDate, Integer skip, Integer take) {
 		User user = this.getUser(request);
-		return this.getService().getPayAsUGoTransactionsByNodePerPage(user.getUsername(), this.nodeName, fromDate, toDate, skip, take);
+		String comments = PageStyleUtil.decodeURL(request.getParameter("comments"));
+		return this.getService().getPayAsUGoTransactionsByNodePerPage(user.getUsername(), this.nodeName,
+				comments, fromDate, toDate, skip, take);
 	}
 
 	@RequestMapping(value="/recurringPaymentHistoryExport.admin")
@@ -588,9 +589,12 @@ public class AccountSettingsController extends AbstractBaseController {
 	}
 
 	@RequestMapping(value="/payAsUGoPaymentHistoryExport.admin")
-    public void payAsUGoPaymentHistoryExport(HttpServletRequest request, HttpServletResponse response, String exportType,  @RequestParam(required=false) Date fromDate,
+    public void payAsUGoPaymentHistoryExport(HttpServletRequest request, HttpServletResponse response, String exportType,
+    		@RequestParam(required=false) String comments,
+    		@RequestParam(required=false) Date fromDate,
 			@RequestParam(required=false)  Date toDate) {
-		List<PayAsUGoTxView> payAsUGoTxList = this.getService().getPayAsUGoTransactionsByNode(request.getRemoteUser(), this.nodeName, fromDate, toDate);
+		List<PayAsUGoTxView> payAsUGoTxList = this.getService().getPayAsUGoTransactionsByNode(request.getRemoteUser(),
+				this.nodeName, comments, fromDate, toDate);
         byte[] outputBytes = new byte[1];
         String fileExtension = "";
         try{

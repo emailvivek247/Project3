@@ -340,14 +340,22 @@ public class PageStyleUtil {
     	return SystemUtil.decrypt(encryptedText);
     }
 
+    public static String decrypt(String encryptedText, String algorithm, String passwordKey) {
+    	return SystemUtil.decrypt(encryptedText, algorithm, passwordKey);
+    }
+    
     public static String decrypt(String encryptedText, String algorithm) {
     	return SystemUtil.decrypt(encryptedText, algorithm);
+    }
+
+    public static String encrypt(String plainText, String algorithm, String passwordKey) {
+    	return SystemUtil.encrypt(plainText, algorithm, passwordKey);
     }
 
     public static String encrypt(String plainText, String algorithm) {
     	return SystemUtil.encrypt(plainText, algorithm);
     }
-
+    
     public static String getSystemValue(String key) {
 		return getSystemValue(null, key);
 	}
@@ -406,9 +414,20 @@ public class PageStyleUtil {
 	}
 
     public static void main(String[] args) {
-		String text = "Up7#Ex8%Nd2Cf7";
+		
+		/*private static String PASSWORD_KEY = "Nk0BusFu9aLE4qb";		
+		private static String PASSWORD_KEY = "dookudu";*/
+    	String text1 = "CE5237CE84D2FB5F938296CE07B2E495E0E706088B11423199A156EC96272C161EE63123BBAE540EBCC87544101E9BE0";
+    	String text2 = "036C6B4E3A77C2C59FB0807A7ECD1BD60DAAE6587D92302BB73E3A6B188429C22713241D37624A3B3DC48B0EA85C7126";
 		String algorithm = "PBEWITHSHA256AND256BITAES-CBC-BC";
-		System.out.println(PageStyleUtil.encrypt(text, algorithm));
+		String devPasswordKey = "dookudu";
+		String prodPasswordKey = "Nk0BusFu9aLE4qb";
+		String decryptedText1 = PageStyleUtil.decrypt(text1, algorithm, devPasswordKey);
+		String decryptedText2 = PageStyleUtil.decrypt(text2, algorithm, prodPasswordKey);
+		System.out.println(decryptedText1);
+		System.out.println(decryptedText2);
+		System.out.println(PageStyleUtil.encrypt(decryptedText1, algorithm));
+		System.out.println(PageStyleUtil.encrypt(decryptedText2, algorithm));
     }
 
     /*public static void main(String[] args) {
@@ -526,9 +545,9 @@ public class PageStyleUtil {
 		return true;
 	}
 
-	private static boolean isMatch(String ip, String regexp) {
+	public static boolean isMatch(String string, String regexp) {
 		Pattern pattern = Pattern.compile(regexp);
-		Matcher matcher = pattern.matcher(ip);
+		Matcher matcher = pattern.matcher(string);
 		return matcher.matches();
 	}
 
@@ -664,7 +683,14 @@ public class PageStyleUtil {
 		 input.close ();
 		 return output;
 	 }
+    
+    public static ByteArrayOutputStream  getByteArrayOutputStreamFromByteArray(byte [] byteArray) throws IOException { 
+		 ByteArrayOutputStream output = new ByteArrayOutputStream (byteArray.length);
+		 output.write(byteArray, 0, byteArray.length);
+		 return output;
+	 }
 
+    
     public static SimpleHash getHierarchialTreeForFolder(String filePath) {
     	logger.debug("filePath: " + filePath);
     	SimpleHash modelMapSimpleHash = new SimpleHash();

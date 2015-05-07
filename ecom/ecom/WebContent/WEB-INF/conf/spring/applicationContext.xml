@@ -8,13 +8,13 @@
     xmlns:jaxws="http://cxf.apache.org/jaxws"
     xmlns:util="http://www.springframework.org/schema/util"
     xmlns:aop="http://www.springframework.org/schema/aop"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
-           http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.0.xsd
-           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
            http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
-           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
-           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd ">
+           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd ">
 
     <import resource="ecomRS.xml" />
     <import resource="ecomWS.xml" />
@@ -54,14 +54,14 @@
 
     <bean name="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl"
       p:host    ="${emailservice.emailserver}"
-      p:port    ="${emailservice.emailport}"  />
-<!--   p:username="${emailservice.username}"
+      p:port    ="${emailservice.emailport}" 
+      p:username="${emailservice.username}"
       p:password="${emailservice.password}"
       p:javaMailProperties-ref="javaMailProperties"/>
 
     <util:properties id="javaMailProperties">
         <prop key="mail.smtp.auth">true</prop>
-    </util:properties> -->
+    </util:properties> 
 
 
     <bean name="freemarkerConfiguration" class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean"

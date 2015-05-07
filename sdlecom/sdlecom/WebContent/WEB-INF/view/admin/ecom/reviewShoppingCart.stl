@@ -21,7 +21,7 @@ table#subscriptionDetails {
 	margin: auto;
 }
 
-table#subscriptionDetails td {	
+table#subscriptionDetails td {
 	padding: 5px 5px;
 }
 
@@ -68,7 +68,7 @@ td.footer{
 	text-transform: uppercase;
 	text-align: center;
 	padding: 6.5px;
-	cursor:pointer;	
+	cursor:pointer;
 }
 .button:hover {
 	background-color: #4F6426;
@@ -91,25 +91,25 @@ textarea { resize:both; }
 
 
 
-		
-			
+
+
 
 <div class="content">
 	<div style="width:90%;min-width:900px;margin-left:auto;margin-right:auto;margin-top:100px;">
 		<div id="ADCSI" class="ADCSI" style="margin-top:0px; margin-bottom: 12px;">
-			<div class="ADCSI_title" id="ADCSI_title">				
+			<div class="ADCSI_title" id="ADCSI_title">
 					<span style="width:49%;text-align:left;display:inline-block;"><b><@spring.message code="form.name.reviewShoppingCart" /></b></span>
 					<span style="width:49%;text-align:right;display:inline-block;"><a href="accountInformation.admin"><@spring.message code="form.name.accountInformation" /></a> | <a href="logout.admin"><@spring.message code="security.authentication.logout" /></a>&nbsp;(${request.getRemoteUser()})</a></span>
-			</div>	
+			</div>
 			<div style="text-align:center;padding-top: 10px;padding-bottom: 20px;">
 				<Label id="updateCommentErrorLabel" style="text-align: center; vertical-align: middle">&nbsp;</Label>
 				<br /><br />
-				
+
 				<#if SHOPPING_CART?has_content>
 					<#assign documentsBasedAccess = false>
 					<#list SHOPPING_CART as shoppingCartItem>
 						<#if shoppingCartItem.access.firmLevelAccess && (shoppingCartItem.access.maxDocumentsAllowed > 0) && !shoppingCartItem.access.governmentAccess>
-							<#assign documentsBasedAccess = true>	
+							<#assign documentsBasedAccess = true>
 						</#if>
 					</#list>
 
@@ -138,9 +138,9 @@ textarea { resize:both; }
 						<th class="header"><@spring.message code="security.ecommerce.maxDocumentsAllowed" /></th>
 					</#if>
 					<th class="header"><@spring.message code="security.ecommerce.Comments" /></th>
-					<th class="header"><@spring.message code="security.ecommerce.label.Action" /></th>	
+					<th class="header"><@spring.message code="security.ecommerce.label.Action" /></th>
 					</tr>
-					
+
 					<#assign counter = 0>
 					<#list SHOPPING_CART as shoppingCartItem>
 					<#assign totalTransactionAmount = totalTransactionAmount + shoppingCartItem.totalTxAmount>
@@ -155,14 +155,14 @@ textarea { resize:both; }
 								<td>$0.0</td>
 							<#else>
 								<td >
-									${shoppingCartItem.baseAmount?string.currency}											
+									${shoppingCartItem.baseAmount?string.currency}
 								</td>
 								<td>
-									${shoppingCartItem.serviceFee?string.currency}											
+									${shoppingCartItem.serviceFee?string.currency}
 								</td>
 							</#if>
 							<td>
-								${shoppingCartItem.totalTxAmount?string.currency}											
+								${shoppingCartItem.totalTxAmount?string.currency}
 							</td>
 							<#if shoppingCartItem.access.firmLevelAccess && (shoppingCartItem.access.maxDocumentsAllowed > 0) && !shoppingCartItem.access.governmentAccess>
 								<td class="center">${shoppingCartItem.documentsPurchased}</td>
@@ -177,9 +177,9 @@ textarea { resize:both; }
 								<#else>
 									<textarea id="comments${shoppingCartItem.id}" rows="1" name="comments${shoppingCartItem.id}" maxlength="200"></textarea>
 								</#if>
-								<br />											
+								<br />
 							</td>
-							
+
 							<td><a href="#"  onClick="addComments(${shoppingCartItem.id}); return false;"><img title="Update Comments" src="resources/images/update.png"> </a>&nbsp;&nbsp;<a href="removeitem.admin?productkey=${shoppingCartItem.productId}${shoppingCartItem.uniqueIdentifier}"><img title="Remove Item" src="resources/images/remove.gif"> </a></td>
 						</tr>
 						<tr>
@@ -192,20 +192,20 @@ textarea { resize:both; }
 							 <input type="hidden" name="item_application_${counter}" value="${shoppingCartItem.application}">
 						</tr>
 					</#list>
-					
+
 					<tr><td class="right footer" colspan="7"><b><@spring.message code="security.ecommerce.totalAmount" />:&nbsp;&nbsp;${totalTransactionAmount?string.currency}</b></td><td class="footer"></td>
 					<td class="right footer" colspan="4"></td>
 					</tr>
-					
+
 					</table>
 					<table width="90%" id="subscriptionDetails">
 					<tr>
-						
+
 					</tr>
 					<tr>
 						<td class="right">
 							<a style="color: #D5C9AD;width:100px;text-decoration: none;" class="button2" href="search.do"><@spring.message code="security.ecommerce.label.continueToSearchPage" /></a>
-								<a style="color: #D5C9AD;width:100px;text-decoration: none;" class="button" href="redirectPage.admin?return_url=${request.getRequestURL()}"><@spring.message code="security.ecommerce.checkout" /></a>							
+								<a style="color: #D5C9AD;width:100px;text-decoration: none;" class="button" href="redirectPage.admin?return_url=${request.getRequestURL()}"><@spring.message code="security.ecommerce.checkout" /></a>
 						</td>
 					</tr>
 					</table>
@@ -215,13 +215,13 @@ textarea { resize:both; }
 				</#if>
 				<br /><br />
 				<div style="text-align:left;padding-left:20px;color:red;">
-					<@spring.message code="security.ecommerce.label.emptyShoppingCartFinePrint" />	
+					<@spring.message code="security.ecommerce.label.emptyShoppingCartFinePrint" />
 				</div>
 				<br /><br />
-				<a href="https://www.paypal.com/us/verified/pal=vshyamsundar%40amcad%2ecom" target="_blank"><img src="https://www.paypal.com/en_US/i/icon/verification_seal.gif" border="0" alt="Official PayPal Seal"></a>
+				
 				<br /><br />
-			</div>	
-		</div>			    			
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -232,10 +232,10 @@ textarea { resize:both; }
 			alert('Please Enter Comments');
 			return;
 		}
-		var dataString = 'shoppingCartItemId=' + shoppingCartItemId + 
+		var dataString = 'shoppingCartItemId=' + shoppingCartItemId +
 						'&comments=' + commentsElem.value;
 		var url = 'updateShoppingCartComments.admin?';
-		
+
 	 	 $.ajax({
 	        url: url,
 	        type: "POST",
@@ -252,15 +252,15 @@ textarea { resize:both; }
 				 		}
 	            	}
 	        },
-	        
-	        // Error occured on server 
+
+	        // Error occured on server
 	        error: function (xhr, ajaxOptions, thrownError) {
 	        	var response = JSON.parse(xhr.responseText);
 	 			displayErrorMessage(getErrorDesription(response));
 	        }
 	    });
 	}
-	
+
 	function getErrorDesription(results){
 		var errorString = '';
 		for(var k in results.errors){
@@ -270,18 +270,18 @@ textarea { resize:both; }
 		return errorString;
 	}
 
-	function displayErrorMessage(message){	
+	function displayErrorMessage(message){
 		var statusElem = document.getElementById('updateCommentErrorLabel');
 		var statusLabelText = '<font color="red" size=2>' + message + '</font>';
 		statusElem.innerHTML  = statusLabelText;
 	}
-	
-	function displaySuccessMessage(message){	
+
+	function displaySuccessMessage(message){
 		var statusElem = document.getElementById('updateCommentErrorLabel');
 		var statusLabelText = '<font color="green" size=2>' + message + '</font>';
 		statusElem.innerHTML  = statusLabelText;
 	}
-	
+
 </script>
 </@loginLayout>
 

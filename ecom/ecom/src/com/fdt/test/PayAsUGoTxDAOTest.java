@@ -25,6 +25,6 @@ public class PayAsUGoTxDAOTest {
     @Test
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor= Throwable.class)
     public void testGetRecurringProfilesForVerification() {
-    	payAsUGoTxDAO.getPayAsUGoTransactionsByNodePerPage("arvindj2ee@yahoo.com",  "RECORDSMANAGEMENT",  null, null, 0,  3);
+    	//payAsUGoTxDAO.getPayAsUGoTransactionsByNodePerPage("arvindj2ee@yahoo.com",  "RECORDSMANAGEMENT",  null, null, 0,  3);
     }
 }

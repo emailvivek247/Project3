@@ -6,6 +6,8 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.tanesha.recaptcha.ReCaptcha;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,9 @@ public abstract class AbstractBaseController {
 
 	/** Used to Store the Business Exceptions **/
 	protected static String BUSSINESS_EXCP = "BUSSINESS_EXCP";
+	
+	@Autowired
+	protected ReCaptcha reCaptcha;
 
 	@Value("${nodeName}")
 	protected String nodeName = null;

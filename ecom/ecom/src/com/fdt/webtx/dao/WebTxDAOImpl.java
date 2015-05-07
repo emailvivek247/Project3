@@ -9,6 +9,9 @@ import java.util.Map;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -16,6 +19,8 @@ import org.springframework.stereotype.Repository;
 import com.fdt.common.dao.AbstractBaseDAOImpl;
 import com.fdt.ecom.entity.Merchant;
 import com.fdt.ecom.entity.Site;
+import com.fdt.webtx.dto.PaymentInfoDTO;
+import com.fdt.webtx.entity.WebCaptureTx;
 import com.fdt.webtx.entity.WebTx;
 import com.fdt.webtx.entity.WebTxItem;
 
@@ -530,6 +535,88 @@ public class WebTxDAOImpl extends AbstractBaseDAOImpl implements WebTxDAO {
             webTransaction.setWebTxItems(webTxItems);
         }
         return webTransaction;
+	}
+
+	public void archiveWebTransactions(String archivedBy, String archiveComments) {
+		DateTime dateTime = new DateTime().minusMonths(18);
+    	DateTimeFormatter format = DateTimeFormat.forPattern("MM/dd/yyyy");
+    	String toDate = format.print(dateTime);
+    	Session session = currentSession();
+        session.getNamedQuery("ARCHIVE_WEB_TX")
+        							.setParameter("toDate", toDate)
+                                    .setParameter("archivedBy", archivedBy)
+                                    .setParameter("archiveComments", archiveComments).list();
+
+	}
+
+	public void saveWebCaptureTx(WebCaptureTx webCaptureTx) {
+		Session session = currentSession();
+        session.saveOrUpdate(webCaptureTx);
+        session.flush();
+		
+	}
+
+	public Map<Long, PaymentInfoDTO> getPaymentInfoMap(List<String> paymentTokens) {
+		PaymentInfoDTO paymentInfoDTO = null;
+		Map<Long,PaymentInfoDTO> paymentInfoDTOMap = null;
+		Session session = currentSession();
+		Query sqlQuery =  session.getNamedQuery("GET_PAYMENT_INFO")
+                 .setParameterList("paymentTokens", paymentTokens);
+		 List<Object> resultSet = sqlQuery.list();
+		 if(!resultSet.isEmpty()){
+			 	ListIterator<Object> resultListIterator = (ListIterator<Object>) resultSet.listIterator();
+			 	paymentInfoDTOMap = new HashMap<Long, PaymentInfoDTO>();
+			 	 while(resultListIterator.hasNext()) {
+			 		Object[] row = (Object[]) resultListIterator.next();
+		            paymentInfoDTO = new PaymentInfoDTO();
+		            paymentInfoDTO.setAccountName(this.getString(row[0]));
+		            paymentInfoDTO.setCreditCardNumber(row[1] == null ? null : this.getPbeStringEncryptor().decrypt(row[1].toString()));
+		            paymentInfoDTO.setExpiryMonth(this.getInteger(row[2]));
+		            paymentInfoDTO.setExpiryYear(this.getInteger(row[3]));
+		            paymentInfoDTO.setAddressLine1(this.getString(row[4]));
+		            paymentInfoDTO.setAddressLine2(this.getString(row[5]));
+		            paymentInfoDTO.setCity(this.getString(row[6]));
+		            paymentInfoDTO.setState(this.getString(row[7]));
+		            paymentInfoDTO.setZip(this.getString(row[8]));
+		            paymentInfoDTO.setPhone(this.getLongFromBigInteger(row[9]));
+		            paymentInfoDTO.setBankRoutingNumber(row[10] == null ? null : this.getPbeStringEncryptor().decrypt(row[10].toString()));
+		            paymentInfoDTO.setBankAccountNumber(row[11] == null ? null : this.getPbeStringEncryptor().decrypt(row[11].toString()));
+		            paymentInfoDTO.setBankAccountType(this.getBankAccountType(row[12]));
+		            paymentInfoDTO.setId(this.getLongFromBigInteger(row[13]));
+		            paymentInfoDTO.setCardType(this.getString(row[14]));
+		            paymentInfoDTOMap.put(this.getLongFromBigInteger(row[13]), paymentInfoDTO);
+			 	 }
+		 }
+		 return paymentInfoDTOMap;
+	}
+
+	@Override
+	public PaymentInfoDTO getPaymentInfoByID(Long paymentInfoID) {
+		PaymentInfoDTO paymentInfoDTO = null;
+		Session session = currentSession();
+		Query sqlQuery =  session.getNamedQuery("GET_PAYMENT_INFO_BY_ID")
+                 .setParameter("paymentInfoID", paymentInfoID);
+		 List<Object> resultSet = sqlQuery.list();
+		 if(!resultSet.isEmpty()){
+			 Object[] row = (Object[]) resultSet.get(0);
+			 paymentInfoDTO = new PaymentInfoDTO();
+             paymentInfoDTO.setAccountName(this.getString(row[0]));
+             paymentInfoDTO.setCreditCardNumber(row[1] == null ? null : this.getPbeStringEncryptor().decrypt(row[1].toString()));
+             paymentInfoDTO.setExpiryMonth(this.getInteger(row[2]));
+             paymentInfoDTO.setExpiryYear(this.getInteger(row[3]));
+             paymentInfoDTO.setAddressLine1(this.getString(row[4]));
+             paymentInfoDTO.setAddressLine2(this.getString(row[5]));
+             paymentInfoDTO.setCity(this.getString(row[6]));
+             paymentInfoDTO.setState(this.getString(row[7]));
+             paymentInfoDTO.setZip(this.getString(row[8]));
+             paymentInfoDTO.setPhone(this.getLongFromBigInteger(row[9]));
+             paymentInfoDTO.setBankRoutingNumber(row[10] == null ? null : this.getPbeStringEncryptor().decrypt(row[10].toString()));
+             paymentInfoDTO.setBankAccountNumber(row[11] == null ? null : this.getPbeStringEncryptor().decrypt(row[11].toString()));
+             paymentInfoDTO.setBankAccountType(this.getBankAccountType(row[12]));
+             paymentInfoDTO.setId(this.getLongFromBigInteger(row[13]));
+             paymentInfoDTO.setCardType(this.getString(row[14]));
+		 }
+		return paymentInfoDTO;
 	}
 
 }

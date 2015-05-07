@@ -53,10 +53,10 @@ public interface UserDAO {
         boolean isAccessOverridden, boolean isFirmAccessAdmin);
 
     public int enableDisableUserAccesses(List<Long> userAccessIds, boolean isEnable, String modifiedBy, String comments,
-        boolean isAccessOverridden);
+        boolean isAccessOverridden, String endDate);
 
     public int enableDisableUserAccess(Long userAccessId, boolean isEnable, String modifiedBy, String comments,
-        boolean isAccessOverridden);
+        boolean isAccessOverridden, String endDate);
 
     public User getUser(String username);
     

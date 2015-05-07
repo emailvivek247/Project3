@@ -1,5 +1,6 @@
 package com.fdt.paymentgateway.service;
 
+import com.fdt.ecom.entity.BankAccount;
 import com.fdt.ecom.entity.CreditCard;
 import com.fdt.ecom.entity.Merchant;
 import com.fdt.ecom.entity.Site;
@@ -56,6 +57,15 @@ public interface PaymentGatewayService {
     */
     public PayPalDTO doSale(Site site, double amtToCharge, CreditCard creditCard, String moduleName,
         String userName, boolean isRecurring) throws PaymentGatewayUserException, PaymentGatewaySystemException;
+    
+    public PayPalDTO doAuthorize(Site site, double amtToCharge, CreditCard creditCard, String moduleName,
+            String userName, boolean isRecurring) throws PaymentGatewayUserException, PaymentGatewaySystemException;
+    
+    public PayPalDTO doSale(Site site, double amtToCharge, BankAccount bankAccount, String moduleName,
+            String userName, boolean isRecurring) throws PaymentGatewayUserException, PaymentGatewaySystemException;
+        
+    public PayPalDTO doAuthorize(Site site, double amtToCharge, BankAccount bankAccount, String moduleName,
+            String userName, boolean isRecurring) throws PaymentGatewayUserException, PaymentGatewaySystemException;
 
     /** This Method Is Used For Charging OTC Transactions. Depending On AmtToCharge It First Determines Whether Micro Or
      * Normal Merchant Is Used. If PaymentGatewaySystemException Occurs, ErrorCode Is Saved In Database. For All Other
@@ -68,6 +78,10 @@ public interface PaymentGatewayService {
      * @param moduleName Method Name For Logging Purpose.
      * @return
      */
+    
+    public PayPalDTO doCapture(Site site, String authorizationTxReferenceNumber, Double captureTxAmount
+    		,String moduleName, String modifiedBy) throws PaymentGatewayUserException, PaymentGatewaySystemException; 
+    		
     public PayPalDTO doSale(Site site, double amtToCharge, String swipeCardDetails, String moduleName) throws
 		PaymentGatewayUserException, PaymentGatewaySystemException;
 

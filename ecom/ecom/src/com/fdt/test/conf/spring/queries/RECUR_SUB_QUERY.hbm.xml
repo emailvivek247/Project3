@@ -101,7 +101,11 @@
             MERCHANT.IS_MICROPAYMENT_ACCOUNT = 'N' AND
            	ACCESS.IS_GOVERNMENT_ACCESS = 'N' AND
             CONVERT(date, NEXT_BILLING_DATE, 101) <= CONVERT(date, GETDATE(), 101) AND
-            USERACCESS.IS_DELETED = 'N'
+            USERACCESS.IS_DELETED = 'N' AND
+            USERS.ACCOUNT_NONEXPIRED = 'Y' AND
+			USERS.ACCOUNT_NONLOCKED = 'Y' AND
+			USERS.ACTIVE = 'Y' AND
+			USERS.ACCOUNT_NONEXPIRED = 'Y'
          ]]>
 </sql-query>
 
@@ -400,4 +404,11 @@
     ]]>
 </sql-query>
 
+	<sql-query name="ARCHIVE_RECUR_TX" callable="true">
+   		<![CDATA[
+        	{call SP_ARCHIVE_RECUR_TX (:toDate, :archivedBy, :archiveComments)}
+   		 ]]>
+	</sql-query>
+	
+	
 </hibernate-mapping>

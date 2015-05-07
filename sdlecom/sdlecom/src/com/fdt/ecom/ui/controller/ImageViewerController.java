@@ -200,12 +200,13 @@ public class ImageViewerController extends AbstractBaseController {
 		return null;
 	}
 
-	private void createCertifiedCopy(String imageLocation, String locationName, String accessName, String certifiedDocumentNumber, String caseNumber,
-			String caseTitle, String caseEvent,	ByteArrayOutputStream byteArrayOutputStream)	throws DocumentException, IOException {
+	private void createCertifiedCopy(String imageLocation, String locationName, String accessName,
+			String certifiedDocumentNumber, String caseNumber,
+			String caseTitle, String caseEvent,	ByteArrayOutputStream byteArrayOutputStream)
+					throws DocumentException, IOException {
 		Location location = cachedService.findLocationByNameAndAccessName(locationName, accessName);
 		String clerkName = location.getClerkName();
 		String designation = location.getDesignation();
-		String countyName = imageLocation;
 		String state = location.getStateDescription();
 		byte[] sealOfAuthenticity = location.getSealOfAuthenticity();
 		byte[] signature = location.getSignature();
@@ -218,10 +219,13 @@ public class ImageViewerController extends AbstractBaseController {
 		Date date = new Date();
 		String footerText = super.watermarkText.concat(" - ").concat(" ").concat(certifiedDocumentNumber).concat(" -").
 			 concat(" ").concat(PageStyleUtil.format(date.toString(), super.inputFormat, super.footerDateFormat));
-		String signatureFooter = clerkName.toUpperCase().concat("\n").concat(designation).concat("\n").concat(state).concat("\n").concat(locationName);
-		String noteOfAuthenticity = "I, ".concat(clerkName).concat(", ").concat(designation).concat(" of the ").concat(state).concat(", in and for the ").concat(locationName).concat(", " +
+		String signatureFooter = clerkName.toUpperCase().concat("\n").concat(designation).concat("\n")
+				.concat("County Of ").concat(locationName).concat("\n").concat(state).concat(".");
+		String noteOfAuthenticity = "I, ".concat(clerkName).concat(", ").concat(designation).concat(" of the ")
+				.concat(state).concat(", in and for the ").concat(locationName).concat(", " +
 				location.getNoteOfAuthenticity()  +	"  \n\nAttest: ".concat(PageStyleUtil.format(date.toString(),
-						super.inputFormat, super.attestedDateFormat)).concat("\nCertified Document Number:  " + certifiedDocumentNumber));
+						super.inputFormat, super.attestedDateFormat))
+						.concat("\nCertified Document Number:  " + certifiedDocumentNumber));
 
 		TIFFToPDFConverter.convert(imageLocation, null, 0,0,0,0,0, true, convertedTiffImage, false, 0.5f, false);
 		String roaInformation = "Certification Page For: \nCase No. " + caseNumber + " - " + caseTitle + " - " + caseEvent;
@@ -229,7 +233,8 @@ public class ImageViewerController extends AbstractBaseController {
 			 signature, signatureFooter, footerText, super.urlVerification);
 
 		Certification.createInternalPage(internalPage, footerText);
-		Certification.stampTheDocument(certifiedDocumentInternal, convertedTiffImage.toByteArray(), internalPage.toByteArray());
+		Certification.stampTheDocument(certifiedDocumentInternal, convertedTiffImage.toByteArray(),
+				internalPage.toByteArray());
 
 		Certification.concatenate(coverPage.toByteArray(), certifiedDocumentInternal.toByteArray(), byteArrayOutputStream);
 		convertedTiffImage.close();
@@ -275,6 +280,7 @@ public class ImageViewerController extends AbstractBaseController {
 					   	   @RequestParam int waterMarkBlueColorCode,
 					   	   @RequestParam String productkey,
 					   	   @RequestParam String producttype,
+					   	   @RequestParam (required=false) String productName,
 					   	   @RequestParam String accessname,
 					   	   @RequestParam int numberofpages,
 					   	   @RequestParam String uniqueidentifier,
@@ -309,7 +315,7 @@ public class ImageViewerController extends AbstractBaseController {
 		if (item == null) {
 			response.reset();
 			response.resetBuffer();
-			ErrorCode error = this.addToTheShoppingCart(requestImageUrl, productkey, producttype, numberofpages, accessname,
+			ErrorCode error = this.addToTheShoppingCart(requestImageUrl, productkey, producttype, productName, numberofpages, accessname,
 					uniqueidentifier, application, barNumber, locationName, state, isCertified, request);
 			errors.add(error);
 			return errors;
@@ -404,7 +410,7 @@ public class ImageViewerController extends AbstractBaseController {
 
 
 
-	private ErrorCode addToTheShoppingCart(String requestImageUrl, String productId, String producttype,
+	private ErrorCode addToTheShoppingCart(String requestImageUrl, String productId, String producttype, String productName,
 								 int numberofpages, String accessname, String uniqueidentifier, String application,
 								 String barNumber, String locationName, String state, boolean isCertified, HttpServletRequest request) {
 		ErrorCode error = new ErrorCode();
@@ -421,6 +427,7 @@ public class ImageViewerController extends AbstractBaseController {
 		shoppingCartItem.setNodeName(this.nodeName);
 		shoppingCartItem.setProductId(productId);
 		shoppingCartItem.setProductType(producttype);
+		shoppingCartItem.setProductName(productName);
 		shoppingCartItem.setPageCount(numberofpages);
 		shoppingCartItem.setDownloadURL(requestImageUrl);
 		shoppingCartItem.setAccessName(accessname);

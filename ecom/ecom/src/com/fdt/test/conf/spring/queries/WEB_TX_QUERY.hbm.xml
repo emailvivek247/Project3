@@ -40,4 +40,29 @@
     ]]>
 </sql-query>
 
+<sql-query name="ARCHIVE_WEB_TX" callable="true">
+  		<![CDATA[
+       	{call SP_ARCHIVE_WEB_TX (:toDate, :archivedBy, :archiveComments)}
+  		 ]]>
+</sql-query>
+
+<sql-query name="GET_PAYMENT_INFO">
+  SELECT
+	   ACCOUNTNAME
+      ,CREDIT_CARD_NUMBER
+	  ,EXPMON
+      ,EXPYEAR
+      ,ADDRESS_1
+      ,ADDRESS_2
+      ,CITY
+      ,STATE
+      ,ZIP
+      ,PHONE      
+      ,BANK_ROUTING_NUMBER
+      ,BANK_ACCOUNT_NUMBER
+      ,BANK_ACCOUNT_TYPE     
+  FROM ECOMM_WEBPAY_TX
+  WHERE PAYMENT_TOKEN IN (:paymentTokens)
+</sql-query>
+
 </hibernate-mapping>

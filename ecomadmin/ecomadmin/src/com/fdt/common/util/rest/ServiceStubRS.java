@@ -125,7 +125,7 @@ public class ServiceStubRS {
 	}
 
 	public void enableDisableUserAccess(Long userAccessId, boolean isEnable, String modifiedBy, String comments,
-		boolean isAccessOverridden) {
+		boolean isAccessOverridden, String endDate) {
 		String url = this.ecomAdminRestUrl.concat("enableDisableUserAccess/{userAccessId}/{isEnable}/{modifiedBy}/" +
 			"{comments}/{isAccessOverridden}");
 		Map<String, Object> paramMap = new HashMap<String, Object>();
@@ -134,6 +134,9 @@ public class ServiceStubRS {
 		paramMap.put("modifiedBy", modifiedBy);
 		paramMap.put("comments", SystemUtil.encodeURL(comments));
 		paramMap.put("isAccessOverridden", isAccessOverridden);
+		if(!StringUtils.isBlank(endDate)){
+			url = url + "?endDate=" + endDate;
+		}
 		restTemplate.postForObject(url, null, Void.class, paramMap);
 	}
 

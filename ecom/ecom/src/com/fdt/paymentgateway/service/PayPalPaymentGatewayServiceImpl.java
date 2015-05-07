@@ -14,7 +14,11 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import paypal.payflow.ACHTender;
+import paypal.payflow.AuthorizationTransaction;
+import paypal.payflow.BankAcct;
 import paypal.payflow.BillTo;
+import paypal.payflow.CaptureTransaction;
 import paypal.payflow.CardTender;
 import paypal.payflow.CreditTransaction;
 import paypal.payflow.Currency;
@@ -32,6 +36,7 @@ import paypal.payflow.UserInfo;
 
 import com.fdt.common.entity.ErrorCode;
 import com.fdt.ecom.dao.EComDAO;
+import com.fdt.ecom.entity.BankAccount;
 import com.fdt.ecom.entity.CreditCard;
 import com.fdt.ecom.entity.Merchant;
 import com.fdt.ecom.entity.Site;
@@ -150,6 +155,232 @@ public class PayPalPaymentGatewayServiceImpl implements PaymentGatewayService {
             	this.logPayPalUserException(paypalResponse, moduleName, "doSale", userName, null);
             } else {
                 this.logPayPalSystemException(paypalResponse, moduleName, "doSale", userName, null);
+            }
+        }
+        return payPalDTO;
+    }
+    
+    @Transactional(propagation = Propagation.REQUIRES_NEW, noRollbackFor = PaymentGatewaySystemException.class)
+    public PayPalDTO doAuthorize(Site site, double amtToCharge, CreditCard creditCard, String moduleName,
+            String userName, boolean isRecurring) throws PaymentGatewayUserException,
+        PaymentGatewaySystemException {
+        UserInfo userInfo = null;
+        PayPalDTO payPalDTO = null;
+        String type = null;
+        Merchant merchant = null;
+
+        Assert.state(amtToCharge > 0.0, "Amount To be chaged must be greater than zero!");
+
+        if(isRecurring) {
+        	merchant = site.getMerchant();
+        	userInfo = this.getMerchantInfo(merchant);
+        	type = "RECURRING";
+        } else {
+	        /** Check Whether it is Micro Transaction or a Normal Transaction **/
+        	type = "WEB";
+	        if (amtToCharge < site.getCardUsageFee().getMicroTxFeeCutOff() && site.isEnableMicroTxWeb()) {
+	        	merchant = site.getMicroMerchant();
+	            userInfo = this.getMerchantInfo(merchant);
+	        } else {
+	        	merchant = site.getMerchant();
+	            userInfo = this.getMerchantInfo(site.getMerchant());
+	        }
+        }
+
+        Invoice invoice = this.getInvoiceForSale(site, amtToCharge, type, creditCard, userName);
+
+        // Create a new Tender data object.
+        CardTender card = this.getCardTender(creditCard);
+
+        // Create a new Authorize Transaction.
+        AuthorizationTransaction trans = new AuthorizationTransaction(userInfo, new PayflowConnectionData(), invoice, card,
+                PayflowUtility.getRequestId());
+        // Submit the Transaction
+        Response paypalResponse = trans.submitTransaction();
+
+        this.handlePayPalResponse(paypalResponse, moduleName, "doAuthorize", null, null);
+
+        TransactionResponse txResponse = paypalResponse.getTransactionResponse();
+
+        /** Handle Any PayPal Transaction Response Errors **/
+        this.handlePayPalTxResponse(txResponse, moduleName, "doAuthorize", null, null);
+
+        if (txResponse.getResult() == 0) {
+            /** The Transaction is Success **/
+            payPalDTO = new PayPalDTO();
+            payPalDTO.setTxRefNum(txResponse.getPnref());
+            payPalDTO.setAuthCode(txResponse.getAuthCode());
+            payPalDTO.setMerchantId(merchant.getId());
+        } else {
+            if (PaymentGatewayUserExceptionCodes.isEqual(String.valueOf(txResponse.getResult()))) {
+            	this.logPayPalUserException(paypalResponse, moduleName, "doAuthorize", userName, null);
+            } else {
+                this.logPayPalSystemException(paypalResponse, moduleName, "doAuthorize", userName, null);
+            }
+        }
+        return payPalDTO;
+    }
+    
+    @Transactional(propagation = Propagation.REQUIRES_NEW, noRollbackFor = PaymentGatewaySystemException.class)
+    public PayPalDTO doAuthorize(Site site, double amtToCharge, BankAccount bankAccount, String moduleName,
+            String userName, boolean isRecurring) throws PaymentGatewayUserException,
+        PaymentGatewaySystemException {
+        UserInfo userInfo = null;
+        PayPalDTO payPalDTO = null;
+        String type = null;
+        Merchant merchant = null;
+
+        Assert.state(amtToCharge > 0.0, "Amount To be chaged must be greater than zero!");
+
+        if(isRecurring) {
+        	merchant = site.getMerchant();
+        	userInfo = this.getMerchantInfo(merchant);
+        	type = "RECURRING";
+        } else {
+	        /** Check Whether it is Micro Transaction or a Normal Transaction **/
+        	type = "WEB";
+	        if (amtToCharge < site.getCardUsageFee().getMicroTxFeeCutOff() && site.isEnableMicroTxWeb()) {
+	        	merchant = site.getMicroMerchant();
+	            userInfo = this.getMerchantInfo(merchant);
+	        } else {
+	        	merchant = site.getMerchant();
+	            userInfo = this.getMerchantInfo(site.getMerchant());
+	        }
+        }
+
+        Invoice invoice = this.getInvoiceForSale(site, amtToCharge, type, bankAccount, userName);
+        
+        ACHTender ach = this.getACHTender(bankAccount);
+
+        // Create a new Authorize Transaction.
+        AuthorizationTransaction trans = new AuthorizationTransaction(userInfo, new PayflowConnectionData(), invoice, ach,
+                PayflowUtility.getRequestId());
+        // Submit the Transaction
+        Response paypalResponse = trans.submitTransaction();
+
+        this.handlePayPalResponse(paypalResponse, moduleName, "doAuthorize", null, null);
+
+        TransactionResponse txResponse = paypalResponse.getTransactionResponse();
+
+        /** Handle Any PayPal Transaction Response Errors **/
+        this.handlePayPalTxResponse(txResponse, moduleName, "doAuthorize", null, null);
+
+        if (txResponse.getResult() == 0) {
+            /** The Transaction is Success **/
+            payPalDTO = new PayPalDTO();
+            payPalDTO.setTxRefNum(txResponse.getPnref());
+            payPalDTO.setAuthCode(txResponse.getAuthCode());
+            payPalDTO.setMerchantId(merchant.getId());
+        } else {
+            if (PaymentGatewayUserExceptionCodes.isEqual(String.valueOf(txResponse.getResult()))) {
+            	this.logPayPalUserException(paypalResponse, moduleName, "doAuthorize", userName, null);
+            } else {
+                this.logPayPalSystemException(paypalResponse, moduleName, "doAuthorize", userName, null);
+            }
+        }
+        return payPalDTO;
+    }
+    
+    public PayPalDTO doCapture(Site site, String authorizationTxReferenceNumber, Double captureTxAmount
+    		,String moduleName, String modifiedBy) throws PaymentGatewayUserException, PaymentGatewaySystemException {
+        UserInfo userInfo = null;
+        PayPalDTO payPalDTO = null;
+        Merchant merchant = null;
+        merchant = site.getMerchant();
+        userInfo = this.getMerchantInfo(merchant);
+        CaptureTransaction captureTransaction = null;
+        if(captureTxAmount !=null) {
+        	Invoice invoice = new Invoice();
+        	Currency amt = new Currency(captureTxAmount);
+            invoice.setAmt(amt);
+            captureTransaction = new CaptureTransaction(authorizationTxReferenceNumber, userInfo, new PayflowConnectionData(), 
+            		invoice, PayflowUtility.getRequestId());
+            captureTransaction.setcaptureComplete("N");
+        } else {
+        	captureTransaction = new CaptureTransaction(authorizationTxReferenceNumber, userInfo, new PayflowConnectionData(), 
+        			PayflowUtility.getRequestId());
+        }
+        Response paypalResponse = captureTransaction.submitTransaction();
+        
+
+        this.handlePayPalResponse(paypalResponse, moduleName, "doCapture", null, null);
+
+        TransactionResponse txResponse = paypalResponse.getTransactionResponse();
+
+        /** Handle Any PayPal Transaction Response Errors **/
+        this.handlePayPalTxResponse(txResponse, moduleName, "doCapture", null, null);
+
+        if (txResponse.getResult() == 0) {
+            /** The Transaction is Success **/
+            payPalDTO = new PayPalDTO();
+            payPalDTO.setTxRefNum(txResponse.getPnref());
+            payPalDTO.setAuthCode(txResponse.getAuthCode());
+            payPalDTO.setMerchantId(merchant.getId());
+        } else {
+            if (PaymentGatewayUserExceptionCodes.isEqual(String.valueOf(txResponse.getResult()))) {
+            	this.logPayPalUserException(paypalResponse, moduleName, "doAuthorize", modifiedBy, null);
+            } else {
+                this.logPayPalSystemException(paypalResponse, moduleName, "doAuthorize", modifiedBy, null);
+            }
+        }
+        return payPalDTO;
+    }
+    
+    @Transactional(propagation = Propagation.REQUIRES_NEW, noRollbackFor = PaymentGatewaySystemException.class)
+    public PayPalDTO doSale(Site site, double amtToCharge, BankAccount bankAccount, String moduleName,
+            String userName, boolean isRecurring) throws PaymentGatewayUserException,
+        PaymentGatewaySystemException {
+        UserInfo userInfo = null;
+        PayPalDTO payPalDTO = null;
+        String type = null;
+        Merchant merchant = null;
+
+        Assert.state(amtToCharge > 0.0, "Amount To be chaged must be greater than zero!");
+
+        if(isRecurring) {
+        	merchant = site.getMerchant();
+        	userInfo = this.getMerchantInfo(merchant);
+        	type = "RECURRING";
+        } else {
+	        /** Check Whether it is Micro Transaction or a Normal Transaction **/
+        	type = "WEB";
+	        if (amtToCharge < site.getCardUsageFee().getMicroTxFeeCutOff() && site.isEnableMicroTxWeb()) {
+	        	merchant = site.getMicroMerchant();
+	            userInfo = this.getMerchantInfo(merchant);
+	        } else {
+	        	merchant = site.getMerchant();
+	            userInfo = this.getMerchantInfo(site.getMerchant());
+	        }
+        }
+
+        Invoice invoice = this.getInvoiceForSale(site, amtToCharge, type, bankAccount, userName);
+        
+        ACHTender ach = this.getACHTender(bankAccount);
+
+        // Create a new Authorize Transaction.
+        SaleTransaction trans = new SaleTransaction(userInfo, new PayflowConnectionData(), invoice, ach,
+                PayflowUtility.getRequestId());
+        // Submit the Transaction
+        Response paypalResponse = trans.submitTransaction();
+
+        this.handlePayPalResponse(paypalResponse, moduleName, "doAuthorize", null, null);
+
+        TransactionResponse txResponse = paypalResponse.getTransactionResponse();
+
+        /** Handle Any PayPal Transaction Response Errors **/
+        this.handlePayPalTxResponse(txResponse, moduleName, "doAuthorize", null, null);
+
+        if (txResponse.getResult() == 0) {
+            /** The Transaction is Success **/
+            payPalDTO = new PayPalDTO();
+            payPalDTO.setTxRefNum(txResponse.getPnref());
+            payPalDTO.setAuthCode(txResponse.getAuthCode());
+            payPalDTO.setMerchantId(merchant.getId());
+        } else {
+            if (PaymentGatewayUserExceptionCodes.isEqual(String.valueOf(txResponse.getResult()))) {
+            	this.logPayPalUserException(paypalResponse, moduleName, "doAuthorize", userName, null);
+            } else {
+                this.logPayPalSystemException(paypalResponse, moduleName, "doAuthorize", userName, null);
             }
         }
         return payPalDTO;
@@ -456,6 +687,14 @@ public class PayPalPaymentGatewayServiceImpl implements PaymentGatewayService {
         CardTender card = new CardTender(payPalCreditCard);
         return card;
     }
+    
+    private ACHTender getACHTender(BankAccount bankAccount) {     
+    	 BankAcct bankAcct = new BankAcct(bankAccount.getBankAccountNumber(), bankAccount.getBankRoutingNumber());
+    	 bankAcct.setAcctType(bankAccount.getBankAccountType().toString());
+    	 bankAcct.setName(bankAccount.getBankAccountName());
+    	ACHTender achTender = new ACHTender(bankAcct);
+        return achTender;
+    }
 
     private Invoice getInvoiceForSale(Site site, Double amtToCharge, String type, CreditCard creditCard, String userName) {
         Invoice inv = new Invoice();
@@ -467,6 +706,23 @@ public class PayPalPaymentGatewayServiceImpl implements PaymentGatewayService {
         bill.setZip(creditCard.getZip());
         bill.setBillToCountry("US");
         bill.setPhoneNum(creditCard.getPhone().toString());
+        Currency amt = new Currency(new Double(amtToCharge), "USD");
+        inv.setAmt(amt);
+        inv.setBillTo(bill);
+        inv.setComment1(site.getName().concat(type));
+        return inv;
+    }
+    
+    private Invoice getInvoiceForSale(Site site, Double amtToCharge, String type, BankAccount bankAccount, String userName) {
+        Invoice inv = new Invoice();
+        BillTo bill = new BillTo();
+        bill.setStreet(bankAccount.getAddressLine1().concat(" ").concat(bankAccount.getAddressLine2() == null
+                ? " " : bankAccount.getAddressLine2()));
+        bill.setCity(bankAccount.getCity());
+        bill.setState(bankAccount.getState());
+        bill.setZip(bankAccount.getZip());
+        bill.setBillToCountry("US");
+        bill.setPhoneNum(bankAccount.getPhone().toString());
         Currency amt = new Currency(new Double(amtToCharge), "USD");
         inv.setAmt(amt);
         inv.setBillTo(bill);
@@ -679,4 +935,9 @@ public class PayPalPaymentGatewayServiceImpl implements PaymentGatewayService {
             "Payment Gateway Function Name ==>{}, Error Description ==>{} ", paramArray);
         throw payPalSystemException;
     }
+
+   
+    
+    
+
 }

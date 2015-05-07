@@ -98,6 +98,8 @@
 			<entry  key="jdbc.url" value="${jdbc.url}" />
 			<entry  key="jdbc.username" value="${jdbc.username}"/>
 			<entry  key="jdbc.password" value="${jdbc.password}"/>
+			<entry  key="activedirectory.domain" value="${activedirectory.domain}"/>
+			<entry  key="activedirectory.providerUrl" value="${activedirectory.providerUrl}"/>
 			<entry  key="webservice.username" value="${webservice.username}"/>
 			<entry  key="webservice.password" value="${webservice.password}"/>
 			<entry  key="email.useractivation.requesturl" value="${email.useractivation.requesturl}"/>
@@ -130,6 +132,10 @@
 			<replace path="/configuration/appender/subject/text()" withText="${logfileSubject}" />
 			<replace path="/configuration/appender/to/text()" withText="${toEmail}" />
 			<replace path="/configuration/appender/from/text()" withText="${fromEmail}" />
+			<replace path="/configuration/appender/smtpHost/text()" withText="${smtp.host}" />
+			<replace path="/configuration/appender/smtpPort/text()" withText="${smtp.port}" />
+			<replace path="/configuration/appender/username/text()" withText="${smtp.username}" />
+			<replace path="/configuration/appender/password/text()" withText="${smtp.password}" />
 		</xmltask>
 	</target>
 
@@ -202,6 +208,11 @@
 						 keystore = "${keystore}"
 						 alias="${alias}"
 						 storepass="${storepass}"/>
+		<signjar jar="${webcontent}\applets\servlet-api.jar"
+								 storetype = "${storetype}"
+								 keystore = "${keystore}"
+								 alias="${alias}"
+								 storepass="${storepass}"/>
 		<signjar jar="${webcontent}\applets\commons-lang-2.6.jar"
 						 storetype = "${storetype}"
 						 keystore = "${keystore}"
@@ -239,6 +250,7 @@
 				<include name="*.properties" />
 				<include name="*.xml" />
 				<include name="*.png" />
+				<include name="*.gif" />
 			</fileset>
 		</copy>
 	</target>
@@ -260,6 +272,7 @@
 				<include name="WEB-INF/lib/*.jar" />
 				<include name="WEB-INF/conf/**/*.*" />
 				<include name="WEB-INF/classes/*.png" />
+				<include name="WEB-INF/classes/*.gif" />
 				<include name="WEB-INF/classes/*.properties" />
 				<include name="WEB-INF/classes/*.xml" />
 				<exclude name="WEB-INF/classes/*.class" />

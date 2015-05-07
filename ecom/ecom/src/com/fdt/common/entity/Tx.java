@@ -35,7 +35,7 @@ public class Tx extends AbstractBaseEntity {
     @Column(name="TX_AMOUNT", nullable = false)
     private Double totalTxAmount;
 
-    @Column(name="CARD_TYPE", nullable = false)
+    @Column(name="CARD_TYPE", nullable = true)
     @Enumerated(EnumType.STRING)
     private CardType cardType = null;
 
@@ -51,7 +51,7 @@ public class Tx extends AbstractBaseEntity {
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType = null;
 
-    @Column(name = "CARD_NUMBER", nullable = false)
+    @Column(name = "CARD_NUMBER", nullable = true)
     private String cardNumber = null;
 
     @Column(name = "ACCOUNTNAME", nullable = false)

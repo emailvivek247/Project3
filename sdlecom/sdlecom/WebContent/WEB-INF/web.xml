@@ -37,9 +37,22 @@
         <param-name>isShoppingCartEnabled</param-name>
         <param-value>true</param-value>
     </context-param>
+    
+    <context-param>
+        <param-name>isPSOOnlyMachine</param-name>
+        <param-value>false</param-value>
+    </context-param>
 
-	<context-param>
+<!--Custom request parameters-->
+    <!--508 Compliance Requirements, Oklahoma-->
+    <context-param>
         <param-name>is508Enabled</param-name>
+        <param-value>false</param-value>
+    </context-param>
+
+    <!--Request by Dallas to remove comments from shopping cart window. Causes confusion for customers-->
+    <context-param>
+        <param-name>isCommentsEnabled</param-name>
         <param-value>false</param-value>
     </context-param>
 

@@ -82,8 +82,8 @@ public class WebTXAdminServiceImpl implements WebTXAdminService {
         PayPalDTO paymentTxResponseDTO = null;
         WebTx webTransaction = this.getWebTransactionItemByItemId(webTxItemId, siteName);
 
-        if (Days.daysBetween(new DateTime(webTransaction.getTransactionDate()).toDateMidnight(),
-                new DateTime().toDateMidnight()).getDays()  > Integer.valueOf(txValidityPeriod)) {
+        if (Days.daysBetween(new DateTime(webTransaction.getTransactionDate()).withTimeAtStartOfDay(),
+                new DateTime().withTimeAtStartOfDay()).getDays()  > Integer.valueOf(txValidityPeriod)) {
             throw new SDLBusinessException(this.getMessage("web.trans.txDatePastValidityPeriod", new Object[]{webTransaction.getTxRefNum(),
                             SystemUtil.format(webTransaction.getTransactionDate().toString()), txValidityPeriod}));
         }

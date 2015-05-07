@@ -126,7 +126,7 @@ td {padding-right:10px;padding-left:10px;}
 													<#assign totalTxAmount = 0>
 													<#list payAsUGoTransactions as payAsUGoTransaction>
 
-													<tr><td colspan="6" class="center bold">${payAsUGoTransaction.getSite().getName()} - (${payAsUGoTransaction.txRefNum})</td></tr>
+													<tr><td colspan="6" class="center bold">${payAsUGoTransaction.getSite().getName()} - (Transaction # : ${payAsUGoTransaction.txRefNum})</td></tr>
 													<#assign totalTxAmountBySite = 0>
 													<#list payAsUGoTransaction.getWebTxItems() as item >
 													<#assign totalTxAmount = totalTxAmount + item.totalTxAmount>

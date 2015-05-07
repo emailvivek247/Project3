@@ -69,13 +69,18 @@
             <replace path="/configuration/appender/subject/text()" withText="${logfileSubject}" />
             <replace path="/configuration/appender/to/text()" withText="${toEmail}" />
             <replace path="/configuration/appender/from/text()" withText="${fromEmail}" />
+			<replace path="/configuration/appender/smtpHost/text()" withText="${smtp.host}" />
+			<replace path="/configuration/appender/smtpPort/text()" withText="${smtp.port}" />
+			<replace path="/configuration/appender/username/text()" withText="${smtp.username}" />
+			<replace path="/configuration/appender/password/text()" withText="${smtp.password}" />
 		</xmltask>
 
 		<xmltask source="${webcontent.web-inf}\web.xml" dest="${webcontent.web-inf}\web.xml" failWithoutMatch="true">
-			<replace path="/:web-app/:context-param[4]/:param-value/text()" withText="${ecommerce.isSecurityEnabled}" />
-			<replace path="/:web-app/:context-param[5]/:param-value/text()" withText="${ecommerce.isDBService}" />
-			<replace path="/:web-app/:context-param[6]/:param-value/text()" withText="${ecommerce.isAlertsEnabled}" />
-			<replace path="/:web-app/:context-param[7]/:param-value/text()" withText="${ecommerce.isShoppingCartEnabled}" />
+			<replace path="/:web-app/:context-param[1]/:param-value/text()" withText="${ecommerce.isSecurityEnabled}" />
+			<replace path="/:web-app/:context-param[2]/:param-value/text()" withText="${ecommerce.isDBService}" />
+			<replace path="/:web-app/:context-param[3]/:param-value/text()" withText="${ecommerce.isAlertsEnabled}" />
+			<replace path="/:web-app/:context-param[4]/:param-value/text()" withText="${ecommerce.isShoppingCartEnabled}" />
+			<replace path="/:web-app/:context-param[5]/:param-value/text()" withText="${ecommerce.isPSOOnlyMachine}" />
 		</xmltask>
 	</target>
 	<target name="compile" depends="ConfUpdate">

@@ -3,10 +3,10 @@
     xmlns:security="http://www.springframework.org/schema/security"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+           http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/security
            http://www.springframework.org/schema/security/spring-security-3.2.xsd
-           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
     <import resource="DB-AuthProvider.xml" />
 
@@ -20,6 +20,7 @@
     <bean id="springSecurityFilterChain" class="org.springframework.security.web.FilterChainProxy">
         <constructor-arg>
             <list>
+            	<security:filter-chain pattern="/public*.admin"                 filters="none" /> 
                 <security:filter-chain pattern="/logout.admin"   filters="logoutFilter" />
                 <security:filter-chain pattern="/secure/*"       filters="securityContextFilter,
                                                                       preAuthenticationFilter,

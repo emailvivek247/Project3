@@ -25,6 +25,8 @@ import com.fdt.otctx.service.OTCTXService;
 import com.fdt.paymentgateway.dto.PayPalDTO;
 import com.fdt.paymentgateway.exception.PaymentGatewaySystemException;
 import com.fdt.paymentgateway.exception.PaymentGatewayUserException;
+import com.fdt.webtx.dto.WebCaptureTxRequestDTO;
+import com.fdt.webtx.dto.WebCaptureTxResponseDTO;
 import com.fdt.webtx.dto.WebTxExtResponseDTO;
 import com.fdt.webtx.entity.WebTx;
 import com.fdt.webtx.service.WebTxService;
@@ -202,6 +204,19 @@ public class ExternalServiceImpl implements ExternalService {
         } catch(RuntimeException runtimeException) {
             logger.error(NOTIFY_ADMIN, "Error in getWebTxByInvoiceId for invoiceNumber {}, siteName {} ", invoiceNumber,
             		siteName, runtimeException);
+            throw runtimeException;
+        }
+	}
+
+	
+	public WebCaptureTxResponseDTO captureWebTx(WebCaptureTxRequestDTO webCaptureTxRequestDTO)
+			throws SDLBusinessException {
+		try {
+			logger.debug("Entering captureWebTx webCaptureTxRequestDTO {}", webCaptureTxRequestDTO);
+            return this.webTxService.captureWebTx(webCaptureTxRequestDTO);
+        } catch(RuntimeException runtimeException) {
+            logger.error(NOTIFY_ADMIN, "Error in captureWebTx for webCaptureTxRequestDTO {} ", webCaptureTxRequestDTO,
+                runtimeException);
             throw runtimeException;
         }
 	}

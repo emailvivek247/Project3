@@ -1,5 +1,7 @@
 package com.fdt.ecom.ui.controller;
 
+import static com.fdt.ecom.ui.EcomViewConstants.ECOM_AZ_EXTERNAL_PAYMENT_PROCESSING;
+import static com.fdt.ecom.ui.EcomViewConstants.ECOM_AZ_PAYMENT_GATEWAY_CONFIRMATION;
 import static com.fdt.ecom.ui.EcomViewConstants.ECOM_EXTERNAL_PAYMENT_PROCESSING;
 import static com.fdt.ecom.ui.EcomViewConstants.ECOM_PAYASUGO_PAYMENT_CONFIRMATION;
 import static com.fdt.ecom.ui.EcomViewConstants.ECOM_PAYASUGO_PAYMENT_INFO;
@@ -45,16 +47,20 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fdt.common.entity.ErrorCode;
 import com.fdt.common.exception.SDLBusinessException;
 import com.fdt.common.ui.controller.AbstractBaseController;
+import com.fdt.common.util.SystemUtil;
+import com.fdt.ecom.entity.BankAccount;
 import com.fdt.ecom.entity.Code;
 import com.fdt.ecom.entity.CreditCard;
 import com.fdt.ecom.entity.ShoppingCartItem;
 import com.fdt.ecom.ui.form.CreditCardForm;
-import com.fdt.ecom.ui.form.CreditCardForm.DefaultGroup;
+import com.fdt.ecom.ui.form.CreditCardForm.BankAccountGroup;
+import com.fdt.ecom.ui.form.CreditCardForm.CreditCardGroup;
 import com.fdt.ecom.ui.validator.CreditCardFormValidator;
 import com.fdt.payasugotx.dto.PayAsUSubDTO;
 import com.fdt.payasugotx.entity.PayAsUGoTx;
@@ -62,6 +68,7 @@ import com.fdt.paymentgateway.exception.PaymentGatewaySystemException;
 import com.fdt.paymentgateway.exception.PaymentGatewayUserException;
 import com.fdt.security.entity.User;
 import com.fdt.security.spring.SDLSavedRequestAwareAuthenticationSuccessHandler;
+import com.fdt.webtx.dto.PaymentInfoDTO;
 import com.fdt.webtx.dto.WebTransactionDTO;
 import com.fdt.webtx.entity.WebTx;
 import com.fdt.webtx.entity.WebTxItem;
@@ -95,6 +102,12 @@ public class PaymentGatewayController extends AbstractBaseController {
             "state",
             "zip",
             "phoneNumber",
+            "bankAccountAddressLine1",
+            "bankAccountAddressLine2",
+            "bankAccountCity",
+            "bankAccountState",
+            "bankAccountZip",
+            "bankAccountPhoneNumber",
             "saveCreditCard",
             "login",
             "paynow",
@@ -109,7 +122,28 @@ public class PaymentGatewayController extends AbstractBaseController {
             "numberofpages",
             "prdtype",
             "prdkey",
-            "uniqueidentifier"
+            "uniqueidentifier",            
+            "payByMethod",
+            "paymentMethodOne",
+            "paymentMethodTwo",
+            "paymentMethodThree",
+            "bankRoutingNumber",
+            "bankAccountNumber",
+            "bankAccountName",
+            "bankAccountType",
+            "paymentInfoDTOId",
+            "paymentMethodThreeNumber",
+            "paymentMethodThreeExpMonthS",
+            "paymentMethodThreeExpYear",
+            "paymentMethodThreeCvv",
+            "paymentMethodThreePhoneNumber",
+            "paymentMethodThreeZip",
+            "paymentMethodThreeAddressLine2",
+            "paymentMethodThreeState",
+            "paymentMethodThreeCity",
+            "paymentMethodThreeAccountName",
+            "paymentMethodThreeAddressLine1",
+            "paymentMethodThreeIdentifier"
         });
     }
 
@@ -120,6 +154,20 @@ public class PaymentGatewayController extends AbstractBaseController {
     public static String SHOPPING_CART = "SHOPPING_CART";
 
     private static String FIRM_CREDIT_CARD = "F";
+    
+    
+    @RequestMapping(value="/publicGetPaymentInfoDTO.admin", method=RequestMethod.GET,  produces="application/json")
+	@ResponseBody
+	private PaymentInfoDTO publicGetPaymentInfoDTO(@RequestParam String paymentInfoDTOId){
+		if(!StringUtils.isBlank(paymentInfoDTOId)){
+			PaymentInfoDTO paymentInfoDTO = this.webTransactionService.getPaymentInfoByID(Long.valueOf(paymentInfoDTOId));
+			String creditCardNumber = paymentInfoDTO.getCreditCardNumber();
+			String maskedCreditCardNumber = creditCardNumber.substring(0, 2).concat("******").concat(creditCardNumber.substring(creditCardNumber.length()-4));
+			paymentInfoDTO.setCreditCardNumber(maskedCreditCardNumber);
+			return paymentInfoDTO;
+		}
+		return null;
+	}
 
     /**
      * This method does the following
@@ -151,6 +199,7 @@ public class PaymentGatewayController extends AbstractBaseController {
         String locComments1 = request.getParameter("loc_comments1");
         String locComments2 = request.getParameter("loc_comments2");
         String invoiceId = request.getParameter("invoiceId");
+        String isAuthorizeTransaction = request.getParameter("isAuthorizeTransaction");
 
         if(StringUtils.isBlank(returnUrl)) {
         	returnUrl = httpSession.getAttribute("return_url_" + sessionId).toString();
@@ -305,7 +354,8 @@ public class PaymentGatewayController extends AbstractBaseController {
                     httpSession.setAttribute("loc_phone" + sessionId, locPhone);
                     httpSession.setAttribute("loc_comments1" + sessionId, locComments1);
                     httpSession.setAttribute("loc_comments2" + sessionId, locComments2);
-
+                    httpSession.setAttribute("isAuthorizeTransaction" + sessionId, isAuthorizeTransaction);
+                    modelAndView.addObject("isAuthorizeTransaction", isAuthorizeTransaction);
                     modelAndView.addObject("image_url", httpSession.getAttribute("image_url_" + sessionId));
                     modelAndView.addObject("footer_url", httpSession.getAttribute("footer_url_" + sessionId));
                     modelAndView.addObject("cancel_url", cancelUrl);
@@ -338,20 +388,250 @@ public class PaymentGatewayController extends AbstractBaseController {
 
     }
 
-    @RequestMapping(value = "/paymentgatewaypaynow.admin", method = RequestMethod.POST)
-    public ModelAndView processPayment(@ModelAttribute("creditCardForm") CreditCardForm creditCardForm,
+    @RequestMapping(value="/paymentgatewayAZ.admin")
+    public ModelAndView paymentgatewayAZ(HttpServletRequest request) {
+        ModelAndView modelAndView = getModelAndView(request, ECOM_AZ_EXTERNAL_PAYMENT_PROCESSING);
+        ErrorCode error = new ErrorCode();
+        HttpSession httpSession = request.getSession();
+        String sessionId = httpSession.getId();
+        String applicationName = request.getParameter("application_name");
+        String siteName = request.getParameter("site_name");
+        String imageUrl = request.getParameter("image_url");
+        String footerUrl = request.getParameter("footer_url");
+        String returnUrl = request.getParameter("return_url");
+        String returnText = request.getParameter("return_text");
+        String sendConfirmationEmail = request.getParameter("send_confirmation_email");
+        String cancelUrl = request.getParameter("cancel_url");
+        String cancelText = request.getParameter("cancel_text");
+        String locName = request.getParameter("loc_name");
+        String locAddrLine1 = request.getParameter("loc_addr_l1");
+        String locAddrLine2 = request.getParameter("loc_addr_l2");
+        String locCity = request.getParameter("loc_city");
+        String locState = request.getParameter("loc_state");
+        String locZip = request.getParameter("loc_zip");
+        String locPhone = request.getParameter("loc_phone");
+        String locComments1 = request.getParameter("loc_comments1");
+        String locComments2 = request.getParameter("loc_comments2");
+        String invoiceId = request.getParameter("invoiceId");
+        String paymentTokens = request.getParameter("paymentTokens");
+        
+        String isAuthorizeTransaction = request.getParameter("isAuthorizeTransaction");
+        if(StringUtils.isBlank(returnUrl)) {
+        	returnUrl = httpSession.getAttribute("return_url_" + sessionId).toString();
+        	modelAndView.addObject("return_url", returnUrl);
+
+        }
+        if(StringUtils.isBlank(returnText)) {
+        	returnUrl = httpSession.getAttribute("return_text_" + sessionId).toString();
+        	modelAndView.addObject("return_text", returnText);
+        }
+
+        if (!StringUtils.isBlank(applicationName) && !StringUtils.isBlank(siteName)
+        		&& !StringUtils.isBlank(imageUrl)  && !StringUtils.isBlank(returnUrl)  && !StringUtils.isBlank(returnText)
+        		&& !StringUtils.isBlank(sendConfirmationEmail) && !StringUtils.isBlank(cancelUrl)
+        		&& !StringUtils.isBlank(cancelText) && !StringUtils.isBlank(locName)
+        		&& !StringUtils.isBlank(locAddrLine1) && !StringUtils.isBlank(locCity)
+        		&& !StringUtils.isBlank(locState) && !StringUtils.isBlank(locZip)
+        		&& !StringUtils.isBlank(locPhone)) {
+            Enumeration<String> paramNames = request.getParameterNames();
+            Map<String, WebTxItem> items = new HashMap<String,WebTxItem>();
+            List<Code> codes = this.eComService.getCodes("REGISTERED_APPLICATION");
+            boolean isValidApplication = false;
+            for (Code code : codes) {
+                if (code.getCode().equals(applicationName)) {
+                    isValidApplication = true;
+                }
+            }
+            if (isValidApplication) {
+                if (applicationName != null && applicationName.trim() !=""
+                		&& siteName!= null && siteName.trim() !="") {
+                    while(paramNames.hasMoreElements())
+                    {
+                          String paramName = (String)paramNames.nextElement();
+                          if (paramName.contains("item_name_")) {
+                              if (items.containsKey(paramName.replace("item_name_", ""))) {
+                                items.get(paramName.replace("item_name_", ""))
+                                .setItemName(request.getParameter(paramName));
+                              } else {
+                                  WebTxItem newItem = new WebTxItem();
+                                  newItem.setItemName(request.getParameter(paramName));
+                                  items.put(paramName.replace("item_name_", ""), newItem);
+                              }
+                          } else if (paramName.contains("item_type_")) {
+                              if (items.containsKey(paramName.replace("item_type_", ""))) {
+                                items.get(paramName.replace("item_type_", ""))
+                                .setProductType(request.getParameter(paramName));
+                              } else {
+                                  WebTxItem newItem = new WebTxItem();
+                                  newItem.setProductType(request.getParameter(paramName));
+                                  items.put(paramName.replace("item_type_", ""), newItem);
+                              }
+                          } else if (paramName.contains("item_id_")) {
+                              if (items.containsKey(paramName.replace("item_id_", ""))) {
+                                items.get(paramName.replace("item_id_", "")).setProductId(request.getParameter(paramName));
+                              } else {
+                                  WebTxItem newItem = new WebTxItem();
+                                  newItem.setProductId(request.getParameter(paramName));
+                                  items.put(paramName.replace("item_id_", ""), newItem);
+                              }
+                          } else if (paramName.contains("item_quantity_")) {
+                              if (items.containsKey(paramName.replace("item_quantity_", ""))) {
+                                items.get(paramName.replace("item_quantity_", ""))
+                                .setItemQuantity(Long.parseLong(request.getParameter(paramName)));
+                              } else {
+                                  WebTxItem newItem = new WebTxItem();
+                                  newItem.setItemQuantity(Long.parseLong(request.getParameter(paramName)));
+                                  items.put(paramName.replace("item_quantity_", ""), newItem);
+                              }
+                          } else if (paramName.contains("item_case_number_")) {
+                              if (items.containsKey(paramName.replace("item_case_number_", ""))) {
+                                items.get(paramName.replace("item_case_number_", ""))
+                                .setCaseNumber(request.getParameter(paramName));
+                              } else {
+                                  WebTxItem newItem = new WebTxItem();
+                                  newItem.setCaseNumber(request.getParameter(paramName));
+                                  items.put(paramName.replace("item_case_number_", ""), newItem);
+                              }
+                          } else if (paramName.contains("item_party_role_")) {
+                              if (items.containsKey(paramName.replace("item_party_role_", ""))) {
+                                items.get(paramName.replace("item_party_role_", ""))
+                                .setPartyRole(request.getParameter(paramName));
+                              } else {
+                                  WebTxItem newItem = new WebTxItem();
+                                  newItem.setPartyRole(request.getParameter(paramName));
+                                  items.put(paramName.replace("item_party_role_", ""), newItem);
+                              }
+                          } else if (paramName.contains("item_party_seq_")) {
+                              if (items.containsKey(paramName.replace("item_party_seq_", ""))) {
+                                items.get(paramName.replace("item_party_seq_", ""))
+                                .setPartySeq(request.getParameter(paramName));
+                              } else {
+                                  WebTxItem newItem = new WebTxItem();
+                                  newItem.setPartySeq(request.getParameter(paramName));
+                                  items.put(paramName.replace("item_party_seq_", ""), newItem);
+                              }
+                          } else if (paramName.contains("item_amount_")) {
+                              if (items.containsKey(paramName.replace("item_amount_", ""))) {
+                                items.get(paramName.replace("item_amount_", ""))
+                                .setBaseAmount(Double.parseDouble(request.getParameter(paramName).replace("$", "")));
+                              } else {
+                                  WebTxItem newItem = new WebTxItem();
+                                  newItem.setBaseAmount(Double.parseDouble(request.getParameter(paramName).replace("$", "")));
+                                  items.put(paramName.replace("item_amount_", ""), newItem);
+                              }
+                          } else if (paramName.contains("item_tax_")) {
+                              if (items.containsKey(paramName.replace("item_tax_", ""))) {
+                                items.get(paramName.replace("item_tax_", ""))
+                                .setTax(Double.parseDouble(request.getParameter(paramName).replace("$", "")));
+                              } else {
+                                  WebTxItem newItem = new WebTxItem();
+                                  newItem.setTax(Double.parseDouble(request.getParameter(paramName).replace("$", "")));
+                                  items.put(paramName.replace("item_tax_", ""), newItem);
+                              }
+                          }
+
+                    }
+                    CreditCardForm creditCardForm =  new CreditCardForm();
+                    modelAndView.addObject("creditCardForm", creditCardForm);
+                    List<WebTxItem> itemList = new LinkedList<WebTxItem>(items.values());
+                    Double amount = 0.0d;
+                    Iterator<WebTxItem>  itemListIterator = itemList.iterator();
+                    while(itemListIterator.hasNext()){
+                        WebTxItem webTransactionItem = (WebTxItem)itemListIterator.next();
+                        amount = amount + webTransactionItem.getBaseAmount();
+                    }
+                    try {
+                        itemList = this.webTransactionService.doSaleGetInfoWEB(siteName, itemList);
+                        modelAndView.addObject("ITEMS", itemList);
+                        List<String> paymentTokenList = null;
+                        if(!StringUtils.isBlank(paymentTokens)) {
+                        	paymentTokenList = new LinkedList<String>(SystemUtil.getPaymentTokens(paymentTokens));
+                        	Map<Long, PaymentInfoDTO> paymentInfoDTOMap = this.webTransactionService.getPaymentInfoMap(paymentTokenList);
+                            modelAndView.addObject("paymentInfoDTOList", paymentInfoDTOMap.values());
+                            modelAndView.addObject("paymentInfoDTOMap", paymentInfoDTOMap);
+                        } else {
+                        	modelAndView.addObject("paymentInfoDTOList", null);
+                            modelAndView.addObject("paymentInfoDTOMap", null);                        	
+                        }              
+                       
+                    } catch (SDLBusinessException sDLBusinessException) {
+                        modelAndView.addObject("ITEMS", null);
+                        modelAndView.addObject("paymentInfoDTOList", null);
+                    }
+                    httpSession.setAttribute("image_url_" + sessionId, imageUrl);
+                    httpSession.setAttribute("footer_url_" + sessionId, footerUrl);
+                    httpSession.setAttribute("siteName_" + sessionId, siteName);
+                    httpSession.setAttribute("invoiceId_" + sessionId, invoiceId);
+                    httpSession.setAttribute("gatewayItems_" + sessionId, itemList);
+                    httpSession.setAttribute("return_url_" + sessionId, returnUrl);
+                    httpSession.setAttribute("return_text_" + sessionId, returnText);
+                    httpSession.setAttribute("send_confirmation_email_" + sessionId,
+                    		sendConfirmationEmail);
+                    httpSession.setAttribute("application_name_" + sessionId,
+                    		applicationName);
+                    httpSession.setAttribute("cancel_url_" + sessionId, cancelUrl);
+                    httpSession.setAttribute("cancel_text_" + sessionId, cancelText);
+                    httpSession.setAttribute("loc_name" + sessionId, locName);
+                    httpSession.setAttribute("loc_addr_l1" + sessionId, locAddrLine1);
+                    httpSession.setAttribute("loc_addr_l2" + sessionId, locAddrLine2);
+                    httpSession.setAttribute("loc_city" + sessionId, locCity);
+                    httpSession.setAttribute("loc_state" + sessionId, locState);
+                    httpSession.setAttribute("loc_zip" + sessionId, locZip);
+                    httpSession.setAttribute("loc_phone" + sessionId, locPhone);
+                    httpSession.setAttribute("loc_comments1" + sessionId, locComments1);
+                    httpSession.setAttribute("loc_comments2" + sessionId, locComments2);
+                    httpSession.setAttribute("isAuthorizeTransaction" + sessionId, isAuthorizeTransaction);
+                   
+                    
+                    
+                    modelAndView.addObject("image_url", httpSession.getAttribute("image_url_" + sessionId));
+                    modelAndView.addObject("footer_url", httpSession.getAttribute("footer_url_" + sessionId));
+                    modelAndView.addObject("cancel_url", cancelUrl);
+                    modelAndView.addObject("cancel_text", cancelText);
+                    modelAndView.addObject("send_confirmation_email", sendConfirmationEmail);
+                    modelAndView.addObject("loc_name", locName);
+                    modelAndView.addObject("loc_addr_l1", locAddrLine1);
+                    modelAndView.addObject("loc_addr_l2", locAddrLine2);
+                    modelAndView.addObject("loc_city", locCity);
+                    modelAndView.addObject("loc_state", locState);
+                    modelAndView.addObject("loc_zip", locZip);
+                    modelAndView.addObject("loc_phone", locPhone);
+                    modelAndView.addObject("loc_comments1", locComments1);
+                    modelAndView.addObject("loc_comments2", locComments2);
+                    modelAndView.addObject("isAuthorizeTransaction", isAuthorizeTransaction);
+                    modelAndView.addObject("invoiceId", invoiceId);
+                }
+            } else {
+                error.setCode("ERROR");
+                error.setDescription("Invalid Application Name or Application Is Not Registered With Gateway.");
+                modelAndView.addObject("ERROR", error);
+            }
+
+        } else {
+            error.setCode("ERROR");
+            error.setDescription("Cannot Process Payment As Required Information Is Invalid. " +
+            		"Please Contact The Administrator.");
+            modelAndView.addObject("ERROR", error);
+        }
+        return modelAndView;
+
+    }
+    
+    @RequestMapping(value = "/paymentgatewaypaynowAZ.admin", method = RequestMethod.POST)
+    public ModelAndView paymentgatewaypaynowAZ(@ModelAttribute("creditCardForm") CreditCardForm creditCardForm,
                                             BindingResult bindingResult,
                                             HttpServletRequest request,
                                             Principal principal) {
-        ModelAndView modelAndView = getModelAndView(request, ECOM_PAYMENT_GATEWAY_CONFIRMATION);
+        ModelAndView modelAndView = getModelAndView(request, ECOM_AZ_PAYMENT_GATEWAY_CONFIRMATION);
         try {
             CreditCard creditCard = null;
+            BankAccount bankAccount = null;
             this.verifyBinding(bindingResult);
             WebTransactionDTO webTransactionDTO = new WebTransactionDTO();
             WebTx webTransaction =  null;
             HttpSession httpSession = request.getSession();
             String sessionId = httpSession.getId();
-            validate(creditCardForm, bindingResult, DefaultGroup.class); // Performing validations specified by annotations.
+            
             String invoiceId = httpSession.getAttribute("invoiceId_" + sessionId).toString();
             String imageUrl = httpSession.getAttribute("image_url_" + sessionId).toString();
             String footerUrl = httpSession.getAttribute("footer_url_" + sessionId).toString();
@@ -368,6 +648,162 @@ public class PaymentGatewayController extends AbstractBaseController {
             String locPhone =  httpSession.getAttribute("loc_phone" + sessionId).toString();
             String locComments1 =  httpSession.getAttribute("loc_comments1" + sessionId).toString();
             String locComments2 =  httpSession.getAttribute("loc_comments2" + sessionId).toString();
+            String isAuthorizeTransaction =  httpSession.getAttribute("isAuthorizeTransaction" + sessionId).toString();
+            String payByMethod =  request.getParameter("payByMethod").toString();
+            
+            if(payByMethod.equalsIgnoreCase("One")) {
+            	validate(creditCardForm, bindingResult, CreditCardGroup.class); // Performing validations specified by annotations.
+                if (bindingResult.hasErrors()) {
+                    modelAndView = setModelAndViewForError(modelAndView, request, principal);
+                    return modelAndView;
+                }
+                creditCardValidator.validate(creditCardForm, bindingResult); // Performing custom validations.
+                if (bindingResult.hasErrors()) {
+                    modelAndView = setModelAndViewForError(modelAndView, request, principal);
+                    return modelAndView;
+                }
+                creditCard = this.buildCreditCard(creditCardForm,request); 
+            } else if(payByMethod.equalsIgnoreCase("Two"))  {            	
+            	validate(creditCardForm, bindingResult, BankAccountGroup.class); // Performing validations specified by annotations.
+                if (bindingResult.hasErrors()) {
+                    modelAndView = setModelAndViewForError(modelAndView, request, principal);
+                    return modelAndView;
+                }
+            	bankAccount = this.buildBankAccount(creditCardForm,request);           	
+            } else if(payByMethod.equalsIgnoreCase("Three"))  {
+            	String paymentMethodThreeIdentifier = request.getParameter("paymentMethodThreeIdentifier");
+            	String cvv = request.getParameter("paymentMethodThreeCvv");
+            	if(!StringUtils.isBlank(paymentMethodThreeIdentifier) && !StringUtils.isBlank(cvv)){
+        			PaymentInfoDTO paymentInfoDTO = this.webTransactionService.getPaymentInfoByID(Long.valueOf(paymentMethodThreeIdentifier));
+        			creditCard = this.buildCreditCardFromPaymentInfoDTO(paymentInfoDTO, request);
+            	} else {
+            		modelAndView = setModelAndViewForError(modelAndView, request, principal);
+                    return modelAndView;
+            	}
+            } else {
+            	 modelAndView = setModelAndViewForError(modelAndView, request, principal);
+                 return modelAndView;
+            }
+            webTransactionDTO.setWebTransactionItemList((List<WebTxItem>) httpSession.getAttribute("gatewayItems_" + sessionId));
+            webTransactionDTO.setCreditCard(creditCard);
+            webTransactionDTO.setBankAccount(bankAccount);
+            webTransactionDTO.setTransactionLocation(request.getRemoteAddr());
+            webTransactionDTO.setOfficeLoc(locName);
+            webTransactionDTO.setOfficeLocAddressLine1(locAddr1);
+            webTransactionDTO.setOfficeLocAddressLine2(locAddr2);
+            webTransactionDTO.setOfficeLocCity(locCity);
+            webTransactionDTO.setOfficeLocState(locState);
+            webTransactionDTO.setOfficeLocZip(locZip);
+            webTransactionDTO.setOfficeLocPhone(locPhone);
+            webTransactionDTO.setOfficeLocComments1(locComments1);
+            webTransactionDTO.setOfficeLocComments2(locComments2);
+            webTransactionDTO.setInvoiceId(invoiceId);
+            webTransactionDTO.setPayByMethod(payByMethod);
+            webTransactionDTO.setAuthorizeTransaction(Boolean.valueOf(isAuthorizeTransaction));
+            modelAndView.addObject("image_url", imageUrl);
+            modelAndView.addObject("footer_url", footerUrl);
+            modelAndView.addObject("return_url", returnUrl);
+            modelAndView.addObject("return_text", returnText);
+            modelAndView.addObject("loc_name", locName);
+            modelAndView.addObject("loc_addr_l1", locAddr1);
+            modelAndView.addObject("loc_addr_l2", locAddr2);
+            modelAndView.addObject("loc_city", locCity);
+            modelAndView.addObject("loc_state", locState);
+            modelAndView.addObject("loc_zip", locZip);
+            modelAndView.addObject("loc_phone", locPhone);
+            modelAndView.addObject("loc_comments1", locComments1);
+            modelAndView.addObject("loc_comments2", locComments2);
+            modelAndView.addObject("invoiceId", invoiceId);
+            modelAndView.addObject("send_confirmation_email", sendConfirmationEmail);
+            modelAndView.addObject("isAuthorizeTransaction", isAuthorizeTransaction);
+            modelAndView.addObject("payByMethod", payByMethod);
+
+            webTransaction = this.webTransactionService.doSaleWebPosts(httpSession.getAttribute("siteName_" +
+                    sessionId).toString(), webTransactionDTO, creditCardForm.getEmailId(), application);
+
+            modelAndView.addObject("webTransaction", webTransaction);          
+            
+            httpSession.removeAttribute("invoiceId_" + sessionId);
+            httpSession.removeAttribute("siteName_" + sessionId);
+            httpSession.removeAttribute("gatewayItems_" + sessionId);
+            httpSession.removeAttribute("image_url_" + sessionId);
+            httpSession.removeAttribute("footer_url_" + sessionId);
+            httpSession.removeAttribute("return_url_" + sessionId);
+            httpSession.removeAttribute("return_text_" + sessionId);
+            httpSession.removeAttribute("send_confirmation_email_" + sessionId);
+            httpSession.removeAttribute("application_name_" + sessionId);
+            httpSession.removeAttribute("cancel_url_" + sessionId);
+            httpSession.removeAttribute("cancel_text_" + sessionId);
+            httpSession.removeAttribute("loc_name" + sessionId);
+            httpSession.removeAttribute("loc_addr_l1" + sessionId);
+            httpSession.removeAttribute("loc_addr_l2" + sessionId);
+            httpSession.removeAttribute("loc_city" + sessionId);
+            httpSession.removeAttribute("loc_state" + sessionId);
+            httpSession.removeAttribute("loc_zip" + sessionId);
+            httpSession.removeAttribute("loc_phone" + sessionId);
+            httpSession.removeAttribute("loc_comments1" + sessionId);
+            httpSession.removeAttribute("loc_comments2" + sessionId);
+            httpSession.removeAttribute("isAuthorizeTransaction" + sessionId);
+            httpSession.removeAttribute("payByMethod" + sessionId);
+
+        } catch (SDLBusinessException sDLBusinessException) {
+            modelAndView.addObject("ERROR", sDLBusinessException.getBusinessMessage());
+        } catch (PaymentGatewaySystemException paypalSystemException) {
+            modelAndView.addObject("ERROR", this.getMessage("paypal.errorcode.generalsystemerror"));
+        } catch (PaymentGatewayUserException paypalUserException) {
+            modelAndView.addObject("ERROR", this.getMessage("paypal.errorcode." + paypalUserException.getErrorCode()));
+        }
+        return modelAndView;
+    }
+    
+    private BankAccount buildBankAccount(CreditCardForm creditCardForm,
+			HttpServletRequest request) {
+    	BankAccount bankAccount = new BankAccount();
+    	bankAccount.setBankAccountName(creditCardForm.getBankAccountName());
+    	bankAccount.setBankAccountNumber(creditCardForm.getBankAccountNumber());
+    	bankAccount.setBankRoutingNumber(creditCardForm.getBankRoutingNumber());
+    	bankAccount.setBankAccountType(creditCardForm.getBankAccountType());
+    	bankAccount.setAddressLine1(creditCardForm.getBankAccountAddressLine1());
+    	bankAccount.setAddressLine2(creditCardForm.getBankAccountAddressLine2());
+    	bankAccount.setCity(creditCardForm.getBankAccountCity());
+    	bankAccount.setState(creditCardForm.getBankAccountState());
+    	bankAccount.setZip(creditCardForm.getBankAccountZip());
+    	bankAccount.setPhone(creditCardForm.getBankAccountPhoneNumber());        
+        return bankAccount;
+	}
+
+	@RequestMapping(value = "/paymentgatewaypaynow.admin", method = RequestMethod.POST)
+    public ModelAndView paymentGatewayPayNow(@ModelAttribute("creditCardForm") CreditCardForm creditCardForm,
+                                            BindingResult bindingResult,
+                                            HttpServletRequest request,
+                                            Principal principal) {
+        ModelAndView modelAndView = getModelAndView(request, ECOM_PAYMENT_GATEWAY_CONFIRMATION);
+        try {
+            CreditCard creditCard = null;
+            this.verifyBinding(bindingResult);
+            WebTransactionDTO webTransactionDTO = new WebTransactionDTO();
+            WebTx webTransaction =  null;
+            HttpSession httpSession = request.getSession();
+            String sessionId = httpSession.getId();
+            validate(creditCardForm, bindingResult, CreditCardGroup.class); // Performing validations specified by annotations.
+            String invoiceId = httpSession.getAttribute("invoiceId_" + sessionId).toString();
+            String imageUrl = httpSession.getAttribute("image_url_" + sessionId).toString();
+            String footerUrl = httpSession.getAttribute("footer_url_" + sessionId).toString();
+            String returnUrl = httpSession.getAttribute("return_url_" + sessionId).toString();
+            String returnText = httpSession.getAttribute("return_text_" + sessionId).toString();
+            String sendConfirmationEmail = httpSession.getAttribute("send_confirmation_email_" + sessionId).toString();
+            String application =  httpSession.getAttribute("application_name_" + sessionId).toString();
+            String locName =  httpSession.getAttribute("loc_name" + sessionId).toString();
+            String locAddr1 =  httpSession.getAttribute("loc_addr_l1" + sessionId).toString();
+            String locAddr2 =  httpSession.getAttribute("loc_addr_l2" + sessionId).toString();
+            String locCity =  httpSession.getAttribute("loc_city" + sessionId).toString();
+            String locState =  httpSession.getAttribute("loc_state" + sessionId).toString();
+            String locZip =  httpSession.getAttribute("loc_zip" + sessionId).toString();
+            String locPhone =  httpSession.getAttribute("loc_phone" + sessionId).toString();
+            String locComments1 =  httpSession.getAttribute("loc_comments1" + sessionId).toString();
+            String locComments2 =  httpSession.getAttribute("loc_comments2" + sessionId).toString();
+            String isAuthorizeTransaction =  httpSession.getAttribute("isAuthorizeTransaction" + sessionId).toString();
+            String payByMethod =  request.getParameter("payByMethod").toString();
             if (bindingResult.hasErrors()) {
                 modelAndView = setModelAndViewForError(modelAndView, request, principal);
                 return modelAndView;
@@ -391,6 +827,8 @@ public class PaymentGatewayController extends AbstractBaseController {
             webTransactionDTO.setOfficeLocComments1(locComments1);
             webTransactionDTO.setOfficeLocComments2(locComments2);
             webTransactionDTO.setInvoiceId(invoiceId);
+            webTransactionDTO.setPayByMethod(payByMethod);
+            webTransactionDTO.setAuthorizeTransaction(Boolean.valueOf(isAuthorizeTransaction));
 
             webTransaction = this.webTransactionService.doSaleWebPosts(httpSession.getAttribute("siteName_" +
                     sessionId).toString(), webTransactionDTO, creditCardForm.getEmailId(), application);
@@ -527,7 +965,7 @@ public class PaymentGatewayController extends AbstractBaseController {
             if(NEW_CREDIT_CARD.equalsIgnoreCase(creditCardForm.getUseExistingAccount())
                     || UPDATE_CREDIT_CARD.equalsIgnoreCase(creditCardForm.getUseExistingAccount())) {
                 //Use New card.
-                validate(creditCardForm, bindingResult, DefaultGroup.class); // Performing validations specified by annotations.
+                validate(creditCardForm, bindingResult, CreditCardGroup.class); // Performing validations specified by annotations.
                 if (bindingResult.hasErrors()) {
                     //modelAndView.setViewName(ECOM_REDIRECT_WEB_PAYMENT_INFO + "?token1=" + request.getSession().getAttribute("token1" + request.getRemoteUser())
                     //                         + "&token3=" + request.getSession().getAttribute("returnUrl" + request.getRemoteUser())
@@ -779,7 +1217,7 @@ public class PaymentGatewayController extends AbstractBaseController {
             if(NEW_CREDIT_CARD.equalsIgnoreCase(creditCardForm.getUseExistingAccount())
                     || UPDATE_CREDIT_CARD.equalsIgnoreCase(creditCardForm.getUseExistingAccount())) {
                 //Use New card.
-                validate(creditCardForm, bindingResult, DefaultGroup.class); // Performing validations specified by annotations.
+                validate(creditCardForm, bindingResult, CreditCardGroup.class); // Performing validations specified by annotations.
                 if (bindingResult.hasErrors()) {
                     modelAndView = setModelAndViewForErrorForShoppingCart(modelAndView, request, principal);
                     return modelAndView;
@@ -925,6 +1363,23 @@ public class PaymentGatewayController extends AbstractBaseController {
             creditCard.setState(creditCardForm.getState());
             creditCard.setZip(creditCardForm.getZip());
             creditCard.setPhone(creditCardForm.getPhoneNumber());
+            creditCard.setModifiedBy(request.getRemoteUser());
+            return creditCard;
+        }
+        
+        private CreditCard buildCreditCardFromPaymentInfoDTO(PaymentInfoDTO paymentInfoDTO, HttpServletRequest request) {
+            CreditCard creditCard = new CreditCard();
+            creditCard.setName(paymentInfoDTO.getAccountName());
+            creditCard.setNumber(paymentInfoDTO.getCreditCardNumber());
+            creditCard.setExpiryMonth(paymentInfoDTO.getExpiryMonth());
+            creditCard.setExpiryYear(paymentInfoDTO.getExpiryYear());
+            creditCard.setSecurityCode(request.getParameter("paymentMethodThreeCvv"));
+            creditCard.setAddressLine1(paymentInfoDTO.getAddressLine1());
+            creditCard.setAddressLine2(paymentInfoDTO.getAddressLine2());
+            creditCard.setCity(paymentInfoDTO.getCity());
+            creditCard.setState(paymentInfoDTO.getState());
+            creditCard.setZip(paymentInfoDTO.getZip());
+            creditCard.setPhone(paymentInfoDTO.getPhone());
             creditCard.setModifiedBy(request.getRemoteUser());
             return creditCard;
         }

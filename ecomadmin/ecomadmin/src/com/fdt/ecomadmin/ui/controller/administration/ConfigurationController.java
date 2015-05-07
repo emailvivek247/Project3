@@ -151,6 +151,7 @@ public class ConfigurationController extends AbstractBaseController {
 			siteConfigurationForm.setPayAsUGoPaymentConfirmationSubject(siteConfiguration.getPayAsUGoPaymentConfSubject());
 			siteConfigurationForm.setRemoveSubscriptionSubject(siteConfiguration.getRemoveSubscriptionSubject());
 			siteConfigurationForm.setAccessAuthorizationSubject(siteConfiguration.getAccessAuthorizationSubject());
+			siteConfigurationForm.setExpiredOverriddenSubscriptionNotificationSubject(siteConfiguration.getExpiredOverriddenSubscriptionNotificationSubject());
 			modelAndView.addObject("modUserId" , siteConfiguration.getModifiedBy());
         }
         modelAndView.addObject("siteConfigForm" , siteConfigurationForm);
@@ -243,6 +244,7 @@ public class ConfigurationController extends AbstractBaseController {
         siteConfiguration.setPayAsUGoPaymentConfSubject(siteConfigurationForm.getPayAsUGoPaymentConfirmationSubject());
         siteConfiguration.setRemoveSubscriptionSubject(siteConfigurationForm.getRemoveSubscriptionSubject());
         siteConfiguration.setAccessAuthorizationSubject(siteConfigurationForm.getAccessAuthorizationSubject());
+        siteConfiguration.setExpiredOverriddenSubscriptionNotificationSubject(siteConfigurationForm.getExpiredOverriddenSubscriptionNotificationSubject());
         siteConfiguration.setSiteId(siteConfigurationForm.getSiteId());
         siteConfiguration.setModifiedBy(request.getRemoteUser());
         this.getServiceStub().updateSiteConfiguration(siteConfiguration);
@@ -271,6 +273,7 @@ public class ConfigurationController extends AbstractBaseController {
 	        siteConfiguration.setPayAsUGoPaymentConfSubject(siteConfigurationForm.getPayAsUGoPaymentConfirmationSubject());
 	        siteConfiguration.setRemoveSubscriptionSubject(siteConfigurationForm.getRemoveSubscriptionSubject());
 	        siteConfiguration.setAccessAuthorizationSubject(siteConfigurationForm.getAccessAuthorizationSubject());
+	        siteConfiguration.setExpiredOverriddenSubscriptionNotificationSubject(siteConfigurationForm.getExpiredOverriddenSubscriptionNotificationSubject());
 	        siteConfiguration.setSiteId(siteConfigurationForm.getSiteId());
 	        siteConfiguration.setModifiedBy(request.getRemoteUser());
 	        this.getServiceStub().updateSiteConfiguration(siteConfiguration);
@@ -411,6 +414,7 @@ public class ConfigurationController extends AbstractBaseController {
             "alertSubject",
             "removeSubscriptionSubject",
             "accessAuthorizationSubject",
+            "expiredOverriddenSubscriptionNotificationSubject",
             "inActiveUserNotifSubject",
         });
     }

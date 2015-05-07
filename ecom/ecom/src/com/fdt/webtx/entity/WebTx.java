@@ -5,11 +5,24 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.fdt.common.entity.Tx;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.jasypt.hibernate4.type.EncryptedStringType;
 
+import com.fdt.common.entity.Tx;
+import com.fdt.ecom.entity.enums.BankAccountType;
+
+@TypeDef (name="encryptedString", typeClass= EncryptedStringType.class,
+parameters= {
+    @Parameter(name="encryptorRegisteredName",  value="hibernateStringEncryptor")
+}
+)
 @Entity
 @Table(name = "ECOMM_WEBPAY_TX")
 public class WebTx extends Tx {
@@ -28,6 +41,25 @@ public class WebTx extends Tx {
 
 	@Column(name = "APPLICATION")
 	private String application = null;
+	
+	@Column(name = "PAYMENT_TOKEN")
+	private String paymentToken = null;
+	
+	@Type(type="encryptedString")
+	@Column(name = "CREDIT_CARD_NUMBER")
+	private String creditCardNumber = null;
+	
+	@Type(type="encryptedString")
+	@Column(name = "BANK_ROUTING_NUMBER")
+	private String bankRoutingNumber = null;
+	
+	@Type(type="encryptedString")
+	@Column(name = "BANK_ACCOUNT_NUMBER")
+	private String bankAccountNumber = null;
+	
+	@Column(name = "BANK_ACCOUNT_TYPE")
+	@Enumerated(EnumType.STRING)
+	private BankAccountType bankAccountType = null;
 
 	@Column(name = "SITE_ID")
 	private Long siteId = null;
@@ -276,5 +308,46 @@ public class WebTx extends Tx {
 	public void setPhone(Long phone) {
 		this.phone = phone;
 	}
+
+	public String getBankRoutingNumber() {
+		return bankRoutingNumber;
+	}
+
+	public void setBankRoutingNumber(String bankRoutingNumber) {
+		this.bankRoutingNumber = bankRoutingNumber;
+	}
+
+	public String getBankAccountNumber() {
+		return bankAccountNumber;
+	}
+
+	public void setBankAccountNumber(String bankAccountNumber) {
+		this.bankAccountNumber = bankAccountNumber;
+	}
+
+	public BankAccountType getBankAccountType() {
+		return bankAccountType;
+	}
+
+	public void setBankAccountType(BankAccountType bankAccountType) {
+		this.bankAccountType = bankAccountType;
+	}
+
+	public String getPaymentToken() {
+		return paymentToken;
+	}
+
+	public void setPaymentToken(String paymentToken) {
+		this.paymentToken = paymentToken;
+	}
+
+	public String getCreditCardNumber() {
+		return creditCardNumber;
+	}
+
+	public void setCreditCardNumber(String creditCardNumber) {
+		this.creditCardNumber = creditCardNumber;
+	}
+
 
 }

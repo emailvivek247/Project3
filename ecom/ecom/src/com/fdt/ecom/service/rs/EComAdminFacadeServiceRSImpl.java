@@ -190,10 +190,12 @@ public class EComAdminFacadeServiceRSImpl implements EComAdminFacadeServiceRS {
                                         @PathParam("isEnable")           boolean isEnable,
                                         @PathParam("modifiedBy")         String modifiedBy,
                                         @PathParam("comments")           String comments,
-                                        @PathParam("isAccessOverridden") boolean isAccessOverridden) {
+                                        @PathParam("isAccessOverridden") boolean isAccessOverridden,
+                                        @QueryParam("endDate") String endDate) {
         try {
             comments = SystemUtil.decodeURL(comments);
-            this.userAdminService.enableDisableUserAccess(userAccessId, isEnable, modifiedBy, comments, isAccessOverridden);
+            endDate = SystemUtil.decodeURL(endDate);
+            this.userAdminService.enableDisableUserAccess(userAccessId, isEnable, modifiedBy, comments, isAccessOverridden, endDate);
             return null;
         } catch(RuntimeException runtimeException) {
             logger.error(NOTIFY_ADMIN, "Error in enableDisableUserAccess for userAccessId {} isEnable {} modifiedBy {}" +

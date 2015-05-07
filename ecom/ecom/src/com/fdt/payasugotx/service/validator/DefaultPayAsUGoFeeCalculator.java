@@ -1,6 +1,7 @@
 package com.fdt.payasugotx.service.validator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -13,6 +14,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.util.Assert;
 
 import com.fdt.common.exception.SDLBusinessException;
+import com.fdt.common.util.SystemUtil;
 import com.fdt.ecom.entity.NonRecurringFee;
 import com.fdt.ecom.entity.ShoppingCartItem;
 import com.fdt.security.dto.FirmUserDTO;
@@ -147,27 +149,38 @@ public class DefaultPayAsUGoFeeCalculator extends AbstractPayAsUGoFeeCalculator 
         return shoppingCartItems;
     }
     
-    private List<String> getBarNumbers(List<FirmUserDTO> firmUsers, String barNumber){
+    private List<String> getBarNumbers(List<FirmUserDTO> firmUsers, String barNumberList){
     	List<String> barNumbers = new ArrayList<String>();
 		for(FirmUserDTO user : firmUsers){
             if(	!StringUtils.isBlank(user.getBarNumber())){
             	barNumbers.add(user.getBarNumber());
             }
 		}
-		if(!StringUtils.isBlank(barNumber)){
-			barNumbers.add(barNumber);
+		if(!StringUtils.isBlank(barNumberList)){
+			String[] barNumbarArray = SystemUtil.tokenizeToStringArray(barNumberList, ",", true, true);
+			if(barNumbarArray.length>0) {
+				List<String> tokenizedBarNumberList = Arrays.asList(barNumbarArray);
+				barNumbers.addAll(tokenizedBarNumberList);
+			}
+			
 		}
 		return barNumbers;
     }
     
-	private boolean barNumberExistsInFirm(List<FirmUserDTO> firmUsers, String barNumber){
+	private boolean barNumberExistsInFirm(List<FirmUserDTO> firmUsers, String barNumberList) {
 		boolean barNumberExists = false;
-		for(FirmUserDTO user : firmUsers){
-            if(	!StringUtils.isBlank(user.getBarNumber()) && 
-                	StringUtils.equalsIgnoreCase(user.getBarNumber(), barNumber)){
-                barNumberExists = true;
-                break;
-            }
+		String[] barNumbarArray = SystemUtil.tokenizeToStringArray(	barNumberList, ",", true, true);
+		outerloop:
+		for (FirmUserDTO user : firmUsers) {
+			if (!StringUtils.isBlank(user.getBarNumber())) {
+				for (String barNumber : barNumbarArray) {
+					if (StringUtils.equalsIgnoreCase(user.getBarNumber(), barNumber)) {
+						barNumberExists = true;
+						break outerloop;
+					}
+				}
+
+			}
 		}
 		return barNumberExists;
 	}

@@ -140,7 +140,7 @@ font-size: 13px;
 						                            <label class="control-label boldText" for="isCertified" class="k-tooltip-validation">Document Type:&nbsp; </label>
 						                            <div class="">
 						                                <select id="isCertified" name="isCertified" class="k-widget k-dropdownlist" style="width:200px" tabindex="4">
-													 		<option value="" selected>ALL Documents</option>
+													 		<option value="" selected>All Documents</option>
 													 		<#if (selectedIsCertified?has_content) && selectedIsCertified == 'Y'>
 													 			<option value="Y" selected>Certified</option>
 													 		<#else>

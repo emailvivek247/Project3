@@ -4,6 +4,9 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.stereotype.Repository;
 
 import com.fdt.common.dao.AbstractBaseDAOImpl;
@@ -177,6 +180,18 @@ public class OTCTxDAOImpl extends AbstractBaseDAOImpl implements OTCTxDAO {
         }
         return otcTransaction;
     }
+
+	public void archiveOTCTransactions(String archivedBy, String archiveComments) {
+		DateTime dateTime = new DateTime().minusMonths(18);
+    	DateTimeFormatter format = DateTimeFormat.forPattern("MM/dd/yyyy");
+    	String toDate = format.print(dateTime);
+    	Session session = currentSession();
+        session.getNamedQuery("ARCHIVE_OTC_TX")
+        							.setParameter("toDate", toDate)
+                                    .setParameter("archivedBy", archivedBy)
+                                    .setParameter("archiveComments", archiveComments).list();
+
+	}
 
 
 

@@ -6,8 +6,9 @@
 
 <sql-query name="GET_DOCUMENT_PURCHASED_FOR_FIRM" callable="true">
      <![CDATA[
-SELECT 
-	SUM(payAsUGOTxItem.ITEM_QUANTITY) AS PURCHASED_ITEM_COUNT
+      SELECT 
+		payAsUGOTxItem.BAR_NUMBER,
+		payAsUGOTxItem.ITEM_QUANTITY	
 		FROM	
 			ECOMM_PAYASUGO_TX payAsUGoTX,
 			ECOMM_PAYASUGO_TX_ITEMS payAsUGoTxItem,
@@ -22,7 +23,6 @@ SELECT
 			AND payAsUGoTX.ID = payAsUGOTxItem.PAYASUGO_TX_ID 
 			AND payAsUGoTXItem.REFUND_TRAN_ID IS NULL 
 			AND payAsUGOTxItem.IS_REFUNDED = 'N' 
-			AND payAsUGOTxItem.BAR_NUMBER NOT IN (:barNumbers) 
 			AND userAccount.USER_ACCESS_ID = payAsUGoTx.FIRM_ADMIN_USER_ACCESS_ID 
 			AND payAsUGoTX.TX_DATE >= userAccount.LAST_BILLING_DATE
 			AND payAsUGoTX.TX_DATE <= userAccount.NEXT_BILLING_DATE
@@ -150,6 +150,7 @@ SELECT
 			,shoppingCart.LOCATION_ID AS shoppingCart_LOCATION_ID
 			,AA.IS_GOVERNMENT_ACCESS AS AA_IS_GOVERNMENT_ACCESS
 			,shoppingCart.IS_CERTIFIED as IS_CERTIFIED
+			,shoppingCart.ITEM_NAME AS shoppingCart_ITEM_NAME
         FROM ECOMM_USERS_SHOPPING_CART shoppingCart,
             AUTH_USERS users,  
             AUTH_ACCESS AA,
@@ -198,6 +199,7 @@ SELECT
 			,shoppingCart.LOCATION_ID AS shoppingCart_LOCATION_ID
 			,AA.IS_GOVERNMENT_ACCESS AS AA_IS_GOVERNMENT_ACCESS
 			,shoppingCart.IS_CERTIFIED as IS_CERTIFIED
+			,shoppingCart.ITEM_NAME AS shoppingCart_ITEM_NAME
         FROM ECOMM_USERS_SHOPPING_CART shoppingCart,
             AUTH_USERS users, 
             ECOMM_NODE node,
@@ -337,12 +339,43 @@ SELECT
 
 <sql-query name="GET_LOCATION_SEAL_BY_ID">
     <![CDATA[
-    		SELECT LOCATION.SEAL_OF_AUTHENTICITY
+    		SELECT 
+    		LOCATION.ID, 
+    		LOCATION.DESCRIPTION, 
+    		LOCATION.SITE_ID, 
+    		LOCATION.STATE_DESCRIPTION, 
+			LOCATION.CLERK_NAME, 
+			LOCATION.DESIGNATION, 
+			LOCATION.NOTE_OF_AUTHENTICITY, 
+			LOCATION.LOCATION_CODE,
+			LOCATION.SEAL_OF_AUTHENTICITY
     	FROM 
     		ECOMM_LOCATION LOCATION 
     	WHERE 
 	    	LOCATION.ID = :locationId AND  
     		LOCATION.ACTIVE = 'Y'
+    ]]>
+</sql-query>
+
+<sql-query name="ARCHIVE_PAYASUGO_TX" callable="true">
+   <![CDATA[
+        {call SP_ARCHIVE_PAYASUGO_TX (:toDate, :archivedBy, :archiveComments)}
+    ]]>
+</sql-query>
+
+<sql-query name="GET_GRANICUS_REVENUE_FROM_PAYASUGO_TX" callable="true">
+     <![CDATA[
+        {call GET_GRANICUS_REVENUE_FROM_PAYASUGO_TX (:siteName, :revenueThresholdStartDate)}
+    ]]>
+</sql-query>
+
+<sql-query name="GET_DOCUMENTID_BY_CERTIFIED_DOCUMENT_NUMBER">
+    <![CDATA[
+    		Select TX_ITEMS.ITEM_NAME, TX_ITEMS.DATE_TIME_CREATED 
+			FROM ECOMM_PAYASUGO_TX TX 
+			INNER JOIN ECOMM_PAYASUGO_TX_ITEMS TX_ITEMS ON TX_ITEMS.PAYASUGO_TX_ID = TX.ID
+			WHERE TX_ITEMS.CERTIFIED_DOCUMENT_NUMBER = :certifiedDocumentNumber
+			AND TX.SITE_ID = (SELECT ID FROM ECOMM_SITE WHERE NAME = :siteName)
     ]]>
 </sql-query>
 

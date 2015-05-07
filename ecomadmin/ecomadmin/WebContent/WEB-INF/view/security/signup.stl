@@ -1,6 +1,6 @@
 <#include "../lib/include.stl" />
 <head>
-<title>ACCEPT Sign Up</title>
+<title>eACCEPT Sign Up</title>
 </head>
 <#assign form  =JspTaglibs["http://www.springframework.org/tags/form"]>
 <#assign spring=JspTaglibs["http://www.springframework.org/tags"]>
@@ -109,7 +109,7 @@ text-shadow: rgba(0, 0, 0, 0.247059) 1px 0px 1px;
 									<div id="signup-box" class="visible widget-box no-border">
 										<div class="widget-main" style="background-color:white;">
 												<div id="acceptTitle" class="center">
-														<img src="resources/images/accept-logo.png">
+														<img src="resources/images/eAccept-logo.png">
 												</div>
 												<h4 class="header green lighter bigger" style="text-align:center;">
 												<i class="icon-user"></i>
@@ -247,28 +247,23 @@ text-shadow: rgba(0, 0, 0, 0.247059) 1px 0px 1px;
 													<i class="icon-arrow-left"></i>
 													Back to login
 												</a>
-											<div style="float:right;display:inline-block;font-size:20px;">	
+											    <div style="float:right;display:inline-block;font-size:20px;">	
 													<span>
-														<a  href="https://www.facebook.com/pages/AMCAD/193699310720652" >
+														<a  href="https://www.facebook.com/granicusinc" >
 															<i class="icon-facebook white "></i>
 														</a>
 													</span>
 													<span>
-														<a href="https://twitter.com/AmCadLLC">
+														<a href="https://twitter.com/granicus">
 															<i class="icon-twitter white"></i>
 														</a>
 													</span>	
 													<span>
-														<a href="http://www.linkedin.com/company/amcad?trk=tabs_biz_home" >
+														<a href="https://www.linkedin.com/company/granicusinc?trk=tyah" >
 															<i class="icon-linkedin white"></i>
 														</a>
 													</span>	
-													<span>
-														<a href="http://www.youtube.com/user/AMCADLLC">
-															<i class="icon-youtube white"></i>
-														</a>
-													</span>
-											</div>	
+											    </div>	
 											</div>
 								</div><!--/signup-box-->
 
@@ -289,7 +284,7 @@ text-shadow: rgba(0, 0, 0, 0.247059) 1px 0px 1px;
 											<tbody id="footerTable" style="color:#000;">
 									        	<tr>
 								               		<td align="center" style="vertical-align:top">
-								                    		<a href="http://www.amcad.com"><img src="resources/images/amcadLogo.png" alt="AMCAD"  height="42px" border="0" /></a><br>&nbsp; Copyright &copy;2014 (dba AmCad & AmCad Digital Conversions)
+								                    		<a href="http://www.granicus.com"><img src="resources/images/granicusLogo.png" alt="Granicus INC"  height="42px" border="0" /></a><br>&nbsp; Copyright &copy; <script>document.write(new Date().getFullYear())</script> Granicus, INC.
 								                	</td>
 								                	<div class="clear">
 									        	</tr>

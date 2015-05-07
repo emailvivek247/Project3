@@ -155,12 +155,11 @@ td {padding-right:10px;padding-left:10px;}
 										<tr>
 											<td class="w580" width="580">
 												<div style="text-align:left;color:red;">
-													<b>Instructions to view the purchased documents</b>: <br/><br />
-													1. To view the purchased documents login to your account and go to "Account Settings" using the link available in the drop down under your email address on the top right corner of the search page. 
-													<br />2. Click on "View Payment History". 
-													<br />3. Go to the "Web Payment History" tab and click on the "Details" icon for the transaction to view the purchased documents. 
-													<br />4. Click on the "View Item" link (if available*) to view the purchased document.
-
+													<b>Instructions to view and print purchased documents</b>: <br/><br />
+													1. To view or print purchased documents, login to your account and go to "Account Settings" using the link available in the drop down under your email address on the top right corner of the search page 
+													<br />2. Click on "View Payment History" 
+													<br />3. Go to the "Pay As You Go Payment History" tab
+													<br />4. Find the View Receipt and Document column for the transaction 
 												</div>
 											</td>
 										</tr>

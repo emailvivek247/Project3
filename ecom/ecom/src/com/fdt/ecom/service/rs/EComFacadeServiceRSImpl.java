@@ -636,12 +636,13 @@ public class EComFacadeServiceRSImpl implements EComFacadeServiceRS {
     @Produces({MediaType.APPLICATION_JSON})
     public List<PayAsUGoTxView> getPayAsUGoTransactionsByNode(@RequestBody TransactionRequestDTO request){
         try {
-            return this.payAsSubService.getPayAsUGoTxByNode(request.getUserName(), request.getNodeName(), 
+            return this.payAsSubService.getPayAsUGoTxByNode(request.getUserName(), request.getNodeName(),
+            		request.getComments(),
             		request.getFromDate(), request.getToDate());
         } catch(RuntimeException runtimeException) {
             logger.error(NOTIFY_ADMIN, "Error in getPayAsUGoTransactionsByNode for userName {} "
-            		+ "nodeName{}, fromDate{}, toDate{}", request.getUserName(), request.getNodeName(), 
-            		request.getFromDate(), request.getToDate(), 
+            		+ "nodeName{}, fromDate{}, toDate{}", request.getUserName(), request.getNodeName(),
+            		request.getFromDate(), request.getToDate(),
                     runtimeException);
             throw runtimeException;
         }
@@ -653,13 +654,14 @@ public class EComFacadeServiceRSImpl implements EComFacadeServiceRS {
     @Produces({MediaType.APPLICATION_JSON})
     public PageRecordsDTO getPayAsUGoTransactionsByNodePerPage(@RequestBody TransactionRequestDTO request) {
         try {
-            return this.payAsSubService.getPayAsUGoTxByNodePerPage(request.getUserName(), request.getNodeName(), 
-            		request.getFromDate(), request.getToDate(), request.getStartingFrom(), request.getNumberOfRecords());
+            return this.payAsSubService.getPayAsUGoTxByNodePerPage(request.getUserName(), request.getNodeName(),
+            		request.getComments(), request.getFromDate(), request.getToDate(),
+            		request.getStartingFrom(), request.getNumberOfRecords());
         } catch(RuntimeException runtimeException) {
             logger.error(NOTIFY_ADMIN, "Error in getPayAsUGoTransactionsByNode for userName {} "
-            		+ "nodeName{}, fromDate{}, toDate{}, startingFrom{}, numberOfRecords{}", request.getUserName(), request.getNodeName(), 
-            		request.getFromDate(), request.getToDate(), request.getStartingFrom(), request.getNumberOfRecords(),
-                    runtimeException);
+            		+ "nodeName{}, fromDate{}, toDate{}, startingFrom{}, numberOfRecords{}", request.getUserName(),
+            		request.getNodeName(), request.getFromDate(), request.getToDate(), request.getStartingFrom(),
+            		request.getNumberOfRecords(), runtimeException);
             throw runtimeException;
         }
     }
@@ -950,7 +952,7 @@ public class EComFacadeServiceRSImpl implements EComFacadeServiceRS {
     @WebMethod
     @POST
     @Path("addFirmUserAccess/{adminUserName}")
-    @Produces({MediaType.APPLICATION_JSON})    
+    @Produces({MediaType.APPLICATION_JSON})
     public void addFirmUserAccess( @RequestBody FirmLevelUserRequestDTO request,
     		@PathParam("adminUserName") String adminUserName)
     			throws UserNameNotFoundException, MaxUsersExceededException, SDLBusinessException{
@@ -965,20 +967,20 @@ public class EComFacadeServiceRSImpl implements EComFacadeServiceRS {
 
 
 	@WebMethod
-	@POST 
+	@POST
 	@Path("updateShoppingCartComments")
-    @Produces({MediaType.APPLICATION_JSON})    
+    @Produces({MediaType.APPLICATION_JSON})
 	public void updateShoppingCartComments(@RequestBody ShoppingCartItem shoppingCartItem) {
 		this.payAsSubService.updateShoppingCartComments(shoppingCartItem.getId(), shoppingCartItem.getComments());
 	}
-	
+
 	@WebMethod
 	@GET @Path("getLocationsBySiteId/{siteId}")
 	@Produces({MediaType.APPLICATION_JSON})
 	public List<Location> getLocationsBySiteId(@PathParam("siteId") Long siteId){
 		return this.payAsSubService.getLocationsBySiteId(siteId);
 	}
-	
+
 
 	@WebMethod
 	@GET @Path("getLocationByNameAndAccessName/{locationName}/{accessName}")
@@ -987,5 +989,13 @@ public class EComFacadeServiceRSImpl implements EComFacadeServiceRS {
 			@PathParam("accessName") String accessName){
 		return this.payAsSubService.getLocationByNameAndAccessName(locationName, accessName);
 	}
-	
+
+	@WebMethod
+	@GET @Path("getDocumentIdByCertifiedDocumentNumber/{certifiedDocumentNumber}/{siteName}")
+	@Produces({MediaType.APPLICATION_JSON})
+	public String getDocumentIdByCertifiedDocumentNumber(@PathParam("certifiedDocumentNumber")
+			String certifiedDocumentNumber, @PathParam("siteName") String siteName) {
+		return this.payAsSubService.getDocumentIdByCertifiedDocumentNumber(certifiedDocumentNumber, siteName);
+	}
+
 }

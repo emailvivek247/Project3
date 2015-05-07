@@ -12,11 +12,12 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import org.apache.axis2.AxisFault;
-import org.apache.axis2.axis2userguide.MagensaStub;
-import org.apache.axis2.axis2userguide.MagensaStub.DecryptRSV201;
-import org.apache.axis2.axis2userguide.MagensaStub.DecryptRSV201Inputs;
-import org.apache.axis2.axis2userguide.MagensaStub.DecryptRSV201Outputs;
-import org.apache.axis2.axis2userguide.MagensaStub.DecryptRSV201Response;
+import org.apache.axis2.axis2userguide.DecryptServiceStub;
+import org.apache.axis2.axis2userguide.DecryptServiceStub.Authentication;
+import org.apache.axis2.axis2userguide.DecryptServiceStub.DecryptCardSwipe;
+import org.apache.axis2.axis2userguide.DecryptServiceStub.DecryptCardSwipeRequest;
+import org.apache.axis2.axis2userguide.DecryptServiceStub.DecryptCardSwipeResponse0;
+import org.apache.axis2.axis2userguide.DecryptServiceStub.EncryptedCardSwipe;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -124,8 +125,8 @@ public class OTCTXServiceImpl implements OTCTXService {
             throw sDLBusinessException;
         }
 
-        if (Days.daysBetween(new DateTime(oTCTransaction.getTransactionDate()).toDateMidnight(),
-                new DateTime().toDateMidnight()).getDays()  > Integer.valueOf(txValidityPeriod)) {
+        if (Days.daysBetween(new DateTime(oTCTransaction.getTransactionDate()).withTimeAtStartOfDay(),
+                new DateTime().withTimeAtStartOfDay()).getDays()  > Integer.valueOf(txValidityPeriod)) {
             sDLBusinessException = new SDLBusinessException();
         	sDLBusinessException.setErrorCode("ERROR");
         	sDLBusinessException.setBusinessMessage(this.getMessage("web.trans.txDatePastValidityPeriod",
@@ -367,29 +368,42 @@ public class OTCTXServiceImpl implements OTCTXService {
         return oTCResponseDTO;
     }
 
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor= Throwable.class)
+	public void archiveOTCTransactions(String archivedBy, String archiveComments) {
+    	this.oTCDAO.archiveOTCTransactions(archivedBy, archiveComments);
+	}
+
 
     /**  This Function Calls Magensa Web Service Method to decrypt swiped credit card details.
       *  Method uses Axis2 Data Binding (ADB) generated stub code.
       *  Stub Generation Method: WSDL2Java -uri magensa.wsdl -p org.apache.axis2.axis2userguide -d adb -s
+      *  keytool -importkeystore -srckeystore Granicus_Prod_Feb2018.pfx -srcstoretype pkcs12 -destkeystore granicus_magensa_client.jks -deststoretype JKS
      */
     private Map<String, String> decrypt(String encTrackOne, String encTrackTwo, String encTrackThree, String encMp,
     		String ksn, String mPrintStatus, String cardType, String encryptionBlockType, String hostId, String hostPwd,
             String registeredBy, String outputFormatCode) throws MagensaException {
     	Map<String, String> tracMap = new HashMap<String, String>();
-        DecryptRSV201Inputs decryptRSV201Inputs = new DecryptRSV201Inputs();
-        DecryptRSV201Outputs decryptRSV201Outputs = new DecryptRSV201Outputs();
-        MagensaStub magensaStub = null ;
+    	DecryptCardSwipe decryptCardSwipe = new DecryptCardSwipe();
+		DecryptCardSwipeRequest decryptCardSwipeRequest = new DecryptCardSwipeRequest();
+		EncryptedCardSwipe encryptedCardSwipe = new EncryptedCardSwipe();
+		Authentication authentication = new Authentication();
+        DecryptServiceStub magensaStub = null ;
+        DecryptCardSwipeResponse0 decryptCardSwipeResponse = null;
         try {
         	if(StringUtils.isBlank(System.getProperty("javax.net.ssl.keyStore"))) {
-        		logger.info("Intializing Keystores");
-        		logger.info("javax.net.ssl.keyStore" + System.getProperty("javax.net.ssl.keyStore"));
-        		logger.info("javax.net.ssl.keyStoreType" + System.getProperty("javax.net.ssl.keyStoreType"));
-        		logger.info("javax.net.ssl.keyStorePassword" + System.getProperty("javax.net.ssl.keyStorePassword"));
+        		logger.info("Intializing Keystores");        		
         		System.setProperty("javax.net.ssl.keyStore", this.magensaCertficatePath);
         		System.setProperty("javax.net.ssl.keyStoreType", "jks");
         		System.setProperty("javax.net.ssl.keyStorePassword", this.magensaCertficatePwd);
 		   }
-        	magensaStub = new MagensaStub(this.magensaWsdl);
+        	String keyStore = StringUtils.isBlank(System.getProperty("javax.net.ssl.keyStore")) == true ? " ": System.getProperty("javax.net.ssl.keyStore"); 
+        	String keyStoreType = StringUtils.isBlank(System.getProperty("javax.net.ssl.keyStoreType")) == true ? " ": System.getProperty("javax.net.ssl.keyStoreType"); 
+        	String keyStorePassword = StringUtils.isBlank(System.getProperty("javax.net.ssl.keyStorePassword")) == true ? " ": System.getProperty("javax.net.ssl.keyStorePassword"); 
+        	logger.info("javax.net.ssl.keyStore: " + keyStore);
+    		logger.info("javax.net.ssl.keyStoreType: " + keyStoreType);
+    		logger.info("javax.net.ssl.keyStorePassword: " + keyStorePassword);
+    		logger.info("Magensa WSDL: " + this.magensaWsdl);
+        	magensaStub = new DecryptServiceStub(this.magensaWsdl);
             magensaStub._getServiceClient().getOptions().setProperty(org.apache.axis2.transport.http.HTTPConstants.CHUNKED, Boolean.FALSE);
         } catch (AxisFault axisFault) {
             axisFault.printStackTrace();
@@ -398,38 +412,33 @@ public class OTCTXServiceImpl implements OTCTXService {
             magensaException.setErrorCode("MALFORMED_MAGENSA_URL");
             throw magensaException;
         }
-        DecryptRSV201 decryptRSV201Request = new DecryptRSV201();
-        decryptRSV201Inputs.setEncTrack1(encTrackOne);
-        decryptRSV201Inputs.setEncTrack2(encTrackTwo);
-        decryptRSV201Inputs.setEncMP(encMp);
-        decryptRSV201Inputs.setKSN(ksn);
-        decryptRSV201Inputs.setMPStatus(mPrintStatus);
-        decryptRSV201Inputs.setCustTranID("None");
-        decryptRSV201Inputs.setCardType(cardType);
-        decryptRSV201Inputs.setEncryptionBlockType(encryptionBlockType);
-        decryptRSV201Inputs.setHostID(hostId);
-        decryptRSV201Inputs.setHostPwd(hostPwd);
-        decryptRSV201Inputs.setRegisteredBy(registeredBy);
-        decryptRSV201Inputs.setOutputFormatCode(outputFormatCode);
-        decryptRSV201Request.setDecryptRSV201_Input(decryptRSV201Inputs);
-        DecryptRSV201Response decryptRSV201Response = null;
-        try {
-            decryptRSV201Response = magensaStub.decryptRSV201(decryptRSV201Request);
-            decryptRSV201Outputs = decryptRSV201Response.getDecryptRSV201Result();
-        } catch (RemoteException remoteException) {
+        encryptedCardSwipe.setTrack1(encTrackOne);
+		encryptedCardSwipe.setTrack2(encTrackTwo);
+		encryptedCardSwipe.setTrack3("D04D1707D07664377FD0F0094B11E26CF4C1B1D670C3696E3F0C14C34EBD3EBE32C602DE684336BCEE8C08CC1BF22862995D9F355573CAEA5FAA97B03F2307E0679FFF294B114FE4");
+		encryptedCardSwipe.setMagnePrint(encMp);
+		encryptedCardSwipe.setKSN(ksn);
+		encryptedCardSwipe.setMagnePrintStatus(mPrintStatus);
+		authentication.setUsername(hostId);
+		authentication.setPassword(hostPwd);
+		authentication.setCustomerCode("001000014");        
+        try {                
+    		decryptCardSwipeRequest.setEncryptedCardSwipe(encryptedCardSwipe);
+    		decryptCardSwipeRequest.setAuthentication(authentication);
+    		decryptCardSwipe.setRequest(decryptCardSwipeRequest);
+    		decryptCardSwipeResponse =  magensaStub.decryptCardSwipe(decryptCardSwipe);
+    	} catch (RemoteException remoteException) {
             remoteException.printStackTrace();
             logger.error("Error in decrypt function of Magensa", remoteException);
             MagensaException magensaException = new MagensaException(remoteException.getMessage());
             magensaException.setErrorCode("MALFORMED_MAGENSA_URL");
             throw magensaException;
         }
-        if(decryptRSV201Outputs.getStatusCode().equalsIgnoreCase("1000") || decryptRSV201Outputs.getStatusCode().equalsIgnoreCase("Y094")
-        		|| decryptRSV201Outputs.getStatusCode().equalsIgnoreCase("Y093")){
-            tracMap.put(TRACK_1, decryptRSV201Outputs.getTrack1());
-            tracMap.put(TRACK_2, decryptRSV201Outputs.getTrack2());
+        if(decryptCardSwipeResponse.isDecryptCardSwipeResultSpecified()){
+            tracMap.put(TRACK_1, decryptCardSwipeResponse.getDecryptCardSwipeResult().getDecryptedCardSwipe().getTrack1());
+            tracMap.put(TRACK_2, decryptCardSwipeResponse.getDecryptCardSwipeResult().getDecryptedCardSwipe().getTrack2());
         } else {
-            MagensaException magensaException = new MagensaException(decryptRSV201Outputs.getStatusMsg());
-            magensaException.setErrorCode(decryptRSV201Outputs.getStatusCode());
+            MagensaException magensaException = new MagensaException("Magensa Decryption Error");
+            magensaException.setErrorCode("Magensa Decryption Error");
             throw magensaException;
         }
         return tracMap;
@@ -636,7 +645,5 @@ public class OTCTXServiceImpl implements OTCTXService {
     private String getMessage(String messageKey) {
         return this.messages.getMessage(messageKey, null, new Locale("en"));
     }
-
-
 
 }

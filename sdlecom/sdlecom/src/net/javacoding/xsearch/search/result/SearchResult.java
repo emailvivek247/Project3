@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.javacoding.xsearch.api.Document;
 import net.javacoding.xsearch.config.DatasetConfiguration;
 import net.javacoding.xsearch.config.ServerConfiguration;
 import net.javacoding.xsearch.config.XMLSerializable;
@@ -70,6 +71,10 @@ public class SearchResult extends XMLSerializable{
 	public List<SearchSort> sortBys;
     @XStreamAlias("docs")
 	public List<HitDocument> docs;
+    
+    @XStreamAlias("xstreamdocs")
+	public List<Document> xstreamdocs;
+    
     @XStreamAlias("searchTime")
 	public long searchTime;
     @XStreamAlias("searchTimeString")
@@ -93,7 +98,13 @@ public class SearchResult extends XMLSerializable{
 
     public String userInput;
     
-   	/**
+    public List<Document> getXstreamdocs() {
+		return xstreamdocs;
+	}
+	public void setXstreamdocs(List<Document> xstreamdocs) {
+		this.xstreamdocs = xstreamdocs;
+	}
+	/**
 	 * Get current DatasetConfiguration instance
 	 */
 	public DatasetConfiguration getDatasetConfiguration(){ return datasetConfiguration;}
@@ -312,6 +323,42 @@ public class SearchResult extends XMLSerializable{
         this.request = request;
         this.response = response;
     }
+    
+    public void initFor3Tier(SearchContext sc, 
+            String q, 
+            String lq,
+            org.apache.lucene.search.Query query, 
+            List<Document> xstreamdocs, 
+            List<HitDocument> defaultDocs, 
+            long searchTime, 
+            int total, 
+            int start, 
+            int length,
+            List<SearchSort> sortBys,
+            FilterResult filterResult,
+            HttpServletRequest request,
+            HttpServletResponse response
+            ) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException{
+        this.datasetConfiguration = sc.dc;
+        this.q = q;
+        this.lq = lq;
+        this.indexName = sc.dc.getName();
+        this.templateName = sc.templateName;
+        this.template = sc.template;
+        this.xstreamdocs = xstreamdocs;
+        this.defaultDocs = defaultDocs;
+        this.searchTime = searchTime;
+        this.total = total;
+        this.start = start;
+        this.length = length;
+        if(query!=null){
+            this.summarizer = new net.javacoding.xsearch.search.Highlighter(sc.dc.getAnalyzer(), query.rewrite(sc.irs.getIndexReader()), q);
+        }
+        this.sortBys = sortBys;
+        this.filterResult = filterResult;
+        this.request = request;
+        this.response = response;
+    }
 
     public SearchResult() {
     	super();
@@ -328,6 +375,7 @@ public class SearchResult extends XMLSerializable{
         request.setAttribute("templateName", templateName);
         request.setAttribute("q", q);
         request.setAttribute("lq", lq);
+        request.setAttribute("xstreamdocs", xstreamdocs);
         request.setAttribute("docs", docs);
         request.setAttribute("searchTime", getSearchTimeString());
         request.setAttribute("total", new Integer(total));
@@ -368,6 +416,7 @@ public class SearchResult extends XMLSerializable{
             this.summarizer.setHighlightPrefix(beginTag);
             this.summarizer.setHighlightSuffix(endTag);
             self.put("docs", HitDocument.toJSONArray(docs));
+            self.put("xstreamdocs", Document.toJSONArray(xstreamdocs));
             self.put("filterResult", filterResult.toJSONArray());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -401,6 +450,11 @@ public class SearchResult extends XMLSerializable{
 	    return this.summarizer.getHighlighted(t, field);
 	}
 	
+	public String highlight(Document doc, String field) {
+	    String t = EscapeChars.forHTMLTag(doc.getString(field));
+	    return this.summarizer.getHighlighted(t, field);
+	}
+	
 	/**
 	 * Usage: searchResult.hightlight(doc, "id")
 	 * <br/>
@@ -422,6 +476,12 @@ public class SearchResult extends XMLSerializable{
         String t = doc.get(field);
         return this.summarizer.getHighlighted(t, field);
     }
+    
+    public String directHighlight(Document doc, String field) {
+        String t = doc.getString(field);
+        return this.summarizer.getHighlighted(t, field);
+    }
+    
     /**
      * Usage: searchResult.summarize(doc, "id")
      * <br/>
@@ -432,6 +492,12 @@ public class SearchResult extends XMLSerializable{
         String t = EscapeChars.forHTMLTag(doc.get(field));
         return this.summarizer.getSummary(t, field);
     }
+    
+    public String summarize(Document doc, String field) {
+        String t = EscapeChars.forHTMLTag(doc.getString(field));
+        return this.summarizer.getSummary(t, field);
+    }
+    
     /**
      * Usage: searchResult.directSummarize(doc, "id")
      * <br/>
@@ -440,6 +506,11 @@ public class SearchResult extends XMLSerializable{
      */
     public String directSummarize(HitDocument doc, String field) {
         String t = doc.get(field);
+        return this.summarizer.getSummary(t, field);
+    }
+    
+    public String directSummarize(Document doc, String field) {
+        String t = doc.getString(field);
         return this.summarizer.getSummary(t, field);
     }
 

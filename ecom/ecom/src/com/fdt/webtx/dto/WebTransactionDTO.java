@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.fdt.common.dto.AbstractBaseDTO;
+import com.fdt.ecom.entity.BankAccount;
 import com.fdt.ecom.entity.CreditCard;
 import com.fdt.ecom.entity.ShoppingCartItem;
 import com.fdt.webtx.entity.WebTxItem;
@@ -13,6 +14,8 @@ public class WebTransactionDTO extends AbstractBaseDTO implements Serializable {
     private static final long serialVersionUID = -1764770670860168937L;
 
     private CreditCard creditCard = null;
+    
+    private BankAccount bankAccount = null;
 
     private List<ShoppingCartItem> shoppingCartItemList = null;
 
@@ -45,8 +48,12 @@ public class WebTransactionDTO extends AbstractBaseDTO implements Serializable {
     private String officeLocComments2 = null;
 
     private String invoiceId = null;
+    
+    private boolean isAuthorizeTransaction = false;
+    
+    private String payByMethod = null;    
 
-    public String getInvoiceId() {
+	public String getInvoiceId() {
 		return invoiceId;
 	}
 
@@ -182,8 +189,32 @@ public class WebTransactionDTO extends AbstractBaseDTO implements Serializable {
     public void setOfficeLocComments2(String officeLocComments2) {
         this.officeLocComments2 = officeLocComments2;
     }
+    
+    public boolean isAuthorizeTransaction() {
+		return isAuthorizeTransaction;
+	}
 
-    @Override
+	public void setAuthorizeTransaction(boolean isAuthorizeTransaction) {
+		this.isAuthorizeTransaction = isAuthorizeTransaction;
+	}
+
+	public BankAccount getBankAccount() {
+		return bankAccount;
+	}
+
+	public void setBankAccount(BankAccount bankAccount) {
+		this.bankAccount = bankAccount;
+	}
+	
+	public String getPayByMethod() {
+		return payByMethod;
+	}
+
+	public void setPayByMethod(String payByMethod) {
+		this.payByMethod = payByMethod;
+	}
+
+	@Override
     public String toString() {
         return "WebTransactionDTO [creditCard=" + creditCard
                 + ", shoppingCartItemList=" + shoppingCartItemList

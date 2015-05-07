@@ -40,7 +40,7 @@ color: #FBFCFA;
 									<div class="widget-body">
 										<div class="widget-main" style="font-size:13px; text-align:left; font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;">
 												<div id="acceptTitle" class="center" style="font-size: 45px;margin: 20px 0;">
-													<img src="resources/images/accept-logo.png">
+													<img src="resources/images/eAccept-logo.png">
 												</div>
 											<h5 style="font-size:13px; font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;"  class="header blue lighter bigger" >
 												<i class="fa fa-info-sign"></i>
@@ -67,11 +67,11 @@ color: #FBFCFA;
 	<!--- Footer ---- Style is inherited from footerTable2 id--->
 	<div class="container-fluid center" id="footerContainer">
 		<span>
-			<a href="http://www.amcad.com"><img src="resources/images/amcadLogo.png" alt="AMCAD"  height="42px" border="0" style="vertical-align:baseline;margin-left:10px;"/></a>
+			<a href="http://www.granicus.com"><img src="resources/images/granicusLogo.png" alt="Granicus INC"  height="42px" border="0" style="vertical-align:baseline;margin-left:10px;"/></a>
 		</span>
 		</br>	
 		<span>
-	    	Copyright &copy;2014 American Cadastre LLC (dba AMCAD). All Rights Reserved
+	    	Copyright &copy; <script>document.write(new Date().getFullYear())</script> Granicus, INC.
 	    </span>
 	    </br>
 	    <span>

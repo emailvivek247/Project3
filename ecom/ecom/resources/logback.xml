@@ -45,9 +45,12 @@
 		<evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
       		<marker>NOTIFY_ADMIN</marker>
     	</evaluator>
-    	<smtpHost>mail.amcad.com</smtpHost>
-    	<to>roamsupport@amcad.com</to>
-    	<from>accept@amcad.com</from>
+    	<smtpHost>email-smtp.us-east-1.amazonaws.com</smtpHost>
+		<smtpPort>587</smtpPort>
+		<username>AKIAJZSKMSNOBKAT2IZA</username>
+		<password>AgSJzhgeLeNHZQaIioms6Y3lHYPaHgZCWrL7BcMraSt1</password>
+    	<to>roamsupport@granicus.com</to>
+    	<from>no-reply@granicus.com</from>
     	<subject>${HOSTNAME} - Ecommerce Error: %logger{20} - %msg</subject>
     	<layout class="ch.qos.logback.classic.PatternLayout">
       		<pattern>%d{MM-dd-yy HH:mm:ss.SSS} %-5level [%thread][%logger{40}] : %msg%n</pattern>
@@ -77,6 +80,7 @@
 	    <!-- Commented for Prod <appender-ref ref="STDOUT"/>  -->
 	    <appender-ref ref="FILE"/>
 		<appender-ref ref="EMAIL"/>
+		<appender-ref ref="STDOUT"/>
 	</root>
 
 </configuration>

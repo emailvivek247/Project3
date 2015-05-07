@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.fdt.ecom.dto.UserAccessDetailDTO;
+import com.fdt.ecom.entity.Site;
 import com.fdt.ecom.entity.UserHistory;
 import com.fdt.recurtx.dto.RecurTxSchedulerDTO;
 import com.fdt.recurtx.dto.UserAccountDetailDTO;
@@ -72,5 +73,7 @@ public interface SubDAO {
             String modifiedBy);
 
     public User getRecurSubAccountInfo(String username);
+
+	public Double getGranicusRevenueFromRecurTx(Site site);
 
 }

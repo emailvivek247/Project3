@@ -1,11 +1,15 @@
 package com.fdt.recurtx.dao;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -14,6 +18,7 @@ import com.fdt.common.dao.AbstractBaseDAOImpl;
 import com.fdt.ecom.entity.CreditCard;
 import com.fdt.ecom.entity.Merchant;
 import com.fdt.ecom.entity.Site;
+import com.fdt.recurtx.dto.ExpiredOverriddenSubscriptionDTO;
 import com.fdt.recurtx.dto.RecurTxSchedulerDTO;
 import com.fdt.recurtx.entity.RecurTx;
 import com.fdt.security.entity.Access;
@@ -63,7 +68,10 @@ public class RecurTxDAOImpl extends AbstractBaseDAOImpl implements RecurTxDAO {
                 Site site = new Site();
                 site.setId(this.getLongFromInteger(row[8]));
                 site.setName(this.getString(row[11]));
+                site.setDescription(this.getString(row[42]));
                 site.setTimeZone(this.getString(row[36]));
+                site.setRevenueThresholdAmount(this.getDoubleFromBigDecimal(row[40]));
+                site.setRevenueThresholdStartDate(this.getDate(row[41]));
                 String userName = this.getString(row[9]);
                 site.addMerchant(merchant);
                 CreditCard creditCard = new CreditCard();
@@ -447,4 +455,61 @@ public class RecurTxDAOImpl extends AbstractBaseDAOImpl implements RecurTxDAO {
         }
         return recurTxHistoryInfoList;
     }
+
+
+	public void archiveRecurTransactions(String archivedBy, String archiveComments) {
+		DateTime dateTime = new DateTime().minusMonths(18);
+    	DateTimeFormatter format = DateTimeFormat.forPattern("MM/dd/yyyy");
+    	String toDate = format.print(dateTime);
+    	Session session = currentSession();
+        session.getNamedQuery("ARCHIVE_RECUR_TX")
+        							.setParameter("toDate", toDate)
+                                    .setParameter("archivedBy", archivedBy)
+                                    .setParameter("archiveComments", archiveComments).list();
+
+	}
+
+	public List<ExpiredOverriddenSubscriptionDTO> getExpiredOverriddenSubscriptions() {
+		List<ExpiredOverriddenSubscriptionDTO> expiredOverriddenSubscriptionDTOList = new LinkedList<ExpiredOverriddenSubscriptionDTO>();
+        Session session = currentSession();
+        Query sqlQuery =  session.getNamedQuery("GET_EXPIRED_OVERRIDDEN_SUBSCRIPTIONS");
+        List<Object> resultSet = sqlQuery.list();
+        if(resultSet.size() > 0){
+            ListIterator<Object> resultSetIterator = (ListIterator<Object>) resultSet.listIterator();
+            while(resultSetIterator.hasNext()) {
+            	Object[] row = (Object[]) resultSetIterator.next();
+            	ExpiredOverriddenSubscriptionDTO expiredOverriddenSubscriptionDTO = new ExpiredOverriddenSubscriptionDTO();
+            	expiredOverriddenSubscriptionDTO.setUserAccessId(this.getLongFromInteger(row[0]));
+            	expiredOverriddenSubscriptionDTO.setAccessId(this.getLongFromInteger(row[1]));
+            	expiredOverriddenSubscriptionDTO.setUserId(this.getLongFromBigInteger(row[2]));
+            	expiredOverriddenSubscriptionDTO.setOverriddenUntillDate(this.getDate(row[3]));
+            	expiredOverriddenSubscriptionDTO.setEmailId(this.getString(row[4]));
+            	expiredOverriddenSubscriptionDTO.setFirstName(this.getString(row[5]));
+            	expiredOverriddenSubscriptionDTO.setLastName(this.getString(row[6]));
+            	expiredOverriddenSubscriptionDTO.setAccessDescription(this.getString(row[7]));
+            	expiredOverriddenSubscriptionDTO.setExpiredOverriddenSubscriptionNotificationSubject(this.getString(row[8]));
+            	expiredOverriddenSubscriptionDTO.setExpiredOverriddenSubscriptionNotificationTemplate(this.getString(row[9]));
+            	expiredOverriddenSubscriptionDTO.setFromEmailAddress(this.getString(row[10]));
+            	expiredOverriddenSubscriptionDTO.setEmailTemplateFolder(this.getString(row[11]));
+                expiredOverriddenSubscriptionDTOList.add(expiredOverriddenSubscriptionDTO);
+            }
+        }
+        return expiredOverriddenSubscriptionDTOList;
+	}
+
+	public void disableOverriddenSubscription(ExpiredOverriddenSubscriptionDTO expiredOverriddenSubscriptionDTO) {
+		Session session = currentSession();
+        session.createQuery("Update UserAccess useraccess " +
+                                "Set useraccess.accessOverriden = :accessOverriden, " +
+                                "useraccess.active = :isActive, " +
+                                "useraccess.modifiedDate = :modifiedDate, " +                              
+                                "useraccess.modifiedBy = :modifiedBy " +
+                                "where useraccess.id = :userAccessId ")
+                                .setParameter("accessOverriden", Boolean.FALSE)
+                                .setParameter("isActive", Boolean.FALSE)
+                                .setParameter("modifiedDate", new Date())
+                                .setParameter("modifiedBy", "DISABLE_OVERRIDDEN_SUBSCRIPTIONS_SCHEDULER")
+                                .setParameter("userAccessId", expiredOverriddenSubscriptionDTO.getUserAccessId())
+                                .executeUpdate();   
+	}
 }

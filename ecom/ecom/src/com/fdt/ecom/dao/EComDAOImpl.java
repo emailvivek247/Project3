@@ -159,6 +159,8 @@ public class EComDAOImpl extends AbstractBaseDAOImpl implements EComDAO {
                 site.setAutoActivate(this.getBoolean(row[6]));
                 site.setTimeZone(this.getString(row[7]));
                 site.setModifiedBy(this.getString(row[9]));
+                site.setRevenueThresholdAmount(this.getDoubleFromBigDecimal(row[50]));
+                site.setRevenueThresholdStartDate(this.getDate(row[51]));
                 term.setId(this.getLongFromInteger(row[10]));
                 term.setDescription(this.getString(row[11]));
                 term.setModifiedBy(this.getString(row[12]));
@@ -425,6 +427,8 @@ public class EComDAOImpl extends AbstractBaseDAOImpl implements EComDAO {
             siteConfiguration.setPayAsUGoPaymentConfSubject(this.getString(row[28]));
             siteConfiguration.setPayAsUGoPaymentConfTemplate(this.getString(row[29]));
             siteConfiguration.setAddSubscriptionSub(this.getString(row[30]));
+            siteConfiguration.setExpiredOverriddenSubscriptionNotificationSubject(this.getString(row[31]));
+            siteConfiguration.setExpiredOverriddenSubscriptionNotificationTemplate(this.getString(row[32]));
         }
         return siteConfiguration;
     }
@@ -501,6 +505,7 @@ public class EComDAOImpl extends AbstractBaseDAOImpl implements EComDAO {
             "siteConfiguration.payAsUGoPaymentConfSubject = :payAsUGoPaymentConfSubject, " +
             "siteConfiguration.removeSubscriptionSubject = :removeSubscriptionSubject, " +
             "siteConfiguration.accessAuthorizationSubject = :accessAuthorizationSubject, " +
+            "siteConfiguration.expiredOverriddenSubscriptionNotificationSubject = :expiredOverriddenSubscriptionNotificationSubject, " +           
             "siteConfiguration.modifiedDate = :modifiedDate, " +
             "siteConfiguration.modifiedBy = :modifiedBy " +
             "WHERE siteConfiguration.siteId = :siteId) ")
@@ -515,6 +520,7 @@ public class EComDAOImpl extends AbstractBaseDAOImpl implements EComDAO {
         .setParameter("payAsUGoPaymentConfSubject", siteConfiguration.getPayAsUGoPaymentConfSubject())
         .setParameter("removeSubscriptionSubject", siteConfiguration.getRemoveSubscriptionSubject())
         .setParameter("accessAuthorizationSubject", siteConfiguration.getAccessAuthorizationSubject())
+        .setParameter("expiredOverriddenSubscriptionNotificationSubject", siteConfiguration.getExpiredOverriddenSubscriptionNotificationSubject())        
         .setParameter("modifiedDate", new Date())
         .setParameter("modifiedBy", siteConfiguration.getModifiedBy())
         .setParameter("siteId", siteConfiguration.getSiteId())
@@ -1152,7 +1158,7 @@ public class EComDAOImpl extends AbstractBaseDAOImpl implements EComDAO {
                 }
 
                 /** Merchant Information **/
-                Long merchantId = this.getLongFromInteger(row[74]); 
+                Long merchantId = this.getLongFromInteger(row[74]);
                 if(uniqueMerchants.get(merchantId) == null){
 	                Merchant merchant = new Merchant();
 	                merchant.setId(merchantId);

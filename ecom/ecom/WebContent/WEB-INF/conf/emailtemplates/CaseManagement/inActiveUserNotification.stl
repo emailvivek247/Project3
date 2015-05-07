@@ -67,7 +67,7 @@ body, td { font-family: Georgia, 'Times New Roman', Times, serif; }
 							<td class="w580" width="580">
 								<div align="center" id="headline">
 									<p>
-										<img src="${serverUrl}resources/images/logos/amcad.png" style="max-width:600px;" />
+										<img src="${serverUrl}resources/images/logos/granicus.png" style="max-width:600px;" />
 									</p>
 								</div>
 							</td>
@@ -127,11 +127,11 @@ body, td { font-family: Georgia, 'Times New Roman', Times, serif; }
 										</tr>
 										<tr><td class="w580" width="580" height="30"></td></tr>
 										<tr>
-											<td class="w580 center" width="580" height="30"><p>AMCAD<br>
-											  Technology | Innovation | Progress<br>
-											  www.amcad.com</p>
-											  <p> 13650 Dulles Technology Drive | Suite 400 | Herndon, VA 20171 | 866-793-6505<br>
-										    (c)${currentDate?string("yyyy")} American Cadastre LLC (dba AMCAD)</p></td>
+											<td class="w580 center" width="580" height="30"><p>Granicus <br>
+											  <br>
+											  www.granicus.com</p>
+											  <p> 707 17th Street | Suite 4000 | Denver, CO 80202 | 866-793-6505<br>
+										    (c)${currentDate?string("yyyy")} Granicus Inc</p></td>
 										</tr>
 										</tbody>
 									</table>

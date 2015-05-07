@@ -25,9 +25,10 @@ public interface UserAdminService {
      * @param modifiedBy
      * @param comments
      * @param isAccessOverridden
+     * @param endDate 
      */
     public void enableDisableUserAccess(Long userAccessId, boolean isEnable, String modifiedBy, String comments,
-        boolean isAccessOverridden);
+        boolean isAccessOverridden, String endDate);
 
     /**
      * @param userName

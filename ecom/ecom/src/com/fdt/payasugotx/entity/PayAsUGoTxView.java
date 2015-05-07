@@ -27,6 +27,9 @@ public class PayAsUGoTxView implements Serializable {
 
     @Id
 	@Column(name="ID")
+    private Long payAsUGoTxItemId = null;
+
+    @Column(name="PAYASUGO_TRANSACTION_ID")
     private Long payAsUGoTxId = null;
 
 	@Column(name = "TX_REFERENCE_NUM")
@@ -81,7 +84,30 @@ public class PayAsUGoTxView implements Serializable {
 
 	@Column(name = "NODE_NAME")
 	private String nodeName = null;
-	
+
+	@Column(name = "TX_COMMENTS")
+	private String transactionComments = null;
+
+	@Column(name = "ITEM_COMMENTS")
+	private String itemComments = null;
+
+
+
+	public String getTransactionComments() {
+		return transactionComments;
+	}
+
+	public void setTransactionComments(String transactionComments) {
+		this.transactionComments = transactionComments;
+	}
+
+	public String getItemComments() {
+		return itemComments;
+	}
+
+	public void setItemComments(String itemComments) {
+		this.itemComments = itemComments;
+	}
 
 	public Long getPayAsUGoTxId() {
 		return payAsUGoTxId;
@@ -218,7 +244,7 @@ public class PayAsUGoTxView implements Serializable {
 	public String getTransactionType() {
 		return transactionType;
 	}
-	
+
 	public boolean isCertified() {
 		return isCertified;
 	}
@@ -226,7 +252,7 @@ public class PayAsUGoTxView implements Serializable {
 	public void setCertified(boolean isCertified) {
 		this.isCertified = isCertified;
 	}
-	
+
 
 	public void setTransactionType(String transactionType) {
 		this.transactionType = transactionType;
@@ -243,26 +269,18 @@ public class PayAsUGoTxView implements Serializable {
 		} else {
 			return "";
 		}
-		
-	}
-	
-	@Override
-	public String toString() {
-		return "PayAsUGoTxView [payAsUGoTxId=" + payAsUGoTxId + ", txRefNum="
-				+ txRefNum + ", totalTxAmount=" + totalTxAmount
-				+ ", transactionDate=" + transactionDate + ", cardNumber="
-				+ cardNumber + ", accountName=" + accountName
-				+ ", transactionType=" + transactionType + ", isCertified="
-				+ isCertified + ", createdDate=" + createdDate + ", siteName="
-				+ siteName + ", itemsPurchased=" + itemsPurchased
-				+ ", siteDescription=" + siteDescription
-				+ ", createdBy=" + createdBy + ", timezone=" + timezone + ", userName="
-				+ userName + ", subscription=" + subscription
-				+ ", firmUserName=" + firmUserName + ", nodeName=" + nodeName
-				+ "]";
+
 	}
 
-	
+	public Long getPayAsUGoTxItemId() {
+		return payAsUGoTxItemId;
+	}
+
+	public void setPayAsUGoTxItemId(Long payAsUGoTxItemId) {
+		this.payAsUGoTxItemId = payAsUGoTxItemId;
+	}
+
+
 
 
 }

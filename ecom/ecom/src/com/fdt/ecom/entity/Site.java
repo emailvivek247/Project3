@@ -1,5 +1,6 @@
 package com.fdt.ecom.entity;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Type;
@@ -79,6 +82,13 @@ public class Site extends AbstractBaseEntity {
     @Column(name="IS_LOCATION_ENABLED", nullable = false)
     @Type(type="yes_no")
     private boolean isLocationEnabled = false;
+
+    @Column(name="REVENUE_THRESHOLD_AMOUNT", nullable = false)
+    private Double revenueThresholdAmount;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "REVENUE_THRESHOLD_START_DATE", nullable = false)
+    private Date revenueThresholdStartDate = null;
 
     @Transient
     @OneToOne(fetch = FetchType.LAZY)
@@ -367,7 +377,7 @@ public class Site extends AbstractBaseEntity {
     public void setSearchDayThreshold(Long searchDayThreshold) {
         this.searchDayThreshold = searchDayThreshold;
     }
-    
+
 	public boolean isFreeSite() {
 		return freeSite;
 	}
@@ -383,7 +393,7 @@ public class Site extends AbstractBaseEntity {
 	public void setSumTxamountPlusServiceFee(boolean sumTxamountPlusServiceFee) {
 		this.sumTxamountPlusServiceFee = sumTxamountPlusServiceFee;
 	}
-	
+
 
 	public boolean isLocationEnabled() {
 		return isLocationEnabled;
@@ -393,32 +403,20 @@ public class Site extends AbstractBaseEntity {
 		this.isLocationEnabled = isLocationEnabled;
 	}
 
-	@Override
-	public String toString() {
-		return "Site [name=" + name + ", description=" + description
-				+ ", county=" + county + ", state=" + state + ", autoActivate="
-				+ autoActivate + ", timeZone=" + timeZone
-				+ ", subscriptionValidationText=" + subscriptionValidationText
-				+ ", isEnableMicroTxOTC=" + isEnableMicroTxOTC
-				+ ", isEnableMicroTxWeb=" + isEnableMicroTxWeb
-				+ ", nameOnCheck=" + nameOnCheck + ", searchDayThreshold="
-				+ searchDayThreshold + ", firmNumberRequired="
-				+ firmNumberRequired + ", barNumberRequired="
-				+ barNumberRequired + ", freeSite=" + freeSite
-				+ ", sumTxamountPlusServiceFee=" + sumTxamountPlusServiceFee
-				+ ", isLocationEnabled=" + isLocationEnabled + ", node=" + node
-				+ ", merchant=" + merchantList + ", cardUsageFee=" + cardUsageFee
-				+ ", webPaymentFee=" + webPaymentFee + ", term=" + term
-				+ ", magensaInfo=" + magensaInfo + ", bankDetails="
-				+ bankDetails + ", customerBankDetails=" + customerBankDetails
-				+ ", access=" + access + ", siteAccess=" + siteAccess
-				+ ", checkHoldingPeriod=" + checkHoldingPeriod
-				+ ", achHoldingPeriod=" + achHoldingPeriod + ", isAchEnabled="
-				+ isAchEnabled + ", id=" + id + ", createdDate=" + createdDate
-				+ ", modifiedDate=" + modifiedDate + ", modifiedBy="
-				+ modifiedBy + ", createdBy=" + createdBy + ", active="
-				+ active + "]";
+	public Double getRevenueThresholdAmount() {
+		return revenueThresholdAmount;
 	}
 
+	public void setRevenueThresholdAmount(Double revenueThresholdAmount) {
+		this.revenueThresholdAmount = revenueThresholdAmount;
+	}
+
+	public Date getRevenueThresholdStartDate() {
+		return revenueThresholdStartDate;
+	}
+
+	public void setRevenueThresholdStartDate(Date revenueThresholdStartDate) {
+		this.revenueThresholdStartDate = revenueThresholdStartDate;
+	}
 
 }

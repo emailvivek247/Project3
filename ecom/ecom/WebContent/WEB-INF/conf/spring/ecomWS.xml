@@ -3,7 +3,7 @@
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	   xmlns:p="http://www.springframework.org/schema/p"
 	   xmlns:jaxws="http://cxf.apache.org/jaxws"
-	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
 
 
@@ -12,6 +12,16 @@
     <bean id="alertFacadeService" class="com.fdt.alerts.service.AlertFacadeServiceImpl"/>
 
     <bean id="externalService" class="com.fdt.ecom.service.ExternalServiceImpl"/>
+    
+    <bean id="externalServiceTransactionInfo" class="com.fdt.ecom.service.ExternalServiceTransactionInfoImpl"/>
+
+     <jaxws:endpoint id="ExternalServiceTransactionInfo" implementor="#externalServiceTransactionInfo" address="/ExternalServiceTransactionInfo">
+ 	     <jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<!-- <ref bean="logInbound" />
+          	<ref bean="logOutbound" /> -->
+		  </jaxws:inInterceptors>
+	</jaxws:endpoint>
 
     <jaxws:endpoint id="ExternalService" implementor="#externalService" address="/ExternalService">
  	     <jaxws:inInterceptors>

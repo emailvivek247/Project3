@@ -301,7 +301,7 @@
 		<field name="CARD_TYPE" class="java.lang.String"/>
 		<field name="TOTAL_PAGE_COUNT" class="java.lang.Integer"/>
 		<field name="TIMEZONE" class="java.lang.String"/>
-		<field name="AMCADPROFIT" class="java.math.BigDecimal"/>
+		<field name="GRANICUSPROFIT" class="java.math.BigDecimal"/>
 		<field name="IS_CERTIFIED" class="java.lang.String"/>
 		<variable name="Amount_By_Node" class="java.lang.Double" resetType="Group" resetGroup="NODE_NAME" calculation="Sum">
 			<variableExpression><![CDATA[$F{TX_TYPE} == "CHARGE" ? $F{AMOUNT} : -$F{AMOUNT}]]></variableExpression>
@@ -327,11 +327,11 @@
 		<variable name="TransactionFee_By_Site" class="java.math.BigDecimal" resetType="Group" resetGroup="SITE_NAME" calculation="Sum">
 			<variableExpression><![CDATA[$F{TRANSACTION_COST}]]></variableExpression>
 		</variable>
-		<variable name="AmcadProfit_By_Node" class="java.math.BigDecimal" resetType="Group" resetGroup="NODE_NAME" calculation="Sum">
-			<variableExpression><![CDATA[$F{AMCADPROFIT}.setScale(2, RoundingMode.UP)]]></variableExpression>
+		<variable name="GranicusProfit_By_Node" class="java.math.BigDecimal" resetType="Group" resetGroup="NODE_NAME" calculation="Sum">
+			<variableExpression><![CDATA[$F{GRANICUSPROFIT}.setScale(2, RoundingMode.UP)]]></variableExpression>
 		</variable>
-		<variable name="AmcadProfit_By_Site" class="java.math.BigDecimal" resetType="Group" resetGroup="SITE_NAME" calculation="Sum">
-			<variableExpression><![CDATA[$F{AMCADPROFIT}.setScale(2, RoundingMode.UP)]]></variableExpression>
+		<variable name="GranicusProfit_By_Site" class="java.math.BigDecimal" resetType="Group" resetGroup="SITE_NAME" calculation="Sum">
+			<variableExpression><![CDATA[$F{GRANICUSPROFIT}.setScale(2, RoundingMode.UP)]]></variableExpression>
 		</variable>
 		<group name="NODE_NAME">
 			<groupExpression><![CDATA[$F{NODE_NAME}]]></groupExpression>
@@ -890,7 +890,7 @@
 											<font size="8" isBold="true"/>
 											<paragraph rightIndent="3"/>
 										</textElement>
-										<textFieldExpression><![CDATA[$V{AmcadProfit_By_Node}]]></textFieldExpression>
+										<textFieldExpression><![CDATA[$V{GranicusProfit_By_Node}]]></textFieldExpression>
 									</textField>
 								</jr:cell>
 							</jr:groupFooter>
@@ -902,7 +902,7 @@
 											<font size="8" isBold="true"/>
 											<paragraph rightIndent="3"/>
 										</textElement>
-										<textFieldExpression><![CDATA[$V{AmcadProfit_By_Site}]]></textFieldExpression>
+										<textFieldExpression><![CDATA[$V{GranicusProfit_By_Site}]]></textFieldExpression>
 									</textField>
 								</jr:cell>
 							</jr:groupFooter>
@@ -912,7 +912,7 @@
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font fontName="SansSerif" size="8" isBold="true"/>
 									</textElement>
-									<text><![CDATA[Amcad Profit]]></text>
+									<text><![CDATA[Granicus Profit]]></text>
 								</staticText>
 							</jr:columnHeader>
 							<jr:detailCell style="table 8_TD" height="20" rowSpan="1">
@@ -922,7 +922,7 @@
 										<font fontName="SansSerif" size="8" isBold="false"/>
 										<paragraph rightIndent="3"/>
 									</textElement>
-									<textFieldExpression><![CDATA[$F{AMCADPROFIT}.setScale(2, RoundingMode.UP)]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{GRANICUSPROFIT}.setScale(2, RoundingMode.UP)]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>

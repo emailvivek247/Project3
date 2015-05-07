@@ -12,6 +12,12 @@ public class SearchCriteriaDTO implements Serializable {
 	public static String HAS_OVERRIDEN_ACCESS = "HASOVERRIDENACCESS";
 	public static String CURRENT_LOGIN_TIME = "CURRENT_LOGIN_TIME";
 	public static String DATE_TIME_CREATED = "DATE_TIME_CREATED";
+	public static String PAYED_USER = "ISPAIDUSER";
+	public static String USER_ACTIVE = "ACTIVE";
+	public static String FIRM_NAME = "FIRM_NAME";
+	public static String FIRM_NUMBER = "FIRM_NUMBER";
+	public static String ACCOUNT_NON_LOCKED = "ACCOUNT_NONLOCKED";
+	public static String FIRM_ADMIN = "T_IS_FIRM_ACCESS_ADMIN";
 	
 
 	private String userName;
@@ -40,6 +46,19 @@ public class SearchCriteriaDTO implements Serializable {
 	
 	private String sortType;
 	
+	private String accountNonLocked;
+	
+	private String firmAdmin;
+	
+	
+	public String getFirmAdmin() {
+		return firmAdmin;
+	}
+
+	public void setFirmAdmin(String firmAdmin) {
+		this.firmAdmin = firmAdmin;
+	}
+
 	/**
 	 * Pagination Variables
 	 * The next two variables are for pagination.
@@ -55,6 +74,13 @@ public class SearchCriteriaDTO implements Serializable {
     // In case use doesn't supply this value , all the records will be returned.
     private Integer numberOfRecords = Integer.MAX_VALUE;
 
+    public String getAccountNonLocked() {
+		return accountNonLocked;
+	}
+
+	public void setAccountNonLocked(String accountNonLocked) {
+		this.accountNonLocked = accountNonLocked;
+	}
 
 	public String getUserName() {
 		return userName;

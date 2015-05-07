@@ -6,6 +6,8 @@ import static com.fdt.ecomadmin.ui.controller.ViewConstants.SUCCESS;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -73,6 +75,13 @@ public class UserRegistrationController extends AbstractBaseController {
 			if (!reCaptchaResponse.isValid()) {
 				bindingResult.rejectValue("recaptcha_response_field", "security.incorrect.captcha");
 			}
+			
+			Pattern regex = Pattern.compile("[$&+,:;=?#|]");
+			Matcher matcher = regex.matcher(userRegistrationForm.getUsername());
+			if(matcher.find()){
+				bindingResult.rejectValue("username", "security.invalidEmail.username");
+			}
+			
 			convertPasswordError(bindingResult);
 			if (bindingResult.hasErrors()) {
 				setModelAndViewForError(modelAndView, request);

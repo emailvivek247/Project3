@@ -9,7 +9,7 @@ ul.k-list li.k-state-hover {background-image: none,linear-gradient(to bottom, gr
 </style>
 <head>
 <!-- Website Title -->
-<title>ACCEPT Administration</title>
+<title>eACCEPT Administration</title>
 
 <#include "include.stl" />
 

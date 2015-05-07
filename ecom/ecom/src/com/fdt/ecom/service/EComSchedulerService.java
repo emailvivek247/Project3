@@ -14,11 +14,16 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import com.fdt.otctx.service.OTCTXService;
+import com.fdt.payasugotx.service.PayAsUGoTxService;
+import com.fdt.recurtx.dto.ExpiredOverriddenSubscriptionDTO;
 import com.fdt.recurtx.dto.RecurTxSchedulerDTO;
+import com.fdt.recurtx.service.RecurTxService;
 import com.fdt.recurtx.service.admin.RecurTxAdminService;
 import com.fdt.security.entity.User;
 import com.fdt.security.entity.UserAccess;
 import com.fdt.security.service.admin.UserAdminService;
+import com.fdt.webtx.service.WebTxService;
 
 @Service
 public class EComSchedulerService {
@@ -29,7 +34,19 @@ public class EComSchedulerService {
     private RecurTxAdminService recurTXAdminService = null;
 
     @Autowired
+    private RecurTxService recurTxService = null;
+
+    @Autowired
+    private PayAsUGoTxService payAsUGoTxService = null;
+
+    @Autowired
     private UserAdminService userAdminService = null;
+
+    @Autowired
+    private OTCTXService oTCTXService = null;
+
+    @Autowired
+    private WebTxService webTxService = null;
 
     @Autowired
     private TransactionTemplate transactionTemplate;
@@ -62,6 +79,32 @@ public class EComSchedulerService {
             /** End of of Transaction **/
         }
         logger.info("Ending Scheduler Service Charge Recurring Profiles");
+    }
+    
+    @Scheduled(cron= "${scheduler.ecom.disableoverriddensubscriptions}")
+    public void disableOverriddenSubscriptions() {
+        if (!this.isSchedulerEnabled()) {
+            logger.info("Skiping Scheduler Service For Disabling Expired Overridden Subscriptions");
+            return;
+        }
+        logger.info("Starting Scheduler Service To  Disable Overridden Subscriptions");
+        List <ExpiredOverriddenSubscriptionDTO> expiredOverriddenSubscriptionDTOList = recurTXAdminService.getExpiredOverriddenSubscriptions();
+        for (final ExpiredOverriddenSubscriptionDTO expiredOverriddenSubscriptionDTO : expiredOverriddenSubscriptionDTOList) {
+            /** Start of Transaction **/
+            transactionTemplate.execute(new TransactionCallback<Void>() {
+                public Void doInTransaction(TransactionStatus txStatus) {
+                	try {
+                        recurTXAdminService.disableOverriddenSubscription(expiredOverriddenSubscriptionDTO);
+                    } catch (Exception exp) {
+                        logger.error(NOTIFY_ADMIN, "Exception in the ECom Scheduler For Disabling Expired Overridden Subscription {}",
+                        		expiredOverriddenSubscriptionDTO, exp);                        
+                    }
+                    return null;
+                }
+            });
+            /** End of of Transaction **/
+        }
+        logger.info("Ending Scheduler Service For Disabling Expired Overridden Subscriptions");
     }
 
     @Scheduled(cron= "${scheduler.ecom.cancelrecurringprofile}")
@@ -110,6 +153,23 @@ public class EComSchedulerService {
         }
         logger.info("Ending Scheduler Service Notify Inactive Users");
     }
+
+    @Scheduled(cron= "${scheduler.ecom.archivetransactions}")
+    public void archiveTransactions() {
+        if (!this.isSchedulerEnabled()) {
+            logger.info("Skiping Scheduler Service Archive Transactions");
+            return;
+        }
+        String archivedBy = "SYSTEM";
+        String archiveComments = "Archived By ACCEPT Archiver.";
+        logger.info("Starting Scheduler Service Archive Transactions");
+        this.recurTxService.archiveRecurTransactions(archivedBy, archiveComments);
+        this.payAsUGoTxService.archivePayAsUGoTransactions(archivedBy, archiveComments);
+        this.oTCTXService.archiveOTCTransactions(archivedBy, archiveComments);
+        this.webTxService.archiveWebTransactions(archivedBy, archiveComments);
+        logger.info("Ending Scheduler Service Archive Transactions");
+    }
+
 
     private boolean isSchedulerEnabled() {
         return (new Boolean(this.isSchedulerEnabled)).booleanValue();

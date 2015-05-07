@@ -20,5 +20,11 @@
 	        {call SP_OTC_GET_REF_TX_DETAILS (:txRefNumber, :siteName)}
 	    ]]>
 	</sql-query>	
+	
+	<sql-query name="ARCHIVE_OTC_TX" callable="true">
+   		<![CDATA[
+        	{call SP_ARCHIVE_OTC_TX (:toDate, :archivedBy, :archiveComments)}
+   		 ]]>
+	</sql-query>
 
 </hibernate-mapping>

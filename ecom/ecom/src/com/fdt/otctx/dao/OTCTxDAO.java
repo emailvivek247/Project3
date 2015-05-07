@@ -11,4 +11,6 @@ public interface OTCTxDAO {
     public OTCTx getReferencedOTCTx(String txRefNumber, String siteName);
 
 	public OTCTx getOTCTransactionByInvoiceNumber(String invoiceNumber, String siteName);
+
+	public void archiveOTCTransactions(String archivedBy, String archiveComments);
 }

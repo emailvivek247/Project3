@@ -97,6 +97,10 @@ public class UserAccess extends AbstractBaseEntity  {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "AUTHORIZED_DATETIME")
     private Date authorizationDate = null;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "OVERRIDDEN_UNTILL_DATE")
+    private Date overriddenUntillDate = null;
 
     @Column(name = "AUTHORIZED_BY")
     protected String authorizedBy = null;
@@ -222,6 +226,15 @@ public class UserAccess extends AbstractBaseEntity  {
 			return false;
 		}
 	}
+	
+	public Date getOverriddenUntillDate() {
+		return overriddenUntillDate;
+	}
+
+	public void setOverriddenUntillDate(Date overriddenUntillDate) {
+		this.overriddenUntillDate = overriddenUntillDate;
+	}
+
 	@Override
     public String toString() {
         return "UserAccess ["  

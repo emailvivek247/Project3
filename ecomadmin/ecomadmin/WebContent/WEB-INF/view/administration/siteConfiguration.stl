@@ -126,6 +126,15 @@
 											<@form.errors path="accessAuthorizationSubject" cssClass="sverror hidden" />
 										</td>
 									</tr>
+									
+									<tr>
+										<td class="right nowrap"><b>Expired Overridden Subscription Notification Subject Text:&nbsp;&nbsp;</b></td>
+										<td class="left">
+											<@form.input style="width:400px" path="expiredOverriddenSubscriptionNotificationSubject" class="validate[required,minSize[1],maxSize[250]] ADCSI_Input" spellcheck="false" tabindex="9" maxlength="250" autocomplete="on" />
+											<@form.errors path="expiredOverriddenSubscriptionNotificationSubject" cssClass="sverror hidden" />
+										</td>
+									</tr>
+									
 									<tr>
 										<td class="center" colspan="2">
 											<span class="input-icon" style="margin-top:10px;">

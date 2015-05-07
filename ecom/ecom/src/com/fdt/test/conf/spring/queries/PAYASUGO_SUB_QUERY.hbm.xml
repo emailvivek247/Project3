@@ -150,6 +150,7 @@ SELECT
 			,shoppingCart.LOCATION_ID AS shoppingCart_LOCATION_ID
 			,AA.IS_GOVERNMENT_ACCESS AS AA_IS_GOVERNMENT_ACCESS
 			,shoppingCart.IS_CERTIFIED as IS_CERTIFIED
+			,shoppingCart.ITEM_NAME AS shoppingCart_ITEM_NAME
         FROM ECOMM_USERS_SHOPPING_CART shoppingCart,
             AUTH_USERS users,  
             AUTH_ACCESS AA,
@@ -198,6 +199,8 @@ SELECT
 			,shoppingCart.LOCATION_ID AS shoppingCart_LOCATION_ID
 			,AA.IS_GOVERNMENT_ACCESS AS AA_IS_GOVERNMENT_ACCESS
 			,shoppingCart.IS_CERTIFIED as IS_CERTIFIED
+			,shoppingCart.ITEM_NAME AS shoppingCart_ITEM_NAME
+			
         FROM ECOMM_USERS_SHOPPING_CART shoppingCart,
             AUTH_USERS users, 
             ECOMM_NODE node,
@@ -343,6 +346,12 @@ SELECT
     	WHERE 
 	    	LOCATION.ID = :locationId AND  
     		LOCATION.ACTIVE = 'Y'
+    ]]>
+</sql-query>
+
+<sql-query name="ARCHIVE_PAYASUGO_TX" callable="true">
+   <![CDATA[
+        {call SP_ARCHIVE_PAYASUGO_TX (:toDate, :archivedBy, :archiveComments)}
     ]]>
 </sql-query>
 

@@ -161,6 +161,7 @@ public class DashboardController extends AbstractBaseController {
 			siteConfigurationForm.setPayAsUGoPaymentConfirmationSubject(siteConfiguration.getPayAsUGoPaymentConfSubject());
 			siteConfigurationForm.setRemoveSubscriptionSubject(siteConfiguration.getRemoveSubscriptionSubject());
 			siteConfigurationForm.setAccessAuthorizationSubject(siteConfiguration.getAccessAuthorizationSubject());
+			siteConfigurationForm.setExpiredOverriddenSubscriptionNotificationSubject(siteConfiguration.getExpiredOverriddenSubscriptionNotificationSubject());
 			modelAndView.addObject("modUserId" , siteConfiguration.getModifiedBy());
         }
         modelAndView.addObject("siteConfigForm" , siteConfigurationForm);

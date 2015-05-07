@@ -59,6 +59,12 @@ public class HitDocument {
         return ret==null? "" : ret;
     }
 
+    public final String getString(String name) {
+        if(doc==null) return "";
+        String ret = doc.get(name);
+        return ret==null? "" : ret;
+    }
+    
     /** Returns an Enumeration of all the fields in a document. */
     public final List<Field> fields() {
         if(doc==null) return null;

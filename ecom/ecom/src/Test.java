@@ -1,3 +1,4 @@
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -6,6 +7,7 @@ import java.util.TimeZone;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.Years;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -16,10 +18,11 @@ public class Test {
 
 	/**
 	 * @param args
+	 * @throws ParseException
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParseException {
 
-		String keystorePath = System.getProperty("javax.net.ssl.keyStore");
+		/*String keystorePath = System.getProperty("javax.net.ssl.keyStore");
 		String keystoreType = System.getProperty("javax.net.ssl.keyStoreType");
 		String keystorePassword =System.getProperty("javax.net.ssl.keyStorePassword");
 
@@ -30,8 +33,20 @@ public class Test {
 
 		Date date = SystemUtil.changeTimeZone(new Date(), TimeZone.getTimeZone("America/Los_Angeles"));
 
-		System.out.println(date);
+		System.out.println(date);*/
+
+		String type ="Master";
+		String creditCardNumber = "4308998314962545";
+		Integer expiryMonth = 6;
+		Integer expiryYear = 2015;
+		String maskedCreditCardNumber = creditCardNumber.substring(0, 2).concat("******").concat(creditCardNumber.substring(creditCardNumber.length()-4));
+		System.out.println(type.concat(" Card ").concat(maskedCreditCardNumber).concat(" Exp ").concat(String.valueOf(expiryMonth)).concat("/").concat(String.valueOf(expiryYear)));
+
 	}
+
+	public static Date getDate(Object object) {
+        return object == null ? null :  (Date)((Timestamp)object);
+    }
 
 	public static Date getDateInTimezone(Date date, String timeZone) {
 

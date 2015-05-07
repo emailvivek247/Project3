@@ -459,25 +459,28 @@ public class ServiceStubRS implements ServiceStub {
 	}
 
 
-	public List<PayAsUGoTxView> getPayAsUGoTransactionsByNode(String userName, String nodeName, Date fromDate, Date toDate) {
+	public List<PayAsUGoTxView> getPayAsUGoTransactionsByNode(String userName, String nodeName, String comments,
+			Date fromDate, Date toDate) {
 		List<PayAsUGoTxView> payAsUGoTransactionList = null;
 		String url = this.ecomRestURL.concat("getPayAsUGoTransactionsByNode");
 		TransactionRequestDTO request = new TransactionRequestDTO();
 		request.setUserName(userName);
 		request.setNodeName(nodeName);
 		request.setFromDate(fromDate);
+		request.setComments(comments);
 		request.setToDate(toDate);
 		PayAsUGoTxView[] arr = this.restTemplate.postForObject(url, request, PayAsUGoTxView[].class);
 		payAsUGoTransactionList = Arrays.asList(arr);
 		return payAsUGoTransactionList;
 	}
-	public PageRecordsDTO getPayAsUGoTransactionsByNodePerPage(String userName, String nodeName, Date fromDate, Date toDate,
-			Integer startingFrom, Integer numberOfRecords) {
+	public PageRecordsDTO getPayAsUGoTransactionsByNodePerPage(String userName, String nodeName, String comments,
+			Date fromDate, Date toDate, Integer startingFrom, Integer numberOfRecords) {
 		String url = this.ecomRestURL.concat("getPayAsUGoTransactionsByNodePerPage");
 		TransactionRequestDTO request = new TransactionRequestDTO();
 		request.setUserName(userName);
 		request.setNodeName(nodeName);
 		request.setFromDate(fromDate);
+		request.setComments(comments);
 		request.setToDate(toDate);
 		request.setStartingFrom(startingFrom);
 		request.setNumberOfRecords(numberOfRecords);
@@ -740,6 +743,15 @@ public class ServiceStubRS implements ServiceStub {
 		paramMap.put("accessName", accessName);
 		Location location = restTemplate.getForObject(url, Location.class, paramMap);
 		return location;
+	}
+
+	public String getDocumentIdByCertifiedDocumentNumber(String certifiedDocumentNumber, String siteName) {
+		String url = this.ecomRestURL.concat("getDocumentIdByCertifiedDocumentNumber/{certifiedDocumentNumber}/{siteName}");
+    	Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("certifiedDocumentNumber", certifiedDocumentNumber);
+		paramMap.put("siteName", siteName);
+		String documentId = restTemplate.getForObject(url, String.class, paramMap);
+		return documentId;
 	}
 
 

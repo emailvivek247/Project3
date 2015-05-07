@@ -264,6 +264,15 @@ public class PayAsUGoTxServiceImpl implements PayAsUGoTxService {
 
                 payAsUGoTransaction.setMerchantId(merchant.getId());
                 payAsUGoTransaction.setUserId(user.getId());
+                
+                Double graniusShare = totalServiceFee - ((totalTxAmount*payAsUGoTransaction.getTxFeePercent()/100) + payAsUGoTransaction.getTxFeeFlat());
+                boolean thresholdReached = isThresholdReached(site, graniusShare);
+                boolean thresholdReachedflag = false;
+                if(thresholdReached){
+                	totalServiceFee = 0.0d;
+                	totalBaseAmount = totalTxAmount;
+                	thresholdReachedflag = true;
+                }
                 payAsUGoTransaction.setBaseAmount(totalBaseAmount);
                 payAsUGoTransaction.setServiceFee(totalServiceFee);
                 payAsUGoTransaction.setTotalTxAmount(totalTxAmount);
@@ -302,9 +311,16 @@ public class PayAsUGoTxServiceImpl implements PayAsUGoTxService {
                     PayAsUGoTxItem payAsUGoTransactionItem = new PayAsUGoTxItem();
                     payAsUGoTransactionItem.setProductId(shoppingCartItem.getProductId());
                     payAsUGoTransactionItem.setProductType(shoppingCartItem.getProductType());
+                    payAsUGoTransactionItem.setItemName(shoppingCartItem.getProductName());
                     payAsUGoTransactionItem.setPageCount(shoppingCartItem.getPageCount());
-                    payAsUGoTransactionItem.setBaseAmount(shoppingCartItem.getBaseAmount());
-                    payAsUGoTransactionItem.setServiceFee(shoppingCartItem.getServiceFee());
+                    Double itemBaseAmount = shoppingCartItem.getBaseAmount();
+                    Double itemServiceFee = shoppingCartItem.getServiceFee();                   
+                    if(thresholdReachedflag) {
+                    	itemServiceFee = 0.0d;
+                    	itemBaseAmount = shoppingCartItem.getTotalTxAmount(); 
+                    }
+                    payAsUGoTransactionItem.setBaseAmount(itemBaseAmount);
+                    payAsUGoTransactionItem.setServiceFee(itemServiceFee);
                     payAsUGoTransactionItem.setTotalTxAmount(shoppingCartItem.getTotalTxAmount());
                     payAsUGoTransactionItem.setPayAsUGoTxId(payAsUGoTransaction.getId());
                     payAsUGoTransactionItem.setModifiedBy(userName);
@@ -317,6 +333,10 @@ public class PayAsUGoTxServiceImpl implements PayAsUGoTxService {
                     payAsUGoTransactionItem.setUniqueIdentifier(shoppingCartItem.getUniqueIdentifier());
                     payAsUGoTransactionItem.setComments(shoppingCartItem.getComments());
                     payAsUGoTransactionItem.setLocationId(shoppingCartItem.getLocationId());
+                    if(shoppingCartItem.getLocationId() != null) {
+                    	Location location = this.payAsUGoSubDAO.getLocationById(shoppingCartItem.getLocationId());
+                    	payAsUGoTransactionItem.setLocationName(location.getDescription());
+                    }
                     payAsUGoTransactionItem.setBarNumber(shoppingCartItem.getBarNumber());
                     payAsUGoTransaction.setCertified(shoppingCartItem.isCertified());
                 	if(shoppingCartItem.isCertified()){
@@ -353,17 +373,24 @@ public class PayAsUGoTxServiceImpl implements PayAsUGoTxService {
                 }
                 payAsUGoTransactions.add(payAsUGoTransaction);
             }
-
+            
+            String cardNumber = null;
+            String nameOnCard = null;
             // set the card number used to charge the amount.
             if(user.getCreditCard() == null){
             	user.setCreditCard(new CreditCard());
+            	cardNumber = "NA";
+            	nameOnCard = "NA";
+            } else {
+	             cardNumber = creditCard.getNumber();
+	             nameOnCard = creditCard.getName();
+	    		if(cardNumber != null && cardNumber.length() > 4) {
+	    			cardNumber = cardNumber.substring(cardNumber.length() - 4);    			 
+	    		}
             }
-            String cardNumber = creditCard.getNumber();
-    		if(cardNumber != null && cardNumber.length() > 4) {
-    			cardNumber = cardNumber.substring(cardNumber.length() - 4);
-    		}
 			user.getCreditCard().setNumber(cardNumber);
-
+			user.getCreditCard().setName(nameOnCard);
+			
             /** Send E-Mail Confirmation **/
             Map<String, Object> emailData = new HashMap<String, Object>();
             emailData.put("payAsUGoTransactions", payAsUGoTransactions);
@@ -405,8 +432,21 @@ public class PayAsUGoTxServiceImpl implements PayAsUGoTxService {
         return payAsUGoTransactions;
     }
 
+    @Transactional(readOnly = true)
+    public boolean isThresholdReached(Site site, Double txAmount) {
+		if(site.getRevenueThresholdStartDate()!=null && site.getRevenueThresholdAmount() != -1.00d){
+			Double totalGranicusShare = txAmount + this.getGranicusRevenueFromPayAsUGoTx(site) + this.getGranicusRevenueFromRecurTx(site);
+			if(totalGranicusShare > site.getRevenueThresholdAmount()) {
+				return true;
+			}
+		} else {
+			return false;
+		}		
+		return false;
+	}
 
-    /** This Method Is Used To Get All The Information Like Transaction Amount, Fees Before The Payment.
+
+	/** This Method Is Used To Get All The Information Like Transaction Amount, Fees Before The Payment.
      * @param userName EmailId of the User Logged In.
      * @param shoppingCart Contains The List Of Shopping Cart Items.
      * @return The List Of Shopping Cart Items with respective fees set.
@@ -484,7 +524,7 @@ public class PayAsUGoTxServiceImpl implements PayAsUGoTxService {
      * @return The List Of WebTransactions.
      */
     @Transactional(readOnly = true)
-    public List<PayAsUGoTxView> getPayAsUGoTxByNode(String userName, String nodeName,
+    public List<PayAsUGoTxView> getPayAsUGoTxByNode(String userName, String nodeName, String comments,
     		Date fromDate, Date toDate) {
         Assert.hasLength(userName, "User Name Cannot be Null/Empty");
         Assert.hasLength(nodeName, "Node Name Cannot be Null/Empty");
@@ -493,7 +533,7 @@ public class PayAsUGoTxServiceImpl implements PayAsUGoTxService {
 			toDate.setTime(toDate.getTime() + (24 * 60 * 60 * 1000));
 		}
 
-        return this.payAsUGoSubDAO.getPayAsUGoTransactionsByNode(userName, nodeName, fromDate, toDate);
+        return this.payAsUGoSubDAO.getPayAsUGoTransactionsByNode(userName, nodeName, comments, fromDate, toDate);
     }
 
     /** This Method Returns All The PayAsUGo Transactions Made By The User For A Particular Node.
@@ -505,7 +545,7 @@ public class PayAsUGoTxServiceImpl implements PayAsUGoTxService {
      * @return The List Of WebTransactions.
      */
     @Transactional(readOnly = true)
-    public PageRecordsDTO getPayAsUGoTxByNodePerPage(String userName, String nodeName,
+    public PageRecordsDTO getPayAsUGoTxByNodePerPage(String userName, String nodeName, String comments,
     		Date fromDate, Date toDate, int startingFrom, int numberOfRecords) {
         Assert.hasLength(userName, "User Name Cannot be Null/Empty");
         Assert.hasLength(nodeName, "Node Name Cannot be Null/Empty");
@@ -513,7 +553,7 @@ public class PayAsUGoTxServiceImpl implements PayAsUGoTxService {
 			// Add 24 hours, so that results include
 			toDate.setTime(toDate.getTime() + (24 * 60 * 60 * 1000));
 		}
-        return this.payAsUGoSubDAO.getPayAsUGoTransactionsByNodePerPage(userName, nodeName, fromDate, toDate,
+        return this.payAsUGoSubDAO.getPayAsUGoTransactionsByNodePerPage(userName, nodeName, comments, fromDate, toDate,
         		startingFrom, numberOfRecords);
     }
 
@@ -558,8 +598,8 @@ public class PayAsUGoTxServiceImpl implements PayAsUGoTxService {
             throw sDLBusinessException;
         }
 
-        if (Days.daysBetween(new DateTime(payAsUGoTransaction.getTransactionDate()).toDateMidnight(),
-                new DateTime().toDateMidnight()).getDays()  > Integer.valueOf(txValidityPeriod)) {
+        if (Days.daysBetween(new DateTime(payAsUGoTransaction.getTransactionDate()).withTimeAtStartOfDay(),
+                new DateTime().withTimeAtStartOfDay()).getDays()  > Integer.valueOf(txValidityPeriod)) {
         	sDLBusinessException = new SDLBusinessException();
         	sDLBusinessException.setErrorCode("ERROR");
         	sDLBusinessException.setBusinessMessage(this.getMessage("web.trans.txDatePastValidityPeriod",
@@ -692,9 +732,30 @@ public class PayAsUGoTxServiceImpl implements PayAsUGoTxService {
 
     @Transactional(readOnly = true)
 	public Location getLocationSealById(Long locationId){
-    	return this.payAsUGoSubDAO.getLocationSealById(locationId);
+    	return this.payAsUGoSubDAO.getLocationById(locationId);
 	}
 
 
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor= Throwable.class)
+	public void archivePayAsUGoTransactions(String archivedBy, String archiveComments) {
+    	 this.payAsUGoSubDAO.archivePayAsUGoTransactions(archivedBy, archiveComments);
 
+	}
+    
+    @Transactional(readOnly = true)
+   	public String getDocumentIdByCertifiedDocumentNumber(String certifiedDocumentNumber, String siteName) {
+   		return this.payAsUGoSubDAO.getDocumentIdByCertifiedDocumentNumber(certifiedDocumentNumber, siteName);
+   	}
+    
+    
+    private Double getGranicusRevenueFromPayAsUGoTx(Site site){
+    	return this.payAsUGoSubDAO.getGranicusRevenueFromPayAsUGoTx(site);
+    }
+    
+    
+    private Double getGranicusRevenueFromRecurTx(Site site){
+    	return this.subDAO.getGranicusRevenueFromRecurTx(site);
+    }
+
+   
 }

@@ -133,7 +133,7 @@ td.footer{
 						<th class="header"><@spring.message code="security.ecommerce.label.pageCount" /></th>
 						<th class="header"><@spring.message code="security.ecommerce.label.comments" /></th>
 						<th class="header"><@spring.message code="security.ecommerce.label.fee" /></th>
-						<th class="header hiddenRecieptColumn"><@spring.message code="security.ecommerce.label.Action" /></th>
+						<th class="header hiddenRecieptColumn"><@spring.message code="security.ecommerce.label.DownloadOrView" /></th>
 						<#assign TotalTxAmount = payAsUGoTransaction.getTotalTxAmount()>
 						<#list payAsUGoTransaction.getPayAsUGoTxItems() as purchasedItem>
 						<tr>
@@ -146,9 +146,9 @@ td.footer{
 							<td style="text-align:center;" class="hiddenRecieptColumn">
 								<#if purchasedItem.getDownloadURL()?has_content && !purchasedItem.isRefunded()>
 									<#if purchasedItem.documentAvailable>
-										<a href="${purchasedItem.getDownloadURL()}&isDownload=Y&downloadDocument=Y&isPrintingAllowed=true&isFillWatermark=false&opacity=1" target="_blank"><img alt="Download Document" title="Download Document" width="20px" height="20px" style="border:0px;" src="resources/images/downloadDocument.png"/></a>
+										<a href="${purchasedItem.getDownloadURL()}&isDownload=Y&downloadDocument=Y&isPrintingAllowed=true&isFillWatermark=false&opacity=1" target="_blank"><img alt="Download Document" title="Download Document" width="30px" height="30px" style="border:0px;" src="resources/images/downloadDocument.png"/></a>
 										&nbsp;&nbsp;
-										<a href="${purchasedItem.getDownloadURL()}&isDownload=Y&downloadDocument=N&isPrintingAllowed=true&isFillWatermark=false&opacity=1" target="_blank"><img alt="View Document" title="View Document" width="20px" height="20px" style="border:0px;" src="resources/images/viewDocument.png"/></a>
+										<a href="${purchasedItem.getDownloadURL()}&isDownload=Y&downloadDocument=N&isPrintingAllowed=true&isFillWatermark=false&opacity=1" target="_blank"><img alt="View Document" title="View Document" width="30px" height="30px" style="border:0px;" src="resources/images/viewDocument.png"/></a>
 									<#else>
 										<@spring.message code="security.ecommerce.label.expired" />
 									</#if>

@@ -17,6 +17,7 @@ import org.jasypt.encryption.pbe.PBEStringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import com.fdt.ecom.entity.enums.BankAccountType;
 import com.fdt.ecom.entity.enums.CardType;
 import com.fdt.ecom.entity.enums.PaymentType;
 import com.fdt.ecom.entity.enums.SettlementStatusType;
@@ -197,6 +198,21 @@ public abstract class AbstractBaseDAOImpl {
         return settlementStatusType;
     }
 
+    protected BankAccountType getBankAccountType(Object object) {
+    	BankAccountType bankAccountType = null;
+        if(object == null){
+            bankAccountType = null;
+        } else {
+            String string = object.toString();
+            if(string.equals("S")){
+                bankAccountType = BankAccountType.SAVING;
+            } else if(string.equals("C")){
+                bankAccountType = BankAccountType.CHECKING;
+            } 
+        }
+        return bankAccountType;
+    }
+    
     protected PaymentType getPaymentType(Object object) {
         PaymentType paymentType = null;
         if(object == null){

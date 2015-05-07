@@ -27,14 +27,17 @@
 		<evaluator class="ch.qos.logback.classic.boolex.OnMarkerEvaluator">
       		<marker>NOTIFY_ADMIN</marker>
     	</evaluator>
-    	<smtpHost>mail.amcad.com</smtpHost>
-        <to>roamsupport@amcad.com</to>
-    	<from>accept@amcad.com</from>
+    	<smtpHost>email-smtp.us-east-1.amazonaws.com</smtpHost>
+		<smtpPort>587</smtpPort>
+		<username>AKIAJZSKMSNOBKAT2IZA</username>
+		<password>AgSJzhgeLeNHZQaIioms6Y3lHYPaHgZCWrL7BcMraSt1</password>
+    	<to>roamsupport@granicus.com</to>
+    	<from>no-reply@granicus.com</from>
     	<subject>localhost Dev Ecomadmin Error: %logger{20} - %msg</subject>
     	<layout class="ch.qos.logback.classic.PatternLayout">
       		<pattern>%d{MM-dd-yy HH:mm:ss.SSS} %-5level [%thread][%logger{40}] : %msg%n</pattern>
     	</layout>
-		<cyclicBufferTracker class="ch.qos.logback.core.spi.CyclicBufferTrackerImpl">
+		<cyclicBufferTracker class="ch.qos.logback.core.spi.CyclicBufferTracker">
       		<bufferSize>1</bufferSize>
     	</cyclicBufferTracker>
   	</appender>

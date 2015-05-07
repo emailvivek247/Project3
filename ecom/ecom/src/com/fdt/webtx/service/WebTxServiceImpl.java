@@ -1,6 +1,7 @@
 package com.fdt.webtx.service;
 
 import static com.fdt.common.SystemConstants.NOTIFY_ADMIN;
+import static com.fdt.common.SystemConstants.PAYMENT_TOKEN_LENGTH;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
@@ -29,12 +31,14 @@ import org.springframework.util.Assert;
 import com.fdt.common.exception.SDLBusinessException;
 import com.fdt.common.util.SystemUtil;
 import com.fdt.ecom.dao.EComDAO;
+import com.fdt.ecom.entity.BankAccount;
 import com.fdt.ecom.entity.Code;
 import com.fdt.ecom.entity.CreditCard;
 import com.fdt.ecom.entity.Merchant;
 import com.fdt.ecom.entity.Site;
 import com.fdt.ecom.entity.SiteConfiguration;
 import com.fdt.ecom.entity.WebPaymentFee;
+import com.fdt.ecom.entity.enums.BankAccountType;
 import com.fdt.ecom.entity.enums.CardType;
 import com.fdt.ecom.entity.enums.SettlementStatusType;
 import com.fdt.ecom.entity.enums.TransactionType;
@@ -47,8 +51,12 @@ import com.fdt.paymentgateway.exception.PaymentGatewayUserException;
 import com.fdt.paymentgateway.service.PaymentGatewayService;
 import com.fdt.security.dao.UserDAO;
 import com.fdt.webtx.dao.WebTxDAO;
+import com.fdt.webtx.dto.PaymentInfoDTO;
+import com.fdt.webtx.dto.WebCaptureTxRequestDTO;
+import com.fdt.webtx.dto.WebCaptureTxResponseDTO;
 import com.fdt.webtx.dto.WebTransactionDTO;
 import com.fdt.webtx.dto.WebTxExtResponseDTO;
+import com.fdt.webtx.entity.WebCaptureTx;
 import com.fdt.webtx.entity.WebTx;
 import com.fdt.webtx.entity.WebTxItem;
 
@@ -123,7 +131,8 @@ public class WebTxServiceImpl implements WebTxService {
             emailId = application;
         }
         CreditCard creditCard = webTransactionDTO.getCreditCard();
-        CardType cardType = CreditCardUtil.getCardType(creditCard.getNumber());
+        BankAccount bankAccount = webTransactionDTO.getBankAccount();
+        CardType cardType = null;
 
         try {
             List<Code> registeredApplicationList = this.eComDAO.getCodes(REGISTERED_APPLICATION_CATEGORY);
@@ -151,28 +160,90 @@ public class WebTxServiceImpl implements WebTxService {
                     } else {
                         merchant = site.getMerchant();
                     }
-                    paymentTxResponseDTO = this.paymentGateway.doSale(site, totalTxAmount, creditCard, "doSaleWebPosts",
-                        emailId, false);
+                    
+                    String accountName = null;
+                    BankAccountType bankAccountType = null;
+                    String bankAccountNumber = null;
+                    String bankRoutingNumber = null;
+                    String cardNumber = null;
+                    Integer expMonth = 1;
+                    Integer expYear = 1;
+                    String addressLine1 = null;
+                    String addressLine2 = null;
+                    String city = null;
+                    String state = null;
+                    String zip = null;
+                    Long phone = null;
+                    String cardCharged = null;
+                    
+                    TransactionType transactionType = TransactionType.CHARGE;
+                    
+                    if(webTransactionDTO.getPayByMethod().equalsIgnoreCase("Two")) {
+                    	accountName = bankAccount.getBankAccountName();
+                		bankAccountType = bankAccount.getBankAccountType();
+                		bankAccountNumber = bankAccount.getBankAccountNumber();
+                		cardCharged = bankAccountNumber.substring(bankAccountNumber.length() - 4);
+                		bankRoutingNumber = bankAccount.getBankRoutingNumber();
+                		addressLine1 = bankAccount.getAddressLine1();
+                		addressLine2 = bankAccount.getAddressLine2();
+                		city = bankAccount.getCity();
+                		state = bankAccount.getState();
+                		zip = bankAccount.getZip();
+                		phone = bankAccount.getPhone();
+                    	if(webTransactionDTO.isAuthorizeTransaction()) {
+                    		transactionType = TransactionType.AUTHORIZE;
+                    		paymentTxResponseDTO = this.paymentGateway.doAuthorize(site, totalTxAmount, bankAccount, "doSaleWebPosts",
+                                    emailId, false); 
+                    	} else {
+                    		paymentTxResponseDTO = this.paymentGateway.doSale(site, totalTxAmount, bankAccount, "doSaleWebPosts",
+                                    emailId, false);                    		
+                    	}
+                    } else {
+                    	cardNumber = creditCard.getNumber();
+                    	cardCharged = cardNumber.substring(cardNumber.length() - 4);
+                    	cardType = CreditCardUtil.getCardType(creditCard.getNumber());
+                		accountName = creditCard.getName();
+                		addressLine1 = creditCard.getAddressLine1();
+                		addressLine2 = creditCard.getAddressLine2();
+                		expMonth = creditCard.getExpiryMonth();
+                		expYear = creditCard.getExpiryYear();
+                		city = creditCard.getCity();
+                		state = creditCard.getState();
+                		zip = creditCard.getZip();
+                		phone = creditCard.getPhone();
+                    	if(webTransactionDTO.isAuthorizeTransaction()) {
+                    		transactionType = TransactionType.AUTHORIZE;
+                    		paymentTxResponseDTO = this.paymentGateway.doAuthorize(site, totalTxAmount, creditCard, "doSaleWebPosts",
+                                    emailId, false);                    		
+                    	} else {
+                    		paymentTxResponseDTO = this.paymentGateway.doSale(site, totalTxAmount, creditCard, "doSaleWebPosts",
+                                    emailId, false);
+                    		
+                    	}
+                    }
+                                     
+                                                           
                     txRefNumber = paymentTxResponseDTO.getTxRefNum();
                     if (paymentTxResponseDTO.getTxRefNum() != null && !paymentTxResponseDTO.getTxRefNum().isEmpty()) {
                         webTransaction.setTxRefNum(paymentTxResponseDTO.getTxRefNum());
                         webTransaction.setAuthCode(paymentTxResponseDTO.getAuthCode());
                         webTransaction.setCardType(cardType);
-                        webTransaction.setCardNumber(creditCard.getNumber());
-                        webTransaction.setExpiryMonth(creditCard.getExpiryMonth());
-                        webTransaction.setExpiryYear(creditCard.getExpiryYear());
-                        webTransaction.setAddressLine1(creditCard.getAddressLine1());
-                        webTransaction.setAddressLine2(creditCard.getAddressLine2());
-                        webTransaction.setCity(creditCard.getCity());
-                        webTransaction.setState(creditCard.getState());
-                        webTransaction.setZip(creditCard.getZip());
-                        webTransaction.setPhone(creditCard.getPhone());
+                        webTransaction.setCardNumber(cardNumber);
+                        webTransaction.setCreditCardNumber(cardNumber);
+                        webTransaction.setExpiryMonth(expMonth);
+                        webTransaction.setExpiryYear(expYear);
+                        webTransaction.setAddressLine1(addressLine1);
+                        webTransaction.setAddressLine2(addressLine2);
+                        webTransaction.setCity(city);
+                        webTransaction.setState(state);
+                        webTransaction.setZip(zip);
+                        webTransaction.setPhone(phone);
                         webTransaction.setBaseAmount(totalBaseAmount);
                         webTransaction.setTax(totalTax);
                         webTransaction.setServiceFee(totalServiceFee);
                         webTransaction.setTotalTxAmount(totalTxAmount);
-                        webTransaction.setTransactionType(TransactionType.CHARGE);
-                        webTransaction.setAccountName(creditCard.getName());
+                        webTransaction.setTransactionType(transactionType);
+                        webTransaction.setAccountName(accountName);
                         webTransaction.setSettlementStatus(SettlementStatusType.UNSETTLED);
                         webTransaction.setMachineName(webTransactionDTO.getTransactionLocation());
                         webTransaction.setMerchantId(merchant.getId());
@@ -198,7 +269,17 @@ public class WebTxServiceImpl implements WebTxService {
                         webTransaction.setOfficeLocComments1(webTransactionDTO.getOfficeLocComments1());
                         webTransaction.setOfficeLocComments2(webTransactionDTO.getOfficeLocComments2());
                         webTransaction.setInvoiceNumber(webTransactionDTO.getInvoiceId());
+                        webTransaction.setBankAccountNumber(bankAccountNumber);
+                        webTransaction.setBankRoutingNumber(bankRoutingNumber);
+                        webTransaction.setBankAccountType(bankAccountType);
 
+                        String randomString = UUID.randomUUID().toString();
+                    	randomString = randomString.replaceAll("-", "");
+                    	randomString = randomString.substring(0, PAYMENT_TOKEN_LENGTH).toUpperCase();
+                    	String paymentToken =
+                    			randomString.substring(0, 3) + "-" + randomString.substring(3, 7) + "-"
+                    			+ randomString.substring(7, 11) + "-" + randomString.substring(11, 15);
+                    	webTransaction.setPaymentToken(paymentToken.toUpperCase());
 
                         if (cardType == CardType.AMEX) {
                             webTransaction.setTxFeePercent(merchant.getTxFeePercentAmex());
@@ -230,7 +311,7 @@ public class WebTxServiceImpl implements WebTxService {
                         emailData.put("webTransactions", webTransactions);
                         emailData.put("emailId", emailId);
                         emailData.put("currentDate", new Date());
-                        emailData.put("cardCharged", creditCard.getNumber().substring(creditCard.getNumber().length() - 4));
+                        emailData.put("cardCharged", cardCharged);
                         emailData.put("serverUrl", this.ecomServerURL);
                         SiteConfiguration siteConfig = this.eComService.getSiteConfiguration(site.getId());
                         Assert.notNull(siteConfig, "siteConfig Cannot be Null");
@@ -302,8 +383,8 @@ public class WebTxServiceImpl implements WebTxService {
             throw sDLBusinessException;
         }
 
-        if (Days.daysBetween(new DateTime(webTransaction.getTransactionDate()).toDateMidnight(),
-                new DateTime().toDateMidnight()).getDays()  > Integer.valueOf(txValidityPeriod)) {
+        if (Days.daysBetween(new DateTime(webTransaction.getTransactionDate()).withTimeAtStartOfDay(),
+                new DateTime().withTimeAtStartOfDay()).getDays()  > Integer.valueOf(txValidityPeriod)) {
         	sDLBusinessException = new SDLBusinessException();
         	sDLBusinessException.setErrorCode("ERROR");
         	sDLBusinessException.setBusinessMessage(this.getMessage("web.trans.txDatePastValidityPeriod",
@@ -385,7 +466,7 @@ public class WebTxServiceImpl implements WebTxService {
         int searchDayThresholdInt = searchDayThreshold.intValue();
         DateTime fromDateTime = new DateTime(fromDate);
         DateTime endDateTime = new DateTime(endDate);
-        int totalDays = Days.daysBetween(fromDateTime.toDateMidnight(), endDateTime.toDateMidnight()).getDays();
+        int totalDays = Days.daysBetween(fromDateTime.withTimeAtStartOfDay(), endDateTime.withTimeAtStartOfDay()).getDays();
         if(totalDays > searchDayThresholdInt) {
            webTransactionExtResponseDTO.setErrorDesc(this.getMessage("web.searchtx.threshold"));
            return webTransactionExtResponseDTO;
@@ -433,7 +514,57 @@ public class WebTxServiceImpl implements WebTxService {
     	Assert.hasLength(invoiceNumber, "Invoice Number Cannot be Null/Empty");
         return this.webTransactionDAO.getWebTxByInvoiceNumber(invoiceNumber, siteName);
 	}
+    
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor= Throwable.class)
+    public WebCaptureTxResponseDTO captureWebTx(WebCaptureTxRequestDTO webCaptureTxRequestDTO) 
+    		throws SDLBusinessException  {
+    	Assert.notNull(webCaptureTxRequestDTO, "webCaptureTxRequestDTO Cannot be Null");
+    	Assert.hasLength(webCaptureTxRequestDTO.getAuthorizationTxReferenceNumber(), "Authorization Transaction Reference Number Cannot be Null/Empty");
+    	Assert.hasLength(webCaptureTxRequestDTO.getSiteName(), "Site Name Cannot be Null/Empty");
+    	Assert.hasLength(webCaptureTxRequestDTO.getModifiedBy(), "Modified By Field Cannot be Null/Empty");
+    	//Assert.notNull(webCaptureTxRequestDTO.getCaptureTxAmount(), "Invoice Number Cannot be Null/Empty");
+    	WebCaptureTxResponseDTO webCaptureTxResponseDTO = new WebCaptureTxResponseDTO();
+    	WebTx webTx = this.getWebTransactionByTxRefNum(webCaptureTxRequestDTO.getAuthorizationTxReferenceNumber(), webCaptureTxRequestDTO.getSiteName());
+    	 if(webTx != null) {
+    		 Site site = this.eComService.getSiteDetailsBySiteName(webCaptureTxRequestDTO.getSiteName());
+    		 PayPalDTO payPalDTO;
+			try {
+				payPalDTO = this.paymentGateway.doCapture(site, webCaptureTxRequestDTO.getAuthorizationTxReferenceNumber(), webCaptureTxRequestDTO.getCaptureTxAmount(), 
+						 "captureWebTx", webCaptureTxRequestDTO.getModifiedBy());
+			} catch (PaymentGatewayUserException e) {
+				webCaptureTxResponseDTO.setErrorCode(e.getErrorCode());
+				webCaptureTxResponseDTO.setErrorDesc(e.getDescription());
+				return webCaptureTxResponseDTO;
+			} catch (PaymentGatewaySystemException e) {
+				webCaptureTxResponseDTO.setErrorCode(e.getErrorCode());
+				webCaptureTxResponseDTO.setErrorDesc(e.getDescription());
+				return webCaptureTxResponseDTO;
+			}
+    		 WebCaptureTx webCaptureTx = new WebCaptureTx();
+    		 webCaptureTx.setCaptureTxReferenceNumber(payPalDTO.getTxRefNum());
+    		 webCaptureTx.setCaptureTxAmount(webCaptureTxRequestDTO.getCaptureTxAmount() == null ? webTx.getTotalTxAmount() : webCaptureTxRequestDTO.getCaptureTxAmount());
+    		 webCaptureTx.setCaptureTxDate(SystemUtil.changeTimeZone(new Date(),
+                     TimeZone.getTimeZone(site.getTimeZone())));
+    		 webCaptureTx.setComments(webCaptureTxRequestDTO.getComments());
+    		 webCaptureTx.setWebTxId(webTx.getId());
+    		 webCaptureTx.setCreatedBy(webCaptureTxRequestDTO.getModifiedBy());
+    		 webCaptureTx.setModifiedBy(webCaptureTxRequestDTO.getModifiedBy());
+    		 webCaptureTx.setModifiedDate(new Date());
+    		 webCaptureTx.setCreatedDate(new Date());
+    		 webCaptureTx.setActive(true);
+    		 this.webTransactionDAO.saveWebCaptureTx(webCaptureTx);
+    		 webCaptureTxResponseDTO.setCaptureTxReferenceNumber(payPalDTO.getTxRefNum());
+    		 webCaptureTxResponseDTO.setCaptureTxAmount(webCaptureTxRequestDTO.getCaptureTxAmount() == null ? webTx.getTotalTxAmount() : webCaptureTxRequestDTO.getCaptureTxAmount());
+    		 return webCaptureTxResponseDTO;
+    	 } else {
+    		 throw new SDLBusinessException();
+    	 }
+	}
 
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor= Throwable.class)
+    public void archiveWebTransactions(String archivedBy, String archiveComments) {
+    	this.webTransactionDAO.archiveWebTransactions(archivedBy, archiveComments);
+	}
     private String getMessage(String messageKey, Object[] object) {
         return this.messages.getMessage(messageKey, object, new Locale("en"));
     }
@@ -456,5 +587,19 @@ public class WebTxServiceImpl implements WebTxService {
         serviceFee = (new BigDecimal(serviceFee).setScale(2, RoundingMode.HALF_DOWN).doubleValue());
         return serviceFee;
     }
+
+
+
+    @Transactional(readOnly = true)
+	public Map<Long, PaymentInfoDTO> getPaymentInfoMap(List<String> paymentTokens) {
+		return this.webTransactionDAO.getPaymentInfoMap(paymentTokens);
+	}
+
+
+
+    @Transactional(readOnly = true)
+	public PaymentInfoDTO getPaymentInfoByID(Long paymentInfoID) {
+    	return this.webTransactionDAO.getPaymentInfoByID(paymentInfoID);
+	}
 
 }

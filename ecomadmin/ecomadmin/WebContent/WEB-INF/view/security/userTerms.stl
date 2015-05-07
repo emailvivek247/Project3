@@ -51,7 +51,7 @@ padding: 9px 18px;
 											<div class="center">
 												<h2>
 													<div id="acceptTitle" class="center">
-															<img src="resources/images/accept-logo.png">
+															<img src="resources/images/eAccept-logo.png">
 													</div>
 												</h2>
 											</div>
@@ -86,25 +86,20 @@ padding: 9px 18px;
 											<div id="menuSub2" style="font-size:20px;float:right;display:inline-block;width:32%;color:white;">			
 												<div class="social-login center">
 													<span>
-														<a  href="https://www.facebook.com/pages/AMCAD/193699310720652" >
+														<a  href="https://www.facebook.com/granicusinc" >
 															<i class="icon-facebook white "></i>
 														</a>
 													</span>
 													<span>
-														<a href="https://twitter.com/AmCadLLC">
+														<a href="https://twitter.com/granicus">
 															<i class="icon-twitter white"></i>
 														</a>
 													</span>	
 													<span>
-														<a href="http://www.linkedin.com/company/amcad?trk=tabs_biz_home" >
+														<a href="https://www.linkedin.com/company/granicusinc?trk=tyah" >
 															<i class="icon-linkedin white"></i>
 														</a>
 													</span>	
-													<span>
-														<a href="http://www.youtube.com/user/AMCADLLC">
-															<i class="icon-youtube white"></i>
-														</a>
-													</span>
 												</div>  <!--end social login-->
 											</div>  <!--end menuSub2--->
 										</div>
@@ -129,7 +124,7 @@ padding: 9px 18px;
 												<tbody id="footerTable" style="color:#000;">
 										        	<tr>
 									               		<td width="50%" align="center" style="vertical-align:top">
-									                    		<a href="http://www.amcad.com"><img src="resources/images/amcadLogo.png" alt="AMCAD"  height="42px" border="0" /></a><br> &nbsp; Copyright &copy;2013 (dba AmCad & AmCad Digital Conversions)
+									                    		<a href="http://www.granicus.com"><img src="resources/images/granicusLogo.png" alt="Granicus INC"  height="42px" border="0" /></a><br> &nbsp; Copyright &copy; <script>document.write(new Date().getFullYear())</script> Granicus, INC.
 									                	</td>
 									                </tr>
 										        </tbody>

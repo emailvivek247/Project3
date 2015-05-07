@@ -9,6 +9,7 @@ public class SystemConstants {
     
     public static int REFERENCE_NUMBER_LENGTH = 12;
     public static int CERTIFIED_DOCUMENT_NUMBER_LENGTH = 15;
+    public static int PAYMENT_TOKEN_LENGTH = 15;
 
     
 }

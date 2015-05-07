@@ -20,4 +20,6 @@ public interface RecurTxService {
      */
     public List<RecurTx> getRecurTxDetail(String userName, String recurTxRefNum);
 
+    public void archiveRecurTransactions(String archivedBy, String archiveComments);
+
 }

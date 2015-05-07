@@ -47,7 +47,10 @@ public class FilterColumn{
 	    return minInt;
 	}
 	
-    /**
+	public void setCounts(Map<Object, Count> counts) {
+		this.counts = counts;
+	}
+	/**
      * Used during search, not for rendering
      */
 	public Count increaseCountByDate(String v, int[] sum) {

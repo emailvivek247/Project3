@@ -10,11 +10,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import net.tanesha.recaptcha.ReCaptcha;
 import net.tanesha.recaptcha.ReCaptchaResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,8 +38,7 @@ import com.fdt.subscriptions.dto.AccessDetailDTO;
 @Controller
 public class UserRegistrationController extends AbstractBaseController {
 
-	@Autowired
-	private ReCaptcha reCaptcha;
+	
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {

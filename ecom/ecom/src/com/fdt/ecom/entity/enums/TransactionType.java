@@ -1,7 +1,7 @@
 package com.fdt.ecom.entity.enums;
 
 public enum TransactionType {
-	REFUND("REFUND"), CHARGE("CHARGE");
+	REFUND("REFUND"), CHARGE("CHARGE"), AUTHORIZE("AUTHORIZE"), CAPTURE("CAPTURE");
 
 	private String code = null;
 

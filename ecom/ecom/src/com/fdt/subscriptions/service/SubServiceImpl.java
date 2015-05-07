@@ -43,6 +43,7 @@ import com.fdt.ecom.exception.AccessUnAuthorizedException;
 import com.fdt.ecom.service.EComService;
 import com.fdt.ecom.util.CreditCardUtil;
 import com.fdt.email.EmailProducer;
+import com.fdt.payasugotx.service.PayAsUGoTxService;
 import com.fdt.paymentgateway.dto.PayPalDTO;
 import com.fdt.paymentgateway.exception.PaymentGatewaySystemException;
 import com.fdt.paymentgateway.exception.PaymentGatewayUserException;
@@ -110,6 +111,9 @@ public class SubServiceImpl implements SubService {
 
     @Autowired
     private FirmUserSubscriptionValidator firmUserValidator;
+    
+    @Autowired
+    private PayAsUGoTxService payAsUGoSubService = null;
 
     @Autowired
     @Qualifier("serverMessageSource")
@@ -712,11 +716,11 @@ public class SubServiceImpl implements SubService {
         	            	for(FirmUserDTO firmUser : firmUsers){
         	            		userAccessIds.add(firmUser.getUserAccessId());
         	            	}
-        	            	this.userDAO.enableDisableUserAccesses(userAccessIds, true, userName, null, false);
+        	            	this.userDAO.enableDisableUserAccesses(userAccessIds, true, userName, null, false, null);
                     	}
                     } else {
                     	// Access is not a firm level access
-                    	this.userDAO.enableDisableUserAccess(userAccess.getId(), true, userName, null, false);
+                    	this.userDAO.enableDisableUserAccess(userAccess.getId(), true, userName, null, false, null);
                     }
 
                     payPalDTO.setAccessId(subscribedAccess.getId());
@@ -728,11 +732,6 @@ public class SubServiceImpl implements SubService {
                     recurTransaction.setTxRefNum(payPalDTO.getTxRefNum());
                     recurTransaction.setBaseAmount(subscribedAccess.getSubscriptionFee().getFee());
                     recurTransaction.setTotalTxAmount(subscribedAccess.getSubscriptionFee().getFee());
-                    recurTransaction.setClientShare(subscribedAccess.getClientShare());
-                    recurTransaction.setTransactionDate(SystemUtil.changeTimeZone(new Date(),
-                        TimeZone.getTimeZone(userAccess.getAccess().getSite().getTimeZone())));
-                    recurTransaction.setSettlementStatus(SettlementStatusType.UNSETTLED);
-                    recurTransaction.setTransactionType(TransactionType.CHARGE);
                     CardType cardType = CreditCardUtil.getCardType(creditCard.getNumber());
                     if (cardType == CardType.AMEX) {
                         recurTransaction.setTxFeePercent(userAccess.getAccess().getSite().getMerchant().getTxFeePercentAmex());
@@ -741,6 +740,21 @@ public class SubServiceImpl implements SubService {
                         recurTransaction.setTxFeePercent(userAccess.getAccess().getSite().getMerchant().getTxFeePercent());
                         recurTransaction.setTxFeeFlat(userAccess.getAccess().getSite().getMerchant().getTxFeeFlat());
                     }
+                    Double clientShare = subscribedAccess.getClientShare();
+                    Double amtToChargeAfterTransactionFee = subscribedAccess.getSubscriptionFee().getFee() - ((subscribedAccess.getSubscriptionFee().getFee()*recurTransaction.getTxFeePercent()/100) + recurTransaction.getTxFeeFlat());
+                    Double graniusShare = amtToChargeAfterTransactionFee * (1.0d - clientShare);
+                    boolean thresholdReached = this.payAsUGoSubService.isThresholdReached(userAccess.getAccess().getSite(), graniusShare);
+                    if(thresholdReached){
+                    	clientShare = 1.0d;
+                    } else {
+                    	clientShare = subscribedAccess.getClientShare();
+                    }
+                    recurTransaction.setClientShare(clientShare);
+                    recurTransaction.setTransactionDate(SystemUtil.changeTimeZone(new Date(),
+                        TimeZone.getTimeZone(userAccess.getAccess().getSite().getTimeZone())));
+                    recurTransaction.setSettlementStatus(SettlementStatusType.UNSETTLED);
+                    recurTransaction.setTransactionType(TransactionType.CHARGE);
+                    
                     recurTransaction.setCardNumber(creditCard.getNumber());
                     recurTransaction.setAccountName(creditCard.getName());
                     recurTransaction.setCardType(cardType);
@@ -1034,7 +1048,7 @@ public class SubServiceImpl implements SubService {
             } else {
                 recurTransactionRefund.setTxFeePercent(0 - existingUserAccountDTO.getSite().getMerchant().getTxFeePercent());
             }
-            recurTransactionRefund.setClientShare(newAccessDTO.getSite().getAccess().get(0).getClientShare());
+            recurTransactionRefund.setClientShare(existingUserAccountDTO.getSite().getAccess().get(0).getClientShare());
             recurTransactionRefund.setMachineName(machineName);
             recurTransactionRefund.setPreviousAccess(false);
             recurTransactionRefund.setModifiedDate(new Date());
@@ -1145,16 +1159,24 @@ public class SubServiceImpl implements SubService {
                 recurTransactionPrimary.setCreatedBy(userName);
                 recurTransactionPrimary.setActive(true);
                 recurTransactionPrimary.setMerchantId(existingUserAccountDTO.getSite().getMerchant().getId());
-                recurTransactionPrimary.setTxFeeFlat(0.0d);
                 if (cardType == CardType.AMEX) {
                     recurTransactionPrimary.setTxFeePercent(newAccessDTO.getSite().getMerchant().getTxFeePercentAmex());
-                    recurTransactionPrimary.setTxFeeFlat(newAccessDTO.getSite().getMerchant().getTxFeeFlat());
+                    recurTransactionPrimary.setTxFeeFlat(newAccessDTO.getSite().getMerchant().getTxFeeFlatAmex());
                 } else {
-                    recurTransactionPrimary.setTxFeePercent(newAccessDTO.getSite().getMerchant().getTxFeePercentAmex());
+                    recurTransactionPrimary.setTxFeePercent(newAccessDTO.getSite().getMerchant().getTxFeePercent());
                     recurTransactionPrimary.setTxFeeFlat(newAccessDTO.getSite().getMerchant().getTxFeeFlat());
                 }
                 recurTransactionPrimary.setMachineName(machineName);
-                recurTransactionPrimary.setClientShare(newAccessDTO.getSite().getAccess().get(0).getClientShare());
+                Double amtToChargeAfterTransactionFee = upgradeDowngradeDTO.getNewBalance() - (upgradeDowngradeDTO.getNewBalance()*recurTransactionPrimary.getTxFeePercent()/100) + recurTransactionPrimary.getTxFeeFlat();
+                Double graniusShare = amtToChargeAfterTransactionFee * (1.0d - newAccessDTO.getSite().getAccess().get(0).getClientShare());
+                boolean thresholdReached = this.payAsUGoSubService.isThresholdReached(newAccessDTO.getSite(), graniusShare);                                
+                Double clientShare = newAccessDTO.getSite().getAccess().get(0).getClientShare();
+                if(thresholdReached){
+                	clientShare = 1.0d;
+                } else {
+                	clientShare = newAccessDTO.getSite().getAccess().get(0).getClientShare();
+                }
+                recurTransactionPrimary.setClientShare(clientShare);
                 recurTransactionPrimary.setPreviousAccess(false);
                 recurTransactionPrimary.setModifiedDate(new Date());
                 recurTransactionPrimary.setCreatedDate(new Date());
@@ -1216,7 +1238,8 @@ public class SubServiceImpl implements SubService {
                         }
                     }
                     recurTransactionSecondary.setMachineName(machineName);
-                    recurTransactionSecondary.setClientShare(newAccessDTO.getSite().getAccess().get(0).getClientShare());
+                    recurTransactionSecondary.setClientShare(upgradeDowngradeDTO.getExistingUserAccountDetail()
+                    		.getSite().getAccess().get(0).getClientShare());
                     this.recurTxDAO.saveRecurTransaction(recurTransactionSecondary);
                 }
             }
@@ -1328,8 +1351,17 @@ public class SubServiceImpl implements SubService {
                 recurTransactionCharge.setTxFeePercent(newAccessDTO.getSite().getMerchant().getTxFeePercent());
                 recurTransactionCharge.setTxFeeFlat(newAccessDTO.getSite().getMerchant().getTxFeeFlat());
             }
-
-            recurTransactionCharge.setClientShare(newAccessDTO.getSite().getAccess().get(0).getClientShare());
+            Double amtToChargeAfterTransactionFee = site.getAccess().get(0).getSubscriptionFee().getFee() - (site.getAccess().get(0).getSubscriptionFee().getFee()*recurTransactionCharge.getTxFeePercent()/100) + recurTransactionCharge.getTxFeeFlat();
+            Double graniusShare = amtToChargeAfterTransactionFee * (1.0d - newAccessDTO.getSite().getAccess().get(0).getClientShare());
+            boolean thresholdReached = this.payAsUGoSubService.isThresholdReached(newAccessDTO.getSite(), graniusShare);
+                        
+            Double clientShare = newAccessDTO.getSite().getAccess().get(0).getClientShare();
+            if(thresholdReached){
+            	clientShare = 1.0d;
+            } else {
+            	clientShare = newAccessDTO.getSite().getAccess().get(0).getClientShare();
+            }
+            recurTransactionCharge.setClientShare(clientShare);
             recurTransactionCharge.setMachineName(machineName);
             recurTransactionCharge.setMerchantId(payPalDTO.getMerchantId());
             this.recurTxDAO.saveRecurTransaction(recurTransactionCharge);
@@ -1388,13 +1420,13 @@ public class SubServiceImpl implements SubService {
         DateTime lastBillingDateTime = new DateTime(existingUserAccount.getUserAccount().getLastBillingDate());
         DateTime todaysDateTime = new DateTime();
 
-        int totalDays = Days.daysBetween(lastBillingDateTime.toDateMidnight(), nextBillingDateTime.toDateMidnight())
+        int totalDays = Days.daysBetween(lastBillingDateTime.withTimeAtStartOfDay(), nextBillingDateTime.withTimeAtStartOfDay())
             .getDays();
         int remainingDays = 0;
         Double newBalance = 0.00d;
         Double unUsedBalance = 0.00d;
 
-        remainingDays = Days.daysBetween(todaysDateTime.toDateMidnight(), nextBillingDateTime.toDateMidnight()).getDays();
+        remainingDays = Days.daysBetween(todaysDateTime.withTimeAtStartOfDay(), nextBillingDateTime.withTimeAtStartOfDay()).getDays();
 
         unUsedBalance = (existingUserAccount.getSubFee().getFee() / totalDays) * remainingDays;
         unUsedBalance = new BigDecimal(unUsedBalance).setScale(2, RoundingMode.HALF_DOWN).doubleValue();
@@ -1842,6 +1874,6 @@ public class SubServiceImpl implements SubService {
         return this.messages.getMessage(messageKey, object, new Locale("en"));
     }
 
-
+   
 
 }

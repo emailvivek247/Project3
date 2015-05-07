@@ -360,4 +360,9 @@ public interface EComFacadeServiceRS {
 	@WebMethod
 	public Location getLocationByNameAndAccessName(@WebParam(name="locationName") String locationName,
 			@WebParam(name="locationName") String accessName);
+	
+	@WebMethod
+	public String getDocumentIdByCertifiedDocumentNumber(
+			@WebParam(name="certifiedDocumentNumber") String certifiedDocumentNumber,
+			@WebParam(name="siteName") String siteName);
 }

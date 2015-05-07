@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Type;
 
 import com.fdt.common.entity.AbstractBaseEntity;
@@ -28,6 +29,9 @@ public class ShoppingCartItem extends AbstractBaseEntity {
 
     @Column(name = "PRODUCT_TYPE", nullable = false)
     private String productType = null;
+    
+    @Column(name = "ITEM_NAME", nullable = true)
+    private String productName = null;
 
     @Column(name = "PAGE_COUNT", nullable = false)
     private int pageCount = 0;
@@ -213,6 +217,9 @@ public class ShoppingCartItem extends AbstractBaseEntity {
 	}
 
 	public void setBarNumber(String barNumber) {
+		if(!StringUtils.isBlank(barNumber)) {
+			barNumber = barNumber.toUpperCase();
+		}
 		this.barNumber = barNumber;
 	}
 
@@ -273,34 +280,12 @@ public class ShoppingCartItem extends AbstractBaseEntity {
 		this.sumTxamountPlusServiceFee = sumTxamountPlusServiceFee;
 	}
 
-	@Override
-    public String toString() {
-        return "ShoppingCartItem ["
-        		+ "userId=" + userId
-        		+ "nodeName=" + nodeName
-        		+ "productId=" + productId
-        		+ "pageCount=" + pageCount
-        		+ "productType=" + productType
-        		+ "downloadURL=" + downloadURL
-        		+ "accessName=" + accessName
-        		+ "uniqueIdentifier=" + uniqueIdentifier
-        		+ "application=" + application
-        		+ "barNumber=" + barNumber
-        		+ "comments=" + comments
-        		+ "locationId=" + locationId
-        		+ "baseAmount=" + baseAmount
-        		+ "serviceFee=" + serviceFee
-        		+ "totalTxAmount=" +totalTxAmount
-        		+ "access=" + access
-        		+ "documentsPurchased=" + documentsPurchased
-        		+ "user=" + user
-        		+ "firmAccessAdmin=" + firmAccessAdmin
-        		+ "locationName=" + locationName
-        		+ "stateCode=" + stateCode
-        		+ "sumTxamountPlusServiceFee=" + sumTxamountPlusServiceFee
-                + ", createdDate=" + createdDate + ", modifiedDate="
-                + modifiedDate + ", modifiedBy=" + modifiedBy + ", createdBy="
-                + createdBy + ", active=" + active + "]";
-    }
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
 
 }

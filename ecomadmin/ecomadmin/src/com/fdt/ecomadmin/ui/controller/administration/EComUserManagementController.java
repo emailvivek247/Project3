@@ -28,6 +28,7 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
+import javax.validation.Valid;
 import javax.validation.Validator;
 import javax.validation.metadata.ConstraintDescriptor;
 
@@ -56,6 +57,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -105,8 +107,15 @@ public class EComUserManagementController extends AbstractBaseController {
 	public static String HAS_OVERRIDEN_ACCESS = "accessOverridden";
 	public static String CURRENT_LOGIN_TIME = "lastLoginTime";
 	public static String DATE_TIME_CREATED = "createdDate";
-
-	private static int[] PDF_USER_COLUMN_WIDTHS = new int[] {21,14,14,10,11,9,8,9,6,8,21,21,16,14};
+	public static String PAYED_USER = "payedUser";
+	public static String USER_ACTIVE = "active";
+	public static String FIRM_NAME = "firmName";
+	public static String FIRM_NUMBER = "firmNumber";
+	public static String ACCOUNT_NON_LOCKED = "accountNonLocked";
+	public static String FIRM_ADMIN = "firmAdmin";
+	
+	
+	private static int[] PDF_USER_COLUMN_WIDTHS = new int[] {21,8,9,9,9,10,9,8,9,6,8,20,20,14,12,10};
 
 
     @Autowired(required = true)
@@ -123,7 +132,7 @@ public class EComUserManagementController extends AbstractBaseController {
     @ResponseBody
     public List<ErrorCodeDTO> enableDisableAccess(HttpServletRequest request, @RequestParam(required = false) String username,
     	@RequestParam(required = false) String nodename, @RequestParam(required = false) Long useraccessid,
-    		@RequestParam(required = false) Boolean enableaccess , @RequestParam(required = false) String comments,
+    		@RequestParam(required = false) Boolean enableaccess , @RequestParam(required = false) String comments, @RequestParam(required = false) String endDate,
     		RedirectAttributes redirectAttributes) {
     	List<ErrorCodeDTO> errors = new LinkedList<ErrorCodeDTO>();
         boolean isValidSiteAdmin = false;
@@ -141,7 +150,7 @@ public class EComUserManagementController extends AbstractBaseController {
         if (isValidSiteAdmin) {
             try {
             	this.getServiceStub().enableDisableUserAccess(useraccessid, enableaccess.booleanValue(),
-            		request.getRemoteUser(), comments, enableaccess.booleanValue());
+            		request.getRemoteUser(), comments, enableaccess.booleanValue(), endDate);
             	ErrorCodeDTO error = new ErrorCodeDTO();
         		error.setCode("SUCCESS");
         		if (enableaccess.booleanValue() == true) {
@@ -746,15 +755,26 @@ public class EComUserManagementController extends AbstractBaseController {
 			sortByField = SearchCriteriaDTO.HAS_OVERRIDEN_ACCESS;
 		} else if(gridSortByField.equals(CURRENT_LOGIN_TIME)){
 			sortByField = SearchCriteriaDTO.CURRENT_LOGIN_TIME;
-		} else if(gridSortByField.equals(DATE_TIME_CREATED)){
-			sortByField = SearchCriteriaDTO.DATE_TIME_CREATED;
-		}
+		} else if(gridSortByField.equals(PAYED_USER)){
+			sortByField = SearchCriteriaDTO.PAYED_USER;
+		} else if(gridSortByField.equals(USER_ACTIVE)){
+			sortByField = SearchCriteriaDTO.USER_ACTIVE;
+		} else if(gridSortByField.equals(FIRM_NAME)){
+			sortByField = SearchCriteriaDTO.FIRM_NAME;
+		} else if(gridSortByField.equals(FIRM_NUMBER)){
+			sortByField = SearchCriteriaDTO.FIRM_NUMBER;
+		} else if(gridSortByField.equals(ACCOUNT_NON_LOCKED)){
+			sortByField = SearchCriteriaDTO.ACCOUNT_NON_LOCKED;
+		} else if(gridSortByField.equals(FIRM_ADMIN)){
+			sortByField = SearchCriteriaDTO.FIRM_ADMIN;
+		}		
+		
 		return sortByField;
 	}
 
 	@RequestMapping(value="/updatecreditcard.admin", produces="application/json")
     @ResponseBody
-    public List<ErrorCodeDTO> updateCreditCardInfo(HttpServletRequest request, CreditCardForm creditCardForm,
+    public List<ErrorCodeDTO> updateCreditCardInfo(HttpServletRequest request, @ModelAttribute("creditCardForm") @Valid CreditCardForm creditCardForm,
     					@RequestParam(required = false) String userName, BindingResult bindingResult) {
         List<ErrorCodeDTO> errors = new LinkedList<ErrorCodeDTO>();
         String verificationResult = verifyBindingInJSON(bindingResult);
@@ -1267,6 +1287,7 @@ public class EComUserManagementController extends AbstractBaseController {
 
 
 		columns.add(user.getUsername() != null ? user.getUsername().toLowerCase() : "");
+		columns.add(user.isFirmAdmin() ? "Yes" : "No");
 		columns.add(user.getFirstName() != null ? StringUtils.capitalize(user.getFirstName().toLowerCase()) : "");
 		columns.add(user.getLastName() != null ? StringUtils.capitalize(user.getLastName().toLowerCase()) : "");
 		columns.add(user.getPhone() != null ? user.getPhone() : "");
@@ -1278,6 +1299,7 @@ public class EComUserManagementController extends AbstractBaseController {
 		columns.add(user.isAccountNonLocked() ? "No" : "Yes");
 		columns.add(lastLoginDateText);
 		columns.add(createdDateText);
+		columns.add(user.getFirmName() != null ? user.getFirmName() : "");
 		columns.add(user.getFirmNumber() != null ? user.getFirmNumber() : "");
 		columns.add(user.getBarNumber() != null ? user.getBarNumber() : "");
 		return columns;
@@ -1291,6 +1313,7 @@ public class EComUserManagementController extends AbstractBaseController {
 		String lastLoginDateText = user.getLastLoginTime() != null ? df.format(user.getLastLoginTime()) : "";
 		boolean wrap = true;
 		cells.add(new PDFCell(user.getUsername() != null ? user.getUsername().toLowerCase() : "", !wrap));
+		cells.add(new PDFCell(user.isFirmAdmin() ? "Yes" : "No", !wrap));
 		cells.add(new PDFCell(user.getFirstName() != null ? StringUtils.capitalize(user.getFirstName().toLowerCase()) : "", wrap));
 		cells.add(new PDFCell(user.getLastName() != null ? StringUtils.capitalize(user.getLastName().toLowerCase()) : "", wrap));
 		cells.add(new PDFCell(user.getPhone() != null ? user.getPhone() : "", !wrap));
@@ -1302,6 +1325,7 @@ public class EComUserManagementController extends AbstractBaseController {
 		cells.add(new PDFCell(user.isAccountNonLocked() ? "No" : "Yes", !wrap));
 		cells.add(new PDFCell(lastLoginDateText, !wrap));
 		cells.add(new PDFCell(createdDateText, !wrap));
+		cells.add(new PDFCell(user.getFirmName() != null ? user.getFirmName() : "", wrap));
 		cells.add(new PDFCell(user.getFirmNumber() != null ? user.getFirmNumber() : "", wrap));
 		cells.add(new PDFCell(user.getBarNumber() != null ? user.getBarNumber() : "", !wrap));
 

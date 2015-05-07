@@ -84,8 +84,32 @@ public class SiteConfiguration extends AbstractBaseEntity {
 
     @Column(name = "ADD_SUBSCRIPTION_SUB", nullable = false)
     private String addSubscriptionSub = null;
+    
+    @Column(name = "EXPIRED_OVERRIDDEN_SUBSCRIPTION_NOTIFICATION_SUB")
+    private String expiredOverriddenSubscriptionNotificationSubject = null;
 
-    @Transient
+    @Column(name = "EXPIRED_OVERRIDDEN_SUBSCRIPTION_NOTIFICATION_TEMPLATE", nullable = false)
+    private String expiredOverriddenSubscriptionNotificationTemplate = null;
+    
+    public String getExpiredOverriddenSubscriptionNotificationSubject() {
+		return expiredOverriddenSubscriptionNotificationSubject;
+	}
+
+	public void setExpiredOverriddenSubscriptionNotificationSubject(
+			String expiredOverriddenSubscriptionNotificationSubject) {
+		this.expiredOverriddenSubscriptionNotificationSubject = expiredOverriddenSubscriptionNotificationSubject;
+	}
+
+	public String getExpiredOverriddenSubscriptionNotificationTemplate() {
+		return expiredOverriddenSubscriptionNotificationTemplate;
+	}
+
+	public void setExpiredOverriddenSubscriptionNotificationTemplate(
+			String expiredOverriddenSubscriptionNotificationTemplate) {
+		this.expiredOverriddenSubscriptionNotificationTemplate = expiredOverriddenSubscriptionNotificationTemplate;
+	}
+
+	@Transient
     private String siteName = null;
 
     public String getEmailTemplateFolder() {

@@ -6,8 +6,13 @@ import java.security.Provider;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,6 +44,24 @@ public class SystemUtil {
         encryptor.setStringOutputType("HEXADECIMAL");
     }
 
+    public static String[] tokenizeToStringArray(String str, String delimiters,	boolean trimTokens, boolean ignoreEmptyTokens) {
+		if (str == null) {
+			return null;
+		}
+		StringTokenizer st = new StringTokenizer(str, delimiters);
+		List<String> tokens = new ArrayList<String>();
+		while (st.hasMoreTokens()) {
+			String token = st.nextToken();
+			if (trimTokens) {
+				token = token.trim();
+			}
+			if (!ignoreEmptyTokens || token.length() > 0) {
+				tokens.add(token);
+			}
+		}
+		return tokens.toArray(new String[tokens.size()]);
+	}
+    
     public static void main (String args[]) {
         System.out.println(encrypt("vivek"));
     }
@@ -127,7 +150,7 @@ public class SystemUtil {
         } else if ("YEAR".equalsIgnoreCase(paymentPeriod)) {
             dateTime = dateTime.plusMonths(12);
         }
-        return dateTime.toDateMidnight().toDateTime();
+        return dateTime.withTimeAtStartOfDay().toDateTime();
     }
 
 	public static CardType getCardType(String accountNumber) {
@@ -154,4 +177,13 @@ public class SystemUtil {
         return null;
     }
 
+	public static Set<String> getPaymentTokens(String paymentTokens) {
+		Set<String>  tokenList = new HashSet<String>();
+		StringTokenizer tokenizer = new StringTokenizer(paymentTokens, "|");
+		while (tokenizer.hasMoreTokens()) {
+			String token = tokenizer.nextToken();
+			tokenList.add(token);		   
+		}
+		return tokenList;
+	}
 }

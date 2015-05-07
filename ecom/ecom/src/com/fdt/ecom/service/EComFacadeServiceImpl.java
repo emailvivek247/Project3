@@ -450,7 +450,7 @@ public class EComFacadeServiceImpl implements EComFacadeService {
     public List<PayAsUGoTxView> getPayAsUGoTransactionsByNode(TransactionRequestDTO request) {
     	try {
             return this.payAsUGoSubService.getPayAsUGoTxByNode(request.getUserName(), request.getNodeName(),
-            		request.getFromDate(), request.getToDate());
+            		request.getComments(), request.getFromDate(), request.getToDate());
         } catch(RuntimeException runtimeException) {
             logger.error(NOTIFY_ADMIN, "Error in getPayAsUGoTransactionsByNode for userName {} "
             		+ "nodeName{}, fromDate{}, toDate{}", request.getUserName(), request.getNodeName(),
@@ -463,12 +463,13 @@ public class EComFacadeServiceImpl implements EComFacadeService {
     public PageRecordsDTO getPayAsUGoTransactionsByNodePerPage(TransactionRequestDTO request) {
         try {
             return this.payAsUGoSubService.getPayAsUGoTxByNodePerPage(request.getUserName(), request.getNodeName(),
-            		request.getFromDate(), request.getToDate(), request.getStartingFrom(), request.getNumberOfRecords());
+            		request.getComments(), request.getFromDate(), request.getToDate(), request.getStartingFrom(),
+            		request.getNumberOfRecords());
         } catch(RuntimeException runtimeException) {
             logger.error(NOTIFY_ADMIN, "Error in getPayAsUGoTransactionsByNode for userName {} "
-            		+ "nodeName{}, fromDate{}, toDate{}, startingFrom{}, numberOfRecords{}", request.getUserName(), request.getNodeName(),
-            		request.getFromDate(), request.getToDate(), request.getStartingFrom(), request.getNumberOfRecords(),
-                    runtimeException);
+            		+ "nodeName{}, fromDate{}, toDate{}, startingFrom{}, numberOfRecords{}", request.getUserName(),
+            		request.getNodeName(), request.getFromDate(), request.getToDate(), request.getStartingFrom(),
+            		request.getNumberOfRecords(), runtimeException);
             throw runtimeException;
         }
     }
@@ -681,5 +682,10 @@ public class EComFacadeServiceImpl implements EComFacadeService {
 	public Location getLocationByNameAndAccessName(@PathParam("locationName") String locationName,
 			@PathParam("accessName") String accessName){
 		return this.payAsUGoSubService.getLocationByNameAndAccessName(locationName, accessName);
+	}
+
+
+	public String getDocumentIdByCertifiedDocumentNumber(String certifiedDocumentNumber, String siteName) {		
+		return this.payAsUGoSubService.getDocumentIdByCertifiedDocumentNumber(certifiedDocumentNumber, siteName);
 	}
 }

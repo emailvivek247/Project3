@@ -1,8 +1,12 @@
 package com.fdt.common.util;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.Provider;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Properties;
 import java.util.TimeZone;
 
 import org.apache.commons.lang.StringUtils;
@@ -19,6 +23,8 @@ public class SystemUtil {
 
 	private static Logger logger = LoggerFactory.getLogger(SystemUtil.class.getName());
 
+	/*private static String PASSWORD_KEY = "Nk0BusFu9aLE4qb";*/
+	
 	private static String PASSWORD_KEY = "dookudu";
 
 	public static String encrypt(String plainText) {
@@ -39,6 +45,17 @@ public class SystemUtil {
 		return encryptedText;
 	}
 
+	public static String readProperty(String key, String fileName) throws IOException {
+		String value = null;
+		Properties properties = new Properties();
+		InputStream in = null;
+		in = new FileInputStream(fileName);
+		properties.load(in);
+		value = (String) properties.get(key);
+		in.close();
+		return value;
+	}
+	
 	public static String decrypt(String encryptedText) {
 		String decryptedText = null;
 		if (StringUtils.isBlank(encryptedText)) {
@@ -57,6 +74,44 @@ public class SystemUtil {
 		return decryptedText;
 	}
 
+    public static String decrypt(String encryptedText, String algorithm, String passwordKey) {
+    	String decryptedText =  null;
+		if (StringUtils.isBlank(encryptedText)) {
+			return encryptedText;
+		}
+    	try {
+	    	StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
+	    	encryptor.setAlgorithm(algorithm);
+			encryptor.setPassword(passwordKey);
+			Provider p = new BouncyCastleProvider();
+			encryptor.setProvider(p);
+			encryptor.setStringOutputType("HEXADECIMAL");
+			decryptedText = encryptor.decrypt(encryptedText);
+		} catch (Exception exception) {
+			logger.error("Exception Occured in Decrypting the Data", exception);
+		}
+    	return decryptedText;
+    }
+
+    public static String encrypt(String plainText, String algorithm, String passwordKey) {
+    	String encryptedText =  null;
+		if (StringUtils.isBlank(plainText)) {
+			return encryptedText;
+		}
+    	try {
+	    	StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
+	    	encryptor.setAlgorithm(algorithm);
+			encryptor.setPassword(passwordKey);
+			Provider p = new BouncyCastleProvider();
+			encryptor.setProvider(p);
+			encryptor.setStringOutputType("HEXADECIMAL");
+			encryptedText = encryptor.encrypt(plainText);
+		} catch (Exception exception) {
+			logger.error("Exception Occured in Encrypting the Data", exception);
+		}
+    	return encryptedText;
+    }
+    
     public static String decrypt(String encryptedText, String algorithm) {
     	String decryptedText =  null;
 		if (StringUtils.isBlank(encryptedText)) {

@@ -17,6 +17,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -154,9 +155,19 @@ public class User extends AbstractBaseEntity implements UserDetails {
 
     @Transient
     private boolean isAuthorizationPending = false;
+    
+    @Transient
+    private boolean firmAdmin = false;
+    
+    public boolean isFirmAdmin() {
+		return firmAdmin;
+	}
 
+	public void setFirmAdmin(boolean firmAdmin) {
+		this.firmAdmin = firmAdmin;
+	}
 
-    public List<Term> getTerms() {
+	public List<Term> getTerms() {
 		return terms;
 	}
 
@@ -323,6 +334,9 @@ public class User extends AbstractBaseEntity implements UserDetails {
 	}
 
 	public void setBarNumber(String barNumber) {
+		if(!StringUtils.isBlank(barNumber)) {
+			barNumber = barNumber.toUpperCase();
+		}
 		this.barNumber = barNumber;
 	}
 
@@ -539,6 +553,7 @@ public class User extends AbstractBaseEntity implements UserDetails {
 				+ city + ", state=" + state + ", zip=" + zip + ", phone="
 				+ phone + ", createdIp=" + createdIp + ", accountNonExpired="
 				+ accountNonExpired + ", accountNonLocked=" + accountNonLocked
+				+ ", firmAdmin=" + firmAdmin
 				+ ", credentialsNonExpired=" + credentialsNonExpired
 				+ ", lastLoginTime=" + lastLoginTime
 				+ ", currentLoginTime="+ currentLoginTime

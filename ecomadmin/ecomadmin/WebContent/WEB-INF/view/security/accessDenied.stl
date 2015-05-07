@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head><title>Ecommerce Administration</title>
+<head><title>eACCEPT Administration</title>
 	<meta http-equiv="content-type" content="text/html; charset="" />
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="Pragma" content="no-cache">
@@ -101,7 +101,7 @@ span.ADCSI_leftcol {
 													<h2>
 														<div id="acceptTitle" class="center">
 															<i class="icon-credit-card orange"></i>
-																<span class="blue" style="margin-left:0px;">ACCEPT</span>
+																<span class="blue" style="margin-left:0px;">eACCEPT</span>
 														</div>
 													</h2>
 													<h4 class="header blue lighter bigger">
@@ -138,14 +138,13 @@ span.ADCSI_leftcol {
 										<tbody id="footerTable" style="font-color:#DDECDF;">
 								        	<tr>
 							               		<td width="50%" align="center" style="vertical-align:top">
-							                    		<a href="http://www.amcad.com"><img src="resources/images/amcadLogo.png" alt="AMCAD"  height="42px" border="0" /></a><br> &nbsp; Copyright &copy;2013 (dba AmCad & AmCad Digital Conversions)
+							                    		<a href="http://www.granicus.com"><img src="resources/images/granicusLogo.png" alt="Granicus INC"  height="42px" border="0" /></a><br> &nbsp; Copyright &copy; <script>document.write(new Date().getFullYear())</script> Granicus, INC.
 							                	</td>
 							                	<td width="50%" align="center" style="vertical-align:top">
 								                	<ul>
-								                    	<a href="https://www.facebook.com/pages/AMCAD/193699310720652"><img src="resources/images/icons/fb.png" alt="Facebook AMCAD" border="0" /></a>
-								                        <a href="http://www.linkedin.com/company/amcad?trk=tabs_biz_home"><img src="resources/images/icons/linkedin.png" alt="Linkedin AMCAD" border="0" /></a>
-								                        <a href="https://twitter.com/AmCadLLC"><img src="resources/images/icons/twitter.png" alt="Twitter AMCAD" border="0" /></a>
-								                        <a href="http://www.youtube.com/user/AMCADLLC"><img src="resources/images/icons/youtube.png" alt="YouTube AMCAD" border="0" /></a>
+								                    	<a href="https://www.facebook.com/granicusinc"><img src="resources/images/icons/fb.png" alt="Facebook Granicus" border="0" /></a>
+								                        <a href="https://www.linkedin.com/company/granicusinc?trk=tyah"><img src="resources/images/icons/linkedin.png" alt="Linkedin Granicus" border="0" /></a>
+								                        <a href="https://twitter.com/granicus"><img src="resources/images/icons/twitter.png" alt="Twitter Granicus" border="0" /></a>
 								                    </ul>
 							               		</td>
 									           <div class="clear">

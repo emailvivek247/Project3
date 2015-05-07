@@ -41,6 +41,9 @@ public class SiteConfigurationForm {
 
     @NotNull(message = "{administration.notnull.accessAuthorizationSubject}")
     private String accessAuthorizationSubject = null;
+    
+    @NotNull(message = "{administration.notnull.expiredOverriddenSubscriptionNotificationSubject}")
+    private String expiredOverriddenSubscriptionNotificationSubject = null;
 
     public Long getSiteId() {
         return siteId;
@@ -143,4 +146,14 @@ public class SiteConfigurationForm {
 		this.payAsUGoPaymentConfirmationSubject = payAsUGoPaymentConfirmationSubject;
 	}
 
+	public String getExpiredOverriddenSubscriptionNotificationSubject() {
+		return expiredOverriddenSubscriptionNotificationSubject;
+	}
+
+	public void setExpiredOverriddenSubscriptionNotificationSubject(
+			String expiredOverriddenSubscriptionNotificationSubject) {
+		this.expiredOverriddenSubscriptionNotificationSubject = expiredOverriddenSubscriptionNotificationSubject;
+	}
+
+	
 }

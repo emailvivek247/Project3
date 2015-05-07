@@ -2,11 +2,15 @@ package com.fdt.webtx.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.fdt.common.exception.SDLBusinessException;
 import com.fdt.paymentgateway.dto.PayPalDTO;
 import com.fdt.paymentgateway.exception.PaymentGatewaySystemException;
 import com.fdt.paymentgateway.exception.PaymentGatewayUserException;
+import com.fdt.webtx.dto.PaymentInfoDTO;
+import com.fdt.webtx.dto.WebCaptureTxRequestDTO;
+import com.fdt.webtx.dto.WebCaptureTxResponseDTO;
 import com.fdt.webtx.dto.WebTransactionDTO;
 import com.fdt.webtx.dto.WebTxExtResponseDTO;
 import com.fdt.webtx.entity.WebTx;
@@ -62,6 +66,8 @@ public interface WebTxService {
      * @return WebTransaction.
      */
     public WebTx getWebTransactionByTxRefNum(String txRefNumber, String siteName);
+    
+    public Map<Long, PaymentInfoDTO> getPaymentInfoMap(List<String> paymentTokens);
 
     /** This Method Calculates The Service Fee For Each Webtransaction Item.
      * @param siteName Name Of The Site.
@@ -78,4 +84,12 @@ public interface WebTxService {
      * @return WebTransaction.
      */
 	public WebTx getWebTxByInvoiceNumber(String invoiceNumber, String siteName);
+
+
+	public void archiveWebTransactions(String archivedBy, String archiveComments);
+	
+	public WebCaptureTxResponseDTO captureWebTx(WebCaptureTxRequestDTO webCaptureTxRequestDTO) throws SDLBusinessException;
+
+
+	public PaymentInfoDTO getPaymentInfoByID(Long paymentInfoID);  
 }

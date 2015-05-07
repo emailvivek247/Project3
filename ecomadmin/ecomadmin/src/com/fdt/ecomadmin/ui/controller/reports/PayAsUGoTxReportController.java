@@ -64,13 +64,14 @@ public class PayAsUGoTxReportController extends AbstractReportController {
                                              @RequestParam(required = false) String dateRange,
                                              @RequestParam(required = false) String transactionType,
                                              @RequestParam(required = false) Integer locationId,
+                                             @RequestParam(required = false) String isCertified,
                                              @CookieValue("JSESSIONID") String sessionId) {
         if (!checkLoggedinUserSiteValidity(request, siteId)) {
             ModelAndView modelAndView = new ModelAndView(REDIRECT_ACCESS_DENIED);
             return modelAndView;
         }
         return this.searchTransactions(request, VIEW_DETAIL_DOCUMENT_TRANSACTIONS, siteId, dateRange.split("-")[0].trim(), dateRange.split("-")[1].trim(), transactionType, sessionId
-        		,TOP_REPORTS, SUB_REPORTS_DETAIL_DOCUMENT_TRANS, locationId, null, null);
+        		,TOP_REPORTS, SUB_REPORTS_DETAIL_DOCUMENT_TRANS, locationId, isCertified, null);
     }
 
 	@Link(label="Pay As You Go Transaction Report", family="ACCEPTADMIN", parent = "Home" )
@@ -103,7 +104,8 @@ public class PayAsUGoTxReportController extends AbstractReportController {
                                      @RequestParam(required = false) String dateRange,
                                      @RequestParam(required = false) String transactionType,
                                      @RequestParam(required = false) int pageIndex,
-                                     @RequestParam(required = false) Integer locationId) {
+                                     @RequestParam(required = false) Integer locationId,
+                                     @RequestParam(required = false) String isCertified) {
         if (!checkLoggedinUserSiteValidity(request, siteId)) {
             ModelAndView modelAndView = new ModelAndView(REDIRECT_ACCESS_DENIED);
             modelAndView.addObject("siteId", siteId);
@@ -114,7 +116,7 @@ public class PayAsUGoTxReportController extends AbstractReportController {
         }
         String reportName = DETAIL_DOCUMENT_TX_RPT;
         return viewHTML(request, siteId, dateRange.split("-")[0].trim(), dateRange.split("-")[1].trim(), transactionType, pageIndex, reportName, DETAIL_DOCUMENT_TRANSACTIONS_HTML_VIEW,
-        		TOP_REPORTS, SUB_REPORTS_DETAIL_DOCUMENT_TRANS, locationId, null, null);
+        		TOP_REPORTS, SUB_REPORTS_DETAIL_DOCUMENT_TRANS, locationId, isCertified, null);
     }
 
 	/* Called From Applet to Load report. If a Specific Site is chosen, then PayAsUGoPaymentsTransactionReport_SiteUser.jasper
@@ -146,13 +148,14 @@ public class PayAsUGoTxReportController extends AbstractReportController {
                                             @RequestParam(required = false) String txType,
                                             @RequestParam(required = false) String fromDate,
                                             @RequestParam(required = false) String toDate,
-                                            @RequestParam(required = false) Integer locationId) throws Exception {
+                                            @RequestParam(required = false) Integer locationId,
+                                            @RequestParam(required = false) String isCertified) throws Exception {
         if (!checkLoggedinUserSiteValidity(request, siteId)) {
             ModelAndView modelAndView = new ModelAndView(REDIRECT_ACCESS_DENIED);
             return modelAndView;
         }
         String reportName = DETAIL_DOCUMENT_TX_RPT;
-        return this.viewAppletJasperReport(request, response, siteId, txType, fromDate, toDate, reportName, locationId, null);
+        return this.viewAppletJasperReport(request, response, siteId, txType, fromDate, toDate, reportName, locationId, isCertified);
     }
 
 	@RequestMapping(value="/viewpayasugopdf.admin")
@@ -175,13 +178,14 @@ public class PayAsUGoTxReportController extends AbstractReportController {
                                   @RequestParam(required = false) Long siteId,
                                   @RequestParam(required = false) String dateRange,
                                   @RequestParam(required = false) String transactionType,
-                                  @RequestParam(required = false) Integer locationId) {
+                                  @RequestParam(required = false) Integer locationId,
+                                  @RequestParam(required = false) String isCertified) {
         if (!checkLoggedinUserSiteValidity(request, siteId)) {
             return REDIRECT_ACCESS_DENIED;
         }
         String reportName = DETAIL_DOCUMENT_TX_RPT;
         String outputFileName = "DetailDocumentsTransactionReport_";
-        this.viewPDF(request, response, siteId, dateRange.split("-")[0].trim(), dateRange.split("-")[1].trim(),  transactionType, reportName, outputFileName, locationId, null, null);
+        this.viewPDF(request, response, siteId, dateRange.split("-")[0].trim(), dateRange.split("-")[1].trim(),  transactionType, reportName, outputFileName, locationId, isCertified, null);
         return null;
     }
 
@@ -205,13 +209,14 @@ public class PayAsUGoTxReportController extends AbstractReportController {
                                      @RequestParam(required = false) Long siteId,
                                      @RequestParam(required = false) String dateRange,
                                      @RequestParam(required = false) String transactionType,
-                                     @RequestParam(required = false) Integer locationId) {
+                                     @RequestParam(required = false) Integer locationId,
+                                     @RequestParam(required = false) String isCertified) {
         if (!checkLoggedinUserSiteValidity(request, siteId)) {
             return REDIRECT_ACCESS_DENIED;
         }
         String reportName = DETAIL_DOCUMENT_TX_RPT;
         String outputFileName = "DetailDocumentsTransactionReport_";
-        this.viewXLSX(request, response, siteId, dateRange.split("-")[0].trim(), dateRange.split("-")[1].trim(),  transactionType, reportName, outputFileName, locationId, null, null);
+        this.viewXLSX(request, response, siteId, dateRange.split("-")[0].trim(), dateRange.split("-")[1].trim(),  transactionType, reportName, outputFileName, locationId, isCertified, null);
         return null;
     }
 
@@ -235,13 +240,14 @@ public class PayAsUGoTxReportController extends AbstractReportController {
                                      @RequestParam(required = false) Long siteId,
                                      @RequestParam(required = false) String dateRange,
                                      @RequestParam(required = false) String transactionType,
-                                     @RequestParam(required = false) Integer locationId) {
+                                     @RequestParam(required = false) Integer locationId,
+                                     @RequestParam(required = false) String isCertified) {
         if (!checkLoggedinUserSiteValidity(request, siteId)) {
             return REDIRECT_ACCESS_DENIED;
         }
         String reportName = DETAIL_DOCUMENT_TX_RPT;
         String outputFileName = "DetailDocumentsTransactionReport_";
-        this.viewCSV(request, response, siteId, dateRange.split("-")[0].trim(), dateRange.split("-")[1].trim(),  transactionType, reportName, outputFileName, locationId, null, null);
+        this.viewCSV(request, response, siteId, dateRange.split("-")[0].trim(), dateRange.split("-")[1].trim(),  transactionType, reportName, outputFileName, locationId, isCertified, null);
         return null;
     }
 
@@ -265,13 +271,14 @@ public class PayAsUGoTxReportController extends AbstractReportController {
                                      @RequestParam(required = false) Long siteId,
                                      @RequestParam(required = false) String dateRange,
                                      @RequestParam(required = false) String transactionType,
-                                     @RequestParam(required = false) Integer locationId) {
+                                     @RequestParam(required = false) Integer locationId,
+                                     @RequestParam(required = false) String isCertified) {
         if (!checkLoggedinUserSiteValidity(request, siteId)) {
             return REDIRECT_ACCESS_DENIED;
         }
         String reportName = DETAIL_DOCUMENT_TX_RPT;
         String outputFileName = "DetailDocumentsTransactionReport_";
-        this.viewRTF(request, response, siteId, dateRange.split("-")[0].trim(), dateRange.split("-")[1].trim(),  transactionType, reportName, outputFileName, locationId, null, null);
+        this.viewRTF(request, response, siteId, dateRange.split("-")[0].trim(), dateRange.split("-")[1].trim(),  transactionType, reportName, outputFileName, locationId, isCertified, null);
         return null;
     }
 

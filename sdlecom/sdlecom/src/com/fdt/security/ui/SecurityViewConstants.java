@@ -54,6 +54,12 @@ public interface SecurityViewConstants extends BaseViewConstants {
 	
 	public static final String REDIRECT_CHECK_SUBSCRIPTION = "redirect:/checkSubscription.admin?isReAu=true";
 	
+	public static final String ECertify_VIEW_RETRIEVE_CERTIFIED_DOCUMENT = "admin/portal/eCertify";
+	
+	public static final String ECertify_VIEW_RETRIEVE_CERTIFIED_DOCUMENT_RENDER = "admin/portal/eCertifyDocumentRender";
+	
+	public static final String ECertify_SUBMIT_RETRIEVE_CERTIFIED_DOCUMENT = "redirect:/checkSubscription.admin?isReAu=true";
+	
     public static final String EXCEL = "excel";
     
     public static final String PDF = "pdf";

@@ -147,6 +147,7 @@ public class UserAdminDAOImpl extends AbstractBaseDAOImpl implements UserAdminDA
                 user.setBarNumber(this.getString(row[15]));
                 String userAccessActive = this.getString(row[16]);
                 user.setPaymentDue(userAccessActive.equals("N") ? true : false);
+                user.setFirmAdmin(this.getBoolean(row[17]));
                 users.add(user);
             }
         }
@@ -233,6 +234,7 @@ public class UserAdminDAOImpl extends AbstractBaseDAOImpl implements UserAdminDA
                 subscriptionDTO.setSubscriptionFee(this.getDoubleFromBigDecimal(row[23]));
                 subscriptionDTO.setFirmLevelAccess(this.getBoolean(row[49]));
                 subscriptionDTO.setFirmAccessAdmin(this.getBoolean(row[50]));
+                subscriptionDTO.setOverriddenUntillDate(this.getDate(row[52]));
             	if(user.getId() != null) {
             		continue;
             	}

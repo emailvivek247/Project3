@@ -20,6 +20,9 @@ import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
@@ -381,15 +384,15 @@ public class UserDAOImpl extends AbstractBaseDAOImpl implements UserDAO {
 
 
     public int enableDisableUserAccess(Long userAccessId, boolean isEnable, String modifiedBy, String comments,
-            boolean isAccessOverridden){
+            boolean isAccessOverridden, String endDate){
     	List<Long> userAccessIds = new ArrayList<Long>();
     	userAccessIds.add(userAccessId);
-    	return this.enableDisableUserAccesses(userAccessIds, isEnable, modifiedBy, comments, isAccessOverridden);
+    	return this.enableDisableUserAccesses(userAccessIds, isEnable, modifiedBy, comments, isAccessOverridden, endDate);
     }
 
 
     public int enableDisableUserAccesses(List<Long> userAccessIds, boolean isEnable, String modifiedBy, String comments,
-            boolean isAccessOverridden) {
+            boolean isAccessOverridden, String endDate) {
         Boolean enableDisable = Boolean.FALSE;
         if (isEnable) {
             enableDisable = Boolean.TRUE;
@@ -398,12 +401,17 @@ public class UserDAOImpl extends AbstractBaseDAOImpl implements UserDAO {
         if (isAccessOverridden) {
             isAccessOverriddenObj = Boolean.TRUE;
         }
+        Date overriddenUntillDate = null;
+        if(!StringUtils.isBlank(endDate)){
+        	overriddenUntillDate = DateTimeFormat.forPattern("MM/dd/yyyy").parseDateTime(endDate).withTime(23,59,59,1).toDate();
+		}
         Session session = currentSession();
         int recordsModified = session.createQuery("Update UserAccess useraccess " +
                                 "Set useraccess.active = :isEnabled , " +
                                 "useraccess.modifiedDate = :modifiedDate, " +
                                 "useraccess.modifiedBy = :modifiedBy, " +
                                 "useraccess.comments = :comments, " +
+                                "useraccess.overriddenUntillDate = :overriddenUntillDate, " +
                                 "useraccess.accessOverriden = :accessOverriden " +
                                 "where useraccess.id  in (:userAccessIds)")
                                 .setParameter("isEnabled", enableDisable)
@@ -411,6 +419,7 @@ public class UserDAOImpl extends AbstractBaseDAOImpl implements UserDAO {
                                 .setParameter("modifiedDate", new Date())
                                 .setParameter("modifiedBy", modifiedBy)
                                 .setParameter("comments", comments)
+                                .setParameter("overriddenUntillDate", overriddenUntillDate)
                                 .setParameter("accessOverriden", isAccessOverriddenObj)
                                 .executeUpdate();
         return recordsModified;

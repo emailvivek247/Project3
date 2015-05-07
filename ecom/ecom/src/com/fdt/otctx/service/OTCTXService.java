@@ -53,4 +53,6 @@ public interface OTCTXService {
 
 	public OTCTx getOTCTransactionByInvoiceNumber(String invoiceNumber, String siteName);
 
+	public void archiveOTCTransactions(String archivedBy, String archiveComments);
+
 }

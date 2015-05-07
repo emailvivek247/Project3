@@ -79,12 +79,20 @@
 			<entry key="reCaptcha.publicKey" value="${reCaptcha.publicKey}" />
 			<entry key="isFirmNumberRequired" value="${isFirmNumberRequired}" />
 			<entry key="isBarNumberRequired" value="${isBarNumberRequired}" />
+			<entry key="threeTier" value="${threeTier}" />
+			<entry key="indexServerUrl" value="${indexServerUrl}" />
+			<entry key="documentManagementSystemWsdl" value="${documentManagementSystemWsdl}" />
+			<entry key="documentManagementSystemClassName" value="${documentManagementSystemClassName}" />
 		</propertyfile>
 		<xmltask source="${basedir}\resources\logback.xml" dest="${basedir}\resources\logback.xml" failWithoutMatch="true">
 			<attr path="/configuration/property" attr="value" value="${prefixPathForLogs}" />
 			<replace path="/configuration/appender/subject/text()" withText="${logfileSubject}" />
 			<replace path="/configuration/appender/to/text()" withText="${toEmail}" />
 			<replace path="/configuration/appender/from/text()" withText="${fromEmail}" />
+			<replace path="/configuration/appender/smtpHost/text()" withText="${smtp.host}" />
+			<replace path="/configuration/appender/smtpPort/text()" withText="${smtp.port}" />
+			<replace path="/configuration/appender/username/text()" withText="${smtp.username}" />
+			<replace path="/configuration/appender/password/text()" withText="${smtp.password}" />
 		</xmltask>
 		<xmltask source="${webcontent.web-inf}\conf\spring\applicationContext.xml"
 					dest="${webcontent.web-inf}\conf\spring\applicationContext.xml" failWithoutMatch="true">
@@ -95,6 +103,7 @@
 			<replace path="/:web-app/:context-param[5]/:param-value/text()" withText="${ecommerce.isDBService}" />
 			<replace path="/:web-app/:context-param[6]/:param-value/text()" withText="${ecommerce.isAlertsEnabled}" />
 			<replace path="/:web-app/:context-param[7]/:param-value/text()" withText="${ecommerce.isShoppingCartEnabled}" />
+			<replace path="/:web-app/:context-param[8]/:param-value/text()" withText="${ecommerce.isPSOOnlyMachine}" />
 		</xmltask>
 		<propertyfile file="${webcontent.web-inf}/data/AlertSystem.properties">
             <entry key="alert.serviceWsdl" value="${alert.serviceWsdl}" />

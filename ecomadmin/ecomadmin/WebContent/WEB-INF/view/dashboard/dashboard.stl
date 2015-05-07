@@ -15,7 +15,7 @@
 	               			 <div class="row-fluid">
 	                            <div class="">
 	                                <b>Select Site:</b> 
-	                                <select id="siteList" name="siteId" class="k-widget k-dropdownlist" tabindex="1" width="auto">
+	                                <select id="siteList" name="siteId" class="k-widget k-dropdownlist" tabindex="1" style="width:200px;">
 							            	<#if sites?has_content>
 							            		<option value="" selected>All Sites</option>
 							            	    <#foreach site in sites>

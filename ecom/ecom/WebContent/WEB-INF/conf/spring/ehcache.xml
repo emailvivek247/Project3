@@ -109,7 +109,7 @@
             maxElementsInMemory       = "100"
             memoryStoreEvictionPolicy = "LFU" />
 
-     <cache name="getLocationSealById"
+     <cache name="getLocationById"
             timeToLiveSeconds         = "10800"
             timeToIdleSeconds         = "10800"
             maxElementsInMemory       = "100"

@@ -163,12 +163,12 @@ td.footer{
 						<#if nonGovFirmUserSub>
 							<@form.radiobutton path="useExistingAccount" value="F" checked="checked"/> <@spring.message code="security.ecommerce.label.useFirmCard" />
 						</#if>
-						<#--
+						
 							<#if	(nonGovFirmUserSub && !nonGovFirmAdminUserSub) ||
 												(govUserSub && !nonGovFirmAdminUserSub)>
 									<@form.hidden path="useExistingAccount" value="NR" checked="checked"/>
 							</#if>
-						-->
+						
 
 							</div>
 						<div id="ccinfo">
@@ -326,7 +326,7 @@ td.footer{
 				    <img id="processing" src="${request.getContextPath()}/resources/images/processing.gif" style="display:none"><br />
 				    	<input type="submit" name="btnPayNow" id="btnPayNow" tabindex="21" value='<@spring.message code="security.ecommerce.payNow"/>' />
                		</div>
-               		<a href="https://www.paypal.com/us/verified/pal=vshyamsundar%40amcad%2ecom" target="_blank"><img src="https://www.paypal.com/en_US/i/icon/verification_seal.gif" border="0" alt="Official PayPal Seal"></a>
+               		
                		<div style="text-align: left;padding-top: 30px;padding-bottom: 10px;padding-right:20px">
                			<span class="unPaid"><@spring.message code="security.ecommerce.alert.paymentProcessing" /></span>
                		</div>

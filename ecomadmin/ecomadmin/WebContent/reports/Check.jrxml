@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version last-->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Check_Recurring" language="groovy" pageWidth="612" pageHeight="792" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="11" uuid="808c2ada-3758-41c4-b4b4-68e5db56223d">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Ecommerce"/>
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="271"/>
+	<property name="ireport.y" value="309"/>
 	<style name="Title" forecolor="#FFFFFF" fontName="Times New Roman" fontSize="50" isBold="false" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#CCCCCC" fontName="Times New Roman" fontSize="18" isBold="false" pdfFontName="Times-Roman"/>
 	<style name="Column header" forecolor="#666666" fontName="Times New Roman" fontSize="14" isBold="true" pdfFontName="Times-Roman"/>
@@ -21,6 +20,7 @@
 	<parameter name="IP_ADDRESS" class="java.lang.String"/>
 	<parameter name="REQUEST_URL" class="java.lang.String"/>
 	<parameter name="SIGNATURE" class="java.io.InputStream" isForPrompting="false"/>
+	<parameter name="BANKLOGO" class="java.io.InputStream" isForPrompting="false"/>
 	<queryString>
 		<![CDATA[EXEC SP_CHECK_GET_PRINT_DETAILS_RPT $P{SITE_ID}, $P{PAYMENT_TYPE}, $P{MOD_USER_ID}, $P{IP_ADDRESS}]]>
 	</queryString>
@@ -42,6 +42,8 @@
 	<field name="BANKZIPCODE" class="java.lang.String"/>
 	<field name="ORDEROF" class="java.lang.String"/>
 	<field name="BANKCODE" class="java.lang.String"/>
+	<field name="BRANCH_NAME" class="java.lang.String"/>
+	<field name="BRANCH_NUMBER" class="java.lang.String"/>
 	<field name="ROUTINGNUM" class="java.lang.String"/>
 	<field name="ACCOUNTNUM" class="java.lang.String"/>
 	<field name="CHECKNUM" class="java.lang.Integer"/>
@@ -349,7 +351,7 @@
 					<pen lineWidth="0.4" lineStyle="Solid"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Times New Roman" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[NumberFormat.getCurrencyInstance(Locale.US).format($F{TX_AMOUNTPAYABLE})]]></textFieldExpression>
 			</textField>
@@ -380,14 +382,7 @@
 				<textFieldExpression><![CDATA["c" + $F{CHECKNUM} + "c " + "&" + $F{ROUTINGNUM} + "&" + $F{ACCOUNTNUM} + "c"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="255" y="18" width="180" height="20" uuid="81eb664c-f0dd-4174-9df5-ff5fe0280889"/>
-				<textElement textAlignment="Center">
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{BANKNAME}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="255" y="38" width="180" height="20" uuid="7aabd6b7-9b09-472b-9203-977cc681f58a"/>
+				<reportElement x="255" y="68" width="180" height="20" uuid="7aabd6b7-9b09-472b-9203-977cc681f58a"/>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
@@ -422,6 +417,24 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ORDEROF}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="255" y="88" width="180" height="20" uuid="2ad02bab-87ba-42e5-ba98-4abba99e0079"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BRANCH_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="255" y="48" width="180" height="20" uuid="e0d491fe-fba7-4796-8a5a-f183fc9391fd"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BRANCH_NAME}]]></textFieldExpression>
+			</textField>
+			<image hAlign="Center">
+				<reportElement x="255" y="18" width="180" height="30" uuid="e2e92afd-64e4-4bc1-a6fb-907d4e51808e"/>
+				<imageExpression><![CDATA[$P{BANKLOGO}]]></imageExpression>
+			</image>
 		</band>
 	</pageFooter>
 </jasperReport>

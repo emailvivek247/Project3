@@ -7,13 +7,19 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.StaleStateException;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
@@ -21,6 +27,7 @@ import org.springframework.stereotype.Repository;
 
 import com.fdt.common.dao.AbstractBaseDAOImpl;
 import com.fdt.common.dto.PageRecordsDTO;
+import com.fdt.common.util.SystemUtil;
 import com.fdt.ecom.entity.Location;
 import com.fdt.ecom.entity.Merchant;
 import com.fdt.ecom.entity.ShoppingCartItem;
@@ -44,13 +51,18 @@ public class PayAsUGoTxDAOImpl extends AbstractBaseDAOImpl implements PayAsUGoTx
         session.flush();
     }
 
-    public List<PayAsUGoTxView> getPayAsUGoTransactionsByNode(String userName, String nodeName,
+    public List<PayAsUGoTxView> getPayAsUGoTransactionsByNode(String userName, String nodeName, String comments,
     		Date fromDate, Date toDate) {
         Session session = currentSession();
         // Now get the actual page records
         Criteria criteria = session.createCriteria(PayAsUGoTxView.class)
         		.add(Restrictions.eq("firmUserName", userName))
         		.add(Restrictions.eq("nodeName", nodeName));
+        if(!StringUtils.isBlank(comments)) {
+			Criterion one = Restrictions.like("itemComments", "%".concat(comments).concat("%"));
+			Criterion two = Restrictions.like("transactionComments", "%".concat(comments).concat("%"));
+			criteria.add(Restrictions.or(one, two));
+		}
 		if(fromDate != null) {
 			criteria.add(Restrictions.ge("transactionDate", fromDate));
 		}
@@ -63,12 +75,21 @@ public class PayAsUGoTxDAOImpl extends AbstractBaseDAOImpl implements PayAsUGoTx
         		.setReadOnly(true);
 
         List<PayAsUGoTxView> payAsUGoTransactions = criteria.list();
-        return payAsUGoTransactions;
+        List<PayAsUGoTxView> filteredpayAsUGoTransactions = criteria.list();
+		if(payAsUGoTransactions!=null && payAsUGoTransactions.size() > 0){
+			filteredpayAsUGoTransactions = new LinkedList<PayAsUGoTxView>();
+			for(PayAsUGoTxView payAsUGoTxView : payAsUGoTransactions) {
+				if(payAsUGoTxView.getTxRefNum()!= null & !isExists(payAsUGoTxView.getTxRefNum(), filteredpayAsUGoTransactions)){
+					filteredpayAsUGoTransactions.add(payAsUGoTxView);
+				}
+			}
+		}
+        return filteredpayAsUGoTransactions;
 
     }
 
 
-    public PageRecordsDTO getPayAsUGoTransactionsByNodePerPage(String firmUserName, String nodeName,
+    public PageRecordsDTO getPayAsUGoTransactionsByNodePerPage(String firmUserName, String nodeName, String comments,
     		Date fromDate, Date toDate, int startingFrom, int numberOfRecords) {
         Session session = currentSession();
 
@@ -77,6 +98,12 @@ public class PayAsUGoTxDAOImpl extends AbstractBaseDAOImpl implements PayAsUGoTx
         		.add(Restrictions.eq("firmUserName", firmUserName))
         		.add(Restrictions.eq("nodeName", nodeName))
         		.setReadOnly(true);
+
+        if(!StringUtils.isBlank(comments)) {
+			Criterion one = Restrictions.like("itemComments", "%".concat(comments).concat("%"));
+			Criterion two = Restrictions.like("transactionComments", "%".concat(comments).concat("%"));
+			countCriteria.add(Restrictions.or(one, two));
+		}
 		if(fromDate != null) {
 			countCriteria.add(Restrictions.ge("transactionDate", fromDate));
 		}
@@ -92,6 +119,13 @@ public class PayAsUGoTxDAOImpl extends AbstractBaseDAOImpl implements PayAsUGoTx
         		.add(Restrictions.eq("nodeName", nodeName))
         		.setFirstResult(startingFrom)
         		.setMaxResults(numberOfRecords);
+
+        if(!StringUtils.isBlank(comments)) {
+			Criterion one = Restrictions.like("itemComments", "%".concat(comments).concat("%"));
+			Criterion two = Restrictions.like("transactionComments", "%".concat(comments).concat("%"));
+			criteria.add(Restrictions.or(one, two));
+		}
+
 		if(fromDate != null) {
 			criteria.add(Restrictions.ge("transactionDate", fromDate));
 		}
@@ -102,16 +136,33 @@ public class PayAsUGoTxDAOImpl extends AbstractBaseDAOImpl implements PayAsUGoTx
        		.addOrder( Property.forName("userName").asc() )
        		.addOrder( Property.forName("transactionDate").desc())
        		.setReadOnly(true);
-
-        List<PayAsUGoTxView> payAsUGoTransactions = criteria.list();
-
+		List<PayAsUGoTxView> payAsUGoTransactions = criteria.list();
+		List<PayAsUGoTxView> filteredpayAsUGoTransactions = criteria.list();
+		if(payAsUGoTransactions!=null && payAsUGoTransactions.size() > 0){
+			filteredpayAsUGoTransactions = new LinkedList<PayAsUGoTxView>();
+			for(PayAsUGoTxView payAsUGoTxView : payAsUGoTransactions) {
+				if(payAsUGoTxView.getTxRefNum()!= null & !isExists(payAsUGoTxView.getTxRefNum(), filteredpayAsUGoTransactions)){
+					filteredpayAsUGoTransactions.add(payAsUGoTxView);
+				}
+			}
+		}
         PageRecordsDTO pageRecords = new PageRecordsDTO();
-        pageRecords.setRecords(payAsUGoTransactions);
+        pageRecords.setRecords(filteredpayAsUGoTransactions);
         pageRecords.setRecordCount(recordCount);
         return pageRecords;
     }
 
-    public PayAsUGoTx getPayAsUGoTransactionDetail(String userName, Long payAsUGoTxId, String isRefund) {
+    private boolean isExists(String txRefNum, List<PayAsUGoTxView> filteredpayAsUGoTransactions) {
+    	boolean exists = false;
+    	for(PayAsUGoTxView payAsUGoTxView : filteredpayAsUGoTransactions) {
+    		if(payAsUGoTxView.getTxRefNum().equalsIgnoreCase(txRefNum)){
+    			return true;
+    		}
+    	}
+		return exists;
+	}
+
+	public PayAsUGoTx getPayAsUGoTransactionDetail(String userName, Long payAsUGoTxId, String isRefund) {
         Session session = currentSession();
         Query sqlQuery  = session.getNamedQuery("GET_PAYASUGO_TX_DETAIL")
                                     .setParameter("userName", userName)
@@ -235,6 +286,7 @@ public class PayAsUGoTxDAOImpl extends AbstractBaseDAOImpl implements PayAsUGoTx
                 payAsUGoTxItem.setId(this.getLongFromBigInteger(row[24]));
                 payAsUGoTxItem.setProductId(this.getString(row[25]));
                 payAsUGoTxItem.setProductType(this.getString(row[26]));
+                payAsUGoTxItem.setItemName(this.getString(row[56]));
                 payAsUGoTxItem.setPageCount(this.getIntFromInteger(row[27]));
                 payAsUGoTxItem.setBaseAmount(this.getDoubleFromBigDecimal(row[28]));
                 payAsUGoTxItem.setServiceFee(this.getDoubleFromBigDecimal(row[29]));
@@ -248,7 +300,7 @@ public class PayAsUGoTxDAOImpl extends AbstractBaseDAOImpl implements PayAsUGoTx
                 payAsUGoTxItem.setCertifiedDocumentNumber(this.getString(row[53]));
                 payAsUGoTxItems.add(payAsUGoTxItem);
                 payAsUGoTxItem.setCreatedDate(this.getDate(row[48]));
-                
+
             }
             payAsUGoTransaction.setPayAsUGoTxItems(payAsUGoTxItems);
         }
@@ -531,8 +583,8 @@ public class PayAsUGoTxDAOImpl extends AbstractBaseDAOImpl implements PayAsUGoTx
         }
         return item;
     }
-    
-   
+
+
     public void saveShoppingCartItem(ShoppingCartItem userTerm) {
         Session session = currentSession();
         session.saveOrUpdate(userTerm);
@@ -555,6 +607,7 @@ public class PayAsUGoTxDAOImpl extends AbstractBaseDAOImpl implements PayAsUGoTx
                 shoppingCartItem.setNodeName(this.getString(row[2]));
                 shoppingCartItem.setProductId(this.getString(row[3]));
                 shoppingCartItem.setProductType(this.getString(row[4]));
+                shoppingCartItem.setProductName(this.getString(row[26]));
                 shoppingCartItem.setPageCount(this.getIntFromInteger(row[5]));
                 shoppingCartItem.setDownloadURL(this.getString(row[6]));
                 shoppingCartItem.setModifiedBy(this.getString(row[7]));
@@ -567,7 +620,6 @@ public class PayAsUGoTxDAOImpl extends AbstractBaseDAOImpl implements PayAsUGoTx
                 shoppingCartItem.setBarNumber(this.getString(row[22]));
                 shoppingCartItem.setLocationId(this.getLongFromInteger(row[23]));
                 shoppingCartItem.setCertified(this.getBoolean(row[25]));
-
                 Access access = new Access();
                 access.setId(this.getLongFromInteger(row[14]));
                 access.setDescription(this.getString(row[15]));
@@ -578,8 +630,6 @@ public class PayAsUGoTxDAOImpl extends AbstractBaseDAOImpl implements PayAsUGoTx
                 site.setName(this.getString(row[18]));
                 access.setSite(site);
                 shoppingCartItem.setAccess(access);
-
-
                 User user = new User();
                 user.setId(shoppingCartItem.getUserId());
                 user.setUsername(this.getString(row[19]));
@@ -609,6 +659,7 @@ public class PayAsUGoTxDAOImpl extends AbstractBaseDAOImpl implements PayAsUGoTx
                 shoppingCartItem.setNodeName(this.getString(row[2]));
                 shoppingCartItem.setProductId(this.getString(row[3]));
                 shoppingCartItem.setProductType(this.getString(row[4]));
+                shoppingCartItem.setProductName(this.getString(row[27]));
                 shoppingCartItem.setPageCount(this.getIntFromInteger(row[5]));
                 shoppingCartItem.setDownloadURL(this.getString(row[6]));
                 shoppingCartItem.setModifiedBy(this.getString(row[7]));
@@ -622,7 +673,6 @@ public class PayAsUGoTxDAOImpl extends AbstractBaseDAOImpl implements PayAsUGoTx
                 shoppingCartItem.setBarNumber(this.getString(row[23]));
                 shoppingCartItem.setLocationId(this.getLongFromInteger(row[24]));
                 shoppingCartItem.setCertified(this.getBoolean(row[26]));
-
                 Access access = new Access();
                 access.setId(this.getLongFromInteger(row[15]));
                 access.setDescription(this.getString(row[16]));
@@ -633,7 +683,6 @@ public class PayAsUGoTxDAOImpl extends AbstractBaseDAOImpl implements PayAsUGoTx
                 site.setName(this.getString(row[19]));
                 access.setSite(site);
                 shoppingCartItem.setAccess(access);
-
                 User user = new User();
                 user.setId(shoppingCartItem.getUserId());
                 user.setUsername(this.getString(row[20]));
@@ -746,28 +795,43 @@ public class PayAsUGoTxDAOImpl extends AbstractBaseDAOImpl implements PayAsUGoTx
      *
      */
 
-	public int getDocsPurchasedForCurrentSubCycle(Long userId, Long accessId, List<String> barNumbers){
-		if(CollectionUtils.isEmpty(barNumbers)){
-			barNumbers.add(new String(""));
-		}
-        List<PayAsUGoTx> payAsUGoTxHistoryList = new LinkedList<PayAsUGoTx>();
+	public int getDocsPurchasedForCurrentSubCycle(Long userId, Long accessId, List<String> barNumbersOfAllFirmUsers){
+		List<PayAsUGoTx> payAsUGoTxHistoryList = new LinkedList<PayAsUGoTx>();
         Session session = currentSession();
         Query sqlQuery = session.getNamedQuery("GET_DOCUMENT_PURCHASED_FOR_FIRM")
                      .setParameter("userId", userId)
-                     .setParameter("accessId", accessId)
-                     .setParameterList("barNumbers", barNumbers);
+                     .setParameter("accessId", accessId);
 
         int documentCount = 0;
+        
         List<Object> resultList = sqlQuery.list();
-		if(resultList.size() > 0) {
-			ListIterator<Object> resultListIterator = (ListIterator<Object>) resultList.listIterator();
-			if(resultListIterator.hasNext()) {
-				Object obj = resultListIterator.next();
-				if(obj != null){
-					documentCount = (Integer) obj;
-				}
-			}
-		}
+        if (resultList.size() > 0) {
+            ListIterator<Object> resultListIterator = (ListIterator<Object>) resultList.listIterator();
+            while(resultListIterator.hasNext()) {
+                Object[] row = (Object[]) resultListIterator.next();
+                String barNumbersPresentOnDoc = this.getString(row[0]);
+                int itemCount = this.getIntFromInteger(row[1]);
+                if(StringUtils.isBlank(barNumbersPresentOnDoc)){
+                	documentCount = documentCount + itemCount;
+                } else {
+                		if(!CollectionUtils.isEmpty(barNumbersOfAllFirmUsers)) {//if atleast one firm user has barNumber 
+                			String [] barNumbersPresentOnDocArray = SystemUtil.tokenizeToStringArray(barNumbersPresentOnDoc, ",", true, true);
+                			boolean isMatchFound = false;
+                			for (String barNumber: barNumbersPresentOnDocArray) {
+                				if(barNumbersOfAllFirmUsers.contains(barNumber.toUpperCase())) {  
+                					isMatchFound = true;
+                            		break;
+                            	} 
+                			}
+                			if(!isMatchFound){
+                				documentCount = documentCount + itemCount;
+                			}
+                        }  else {
+                        	documentCount = documentCount + itemCount;
+                        }
+                }
+            }
+        }
         return documentCount;
 	}
 
@@ -777,8 +841,8 @@ public class PayAsUGoTxDAOImpl extends AbstractBaseDAOImpl implements PayAsUGoTx
 	        .setParameter("comments", comments)
 	    .executeUpdate();
 	}
-	
-	
+
+
     @Cacheable("getLocationByNameAndAccessName")
 	public Location getLocationByNameAndAccessName(String locationName, String accessName){
         Session session = currentSession();
@@ -837,7 +901,7 @@ public class PayAsUGoTxDAOImpl extends AbstractBaseDAOImpl implements PayAsUGoTx
         }
         return locations;
 	}
-    
+
     @Cacheable("getLocationSignatureById")
 	public Location getLocationSignatureById(Long locationId){
         Session session = currentSession();
@@ -856,9 +920,9 @@ public class PayAsUGoTxDAOImpl extends AbstractBaseDAOImpl implements PayAsUGoTx
         }
         return location;
 	}
-    
-    @Cacheable("getLocationSealById")
-	public Location getLocationSealById(Long locationId){
+
+    @Cacheable("getLocationById")
+	public Location getLocationById(Long locationId){
         Session session = currentSession();
         Query sqlQuery = session.getNamedQuery("GET_LOCATION_SEAL_BY_ID")
                      .setParameter("locationId", locationId);
@@ -868,14 +932,77 @@ public class PayAsUGoTxDAOImpl extends AbstractBaseDAOImpl implements PayAsUGoTx
             ListIterator<Object> resultListIterator = (ListIterator<Object>) resultList.listIterator();
             if(resultListIterator.hasNext()) {
             	location = new Location();
-                Object obj =  resultListIterator.next();
+            	Object[] row = (Object[]) resultListIterator.next();
                 location = new Location();
-                location.setSealOfAuthenticity(obj == null ? null : (byte[]) obj);
+                location.setId(this.getLongFromInteger(row[0]));
+                location.setDescription(this.getString(row[1]));
+                Site site = new Site();
+                site.setId(this.getLongFromInteger(row[2]));
+                location.setSite(site);
+                location.setStateDescription(this.getString(row[3]));
+                location.setClerkName(this.getString(row[4]));
+                location.setDesignation(this.getString(row[5]));
+                location.setNoteOfAuthenticity(this.getString(row[6]));
+                location.setLocationCode(this.getString(row[7]));
+                location.setSealOfAuthenticity(row[8] == null ? null : (byte[]) row[8]);
             }
         }
         return location;
 	}
-    
-    
+
+	public void archivePayAsUGoTransactions(String archivedBy, String archiveComments) {
+		DateTime dateTime = new DateTime().minusMonths(18);
+    	DateTimeFormatter format = DateTimeFormat.forPattern("MM/dd/yyyy");
+    	String toDate = format.print(dateTime);
+    	Session session = currentSession();
+        session.getNamedQuery("ARCHIVE_PAYASUGO_TX")
+        							.setParameter("toDate", toDate)
+                                    .setParameter("archivedBy", archivedBy)
+                                    .setParameter("archiveComments", archiveComments).list();
+
+
+	}
+
+	
+	public Double getGranicusRevenueFromPayAsUGoTx(Site site) {
+		Double granicusRevenue = 0.0d;
+		if(site!=null && site.getRevenueThresholdStartDate() != null && site.getName()!= null) {
+			DateTime dateTime = new DateTime(site.getRevenueThresholdStartDate());
+	    	DateTimeFormatter format = DateTimeFormat.forPattern("MM/dd/yyyy");
+	    	String revenueThresholdStartDate = format.print(dateTime);
+	    	Session session = currentSession();    	
+	    	Query sqlQuery  = session.getNamedQuery("GET_GRANICUS_REVENUE_FROM_PAYASUGO_TX")
+	        							.setParameter("siteName", site.getName())
+	        							.setParameter("revenueThresholdStartDate", revenueThresholdStartDate);
+	    	List<Object> resultList = sqlQuery.list();
+	        if (resultList.size() > 0) {
+	        	granicusRevenue = this.getDoubleFromBigDecimal(resultList.get(0));
+	        }
+		}
+		return granicusRevenue;
+	}
+
+	public String getDocumentIdByCertifiedDocumentNumber(String certifiedDocumentNumber, String siteName) {
+		String documentId = null;
+		Date dateTimeCreated = new Date();
+		if(!StringUtils.isBlank(certifiedDocumentNumber)) {
+			Session session = currentSession();    	
+	    	Query sqlQuery  = session.getNamedQuery("GET_DOCUMENTID_BY_CERTIFIED_DOCUMENT_NUMBER")
+	        							.setParameter("certifiedDocumentNumber", certifiedDocumentNumber)
+        								.setParameter("siteName", siteName);
+	    	List<Object> resultList = sqlQuery.list();
+	        if (resultList.size() > 0) {
+	        	 ListIterator<Object> resultListIterator = (ListIterator<Object>) resultList.listIterator();
+	             Object[] row = (Object[]) resultListIterator.next();
+	        	documentId = this.getString(row[0]);
+	        	dateTimeCreated =  this.getDate(row[1]);
+	        }
+	        if (Days.daysBetween(new DateTime(dateTimeCreated).withTimeAtStartOfDay(),
+	                new DateTime().withTimeAtStartOfDay()).getDays()  > 180) {
+	        	documentId = "-1";
+	        }
+		}
+		return documentId;
+	}
 
 }

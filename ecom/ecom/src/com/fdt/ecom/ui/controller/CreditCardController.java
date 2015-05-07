@@ -36,7 +36,7 @@ import com.fdt.common.entity.ErrorCode;
 import com.fdt.common.ui.controller.AbstractBaseController;
 import com.fdt.ecom.entity.CreditCard;
 import com.fdt.ecom.ui.form.CreditCardForm;
-import com.fdt.ecom.ui.form.CreditCardForm.DefaultGroup;
+import com.fdt.ecom.ui.form.CreditCardForm.CreditCardGroup;
 import com.fdt.ecom.ui.validator.CreditCardFormValidator;
 import com.fdt.paymentgateway.exception.PaymentGatewaySystemException;
 import com.fdt.paymentgateway.exception.PaymentGatewayUserException;
@@ -128,7 +128,7 @@ public class CreditCardController extends AbstractBaseController {
             return errors;
         }
 
-        validate(creditCardForm, bindingResult, DefaultGroup.class);
+        validate(creditCardForm, bindingResult, CreditCardGroup.class);
         if (bindingResult.hasErrors()) {
             errors = this.populateErrorCodes(bindingResult.getFieldErrors());
         }

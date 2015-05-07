@@ -98,6 +98,8 @@ public class SubscriptionDTO extends AbstractBaseDTO {
     private CreditCard creditCard = null;
 
     private String machineName = null;
+    
+    private Date overriddenUntillDate = null;
 
     // Flag for Firm Level Admin User
     protected boolean isFirmAccessAdmin = false;
@@ -116,9 +118,17 @@ public class SubscriptionDTO extends AbstractBaseDTO {
 
     // Flag for Subscription indicating if it's a government subscription
     private boolean isGovernmentAccess = false;
+    
+    
+    public Date getOverriddenUntillDate() {
+		return overriddenUntillDate;
+	}
 
+	public void setOverriddenUntillDate(Date overriddenUntillDate) {
+		this.overriddenUntillDate = overriddenUntillDate;
+	}
 
-    public Date getAuthorizationDate() {
+	public Date getAuthorizationDate() {
         return authorizationDate;
     }
 

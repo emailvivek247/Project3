@@ -298,7 +298,7 @@
 		<field name="TRANSACTION_COST" class="java.math.BigDecimal"/>
 		<field name="NETPROFIT" class="java.math.BigDecimal"/>
 		<field name="CLIENT_PROFIT_SHARE" class="java.math.BigDecimal"/>
-		<field name="AMCAD_PROFIT_SHARE" class="java.math.BigDecimal"/>
+		<field name="GRANICUS_PROFIT_SHARE" class="java.math.BigDecimal"/>
 		<field name="CARD_TYPE" class="java.lang.String"/>
 		<field name="TIMEZONE" class="java.lang.String"/>
 		<variable name="Amount_By_Subscription" class="java.math.BigDecimal" resetType="Group" resetGroup="ACCESS_DESCR" calculation="Sum">
@@ -322,8 +322,8 @@
 		<variable name="ClientProfitShare_By_Subscription" class="java.math.BigDecimal" resetType="Group" resetGroup="ACCESS_DESCR" calculation="Sum">
 			<variableExpression><![CDATA[$F{CLIENT_PROFIT_SHARE}.setScale(2, RoundingMode.UP)]]></variableExpression>
 		</variable>
-		<variable name="AmcadProfitShare_By_Site" class="java.math.BigDecimal" resetType="Group" resetGroup="SITE_NAME" calculation="Sum">
-			<variableExpression><![CDATA[$F{AMCAD_PROFIT_SHARE}.setScale(2, RoundingMode.UP)]]></variableExpression>
+		<variable name="GranicusProfitShare_By_Site" class="java.math.BigDecimal" resetType="Group" resetGroup="SITE_NAME" calculation="Sum">
+			<variableExpression><![CDATA[$F{GRANICUS_PROFIT_SHARE}.setScale(2, RoundingMode.UP)]]></variableExpression>
 		</variable>
 		<variable name="TransactionCost_By_Subscription" class="java.math.BigDecimal" resetType="Group" resetGroup="ACCESS_DESCR" calculation="Sum">
 			<variableExpression><![CDATA[$F{TRANSACTION_COST}]]></variableExpression>
@@ -331,8 +331,8 @@
 		<variable name="TransactionCost_By_Site" class="java.math.BigDecimal" resetType="Group" resetGroup="SITE_NAME" calculation="Sum">
 			<variableExpression><![CDATA[$F{TRANSACTION_COST}]]></variableExpression>
 		</variable>
-		<variable name="AmcadProfitShare_By_Subscription" class="java.math.BigDecimal" resetType="Group" resetGroup="ACCESS_DESCR" calculation="Sum">
-			<variableExpression><![CDATA[$F{AMCAD_PROFIT_SHARE}.setScale(2, RoundingMode.UP)]]></variableExpression>
+		<variable name="GranicusProfitShare_By_Subscription" class="java.math.BigDecimal" resetType="Group" resetGroup="ACCESS_DESCR" calculation="Sum">
+			<variableExpression><![CDATA[$F{GRANICUS_PROFIT_SHARE}.setScale(2, RoundingMode.UP)]]></variableExpression>
 		</variable>
 		<variable name="NetProfit_By_Node" class="java.math.BigDecimal" resetType="Group" resetGroup="NODE_NAME" calculation="Sum">
 			<variableExpression><![CDATA[$F{NETPROFIT}.setScale(2, RoundingMode.UP)]]></variableExpression>
@@ -343,8 +343,8 @@
 		<variable name="TransactionCost_By_Node" class="java.math.BigDecimal" resetType="Group" resetGroup="NODE_NAME" calculation="Sum">
 			<variableExpression><![CDATA[$F{TRANSACTION_COST}]]></variableExpression>
 		</variable>
-		<variable name="AmcadProfitShare_By_Node" class="java.math.BigDecimal" resetType="Group" resetGroup="NODE_NAME" calculation="Sum">
-			<variableExpression><![CDATA[$F{AMCAD_PROFIT_SHARE}.setScale(2, RoundingMode.UP)]]></variableExpression>
+		<variable name="GranicusProfitShare_By_Node" class="java.math.BigDecimal" resetType="Group" resetGroup="NODE_NAME" calculation="Sum">
+			<variableExpression><![CDATA[$F{GRANICUS_PROFIT_SHARE}.setScale(2, RoundingMode.UP)]]></variableExpression>
 		</variable>
 		<variable name="RECORD_COUNT" class="java.lang.Integer" incrementType="Report" calculation="Count"/>
 		<group name="NODE_NAME">
@@ -914,7 +914,7 @@
 											<font size="8" isBold="true"/>
 											<paragraph rightIndent="3"/>
 										</textElement>
-										<textFieldExpression><![CDATA[$V{AmcadProfitShare_By_Node}]]></textFieldExpression>
+										<textFieldExpression><![CDATA[$V{GranicusProfitShare_By_Node}]]></textFieldExpression>
 									</textField>
 								</jr:cell>
 							</jr:groupFooter>
@@ -926,7 +926,7 @@
 											<font size="8" isBold="true"/>
 											<paragraph rightIndent="3"/>
 										</textElement>
-										<textFieldExpression><![CDATA[$V{AmcadProfitShare_By_Site}]]></textFieldExpression>
+										<textFieldExpression><![CDATA[$V{GranicusProfitShare_By_Site}]]></textFieldExpression>
 									</textField>
 								</jr:cell>
 							</jr:groupFooter>
@@ -938,7 +938,7 @@
 											<font size="8" isBold="true"/>
 											<paragraph rightIndent="3"/>
 										</textElement>
-										<textFieldExpression><![CDATA[$V{AmcadProfitShare_By_Subscription}]]></textFieldExpression>
+										<textFieldExpression><![CDATA[$V{GranicusProfitShare_By_Subscription}]]></textFieldExpression>
 									</textField>
 								</jr:cell>
 							</jr:groupFooter>
@@ -948,7 +948,7 @@
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font fontName="SansSerif" size="8" isBold="true"/>
 									</textElement>
-									<text><![CDATA[Amcad Share]]></text>
+									<text><![CDATA[Granicus Share]]></text>
 								</staticText>
 							</jr:columnHeader>
 							<jr:detailCell style="table 8_TD" height="20" rowSpan="1">
@@ -958,7 +958,7 @@
 										<font fontName="SansSerif" size="8" isBold="false"/>
 										<paragraph rightIndent="3"/>
 									</textElement>
-									<textFieldExpression><![CDATA[$F{AMCAD_PROFIT_SHARE}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{GRANICUS_PROFIT_SHARE}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>

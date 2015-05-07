@@ -22,6 +22,10 @@ public class TransactionRequestDTO implements Serializable {
 
 	private Date toDate;
 
+	private String comments;
+
+
+
 	/**
 	 * Pagination Variables
 	 * The next two variables are for pagination.
@@ -86,11 +90,22 @@ public class TransactionRequestDTO implements Serializable {
 		this.numberOfRecords = numberOfRecords;
 	}
 
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
+
 	@Override
 	public String toString() {
 		return "TransactionRequestDTO [userName=" + userName + ", nodeName="
 				+ nodeName + ", fromDate=" + fromDate + ", toDate=" + toDate
-				+ ", startingFrom=" + startingFrom + ", numberOfRecords="
-				+ numberOfRecords + "]";
+				+ ", comments=" + comments + ", startingFrom=" + startingFrom
+				+ ", numberOfRecords=" + numberOfRecords + "]";
 	}
+
+
+
 }

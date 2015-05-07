@@ -1,7 +1,6 @@
 package com.fdt.ecert;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 

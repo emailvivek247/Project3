@@ -82,7 +82,7 @@ public class UserAdminServiceImpl implements UserAdminService {
      */
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor= Throwable.class)
     public void enableDisableUserAccess(Long userAccessId, boolean isEnable, String modifiedBy, String comments,
-            boolean isAccessOverridden) {
+            boolean isAccessOverridden, String endDate) {
         Assert.notNull(userAccessId, "User Access id Cannot Be Null");
         Assert.hasLength(modifiedBy, "modifiedBy Cannot be Null/Empty");
         Assert.hasLength(comments,   "comments Cannot be Null/Empty");
@@ -93,7 +93,7 @@ public class UserAdminServiceImpl implements UserAdminService {
         int noOfRecordUpdated = 0;
         if(!user.isFirmLevelAccess()){
         	noOfRecordUpdated = this.userDAO.enableDisableUserAccess(userAccessId, isEnable, modifiedBy, comments,
-                    isAccessOverridden);
+                    isAccessOverridden, endDate);
 	        if (noOfRecordUpdated == 0) {
 	            logger.error("The User Access is not Disabled");
 	            throw new RuntimeException("The User Access is not Disabled");

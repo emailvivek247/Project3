@@ -40,7 +40,9 @@
             <entry  key="scheduler.ecom.isenabled" value="${scheduler.ecom.isenabled}"/>        	
         	<entry  key="scheduler.ecom.cancelrecurringprofile" value="${scheduler.ecom.cancelrecurringprofile}"/>
         	<entry  key="scheduler.ecom.chargerecurringprofiles" value="${scheduler.ecom.chargerecurringprofiles}"/>
-        	<entry  key="scheduler.ecom.notifyinactiveusers" value="${scheduler.ecom.notifyinactiveusers}"/>        	
+        	<entry  key="scheduler.ecom.notifyinactiveusers" value="${scheduler.ecom.notifyinactiveusers}"/> 
+        	<entry  key="scheduler.ecom.archivetransactions" value="${scheduler.ecom.archivetransactions}"/> 
+        	<entry  key="scheduler.ecom.disableoverriddensubscriptions" value="${scheduler.ecom.disableoverriddensubscriptions}"/> 
             <entry  key="activemq.emailqueue" value="${activemq.emailqueue}"/>
             <entry  key="emailservice.emailserver" value="${emailservice.emailserver}"/>
             <entry  key="emailservice.emailport" value="${emailservice.emailport}"/>
@@ -60,6 +62,10 @@
               <replace path="/configuration/appender/subject/text()" withText="${logfileSubject}" />
               <replace path="/configuration/appender/to/text()" withText="${toEmail}" />
               <replace path="/configuration/appender/from/text()" withText="${fromEmail}" />
+	    	<replace path="/configuration/appender/smtpHost/text()" withText="${smtp.host}" />
+			<replace path="/configuration/appender/smtpPort/text()" withText="${smtp.port}" />
+			<replace path="/configuration/appender/username/text()" withText="${smtp.username}" />
+			<replace path="/configuration/appender/password/text()" withText="${smtp.password}" />
         </xmltask>
     </target>
 

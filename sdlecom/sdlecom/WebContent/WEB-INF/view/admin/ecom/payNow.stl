@@ -314,7 +314,7 @@ td.footer{
 				    	</#if>
                		</div>
                		</#if>
-               		<img src="https://www.paypal.com/en_US/i/icon/verification_seal.gif" border="0" alt="Official PayPal Seal">
+               		
                		<div style="text-align: left;padding-top: 30px;padding-bottom: 10px;padding-right:20px">
                			<span class="unPaid">
                				<i class="fa fa-exclamation-triangle red" style="font-size:18px;"></i>&nbsp;<b><@spring.message code="security.ecommerce.label.importantInformation" /></b><br /><br />

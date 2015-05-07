@@ -296,7 +296,7 @@
 		<field name="COMMENTS" class="java.lang.String"/>
 		<field name="SIGNATURE" class="java.lang.Object"/>
 		<field name="TRANSACTION_COST" class="java.math.BigDecimal"/>
-		<field name="NETPROFIT_FOR_AMCAD" class="java.math.BigDecimal"/>
+		<field name="NETPROFIT_FOR_GRANICUS" class="java.math.BigDecimal"/>
 		<field name="CARD_TYPE" class="java.lang.String"/>
 		<field name="TIMEZONE" class="java.lang.String"/>
 		<variable name="Amount_By_Node" class="java.lang.Double" resetType="Group" resetGroup="NODE_NAME" calculation="Sum">
@@ -324,10 +324,10 @@
 			<variableExpression><![CDATA[$F{TRANSACTION_COST}]]></variableExpression>
 		</variable>
 		<variable name="NetProfit_By_Node" class="java.math.BigDecimal" resetType="Group" resetGroup="NODE_NAME" calculation="Sum">
-			<variableExpression><![CDATA[$F{NETPROFIT_FOR_AMCAD}.setScale(2, RoundingMode.UP)]]></variableExpression>
+			<variableExpression><![CDATA[$F{NETPROFIT_FOR_GRANICUS}.setScale(2, RoundingMode.UP)]]></variableExpression>
 		</variable>
 		<variable name="NetProfit_By_Site" class="java.math.BigDecimal" resetType="Group" resetGroup="SITE_NAME" calculation="Sum">
-			<variableExpression><![CDATA[$F{NETPROFIT_FOR_AMCAD}.setScale(2, RoundingMode.UP)]]></variableExpression>
+			<variableExpression><![CDATA[$F{NETPROFIT_FOR_GRANICUS}.setScale(2, RoundingMode.UP)]]></variableExpression>
 		</variable>
 		<variable name="RECORD_COUNT" class="java.lang.Integer" resetType="None" calculation="Sum">
 			<variableExpression><![CDATA[$F{AMOUNT}]]></variableExpression>
@@ -894,7 +894,7 @@
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font fontName="SansSerif" size="8" isBold="true"/>
 									</textElement>
-									<text><![CDATA[Amcad  Profit]]></text>
+									<text><![CDATA[Granicus  Profit]]></text>
 								</staticText>
 							</jr:columnHeader>
 							<jr:detailCell style="table 8_TD" height="20" rowSpan="1">
@@ -904,7 +904,7 @@
 										<font fontName="SansSerif" size="8" isBold="false"/>
 										<paragraph rightIndent="3"/>
 									</textElement>
-									<textFieldExpression><![CDATA[$F{NETPROFIT_FOR_AMCAD}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[$F{NETPROFIT_FOR_GRANICUS}]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>

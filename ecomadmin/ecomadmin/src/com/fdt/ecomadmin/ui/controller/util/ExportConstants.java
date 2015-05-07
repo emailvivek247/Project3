@@ -8,6 +8,7 @@ public class ExportConstants {
 	public static String DATE_CREATED ="Date Created";
 	public static String LAST_LOGIN="Last Login";
 	public static String EMAIL ="Email";
+	public static String FIRM_ADMIN ="Firm Admin";
 	public static String FIRST_NAME ="First Name";
 	public static String LAST_NAME ="Last Name";
 	public static String PHONE ="Phone";
@@ -49,6 +50,7 @@ public class ExportConstants {
 	public static List<String> getUsersHeaders(){
 		List<String> headers = new ArrayList<String>();
 		headers.add(EMAIL);
+		headers.add(FIRM_ADMIN);
 		headers.add(FIRST_NAME);
 		headers.add(LAST_NAME);
 		headers.add(PHONE);
@@ -60,6 +62,7 @@ public class ExportConstants {
 		headers.add(ACCOUNT_LOCKED);
 		headers.add(LAST_LOGIN);
 		headers.add(DATE_CREATED);
+		headers.add(FIRM_NAME);
 		headers.add(FIRM_NUMBER);
 		headers.add(BAR_NUMBER);
 		return headers;

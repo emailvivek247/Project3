@@ -7,8 +7,12 @@ public interface EcomViewConstants extends BaseViewConstants {
     public static final String ECOM_CC_INFO  = "ecom/ccinfo";
 
     public static final String ECOM_EXTERNAL_PAYMENT_PROCESSING = "ecom/viewExternalPayments";
+    
+    public static final String ECOM_AZ_EXTERNAL_PAYMENT_PROCESSING = "ecom/viewAZExternalPayments";
 
     public static final String ECOM_PAYMENT_GATEWAY_CONFIRMATION = "ecom/paymentGatewayConfirmation";
+    
+    public static final String ECOM_AZ_PAYMENT_GATEWAY_CONFIRMATION = "ecom/paymentGatewayConfirmationAZ";
 
     public static final String ECOM_VIEW_SECURITY_CODE_HELP   = "ecom/securityCodeHelp";
 

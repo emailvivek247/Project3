@@ -90,10 +90,30 @@ font-size: 13px;
 										             </select>
 					                            </div>
 					                        </div>
+					                        
+					                        <div class="row-fluid labelMarginBottom">
+					                            <label class="control-label boldText" for="isCertified" class="k-tooltip-validation">Document Type:&nbsp; </label>
+					                            <div class="">
+					                                <select id="isCertified" name="isCertified" class="k-widget k-dropdownlist" style="width:200px" tabindex="4">
+												 		<option value="" selected>All Documents</option>
+												 		<#if (selectedIsCertified?has_content) && selectedIsCertified == 'Y'>
+												 			<option value="Y" selected>Certified</option>
+												 		<#else>
+												 			<option value="Y">Certified</option>
+												 		</#if>
+												 		<#if (selectedIsCertified?has_content) && selectedIsCertified == 'N'>
+												 			<option value="N" selected>Non-Certified</option>
+												 		<#else>
+												 			<option value="N">Non-Certified</option>
+												 		</#if>
+										            </select>
+					                            </div>
+					                        </div>
+					                        
 					                        <div class="row-fluid labelMarginBottom">
 					                            <label class="control-label boldText" for="transactionType" class="k-tooltip-validation">Location Name :&nbsp; </label>
 					                            <div class="">
-					                                <select id="locationId" name="locationId" class="k-widget k-dropdownlist" style="width:200px" tabindex="4">
+					                                <select id="locationId" name="locationId" class="k-widget k-dropdownlist" style="width:200px" tabindex="5">
 												 		<option value="" selected>All Locations</option>
 										            </select>
 					                            </div>
@@ -134,14 +154,14 @@ font-size: 13px;
 				        <#if displayFlag = true>
 						<div style="display:inline;">
 				            <#if pageIndex?has_content && lastPageIndex?has_content>
-					               <a href="viewDetailDocumentPdf.admin?siteId=<#if selectedSiteId?has_content>${selectedSiteId}</#if>&dateRange=<#if fromDate?has_content>${fromDate}</#if><#if toDate?has_content> - ${toDate}</#if>&transactionType=<#if selectTranType?has_content >${selectTranType}</#if><#if selectedLocationId?has_content>&locationId=${selectedLocationId}</#if>"><img src="resources/images/pdf.png" /></a>
-					               <a href="viewDetailDocumentXls.admin?siteId=<#if selectedSiteId?has_content>${selectedSiteId}</#if>&dateRange=<#if fromDate?has_content>${fromDate}</#if><#if toDate?has_content> - ${toDate}</#if>&transactionType=<#if selectTranType?has_content >${selectTranType}</#if><#if selectedLocationId?has_content>&locationId=${selectedLocationId}</#if>"><img src="resources/images/excel.png" /></a>
-					               <a href="viewDetailDocumentRtf.admin?siteId=<#if selectedSiteId?has_content>${selectedSiteId}</#if>&dateRange=<#if fromDate?has_content>${fromDate}</#if><#if toDate?has_content> - ${toDate}</#if>&transactionType=<#if selectTranType?has_content >${selectTranType}</#if><#if selectedLocationId?has_content>&locationId=${selectedLocationId}</#if>"><img src="resources/images/rtf.png" /></a>
-					               <a href="viewDetailDocumentCsv.admin?siteId=<#if selectedSiteId?has_content>${selectedSiteId}</#if>&dateRange=<#if fromDate?has_content>${fromDate}</#if><#if toDate?has_content> - ${toDate}</#if>&transactionType=<#if selectTranType?has_content >${selectTranType}</#if><#if selectedLocationId?has_content>&locationId=${selectedLocationId}</#if>"><img src="resources/images/CSV.png" /></a>
+					               <a href="viewDetailDocumentPdf.admin?siteId=<#if selectedSiteId?has_content>${selectedSiteId}</#if>&dateRange=<#if fromDate?has_content>${fromDate}</#if><#if toDate?has_content> - ${toDate}</#if>&transactionType=<#if selectTranType?has_content >${selectTranType}</#if><#if selectedLocationId?has_content>&locationId=${selectedLocationId}</#if><#if selectedIsCertified?has_content>&isCertified=${selectedIsCertified}</#if>"><img src="resources/images/pdf.png" /></a>
+					               <a href="viewDetailDocumentXls.admin?siteId=<#if selectedSiteId?has_content>${selectedSiteId}</#if>&dateRange=<#if fromDate?has_content>${fromDate}</#if><#if toDate?has_content> - ${toDate}</#if>&transactionType=<#if selectTranType?has_content >${selectTranType}</#if><#if selectedLocationId?has_content>&locationId=${selectedLocationId}</#if><#if selectedIsCertified?has_content>&isCertified=${selectedIsCertified}</#if>"><img src="resources/images/excel.png" /></a>
+					               <a href="viewDetailDocumentRtf.admin?siteId=<#if selectedSiteId?has_content>${selectedSiteId}</#if>&dateRange=<#if fromDate?has_content>${fromDate}</#if><#if toDate?has_content> - ${toDate}</#if>&transactionType=<#if selectTranType?has_content >${selectTranType}</#if><#if selectedLocationId?has_content>&locationId=${selectedLocationId}</#if><#if selectedIsCertified?has_content>&isCertified=${selectedIsCertified}</#if>"><img src="resources/images/rtf.png" /></a>
+					               <a href="viewDetailDocumentCsv.admin?siteId=<#if selectedSiteId?has_content>${selectedSiteId}</#if>&dateRange=<#if fromDate?has_content>${fromDate}</#if><#if toDate?has_content> - ${toDate}</#if>&transactionType=<#if selectTranType?has_content >${selectTranType}</#if><#if selectedLocationId?has_content>&locationId=${selectedLocationId}</#if><#if selectedIsCertified?has_content>&isCertified=${selectedIsCertified}</#if>"><img src="resources/images/CSV.png" /></a>
 					        </#if>
 					    </div>
 					    <div style="float:right;display:inline-block;">        
-					        <a href="searchDetailDocumentTransactionsApp.admin?siteId=<#if selectedSiteId?has_content >${selectedSiteId}</#if>&dateRange=<#if fromDate?has_content >${fromDate}</#if><#if toDate?has_content > - ${toDate}</#if>&transactionType=<#if selectTranType?has_content >${selectTranType}</#if>&pageIndex=<#if pageIndex?has_content>${pageIndex}<#else>0</#if><#if selectedLocationId?has_content>&locationId=${selectedLocationId}</#if>">
+					        <a href="searchDetailDocumentTransactionsApp.admin?siteId=<#if selectedSiteId?has_content >${selectedSiteId}</#if>&dateRange=<#if fromDate?has_content >${fromDate}</#if><#if toDate?has_content > - ${toDate}</#if>&transactionType=<#if selectTranType?has_content >${selectTranType}</#if>&pageIndex=<#if pageIndex?has_content>${pageIndex}<#else>0</#if><#if selectedLocationId?has_content>&locationId=${selectedLocationId}</#if><#if selectedIsCertified?has_content>&isCertified=${selectedIsCertified}</#if>">
 					        	Switch to Advanced Viewer
 					        </a>
 					    </div>    
@@ -152,15 +172,15 @@ font-size: 13px;
 							 	<div id="reportNav" style="width:300px;margin:0 auto;">  	 
 		                       		<#if pageIndex?has_content && lastPageIndex?has_content>
 			                            <#if pageIndex &gt; 0 >
-			                                    <a href="searchDetailDocumentTransactions.admin?siteId=<#if selectedSiteId?has_content>${selectedSiteId}</#if>&dateRange=<#if fromDate?has_content>${fromDate}</#if><#if toDate?has_content> - ${toDate}</#if>&transactionType=<#if selectTranType?has_content>${selectTranType}</#if>&pageIndex=0<#if selectedLocationId?has_content>&locationId=${selectedLocationId}</#if>"><img src="resources/images/jasperImages/first.gif" border="0"></a>
-			                                    <a href="searchDetailDocumentTransactions.admin?siteId=<#if selectedSiteId?has_content>${selectedSiteId}</#if>&dateRange=<#if fromDate?has_content>${fromDate}</#if><#if toDate?has_content> - ${toDate}</#if>&transactionType=<#if selectTranType?has_content>${selectTranType}</#if>&pageIndex=${pageIndex - 1}<#if selectedLocationId?has_content>&locationId=${selectedLocationId}</#if>"><img src="resources/images/jasperImages/previous.gif" border="0"></a>
+			                                    <a href="searchDetailDocumentTransactions.admin?siteId=<#if selectedSiteId?has_content>${selectedSiteId}</#if>&dateRange=<#if fromDate?has_content>${fromDate}</#if><#if toDate?has_content> - ${toDate}</#if>&transactionType=<#if selectTranType?has_content>${selectTranType}</#if>&pageIndex=0<#if selectedLocationId?has_content>&locationId=${selectedLocationId}</#if><#if selectedIsCertified?has_content>&isCertified=${selectedIsCertified}</#if>"><img src="resources/images/jasperImages/first.gif" border="0"></a>
+			                                    <a href="searchDetailDocumentTransactions.admin?siteId=<#if selectedSiteId?has_content>${selectedSiteId}</#if>&dateRange=<#if fromDate?has_content>${fromDate}</#if><#if toDate?has_content> - ${toDate}</#if>&transactionType=<#if selectTranType?has_content>${selectTranType}</#if>&pageIndex=${pageIndex - 1}<#if selectedLocationId?has_content>&locationId=${selectedLocationId}</#if><#if selectedIsCertified?has_content>&isCertified=${selectedIsCertified}</#if>"><img src="resources/images/jasperImages/previous.gif" border="0"></a>
 			                            <#else>
 			                                    <img src="resources/images/jasperImages/first_grey.gif" border="0">
 			                                    <img src="resources/images/jasperImages/previous_grey.gif" border="0">
 			                            </#if>
 			                            <#if pageIndex &lt; lastPageIndex >
-			                                    <a href="searchDetailDocumentTransactions.admin?siteId=<#if selectedSiteId?has_content>${selectedSiteId}</#if>&dateRange=<#if fromDate?has_content>${fromDate}</#if><#if toDate?has_content> - ${toDate}</#if>&transactionType=<#if selectTranType?has_content>${selectTranType}</#if>&pageIndex=${pageIndex + 1}<#if selectedLocationId?has_content>&locationId=${selectedLocationId}</#if>"><img src="resources/images/jasperImages/next.gif" border="0"></a>
-			                                    <a href="searchDetailDocumentTransactions.admin?siteId=<#if selectedSiteId?has_content>${selectedSiteId}</#if>&dateRange=<#if fromDate?has_content>${fromDate}</#if><#if toDate?has_content> - ${toDate}</#if>&transactionType=<#if selectTranType?has_content>${selectTranType}</#if>&pageIndex=${lastPageIndex}<#if selectedLocationId?has_content>&locationId=${selectedLocationId}</#if>"><img src="resources/images/jasperImages/last.gif" border="0"></a>
+			                                    <a href="searchDetailDocumentTransactions.admin?siteId=<#if selectedSiteId?has_content>${selectedSiteId}</#if>&dateRange=<#if fromDate?has_content>${fromDate}</#if><#if toDate?has_content> - ${toDate}</#if>&transactionType=<#if selectTranType?has_content>${selectTranType}</#if>&pageIndex=${pageIndex + 1}<#if selectedLocationId?has_content>&locationId=${selectedLocationId}</#if><#if selectedIsCertified?has_content>&isCertified=${selectedIsCertified}</#if>"><img src="resources/images/jasperImages/next.gif" border="0"></a>
+			                                    <a href="searchDetailDocumentTransactions.admin?siteId=<#if selectedSiteId?has_content>${selectedSiteId}</#if>&dateRange=<#if fromDate?has_content>${fromDate}</#if><#if toDate?has_content> - ${toDate}</#if>&transactionType=<#if selectTranType?has_content>${selectTranType}</#if>&pageIndex=${lastPageIndex}<#if selectedLocationId?has_content>&locationId=${selectedLocationId}</#if><#if selectedIsCertified?has_content>&isCertified=${selectedIsCertified}</#if>"><img src="resources/images/jasperImages/last.gif" border="0"></a>
 			                            <#else>
 			                                    <img src="resources/images/jasperImages/next_grey.gif" border="0">
 			                                    <img src="resources/images/jasperImages/last_grey.gif" border="0">
@@ -205,6 +225,7 @@ font-size: 13px;
 
 		$("#siteId").kendoDropDownList();
 		$("#transactionType").kendoDropDownList();
+		$("#isCertified").kendoDropDownList();
 		$("#locationId").kendoDropDownList();
         var locationList = $("#locationId").kendoDropDownList({
             autoBind: false,

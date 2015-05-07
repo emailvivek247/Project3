@@ -130,19 +130,19 @@ img#closeIcon{
 </head>
 <body>
 
-					
+
 <div id="wrapper">
 <!-- Begin content -->
 	<div style="width: 80%; margin-left: auto;margin-right:auto;margin-top:100px;">
 		<div id="ADCSI" class="ADCSI" style="margin-top: 0px; margin-bottom: 12px;">
-			<div class="ADCSI_title" id="ADCSI_title">				
+			<div class="ADCSI_title" id="ADCSI_title">
 					<span style="width:49%;text-align:left;display:inline-block;"><i class="fa fa-users blue" style="font-size:20px;"></i>&nbsp;<b><@spring.message code="security.authentication.firmUserSubscriptionTitle" /></b></span>
 					<span style="width:49%;text-align:right;display:inline-block;"><a href="accountInformation.admin"><i class="fa fa-info-circle blue" style="font-size:18px;"></i>&nbsp;<@spring.message code="form.name.accountInformation" /></a>&nbsp;(${request.getRemoteUser()})</span>
-					
-			</div>					
-													
-					
-					
+
+			</div>
+
+
+
 					<br /><br />
 						<table style="width: 100%; text-align:center;vertical-align:top;" border="0" cellspacing="1" cellpadding="4">
 							<tr style="text-align:center;vertical-align:top;">
@@ -172,8 +172,8 @@ img#closeIcon{
 									</div>
 								</td>
 							</tr>
-	
-	
+
+
 	<!--Display The Grid Start -->
 						<tr style="text-align:center;vertical-align:top;">
 							<td style="text-align:center;vertical-align:top;width:450px">
@@ -186,7 +186,7 @@ img#closeIcon{
 											        <input type="search" id="subscription-category" style="width: 230px"></input>
 											    </div>
 											</script>
-											
+
 											<!-- Add User Popup Window Definition -->
 											<script type="text/x-kendo-template" id="add-user-window-template">
 											    <div id="addUserDiv">
@@ -197,7 +197,7 @@ img#closeIcon{
 																<Label id="addUserErrorLabel" style="text-align: center; vertical-align: middle">&nbsp;</Label>
 															</td>
 														</tr>
-											    	
+
 														<tr>
 													        <td align="right">
 													            <label class="control-label required"><@spring.message code="security.authentication.addSubscription"/></label>
@@ -216,12 +216,12 @@ img#closeIcon{
 													        </td>
 													    </tr>
 													    <tr><td>&nbsp;</td></tr>
-													    
+
 														<tr>
 													        <td align="right">  <label class="control-label required"><@spring.message code="security.authentication.username"/></label>  </td>
-													        <td>  <input type="email" class="textbox" name="username" data-bind="value:username" 
+													        <td>  <input type="email" class="textbox" name="username" data-bind="value:username"
 													        					maxlength="55" required validationMessage="Email is required !" data-email-msg="Email format is not valid"/>   </td>
-													        
+
 													    </tr>
 													    <tr><td>&nbsp;</td></tr>
 														<tr>
@@ -236,7 +236,7 @@ img#closeIcon{
 													    <tr><td>&nbsp;</td></tr>
 														<tr>
 													        <td align="right">  <label class="control-label required"><@spring.message code="security.authentication.phone"/></label>  </td>
-													        <td>  <input type="tel" class="k-textbox" name="phone" id="phone" placeholder="xxx-xxx-xxxx" data-bind="value:phone"  
+													        <td>  <input type="tel" class="k-textbox" name="phone" id="phone" placeholder="xxx-xxx-xxxx" data-bind="value:phone"
 													        			maxlength="14" required validationMessage="Please enter a phone number (xxx-xxx-xxxx)"/>   </td>
 													    </tr>
 													    <tr><td>&nbsp;</td></tr>
@@ -262,11 +262,11 @@ img#closeIcon{
 											    	</form>
 														<tr align="center">
 															<td align="right">  <button id="addUserButton" class="k-button" >Create</button></td>
-															<td align="left"> <button id="cancelUserButton" class="k-button" >Cancel</button></td> 
+															<td align="left"> <button id="cancelUserButton" class="k-button" >Cancel</button></td>
 													    </tr>
-													    
+
 											    	</table>
-											    	
+
 											    </div>
 											</script>
 											<!-- Add User Popup Window Definition -->
@@ -300,27 +300,27 @@ img#closeIcon{
 													        </td>
 													    </tr>
 													    <tr><td>&nbsp;</td></tr>
-													    
+
 														<tr>
 													        <td align="right">  <label class="control-label required"><@spring.message code="security.authentication.username"/></label>  </td>
-													        <td>  <input type="email" class="textbox" name="username" data-bind="value:username" 
+													        <td>  <input type="email" class="textbox" name="username" data-bind="value:username"
 													        					maxlength="55" required validationMessage="Email is required !" data-email-msg="Email format is not valid"/>   </td>
-															<td> <button id="checkUserButton" class="k-button" >Check if Exists</button></td>													        					
-													        
+															<td> <button id="checkUserButton" class="k-button" >Check if Exists</button></td>
+
 													    </tr>
 													    <tr><td>&nbsp;</td></tr>
 											    	</form>
 														<tr align="center">
 															<td align="right"> <button id="okSubButton" class="k-button" >Add</button></td>
-															<td align="left"> <button id="cancelSubButton" class="k-button" >Cancel</button></td> 
+															<td align="left"> <button id="cancelSubButton" class="k-button" >Cancel</button></td>
 															<td align="left"> <button id="createUserButton" class="k-button" style="display: none;">Create User</button></td>
 													    </tr>
 											    	</table>
-											    	
+
 											    </div>
 											</script>
 											<!-- Add Subscription to User Popup Window Definition END -->
-									
+
 
 											<!-- Confirmation Dialog Used for Remove/Enable/Disable Access -->
 											<script type="text/x-kendo-template" id="confirm-window-template">
@@ -354,18 +354,18 @@ img#closeIcon{
 													</form>
 														<tr align="center">
 															<td align="right">  <button id="okConfirmButton" class="k-button" >Ok</button></td>
-															<td align="left"> <button id="cancelConfirmButton" class="k-button" >Cancel</button></td> 
+															<td align="left"> <button id="cancelConfirmButton" class="k-button" >Cancel</button></td>
 													    </tr>
 											    	</table>
-												
+
 												</div>
-											</script>		
-											<!-- Confirmation Dialog End -->																	            
-								            
+											</script>
+											<!-- Confirmation Dialog End -->
+
 								            <script>
-								            
+
 								             $(document).ready(function () {
-								             	$.ajaxSetup({ cache: false }); 
+								             	$.ajaxSetup({ cache: false });
 									            var firmUserDataSource = new kendo.data.DataSource({
 									   				 transport: {
 									        			read: {
@@ -389,8 +389,8 @@ img#closeIcon{
 																	// Success
 																	var response = JSON.parse(result.responseText);
 																	displaySuccessMessage(getErrorDesription(response));
-																} 
-															} 
+																}
+															}
 								                        },
 
 								                         parameterMap: function(options, operation) {
@@ -402,23 +402,23 @@ img#closeIcon{
 											                return options;
 											            }
 								                 	},
-								                 	
-								                 	
-													
+
+
+
 													// If there was an error on server side
 								                 	error: function (e) {
 													    var grid = $("#firmUserGrid").data("kendoGrid");
 												 		e.preventDefault();
-												        
+
 												        //roll back the changes
 												        grid.cancelChanges();
-												        
+
 												        // Fetch the error description and display it
 														var response = JSON.parse(e.xhr.responseText);
 														displayErrorMessage(getErrorDesription(response));
-														
+
 													},
-													
+
 									    			// describe the result format
 									    			schema: {
 									    					data: "models",
@@ -442,7 +442,7 @@ img#closeIcon{
 								                         pageSize: 10,
 								                 		batch: false
 								                });
-								                
+
 								                 $("#firmUserGrid").kendoGrid({
 								                        dataSource: firmUserDataSource,
 								                        change: onChange,
@@ -451,35 +451,35 @@ img#closeIcon{
 								                        pageable: {
 								                        		refresh: true,
 								                        		pageSizes: true,
-								                        		pageSize: true,                        		
+								                        		pageSize: true,
 								                        		numeric: true,
 								                        		info: true,
 								                        		input: true
-								                        },  
+								                        },
 								                        height: 430,
-	
+
 								                        toolbar: [
 									                         { name: "create", text: "Add User" },
 									                         { name: "edit", text: "Add Subscription To User" }
 								                        ],
 								                        columns: [
-								                            { field: "username", title: "User Name",  width: 155,  template: function(e){ return e.username.toLowerCase();}}, 
+								                            { field: "username", title: "User Name",  width: 155,  template: function(e){ return e.username.toLowerCase();}},
 								                            { field: "firstName", title: "First Name", width: 110, template: function(e){ return toCamelCase(e.firstName); } },
 								                            { field: "lastName", title: "Last Name", width: 110, template: function(e){ return toCamelCase(e.lastName); } },
 								                            { field: "phone", title: "Phone Number", width: 110 },
 								                            { field: "subscriptionStatus", title: "Subscription Status", width: 95, template: function(e){ return toCamelCase(e.subscriptionStatus); } },
 								                            { field: "userLocked", title: "User Status", width: 72, template: "#= userLocked ? 'Locked' : 'Unlocked' #" },
 								                            { field: "subscriptionAction", title: "Actions", width: 75,	template: getActionLink , width: 100 }
-								                            ], 
+								                            ],
 
 								                            //editable: "popup",
 								                            editable: {
 																mode: "popup"
 															}
-  															
+
 								                 });
-								                 
-												// Add User dialog Definition						                 
+
+												// Add User dialog Definition
 												var addKendoWindow = $("<div id='addUserWindow'/>").kendoWindow({
 							                            title: "Add User",
 							                            width: 400,
@@ -491,10 +491,10 @@ img#closeIcon{
 							                            content: {
 													        template: $("#add-user-window-template").html()
 													    }
-													    
+
 												}).data("kendoWindow");
-												
-												// Add User dialog Definition						                 
+
+												// Add User dialog Definition
 												var addSubKendoWindow = $("<div id='addSubWindow'/>").kendoWindow({
 							                            title: "Add Subscription To User",
 							                            width: 450,
@@ -512,7 +512,7 @@ img#closeIcon{
 											            }
 												}).data("kendoWindow");
 
-												
+
 												// Confirm dialog Definition
 												var confirmKendoWindow = $("<div id='confirmWindow'/>").kendoWindow({
 							                            title: "Confirmation",
@@ -525,17 +525,17 @@ img#closeIcon{
 							                            content: {
 													        template: $("#confirm-window-template").html()
 													    }
-													    
+
 												}).data("kendoWindow");
 
-												//Open a custom window on add user button clicked 
+												//Open a custom window on add user button clicked
 								                  $(".k-grid-add").on("click",function(){
 								                  	// Disable the previous validation errors
 								                  	addKendoWindow.element.find("span.k-tooltip-validation").hide();
 								                    var newWindow = addKendoWindow.open().center();
 													return false;
 							                    });
-							                    
+
 								                  $(".k-grid-edit").on("click",function(){
 								                  	// Disable the previous validation errors
 								                  	addSubKendoWindow.element.find("span.k-tooltip-validation").hide();
@@ -545,7 +545,7 @@ img#closeIcon{
 													return false;
 							                    });
 
-							                    //Ok clicked : confirm dialog -- Used for Remove/Enable/Disable Access 
+							                    //Ok clicked : confirm dialog -- Used for Remove/Enable/Disable Access
 							                    $("#okConfirmButton").click( function (e) {
                     								var confirmValidator = $('#confirmDialogDiv').kendoValidator().data('kendoValidator');
                     								if(confirmValidator.validate()){
@@ -553,18 +553,18 @@ img#closeIcon{
 													 	var confirmBoxElem =  document.forms['ConfirmDialogForm'];
 													 	var uid = confirmBoxElem.elements['key'].value;
 													 	var action = confirmBoxElem.elements['action'].value;
-													 	
-													 	// Find a datarow/user  
+
+													 	// Find a datarow/user
 													 	var user = $('#firmUserGrid').data("kendoGrid").dataSource.getByUid(uid);
 													 	var htmlGridRow = $("#firmUserGrid").data("kendoGrid").tbody.find("tr[data-uid='" + user.uid + "']");
-                    								
+
                     									//validated fine , take an action
 													    if(action == 'Disable'){
 															callEnableDisableSubscriptionService(user, htmlGridRow, false);
 														} else if(action == 'Enable'){
 															callEnableDisableSubscriptionService(user, htmlGridRow, true);
 														}	else if(action == 'Remove'){
-															callRemoveAccessService(user);										
+															callRemoveAccessService(user);
 														} else if (action == 'Lock'){
 															callLockUnlockUser(user, true);
 														} else if (action == 'Unlock'){
@@ -573,45 +573,45 @@ img#closeIcon{
                     								}
 							                    	return false;
                     							});
-                    							
-                    							//Event of cancel confirm diaglog 
+
+                    							//Event of cancel confirm diaglog
 							                    $("#cancelConfirmButton").click( function (e) {
                     								var confirmValidator = $('#confirmDialogDiv').kendoValidator().data('kendoValidator');
 				                                   	onConfirmClose();
-							                    	confirmKendoWindow.close();	
+							                    	confirmKendoWindow.close();
 							                    	return false;
                     							});
-                    							
-							                    //Ok clicked : Remove Subscription dialog  
+
+							                    //Ok clicked : Remove Subscription dialog
 							                    $("#okSubButton").click( function (e) {
                     								var addSubValidator = $('#addSubToUserDiv').kendoValidator().data('kendoValidator');
                     								if(addSubValidator.validate()){
 													 	// Get the key from form
 													 	addSubToUser();
-													}                    								
+													}
 							                    	return false;
                     							});
-							                    
-                    							
-                    							//Event of cancel confirm diaglog 
+
+
+                    							//Event of cancel confirm diaglog
 							                    $("#cancelSubButton").click( function (e) {
                     								//var confirmValidator = $('#addSubToUserDiv').kendoValidator().data('kendoValidator');
 				                                   	onAddSubToUserClose();
-							                    	addSubKendoWindow.close();	
+							                    	addSubKendoWindow.close();
 							                    	return false;
                     							});
-                    							
-							                    //Create User button clicked from remove subscription 
+
+							                    //Create User button clicked from remove subscription
 							                    $("#createUserButton").click( function (e) {
 													// Take the user name and populate to add user window
 												 	var addSubFormElem =  document.forms['addSubToUserForm'];
 												 	var accessId = addSubFormElem.elements['accessId'].value;
 												 	var userName = addSubFormElem.elements['username'].value;
-												 	
+
 												 	var addUserFormElem =  document.forms['addUserForm'];
 												 	addUserFormElem.elements['accessId'].value = accessId;
 												 	addUserFormElem.elements['username'].value = userName;
-																				                    	
+
 							                    	$("#addSubWindow").data("kendoWindow").close();
 	        										$("#addUserWindow").data("kendoWindow").open().center();
 							                    	return false;
@@ -626,7 +626,7 @@ img#closeIcon{
                     								}
                        								return false;
                     							});
-							                    
+
 							                    //Event of cancel button on add user window
 							                    $("#cancelUserButton").click( function (e) {
 							                    		// Close the window
@@ -637,7 +637,7 @@ img#closeIcon{
 							                    		 setAddErrorMessage('');
 							                    		 return false;
                     							});
-                    							
+
                     							// Event of add user button
                     							$("#checkUserButton").click( function (e) {
                     								var validator = $('#addSubToUserDiv').kendoValidator().data('kendoValidator');
@@ -647,12 +647,12 @@ img#closeIcon{
                     								}
                        								return false;
                     							});
-                    							
-                    							
+
+
 
 										});
-								            
-								                 
+
+
 								            </script>
 									             <style scoped>
 									                #firmUserGrid .k-toolbar
@@ -677,17 +677,17 @@ img#closeIcon{
 									                .toolbar {
 									                    float: right;
 									                }
-									                
+
 									            </style>
-								        </div>							
+								        </div>
 							</td>
 						</tr>
 	<!--Display The Grid End -->
-												
+
 				</table>
 
-				
-				
+
+
 		</div>
 	</div>
 </div>
@@ -700,10 +700,10 @@ img#closeIcon{
 
 	function addSubToUser(){
 	 	var url = "addFirmUserAccess.admin?adminUserName=${adminUserName}";
-	 	
+
 	 	var formElem = $('#addSubToUserForm');
 	 	var serializedData = formElem.serialize();
-	 	
+
 	 	 $.ajax({
 	        url: url,
 	        type: "POST",
@@ -715,7 +715,7 @@ img#closeIcon{
 							var grid = $('#firmUserGrid').data('kendoGrid');
 							grid.dataSource.read();
 	                    	displaySuccessMessage('Subscription added successfully');
-							// Close the window, job is done 			
+							// Close the window, job is done
 							var kw =  $('#addSubWindow').data('kendoWindow');
 							kw.close();
 				 		} else if(results.errorCode == 'ERROR'){
@@ -723,22 +723,22 @@ img#closeIcon{
 				 		}
 	            	}
 	        },
-	        
-	        // Error occured on server 
+
+	        // Error occured on server
 	        error: function (xhr, ajaxOptions, thrownError) {
 	        	var response = JSON.parse(xhr.responseText);
 	        	displaySubError(getErrorDesription(response));
 	        }
 	    });
 	}
-	
+
 	function checkUser(){
 	 	var url = "checkUser.admin?";
-	 	
+
 	 	var addSubFormObject =  document.forms['addSubToUserForm'];
 	 	var username = addSubFormObject.elements['username'].value;
 	 	url = url + 'username=' + username;
-	 	
+
 	 	 $.ajax({
 	        url: url,
 	        type: "GET",
@@ -748,11 +748,11 @@ img#closeIcon{
 	                    if(results.errorCode == 'SUCCESS'){
 				 			displaySubSuccess('User Found');
 				 			document.getElementById("createUserButton").style.display='none';
-				 		}  
+				 		}
 	            	}
 	        },
-	        
-	        // Error occured on server 
+
+	        // Error occured on server
 	        error: function (xhr, ajaxOptions, thrownError) {
 	        	var response = JSON.parse(xhr.responseText);
 	        	displaySubError(getErrorDesription(response));
@@ -761,7 +761,7 @@ img#closeIcon{
 	        }
 	    });
 	}
-	
+
 	function getActionLink(e){
 		// If no Subscription is selected then no action can be performed on access
 		var subscription = document.getElementById('firmSubscription');
@@ -771,23 +771,25 @@ img#closeIcon{
 		var contents = '';
 		if(e.subscriptionAction == 'Disable'){
 			// Disable Link
-				contents = contents + 
+				contents = contents +
 					'<span><a class="cancelSubscription" style="cursor:pointer;" onclick="confrimUserAccessAction(\'' + e.uid + '\', \'' + e.subscriptionAction + '\', \'Are you sure you want to Disable the User Subscription ?\'); return false;"><img src="resources/images/disable.png" alt="Disable Subscription" title="Disable Subscription"></a></span>';
 		} else if (e.subscriptionAction == 'Enable'){
 			// Enable Link
-			contents = contents + 
-				'<span><a class="enableAccess" style="cursor:pointer;" onclick="confrimUserAccessAction(\'' + e.uid + '\', \'' + e.subscriptionAction + '\', \'Are you sure you want to Enable the User Subscription ?\'); return false;"><img src="resources/images/accept.png" alt="Enable Subscription" title="Enable Subscription"></a></span>';																					
-		} 
+			contents = contents +
+				'<span><a class="enableAccess" style="cursor:pointer;" onclick="confrimUserAccessAction(\'' + e.uid + '\', \'' + e.subscriptionAction + '\', \'Are you sure you want to Enable the User Subscription ?\'); return false;"><img src="resources/images/accept.png" alt="Enable Subscription" title="Enable Subscription"></a></span>';
+		}
 		if(e.removable){
 			// add remove Link
-			contents = contents + 
+			contents = contents +
 				'<span><a class="removeAccess" style="cursor:pointer;" onclick="confrimUserAccessAction(\'' + e.uid + '\', \'Remove\', \'Are you sure you want to Remove the User Subscription ?\'); return false;"><img src="resources/images/delete.png" alt="Remove Subscription" title="Remove Subscription"></a></span>';
 		}
+		<#--
 		if(e.userLocked){
 			contents = contents + '<span><a style="cursor:pointer;" onclick="confrimUserAccessAction(\'' + e.uid + '\', \'Unlock\', \'Are you sure you want to Unlock the User ' + e.username + '?\'); return false;"><img src="resources/images/unlockuser.png" alt="Unlock User" title="Unlock User"></a></span>';
 		} else {
-			contents = contents + '<span><a style="cursor:pointer;" onclick="confrimUserAccessAction(\'' + e.uid + '\', \'Lock\', \'Are you sure you want to Lock the User ' + e.username + '?\'); return false;"><img src="resources/images/lockuser.png" alt="Lock User" title="Lock User"></a></span>';		
+			contents = contents + '<span><a style="cursor:pointer;" onclick="confrimUserAccessAction(\'' + e.uid + '\', \'Lock\', \'Are you sure you want to Lock the User ' + e.username + '?\'); return false;"><img src="resources/images/lockuser.png" alt="Lock User" title="Lock User"></a></span>';
 		}
+		 -->
 		return contents;
 	}
 
@@ -797,36 +799,36 @@ img#closeIcon{
  		var confirmBoxElem =  document.forms['ConfirmDialogForm'];
  		confirmBoxElem.elements['key'].value = uid;
  		confirmBoxElem.elements['action'].value = action;
- 		
+
  		//Set the confirm message on confirm dialog window
- 		var confirmMsgElem = document.getElementById('confirmMessage'); 
-		confirmMsgElem.innerHTML = message; 
-		
+ 		var confirmMsgElem = document.getElementById('confirmMessage');
+		confirmMsgElem.innerHTML = message;
+
 		// Disable the previous validation errors
 		var confirmKendoWindow =  $('#confirmWindow').data('kendoWindow');
 		confirmKendoWindow.element.find("span.k-tooltip-validation").hide();
 		// Show the confirmation dialog
- 		confirmKendoWindow.open().center(); 
+ 		confirmKendoWindow.open().center();
 	 }
 
 	$(document).ready(function(){
-		// Select Subscripton Chnage Event  	
+		// Select Subscripton Chnage Event
 		$("#firmSubscription").change(function () {
 					var grid = $('#firmUserGrid').data('kendoGrid');
 					grid.dataSource.read();
 					displaySuccessMessage('');
 	    });
 	});
-	
+
 
 
 	// add user
 	 function addFirmUser(data){
 	 	var url = "addFirmUser.admin?adminUserName=${adminUserName}";
-	 	
+
 	 	var formElem = $('#addUserForm');
 	 	var serializedData = formElem.serialize();
-	 	
+
 	 	 $.ajax({
 	        url: url,
 	        type: "POST",
@@ -838,7 +840,7 @@ img#closeIcon{
 				 			// Add a row to the grid
 							addUserToGrid(results);
 							resetAddUserFields();
-							
+
 							// Display Success message
 				 			displaySuccessMessage(getErrorDesription(results));
 				 		}  else {
@@ -846,26 +848,26 @@ img#closeIcon{
 				 			displayAddUserErrors(results);
 				 		}
 	            	}
-					// Close the window, job is done 			
+					// Close the window, job is done
 					var kw =  $('#addUserWindow').data('kendoWindow');
 					kw.close();
 	        },
-	        
-	        // Error occured on server 
+
+	        // Error occured on server
 	        error: function (xhr, ajaxOptions, thrownError) {
 	        	var response = JSON.parse(xhr.responseText);
 	        	displayAddUserErrors(response);
 	        }
 	    });
 	 }
-	 
-	
+
+
 	 // Add user to the grid
 	 function addUserToGrid(results){
 			var grid = $('#firmUserGrid').data('kendoGrid');
 			grid.dataSource.read();
 	 }
-	
+
 
 	//Get the subscriptions
 	function getAdminSubscriptions(){
@@ -880,7 +882,7 @@ img#closeIcon{
 		               		subscriptions[i] = subscription;
 		               		i = i + 1;
 					  </#if>
-					  
+
 		        </#foreach>
 		</#if>
 		return subscriptions;
@@ -891,14 +893,14 @@ img#closeIcon{
 	}
 
 
-	
- 
- 	// Find a user in Grid 
+
+
+ 	// Find a user in Grid
 	 function findUserInGrid(username){
-	 	var grid = $("#firmUserGrid").data("kendoGrid");       
+	 	var grid = $("#firmUserGrid").data("kendoGrid");
 	    var data = grid.dataSource.data();
 	    var totalNumber = data.length;
-	
+
 	    for(var i = 0; i<totalNumber; i++) {
 	        var user = data[i];
 	        if(user.username == username){
@@ -907,23 +909,23 @@ img#closeIcon{
 	    }
 	 }
 
- 
+
 	function refreshGrid(){
 		var grid = $('#firmUserGrid').data('kendoGrid');
 		grid.refresh();
 	}
-	
-	
+
+
 	// Remove the Subscription
 	 function callRemoveAccessService(user){
 	 	var url = "removeFirmUserAccess.admin?adminUserName=${adminUserName}";
-	 	
+
 	 	// Get the comments from form
 	 	var confirmBoxElem =  document.forms['ConfirmDialogForm'];
 	 	var comments = confirmBoxElem.elements['comments'].value;
 
 	 	url = url + "&firmUserName=" + user.username  +
-	 				"&userAccessId=" + user.userAccessId +  
+	 				"&userAccessId=" + user.userAccessId +
 	 				"&comments=" + comments;
 	 	 $.ajax({
 	        url: url,
@@ -935,17 +937,17 @@ img#closeIcon{
 				 			// Delete the row from grid
 	            			$('#firmUserGrid').data("kendoGrid").dataSource.remove(user);
 				 			displaySuccessMessage('Subscription Removed Successfully');
-				 		} 
+				 		}
 	            	}
 	            	// Close the window, job is done
 	            	onConfirmClose();
 					var kw =  $('#confirmWindow').data('kendoWindow');
 					kw.close();
-	            	
+
 	        },
 	        error: function (xhr, ajaxOptions, thrownError) {
-            	// Close the window, job is done 
-            	onConfirmClose();			
+            	// Close the window, job is done
+            	onConfirmClose();
 				var kw =  $('#confirmWindow').data('kendoWindow');
 				kw.close();
 	        	var response = JSON.parse(xhr.responseText);
@@ -953,8 +955,8 @@ img#closeIcon{
 	        }
 	    });
 	 }
-	
-	// Enable/Disable the user	 
+
+	// Enable/Disable the user
 	 function callEnableDisableSubscriptionService(user, row, isEnable){
 	 	var url = "enableDisableFirmUserAccess.admin?adminUserName=${adminUserName}";
 
@@ -963,10 +965,10 @@ img#closeIcon{
 	 	var comments = confirmBoxElem.elements['comments'].value;
 
 	 	url = url + "&firmUserName=" + user.username +
-	 				"&userAccessId=" + user.userAccessId +  
-	 				 "&isEnable=" + isEnable + 
+	 				"&userAccessId=" + user.userAccessId +
+	 				 "&isEnable=" + isEnable +
 	 				"&comments=" + comments  ;
-	 	
+
 	 	 $.ajax({
 	        url: url,
 	        type: "POST",
@@ -981,17 +983,17 @@ img#closeIcon{
 				 			} else {
 				 				displaySuccessMessage('Subscription Enabled Successfully');
 				 			}
-				 		} 
+				 		}
 	            	}
-	            	// Close the window, job is done 			
+	            	// Close the window, job is done
 	            	onConfirmClose();
 					var kw =  $('#confirmWindow').data('kendoWindow');
 					kw.close();
-	            	
+
 	        },
 	        error: function (xhr, ajaxOptions, thrownError) {
-            	// Close the window, job is done 		
-            	onConfirmClose();	
+            	// Close the window, job is done
+            	onConfirmClose();
 				var kw =  $('#confirmWindow').data('kendoWindow');
 				kw.close();
 	        	var response = JSON.parse(xhr.responseText);
@@ -999,8 +1001,8 @@ img#closeIcon{
 	        }
 	    });
 	 }
-	 
-	// Lock / Unlock  the user	 
+
+	// Lock / Unlock  the user
 	 function callLockUnlockUser(user, isLock){
 	 	var url = "lockUnLockFirmUser.admin?adminUserName=${adminUserName}";
 
@@ -1009,10 +1011,10 @@ img#closeIcon{
 	 	var comments = confirmBoxElem.elements['comments'].value;
 
 	 	url = url + "&firmUserName=" + user.username +
-	 				 "&isLock=" + isLock + 
+	 				 "&isLock=" + isLock +
 	 				 "&nodeName=" + user.nodeName +
 	 				"&comments=" + comments  ;
-	 	
+
 	 	 $.ajax({
 	        url: url,
 	        type: "POST",
@@ -1027,17 +1029,17 @@ img#closeIcon{
 				 			} else {
 				 				displaySuccessMessage('User Unlocked Successfully');
 				 			}
-				 		} 
+				 		}
 	            	}
-	            	// Close the window, job is done 			
+	            	// Close the window, job is done
 	            	onConfirmClose();
 					var kw =  $('#confirmWindow').data('kendoWindow');
 					kw.close();
-	            	
+
 	        },
 	        error: function (xhr, ajaxOptions, thrownError) {
-            	// Close the window, job is done 		
-            	onConfirmClose();	
+            	// Close the window, job is done
+            	onConfirmClose();
 				var kw =  $('#confirmWindow').data('kendoWindow');
 				kw.close();
 	        	var response = JSON.parse(xhr.responseText);
@@ -1046,19 +1048,19 @@ img#closeIcon{
 	    });
 	 }
 
-	
+
 	function displayErrorMessage(message){
 		var statusElem = document.getElementById('errorStatusLabel');
 		var statusLabelText = '<font color="red" size=4>' + message + '</font>';
 		statusElem.innerHTML  = statusLabelText;
 	}
-	
+
 	function displaySuccessMessage(message){
 		var statusElem = document.getElementById('errorStatusLabel');
 		var statusLabelText = '<font color="green" size=4>' + message + '</font>';
 		statusElem.innerHTML  = statusLabelText;
 	}
-	
+
 	// Display Error in Add User Window
 	function displayAddUserErrors(results){
 		var errorString = '';
@@ -1069,7 +1071,7 @@ img#closeIcon{
 		var errorLabelText = '<font color="red" size=2>' + errorString + '</font>';
 		setAddErrorMessage(errorLabelText);
 	}
-	
+
 	function getErrorDesription(results){
 		var errorString = '';
 		for(var k in results.errors){
@@ -1078,12 +1080,12 @@ img#closeIcon{
 		errorString = errorString + '</br>';
 		return errorString;
 	}
-	
+
 	function onAddUserClose(){
 		resetAddUserFields();
 		setAddErrorMessage('');
 	}
-	
+
 	function onAddSubToUserClose(){
 		resetAddSubFields();
 		setAddSubErrorMessage('');
@@ -1093,9 +1095,9 @@ img#closeIcon{
 	 	var confirmBoxElem =  document.forms['ConfirmDialogForm'];
 		confirmBoxElem.elements['comments'].value = '';
 	}
-	
-	
-	
+
+
+
 	// Resent add user form fields
 	function resetAddSubFields(){
 		var addSubFormObject = document.forms['addSubToUserForm'];
@@ -1129,25 +1131,25 @@ img#closeIcon{
 		errorElem = document.getElementById('addUserErrorLabel');
 		errorElem.innerHTML  = msg;
 	}
-	
+
 	function displaySubSuccess(message){
 		var statusElem = document.getElementById('addSubToUserErrorLabel');
 		var statusLabelText = '<font color="green" size=2>' + message + '</font>';
 		statusElem.innerHTML  = statusLabelText;
 	}
-	
+
 	function displaySubError(message){
 		var statusElem = document.getElementById('addSubToUserErrorLabel');
 		var statusLabelText = '<font color="red" size=2>' + message + '</font>';
 		statusElem.innerHTML  = statusLabelText;
 	}
-	
+
 	function toCamelCase(str) {
 		str = str.toLowerCase();
 	    return str.replace(/(?:^|\s)\w/g, function(match) {
 	        return match.toUpperCase();
 	    });
-    }	
+    }
 
 </script>
 

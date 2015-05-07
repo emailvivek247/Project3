@@ -273,7 +273,14 @@
 					WHEN SUM(CASE
 						WHEN ISNULL(USERACCESS_ACTIVE, 'N') = 'Y' THEN 0 ELSE 1
 					END) = 0 THEN 'Y' ELSE 'N'
-				END AS USERACCESS_ACTIVE
+				END AS USERACCESS_ACTIVE,
+				CASE      
+            		WHEN SUM(CASE       
+                				WHEN IS_FIRM_ACCESS_ADMIN = 'Y' THEN 1 
+                				ELSE 0     
+           					 END) = 0 THEN 'N' 
+           				 ELSE 'Y'     
+       		 			END AS T_IS_FIRM_ACCESS_ADMIN 				
 			FROM V_GET_USERS_FOR_ADMIN
 			WHERE EMAIL_ID LIKE :userName AND
 			FIRST_NAME LIKE :firstName AND

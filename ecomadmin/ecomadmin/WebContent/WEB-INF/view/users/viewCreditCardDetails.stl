@@ -3,8 +3,10 @@
 <script type="text/javascript" src="resources/js/jquery/plugins/jquery.form.js"></script>
 	<div>
 		<#if creditCardForm?has_content>
+     <@form.form id="frmccinfo" name="frmccinfo" action="" modelAttribute="creditCardForm" method="post"  autocomplete="on" >
+
 			<table width="100%">
-			<@form.form id="frmccinfo" name="frmccinfo" action="" modelAttribute="creditCardForm" method="post"  autocomplete="on" >
+			
 				<input type="hidden" id="username" value="${userName}">
 					<tr>
 						<td align="right;" width="50%">
@@ -101,8 +103,9 @@
 							</td>
 						</tr>
 					</#if>
-			</@form.form>
-		</table>
+			
+	</table>
+	</@form.form>
 		<#else>
 			<span class="red"><i class="icon-warning-sign red"></i>&nbsp;No Credit Card Information Available</span>
 		</#if>

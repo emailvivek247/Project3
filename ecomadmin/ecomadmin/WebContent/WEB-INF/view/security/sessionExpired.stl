@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head><title>Ecommerce Administration</title>
+<head><title>eACCEPT Administration</title>
 	<meta http-equiv="content-type" content="text/html; charset="" />
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="Pragma" content="no-cache">
@@ -107,7 +107,7 @@ span.ADCSI_leftcol {
 													<div class="widget-main" style="background-color:white;">
 													<h2>
 														<div id="acceptTitle" class="center">
-															<img src="resources/images/accept-logo.png">
+															<img src="resources/images/eAccept-logo.png">
 														</div>
 													</h2>
 													<h4 class="header blue lighter bigger">
@@ -144,7 +144,7 @@ span.ADCSI_leftcol {
 	<!--- Footer ---- Style is inherited from footerTable2 id--->
 	<div class="container-fluid center">
 		<span>
-	    	Copyright &copy;2013 American Cadastre LLC (dba AMCAD). All Rights Reserved<a href="http://www.amcad.com"><img src="resources/images/amcadLogo.png" alt="AMCAD"  height="42px" border="0" style="vertical-align:baseline;margin-left:10px;"/></a>
+	    	Copyright &copy; <script>document.write(new Date().getFullYear())</script> Granicus, INC.<a href="http://www.granicus.com"><img src="resources/images/granicusLogo.png" alt="Granicus INC"  height="42px" border="0" style="vertical-align:baseline;margin-left:10px;"/></a>
 	    </span>
     </div><!-- end #after-footer -->
 </div><!--/.fluid-container-->

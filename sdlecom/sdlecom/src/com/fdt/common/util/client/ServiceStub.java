@@ -48,10 +48,10 @@ public interface ServiceStub {
         	throws UserNameNotFoundException,	MaxUsersExceededException, SDLBusinessException, Exception ;
 
     public List<FirmUserDTO> getFirmUsers(String adminUserName, Long accessId);
-    
+
     public void removeFirmLevelAccess(String firmUserName, Long accessId, String comments, String modifiedBy)
     		throws UserNameNotFoundException, SDLBusinessException, Exception  ;
-   
+
 
     public void changePassword(User existingUser) throws UserNameNotFoundException, BadPasswordException;
 
@@ -70,7 +70,7 @@ public interface ServiceStub {
     public void lockUnLockUser(String userName, boolean isLock, String modifiedBy, boolean isSendUserConfirmation,
         String nodeName, String additionalComments);
 
-    public void enableDisableFirmUserAccess(String adminUserName, String firmUserName, Long accessId, boolean isEnable, 
+    public void enableDisableFirmUserAccess(String adminUserName, String firmUserName, Long accessId, boolean isEnable,
     		String comments) throws UserNameNotFoundException, SDLBusinessException, Exception ;
 
     public List<Site> getSitesForNode(String nodeName);
@@ -87,7 +87,7 @@ public interface ServiceStub {
 
     public CreditCard getCreditCardDetails(Long userId);
 
-    public List<SubscriptionDTO> getUserSubscriptions(String userName, String nodeName, String siteName, 
+    public List<SubscriptionDTO> getUserSubscriptions(String userName, String nodeName, String siteName,
     		boolean activeSubscriptionsOnly, boolean firmAdminSubscriptionsOnly);
 
     public SubscriptionDTO getSubscriptionDetails(String userName, Long accessId);
@@ -110,10 +110,11 @@ public interface ServiceStub {
 
     public List<RecurTx> getRecurTxDetail(String recurTxRefNum, String userName);
 
-    public PageRecordsDTO getPayAsUGoTransactionsByNodePerPage(String userName, String nodeName, Date fromDate, Date toDate, 
-    		Integer startingFrom, Integer numberOfRecords);
-    
-    public List<PayAsUGoTxView> getPayAsUGoTransactionsByNode(String userName, String nodeName, Date fromDate, Date toDate);
+    public PageRecordsDTO getPayAsUGoTransactionsByNodePerPage(String userName, String nodeName, String comments,
+    		Date fromDate, Date toDate, Integer startingFrom, Integer numberOfRecords);
+
+    public List<PayAsUGoTxView> getPayAsUGoTransactionsByNode(String userName, String nodeName, String comments,
+    		Date fromDate, Date toDate);
 
     public PayAsUGoTx getPayAsUGoTransactionDetail(Long recTxId, String userName, String isRefund);
 
@@ -123,7 +124,7 @@ public interface ServiceStub {
     public List<ShoppingCartItem> doSalePayAsUGoInfo(PayAsUSubDTO payAsUGoTransactionDTO) throws SDLBusinessException;
 
     public PayAsUGoTxItem getPayAsUGoTxIdForPurchasedDoc(String userName, String productKey, String uniqueIdentifier);
-    
+
     public void checkValidResetPasswordRequest(String userName, String requestToken) throws InvalidDataException;
 
     public List<ShoppingCartItem> getShoppingBasketItems(String userName, String nodeName);
@@ -153,17 +154,19 @@ public interface ServiceStub {
     public List<Term> getNewTermsAndConditionsforUser(String userName, String nodeName);
 
     public void updateUserTerms(User user) throws UserNameNotFoundException;
-    
+
     public User findUser(String userName) throws UserNameNotFoundException;
-    
-	public void addFirmUserAccess(String adminUserName, String firmUserName, Long accessId, String nodeName) 
+
+	public void addFirmUserAccess(String adminUserName, String firmUserName, Long accessId, String nodeName)
 			throws UserNameNotFoundException, MaxUsersExceededException, SDLBusinessException, Exception;
-    
+
 	public void updateShoppingCartComments(Long shoppingCartItemId, String comments);
 
-	
+
 	public List<Location> getLocationsBySiteId(Long siteId);
+
+	public Location getLocationByNameAndAccessName(String locationName, String accessName);
 	
-	public Location getLocationByNameAndAccessName(String locationName, String accessName);	
+	public String getDocumentIdByCertifiedDocumentNumber(String certifiedDocumentNumber, String siteName);
 
 }

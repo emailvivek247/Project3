@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
@@ -85,7 +86,13 @@ public class RecurTxServiceImpl implements RecurTxService {
         return this.recurTxDAO.getRecuringTxDetail(userName, recurTxRefNum);
     }
 
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor= Throwable.class)
+	public void archiveRecurTransactions(String archivedBy, String archiveComments) {
+    	this.recurTxDAO.archiveRecurTransactions(archivedBy, archiveComments);
+	}
+
     private String getMessage(String messageKey) {
         return this.messages.getMessage(messageKey, null, new Locale("en"));
     }
+
 }

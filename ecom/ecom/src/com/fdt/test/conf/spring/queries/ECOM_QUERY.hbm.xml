@@ -262,7 +262,9 @@
             mi.TRAN_FEE_FLAT_AMEX AS mi_TRAN_FEE_FLAT_AMEX,
             s.IS_FIRM_NUMBER_REQUIRED s_IS_FIRM_NUMBER_REQUIRED,
             s.IS_BAR_NUMBER_REQUIRED s_IS_BAR_NUMBER_REQUIRED,
-            s.IS_FREE_SITE s_IS_FREE_SITE
+            s.IS_FREE_SITE s_IS_FREE_SITE,
+            s.REVENUE_THRESHOLD_AMOUNT AS s_REVENUE_THRESHOLD_AMOUNT,
+            s.REVENUE_THRESHOLD_START_DATE AS s_REVENUE_THRESHOLD_START_DATE
         FROM
             ECOMM_SITE s,
             AUTH_TERMS at,
@@ -382,7 +384,11 @@
             sc.ACCESS_AUTHORIZATION_TEMPLATE AS sc_ACCESS_AUTHORIZATION_TEMPLATE,
             sc.PAYASUGO_PAYMENT_CONFIRMATION_SUB AS sc_PAYASUGO_PAYMENT_CONFIRMATION_SUB,
             sc.PAYASUGO_PAYMENT_CONFIRMATION_TEMPLATE AS sc_PAYASUGO_PAYMENT_CONFIRMATION_TEMPLATE,
-            sc.ADD_SUBSCRIPTION_SUB as sc_ADD_ADD_SUBSCRIPTION_SUB
+            sc.ADD_SUBSCRIPTION_SUB as sc_ADD_ADD_SUBSCRIPTION_SUB,
+            sc.PAYASUGO_PAYMENT_CONFIRMATION_TEMPLATE AS sc_PAYASUGO_PAYMENT_CONFIRMATION_TEMPLATE,
+            sc.ADD_SUBSCRIPTION_SUB as sc_ADD_ADD_SUBSCRIPTION_SUB,
+            sc.EXPIRED_OVERRIDDEN_SUBSCRIPTION_NOTIFICATION_SUB AS sc_EXPIRED_OVERRIDDEN_SUBSCRIPTION_NOTIFICATION_SUB,
+            sc.EXPIRED_OVERRIDDEN_SUBSCRIPTION_NOTIFICATION_TEMPLATE as sc_EXPIRED_OVERRIDDEN_SUBSCRIPTION_NOTIFICATION_TEMPLATE
         FROM
             SITE_CONFIGURATION sc,
             ECOMM_SITE site
@@ -838,7 +844,7 @@
 	</sql-query>
 
 	<sql-query name="GET_OTC_TX_DETAILS">
-	    <![CDATA[ SELECT
+	    <![CDATA[ SELECT DISTINCT
     	        TX.TX_ID AS TX_ID
 	            ,TX.TX_REFERENCE_NUM AS TX_TX_REFERENCE_NUM
             	,TX.ORG_REF_NUM AS TX_ORG_REF_NUM
@@ -864,8 +870,8 @@
 	      	AND TX.ITEM_NAME LIKE :productName
 	      	AND TX.PRODUCT_TYPE LIKE :productType
 	      	AND TX.INVOICE_NUMBER LIKE :invoiceId	      	
-			AND TX.TX_DATE  >= :transactionStartDate
-			AND TX.TX_DATE <= :transactionEndDate
+			AND CONVERT(DATE, TX.TX_DATE)  >= :transactionStartDate
+			AND CONVERT(DATE, TX.TX_DATE) <= :transactionEndDate
       		AND TX.SITE_NAME LIKE :siteName
       		ORDER BY TX.TX_DATE DESC 
       		OFFSET :startFrom ROWS
@@ -876,15 +882,15 @@
 
 	<sql-query name="GET_OTC_TX_DETAILS_COUNT">
 	    <![CDATA[
-	    	SELECT COUNT(TX.TX_ID)
+	    	SELECT COUNT(DISTINCT TX.TX_ID)
             FROM
 				V_OTC_GET_TX_DETAILS TX
 			WHERE
       		TX.TX_REFERENCE_NUM LIKE :txRefNumber     
 			AND TX.ACCOUNTNAME LIKE :accountName
 	      	AND TX.CARD_NUMBER LIKE :accountNumber
-			AND TX.TX_DATE  >= :transactionStartDate
-			AND TX.TX_DATE <= :transactionEndDate
+			AND CONVERT(DATE, TX.TX_DATE)  >= :transactionStartDate
+			AND CONVERT(DATE, TX.TX_DATE) <= :transactionEndDate
       		AND TX.SITE_NAME LIKE :siteName
       		AND TX.ITEM_NAME LIKE :productName
 	      	AND TX.PRODUCT_TYPE LIKE :productType
@@ -917,8 +923,8 @@
       		TX.TX_REFERENCE_NUM LIKE :txRefNumber     
 			AND TX.ACCOUNTNAME LIKE :accountName
 	      	AND TX.CARD_NUMBER LIKE :accountNumber
-			AND TX.TX_DATE  >= :transactionStartDate
-			AND TX.TX_DATE <= :transactionEndDate
+			AND CONVERT(DATE, TX.TX_DATE)  >= :transactionStartDate
+			AND CONVERT(DATE, TX.TX_DATE) <= :transactionEndDate
       		AND TX.SITE_NAME LIKE :siteName
 			AND TX.PRODUCT_ID LIKE :productId
 			AND TX.ITEM_NAME LIKE :productName
@@ -932,15 +938,15 @@
 	
 <sql-query name="GET_WEB_TX_DETAILS_COUNT">
 	    <![CDATA[
-	    	SELECT COUNT(TX.TX_ID)
+	    	SELECT COUNT(DISTINCT TX.TX_ID)
             FROM
 				V_WEB_GET_TX_DETAILS TX
 			WHERE
       		TX.TX_REFERENCE_NUM LIKE :txRefNumber     
 			AND TX.ACCOUNTNAME LIKE :accountName
 	      	AND TX.CARD_NUMBER LIKE :accountNumber
-			AND TX.TX_DATE  >= :transactionStartDate
-			AND TX.TX_DATE <= :transactionEndDate
+			AND CONVERT(DATE, TX.TX_DATE)  >= :transactionStartDate
+			AND CONVERT(DATE, TX.TX_DATE) <= :transactionEndDate
       		AND TX.SITE_NAME LIKE :siteName
 			AND TX.PRODUCT_ID LIKE :productId
 			AND TX.ITEM_NAME LIKE :productName
@@ -951,7 +957,7 @@
 
 	<sql-query name="GET_PAYASUGO_TX_DETAILS">
 	    <![CDATA[
-	    	SELECT 
+	    	SELECT  DISTINCT
     	        TX.TX_ID AS TX_ID
 	            ,TX.TX_REFERENCE_NUM AS TX_TX_REFERENCE_NUM
             	,TX.ORG_REF_NUM AS TX_ORG_REF_NUM
@@ -974,8 +980,8 @@
       		TX.TX_REFERENCE_NUM LIKE :txRefNumber     
 			AND TX.ACCOUNTNAME LIKE :accountName
 	      	AND TX.CARD_NUMBER LIKE :accountNumber
-			AND TX.TX_DATE  >= :transactionStartDate
-			AND TX.TX_DATE <= :transactionEndDate
+			AND CONVERT(DATE, TX.TX_DATE)  >= :transactionStartDate
+			AND CONVERT(DATE, TX.TX_DATE) <= :transactionEndDate
       		AND TX.SITE_NAME LIKE :siteName
 			AND TX.PRODUCT_ID LIKE :productId
 			AND TX.ITEM_NAME LIKE :productName
@@ -988,15 +994,15 @@
 	
 	<sql-query name="GET_PAYASUGO_TX_DETAILS_COUNT">
 	    <![CDATA[
-	    	SELECT COUNT(TX.TX_ID)
+	    	SELECT COUNT(DISTINCT TX.TX_ID)
             FROM
 				V_PAYASUGO_GET_TX_DETAILS TX
 			WHERE
       		TX.TX_REFERENCE_NUM LIKE :txRefNumber     
 			AND TX.ACCOUNTNAME LIKE :accountName
 	      	AND TX.CARD_NUMBER LIKE :accountNumber
-			AND TX.TX_DATE  >= :transactionStartDate
-			AND TX.TX_DATE <= :transactionEndDate
+			AND CONVERT(DATE, TX.TX_DATE)  >= :transactionStartDate
+			AND CONVERT(DATE, TX.TX_DATE) <= :transactionEndDate
       		AND TX.SITE_NAME LIKE :siteName
 			AND TX.PRODUCT_ID LIKE :productId
 			AND TX.ITEM_NAME LIKE :productName
@@ -1005,7 +1011,7 @@
 	</sql-query>
 	
 	<sql-query name="GET_RECURRING_TX_DETAILS">
-	    <![CDATA[ SELECT
+	    <![CDATA[ SELECT  DISTINCT
     	        TX.TX_ID AS TX_ID
 	            ,TX.TX_REFERENCE_NUM AS TX_TX_REFERENCE_NUM
             	,TX.ORG_REF_NUM AS TX_ORG_REF_NUM
@@ -1028,8 +1034,8 @@
       		TX.TX_REFERENCE_NUM LIKE :txRefNumber     
 			AND TX.ACCOUNTNAME LIKE :accountName
 	      	AND TX.CARD_NUMBER LIKE :accountNumber
-			AND TX.TX_DATE  >= :transactionStartDate
-			AND TX.TX_DATE <= :transactionEndDate
+			AND CONVERT(DATE, TX.TX_DATE)  >= :transactionStartDate
+			AND CONVERT(DATE, TX.TX_DATE) <= :transactionEndDate
       		AND TX.SITE_NAME LIKE :siteName
       		ORDER BY TX.TX_DATE DESC 
       		OFFSET :startFrom ROWS
@@ -1039,15 +1045,15 @@
 	
 <sql-query name="GET_RECURRING_TX_DETAILS_COUNT">
 	    <![CDATA[ SELECT
-    	        COUNT(TX.TX_ID)
+    	        COUNT(DISTINCT TX.TX_ID)
             FROM
 				V_RECURRING_GET_TX_DETAILS  TX
 			WHERE
       		TX.TX_REFERENCE_NUM LIKE :txRefNumber     
 			AND TX.ACCOUNTNAME LIKE :accountName
 	      	AND TX.CARD_NUMBER LIKE :accountNumber
-			AND TX.TX_DATE  >= :transactionStartDate
-			AND TX.TX_DATE <= :transactionEndDate
+			AND CONVERT(DATE, TX.TX_DATE)  >= :transactionStartDate
+			AND CONVERT(DATE, TX.TX_DATE) <= :transactionEndDate
       		AND TX.SITE_NAME LIKE :siteName
 	       ]]>
 	</sql-query>	

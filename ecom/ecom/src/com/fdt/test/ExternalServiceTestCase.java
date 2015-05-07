@@ -1,8 +1,5 @@
 package com.fdt.test;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,15 +7,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.fdt.common.exception.SDLBusinessException;
 import com.fdt.ecom.service.EComFacadeService;
 import com.fdt.ecom.service.ExternalService;
 import com.fdt.ecom.service.rs.EComAdminFacadeServiceRS;
-import com.fdt.otctx.entity.OTCTx;
-import com.fdt.webtx.dto.WebTxExtResponseDTO;
-import com.fdt.webtx.entity.WebTx;
+import com.fdt.webtx.dto.WebCaptureTxRequestDTO;
+import com.fdt.webtx.dto.WebCaptureTxResponseDTO;
+import com.fdt.webtx.service.WebTxService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration({ "file:C:\\Projects\\SDL\\2.9\\Enterprise\\development\\ecom\\ecom\\WebContent\\WEB-INF\\conf\\spring\\applicationContext.xml" })
+@ContextConfiguration({ "file:C:\\Projects\\AMCAD\\Development\\ecom\\ecom\\WebContent\\WEB-INF\\conf\\spring\\applicationContext.xml" })
 public class ExternalServiceTestCase {
 
 	@Autowired
@@ -28,6 +26,10 @@ public class ExternalServiceTestCase {
 	@Autowired
 	@Qualifier("eComFacadeService")
 	private EComFacadeService eComFacadeService = null;
+	
+	@Autowired
+	@Qualifier("webTxService")
+	private WebTxService webTxService = null;
 
 	@Autowired
 	@Qualifier("eComAdminFacadeServiceRS")
@@ -35,7 +37,7 @@ public class ExternalServiceTestCase {
 
 	public ExternalServiceTestCase() {
 		System.setProperty("CONFIG_LOCATION",
-				"file:C:\\Projects\\SDL\\2.9\\Enterprise\\development\\ecom\\ecom\\src\\com\\fdt\\test\\conf");
+				"file:C:\\Projects\\AMCAD\\Development\\ecom\\ecom\\src\\com\\fdt\\test\\conf");
 	}
 
 	@Test
@@ -79,12 +81,37 @@ public class ExternalServiceTestCase {
 		}*/
 
 
-		OTCTx otcTx = this.externalService.getOTCTransactionByInvoiceNumber("12345", "MOBILE");
+		/*OTCTx otcTx = this.externalService.getOTCTransactionByInvoiceNumber("12345", "MOBILE");
 		System.out.println(otcTx);
 
 
 		OTCTx otcTx2 = this.externalService.getOTCTransactionByTxRefNum("B71P5EFF1E13", "MOBILE");
-		System.out.println(otcTx2);
+		System.out.println(otcTx2);*/
+		/*Date startDate = new Date();
+		try {
+			startDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2010-05-12 00:00:00");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Format formatter = new SimpleDateFormat("MM/dd/yyyy");
+		List<CheckHistory> checHistoryList = this.eComAdminFacadeServiceRS.getCheckHistories(null,
+				formatter.format(startDate), formatter.format(new Date()), null, null);
+		System.out.println(checHistoryList.size());*/
+
+		WebCaptureTxRequestDTO webCaptureTxRequestDTO = new WebCaptureTxRequestDTO();
+		try {
+			webCaptureTxRequestDTO.setAuthorizationTxReferenceNumber("B10P7CA06AC3");
+			webCaptureTxRequestDTO.setCaptureTxAmount(50.0d);
+			webCaptureTxRequestDTO.setComments("Testing Partial Capture 2");
+			webCaptureTxRequestDTO.setModifiedBy("Vivekanand");
+			webCaptureTxRequestDTO.setSiteName("WARREN");
+			WebCaptureTxResponseDTO webCaptureTxResponseDTO = this.externalService.captureWebTx(webCaptureTxRequestDTO);
+			System.out.println(webCaptureTxResponseDTO);
+		} catch (SDLBusinessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 
 	}

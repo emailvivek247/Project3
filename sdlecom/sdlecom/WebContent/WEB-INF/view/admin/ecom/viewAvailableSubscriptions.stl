@@ -25,7 +25,7 @@ span.ADCSI_leftcol {
     display: inline-block;
 }
 span.ADCSI_rightcol {
-    width: 650px;    
+    width: 650px;
 }
 
 table#subscriptionDetails {
@@ -33,15 +33,15 @@ table#subscriptionDetails {
 	margin: 10px;
 }
 
-table#subscriptionDetails td {	
+table#subscriptionDetails td {
 	padding: 5px 5px;
 }
 
-table#subscriptionDetails tr.paid {	
+table#subscriptionDetails tr.paid {
 	color: #527838;
 }
 
-table#subscriptionDetails tr.unPaid {	
+table#subscriptionDetails tr.unPaid {
 	color: #ED1C43;
 }
 
@@ -74,7 +74,7 @@ span.alert {
 	display:none;
 	z-index:10000;
 	background-color:#333;
-	width:675px;	
+	width:675px;
 	min-height:200px;
 	border:1px solid #666;
 	-moz-box-shadow:0 0 90px 5px #000;
@@ -98,7 +98,7 @@ span.alert {
 .details_inner {
 	text-align:left;
 	margin:10px;
-}	
+}
 .details h3 {
 	color:#aba;
 	font-size:15px;
@@ -111,7 +111,7 @@ span.alert {
 <div class="content">
 	<div style="width: 650px; margin-left: auto;margin-right:auto;margin-top:100px;">
 		<div id="ADCSI" class="ADCSI" style="margin-top: 0px; margin-bottom: 12px;">
-			<div class="ADCSI_title" id="ADCSI_title">				
+			<div class="ADCSI_title" id="ADCSI_title">
 				<span style="width:40%;text-align:left;vertical-align:top;display:inline-block;">
 					<i class="fa fa-plus green" style="font-size:18px;"></i>&nbsp;<b><@spring.message code="form.name.addNewSubscription" /></b></span>
 				<span style="width:58%;text-align:right;display:inline-block;">
@@ -120,7 +120,7 @@ span.alert {
 			</div>
 			<form id="frmAddSubscription" name="frmAddSubscription" action="addSubscription.admin" method="post" autocomplete="off">
 		    <center><h4><@spring.message code="security.ecommerce.message.addSubscription" /></h4></center>
-		    <div style="text-align: center;padding-top: 30px;padding-bottom: 10px;">										
+		    <div style="text-align: center;padding-top: 30px;padding-bottom: 10px;">
 				<#if FAILURE_MSG?has_content>
 					<span class="alert" style="text-align:left;">${FAILURE_MSG}</span>
 				</#if>
@@ -133,10 +133,10 @@ span.alert {
 			</div>
 			<div class="ADCSI_row">
 			<span class="ADCSI_rightcol" style="display: inline-block; ">
-				<span><b><@spring.message code="security.authentication.selectSite" /></b> 				
+				<span><b><@spring.message code="security.authentication.selectSite" /></b>
 					<select id="siteId" name="siteId" class="validate[required]" style="width:250px" tabindex="7">
 			            <#if sites?has_content>
-			            	<option value=""><@spring.message code="security.ecommerce.label.selectFromBelowSites" /></option>
+
 				            <#foreach site in sites>
 				               <#if (selectedSites?has_content)>
 		                          <#foreach siteId in selectedSites>
@@ -144,14 +144,18 @@ span.alert {
 		                                    <option value="${site.id}" selected>${site.getState()} - ${site.description}</option>
 		                                <#else>
 		                                    <option value="${site.id}">${site.getState()} - ${site.description}</option>
-		                                </#if>    
+		                                </#if>
 		                          </#foreach>
-		                      <#else>		                            
-		                            <option value="${site.id}">${site.getState()} - ${site.description}</option>		                            
-							  </#if> 
+		                      <#else>
+			                      <#if site.name == defaultSiteName>
+	                                  <option value="${site.id}" selected>${site.state} - ${site.description}</option>
+		                          <#else>
+		                              <option value="${site.id}">${site.state} - ${site.description}</option>
+		                          </#if>
+		                      </#if>
 		                    </#foreach>
-	                    </#if> 
-	                </select>	 
+	                    </#if>
+	                </select>
 					<table width="100%" id="subscriptionDetails">
 						<th class="header" width="100px"><@spring.message code="security.ecommerce.label.select" />
 						</th>
@@ -160,10 +164,10 @@ span.alert {
 						<th class="header" width="70px"><@spring.message code="security.ecommerce.label.fee" />
 						</th>
 						<th class="header" width="150px"><@spring.message code="security.ecommerce.label.subscriptionType" />
-						</th>										
+						</th>
 					<#assign siteCounter = 0>
 					<#list sites as site>
-						<#assign siteCounter = siteCounter + 1>												
+						<#assign siteCounter = siteCounter + 1>
 						<#assign accessList = site.getAccess()>
 						<tr class="subscriptioninfo site-${site.id}" style="display:none;">
 							<th class="siteName" colspan="4">${site.getState()} - ${site.description}
@@ -177,19 +181,19 @@ span.alert {
 									<div class="details_inner">
 										<p>
 											${site.getSubscriptionValidationText()}
-										</p>									
+										</p>
 									</div>
 								</div>
 							</div>
-							</th>							
-						</tr>							
+							</th>
+						</tr>
 						<#list  accessList as access>
 							<#assign isSubscribed = false >
 							<#if subscriptions?has_content>
-								<#list subscriptions as subscription>							
+								<#list subscriptions as subscription>
 									<#if access.id = subscription.accessId>
-										<#assign isSubscribed = true >										
-									</#if>    
+										<#assign isSubscribed = true >
+									</#if>
 								</#list>
 							</#if>
 							<#if access.isVisible()>
@@ -204,9 +208,9 @@ span.alert {
 				 		 			<#if isSubscribed>
 					 		 		<td><input type="checkbox" name="oldSubscription" class="accessGroup${siteCounter} ${accessType}" checked="checked" disabled="disabled" value="${access.id}" /></td>
 					 		 		<#else>
-					 		 		<td><input type="checkbox" class="accessGroup${siteCounter} ${accessType}" name="newSubscription" value="${access.id}" /></td>	
+					 		 		<td><input type="checkbox" class="accessGroup${siteCounter} ${accessType}" name="newSubscription" value="${access.id}" /></td>
 					 		 		</#if>
-					 		 		
+
 					 		 		<td>${access.description}</td>
 					 		 		<td>${access.getSubscriptionFee().getFee()?string.currency}</td>
 					 		 		<td><#if access.accessType="RECURRING_SUBSCRIPTION">
@@ -218,28 +222,38 @@ span.alert {
 					 		 			<#elseif access.accessType="CERTIFIED_NON_RECURRING_SUBSCRIPTION">
 					 		 				<@spring.message code="security.ecommerce.label.certified" />
 					 		 			</#if>
-					 		 		</td>						 		 	
-					 		 	</tr>	
-				 		 	</#if>				     		  
-						</#list>													
-					 </#list>					 
+					 		 		</td>
+					 		 	</tr>
+				 		 	</#if>
+						</#list>
+					 </#list>
 					 <tr>
 						<td class="footer" colspan="4"></td>
-					 </tr>	    
+					 </tr>
 					 </table>
 				</span>
 			</span>
 			</div>
 			<span class="alert" style="margin:30px; "><i class="fa fa-exclamation-circle red" style="font-size:15px;"></i>&nbsp;<@spring.message code="security.ecommerce.label.viewInformation" /></span>
 			<div style="text-align: center;padding-top: 30px;padding-bottom: 10px;">
-				<a name="btnAddSubscription" id="btnAddSubscription" style="display:none"><@spring.message code="security.ecommerce.addSubscription" /></a>								
+				<a name="btnAddSubscription" id="btnAddSubscription" style="display:none"><@spring.message code="security.ecommerce.addSubscription" /></a>
 			</div>
-			
+
 			</form>
-	</div>			
+	</div>
 </div>
 
-<script type="text/javascript">	
+<script type="text/javascript">
+		$(document).ready(function(){
+		$('tr.subscriptioninfo').hide();
+					if ( $("#siteId").val()!="" ){
+						var siteIdTemp = ".site-" + $("#siteId").val();
+						$(siteIdTemp).show();
+						$("#btnAddSubscription").show();
+					} else {
+						$("#btnAddSubscription").hide();
+					}
+		});
 		$(function() {
 			$( "#btnAddSubscription" ).button({
 	            icons: {
@@ -250,16 +264,16 @@ span.alert {
 	            icons: {
 	                primary: "ui-icon-alert"
 	            }
-	        });	
+	        });
 	        $("img[rel]").overlay();
-	        
+
 	        sortDropDownListByText();
 		});
-		
+
 		$("#btnAddSubscription").click(function() {
 		if ($("input[name=newSubscription]:checked").val() != null) {
-			/* Planned to handle in Business Rule Validator on server side			
-			var isValidAccessList = checkUniqueAccess();		
+			/* Planned to handle in Business Rule Validator on server side
+			var isValidAccessList = checkUniqueAccess();
 				if (!isValidAccessList) {
 					$.prompt('<@spring.message code="security.ecommerce.label.oneAccessPerTypePerSite" />');
 					return;
@@ -271,19 +285,19 @@ span.alert {
 								if(m) { submitAddForm(); }
 								else { return true; }
 					}
-				
+
 				});
-			
+
 		} else {
 			$.prompt('<@spring.message code="security.ecommerce.label.noNewSubscription" />');
-		}	
+		}
 		});
-		
+
 		function checkUniqueAccess() {
 		    var isAccessListValid = true;
 			var availableSites = $("th.siteName").length;
 			var i=1;
-			while (i<=availableSites) {	
+			while (i<=availableSites) {
 			   var name1 = "input.accessGroup" + i + ".recurring:checked";
 			   var name2 = "input.accessGroup" + i + ".nonRecurring:checked";
 			   var name3 = "input.accessGroup" + i + ".free:checked";
@@ -294,8 +308,8 @@ span.alert {
 			   i++;
 			}
 			return isAccessListValid;
-		}	
-		
+		}
+
 		function submitAddForm() {
 			document.frmAddSubscription.submit();
 		}
@@ -309,7 +323,7 @@ span.alert {
 				$("#btnAddSubscription").hide();
 			}
 		});
-		
+
 		function sortDropDownListByText() {
 		    $("select").each(function() {
 		        var selectedValue = $(this).val();
@@ -321,6 +335,6 @@ span.alert {
 		        $(this).val(selectedValue);
 		    });
 		}
-		
+
 </script>
 </@loginLayout>

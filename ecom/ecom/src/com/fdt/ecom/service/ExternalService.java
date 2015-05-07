@@ -6,10 +6,13 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
+import com.fdt.common.exception.SDLBusinessException;
 import com.fdt.otctx.dto.OTCRequestDTO;
 import com.fdt.otctx.dto.OTCResponseDTO;
 import com.fdt.otctx.entity.OTCTx;
 import com.fdt.paymentgateway.dto.PayPalDTO;
+import com.fdt.webtx.dto.WebCaptureTxRequestDTO;
+import com.fdt.webtx.dto.WebCaptureTxResponseDTO;
 import com.fdt.webtx.dto.WebTxExtResponseDTO;
 import com.fdt.webtx.entity.WebTx;
 
@@ -54,5 +57,9 @@ public interface ExternalService {
 	@WebMethod
 	public WebTx getWebTxByTxRefNum(@WebParam(name="txRefNumber") String txRefNumber,
 			@WebParam(name="siteName") String siteName);
+	
+	@WebMethod
+	public WebCaptureTxResponseDTO captureWebTx(@WebParam(name="webCaptureTxRequestDTO") WebCaptureTxRequestDTO webCaptureTxRequestDTO) 
+			throws SDLBusinessException;
 
 }

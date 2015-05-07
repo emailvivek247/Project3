@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Type;
 
 import com.fdt.common.entity.AbstractBaseEntity;
@@ -223,6 +224,9 @@ public class PayAsUGoTxItem extends AbstractBaseEntity {
 	}
 
 	public void setBarNumber(String barNumber) {
+		if(!StringUtils.isBlank(barNumber)) {
+			barNumber = barNumber.toUpperCase();
+		}
 		this.barNumber = barNumber;
 	}
 

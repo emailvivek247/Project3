@@ -38,6 +38,11 @@ public class SearchQuery{
         return this;
     }
     
+    public SearchQuery setBasicQuery(String basicQuery) {
+        this.q = basicQuery;
+        return this;
+    }  
+    
     public SearchQuery setAdvancedQuery(String advancedQuery) {
         this.lq = advancedQuery;
         return this;

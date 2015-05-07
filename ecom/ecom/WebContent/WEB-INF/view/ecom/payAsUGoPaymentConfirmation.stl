@@ -117,14 +117,15 @@ td.footer{
 			<table width="100%" id="subscriptionDetails">
 				<th class="header"><@spring.message code="security.ecommerce.label.productId" /></th>
 				<th class="header"><@spring.message code="security.ecommerce.label.productType" /></th>
-				<#if transaction.isCertified()> <th class="header"><@spring.message code="security.ecommerce.label.certifiedDocumentNumber" /></th> </#if>
+				<th class="header"><@spring.message code="security.ecommerce.label.location" /></th>
+				<th class="header"><@spring.message code="security.ecommerce.label.certifiedDocumentNumber" /></th> 
 				<th class="header"><@spring.message code="security.ecommerce.label.pageCount" /></th>
 				<th class="header"><@spring.message code="security.ecommerce.label.comments" /></th>
 				<th class="header right"><@spring.message code="security.ecommerce.label.price" /></th>
-				<th class="header hiddenRecieptColumn"><@spring.message code="security.ecommerce.label.Action" /></th>
+				<th class="header hiddenRecieptColumn"><@spring.message code="security.ecommerce.label.DownloadOrView" /></th>
 				<#assign totalTxAmount = 0>
 				<#list payAsUGoTransactionList as webTransaction>
-					<tr><td colspan="5" class="center bold">${webTransaction.getSite().getName()} - (${webTransaction.txRefNum})</td></tr>
+					<tr><td colspan="5" class="center bold">${webTransaction.getSite().getName()} - (Transaction # : ${webTransaction.txRefNum})</td></tr>
 		        	<#assign totalTxAmountBySite = 0>
 					<#list webTransaction.getPayAsUGoTxItems() as item >
 						<#assign totalTxAmount = totalTxAmount + item.totalTxAmount>
@@ -132,40 +133,39 @@ td.footer{
 						<tr>
 							<td>${item.productId}</td>
 							<td>${item.productType}</td>
-							<#if webTransaction.isCertified()> <td><#if item.certifiedDocumentNumber?has_content> ${item.certifiedDocumentNumber} </#if></td> </#if>
+							<td><#if item.locationName?has_content> ${item.locationName} <#else> NA </#if></td>
+							<#if webTransaction.isCertified()> 
+								<td><#if item.certifiedDocumentNumber?has_content> ${item.certifiedDocumentNumber} </#if></td>
+							<#else> 
+								<td>NA</td>
+							</#if>
 							<td>${item.pageCount}</td>
 							<td><#if item.comments?has_content>${item.comments}</#if></td>
 							<td class="right">
 								${item.totalTxAmount?string.currency}<br />
 							</td>
-							<td class="hiddenRecieptColumn"><a href="${item.downloadURL}&isDownload=Y&downloadDocument=Y" target="_blank"><img alt="Download Document" title="Download Document" width="20px" height="20px" style="border:0px;" src="${request.getContextPath()}/resources/images/downloadDocument.png"/></a>&nbsp;&nbsp;<a href="${item.downloadURL}&isDownload=Y&downloadDocument=N" target="_blank"><img alt="View Document" title="View Document" width="20px" height="20px" style="border:0px;" src="${request.getContextPath()}/resources/images/viewDocument.png"/></a></td>
+							<td class="hiddenRecieptColumn">
+								<a href="${item.downloadURL}&isDownload=Y&downloadDocument=Y" target="_blank"><img alt="Download Document" title="Download Document" width="30px" height="30px" style="border:0px;" src="${request.getContextPath()}/resources/images/downloadDocument.png"/></a>&nbsp;&nbsp;
+								<a href="${item.downloadURL}&isDownload=Y&downloadDocument=N" target="_blank"><img alt="View Document" title="View Document" width="30px" height="30px" style="border:0px;" src="${request.getContextPath()}/resources/images/viewDocument.png"/></a>
+							</td>
 						</tr>
 					</#list>
 				<tr>
-				<#if webTransaction.isCertified()>
-					<#assign isCertified = true>
-					<td class="right bold" colspan="5"><@spring.message code="security.ecommerce.subTotal" /></td>
-				<#else>
-					<td class="right bold" colspan="4"><@spring.message code="security.ecommerce.subTotal" /></td>
-				</#if>
+				
+					<td class="right bold" colspan="6"><@spring.message code="security.ecommerce.subTotal" /></td>
 					<td class="bold right" style="text-align:right;">${totalTxAmountBySite?string.currency}</td>
 					<td class="right bold"></td>
 			 		</tr>
 				</#list>
 				<tr>
-				<#if isCertified>
-					<td class="footer right bold" colspan="5"><@spring.message code="security.ecommerce.totalAmountCharged" /></td>
-				<#else>
-					<td class="footer right bold" colspan="4"><@spring.message code="security.ecommerce.totalAmountCharged" /></td>
-				</#if>
-
+				<td class="footer right bold" colspan="6"><@spring.message code="security.ecommerce.totalAmountCharged" /></td>
 				<td class="footer right bold"  style="text-align:right;">${totalTxAmount?string.currency}</td>
 				<td class="footer right bold"></td>
 			 	</tr>
 			</table>
 			</div>
 			<br />
-			<div  style="text-align:center;padding-right:20px"><a id="printRecepit" style="cursor:pointer;"><img src="${request.getContextPath()}/resources/images/print.png" /><@spring.message code="security.ecommerce.label.printConfirmation" /></a></div>
+			<div  style="text-align:center;padding-right:20px"><a id="printRecepit" style="cursor:pointer;"><img src="${request.getContextPath()}/resources/images/print.png" /><@spring.message code="security.ecommerce.label.printReceipt" /></a></div>
 			<#else>
 				<#if ERROR?has_content>
 					${ERROR}
