@@ -1,0 +1,7 @@
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.textarearesizer.js"></script>
+<script type="text/javascript">
+/* jQuery textarea resizer plugin usage */
+jQuery(document).ready(function() {
+  jQuery('textarea.resizable:not(.processed)').TextAreaResizer();
+});
+</script>

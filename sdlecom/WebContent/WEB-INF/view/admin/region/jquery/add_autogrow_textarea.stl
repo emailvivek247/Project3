@@ -1,0 +1,10 @@
+<script type="text/javascript" src="resources/javascripts/jquery.autogrow.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+  $('textarea').autogrow({
+    maxHeight: 1200,
+    minHeight: 80,
+    lineHeight: 16
+  });
+});
+</script>

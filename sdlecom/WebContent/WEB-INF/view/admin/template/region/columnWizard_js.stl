@@ -1,0 +1,31 @@
+<script type="text/javascript">
+<!--
+var columnName = "Document Columns";
+var columnType = "";
+function changeColumn(count) {
+  var columnList = document.getElementById("variable"+count);
+  if (!columnList) return false;
+  if (columnList.selectedIndex > -1) {
+    var v = columnList.options[columnList.selectedIndex].value;
+    var i = v.indexOf("|");
+    columnName = v.substr(0, i);
+    columnType = v.substr(i+1);
+  }
+  if (columnType == "String" || columnType == "Clob" || columnType == "Blob"){
+    $("#modifiers"+count).show();
+  }else{
+    $("#modifiers"+count).hide();
+  }
+  if (columnType == "Timestamp"){
+    $("#dateFormatSection"+count).show();
+  }else{
+    $("#dateFormatSection"+count).hide();
+  }
+  if (columnType == "Number"){
+    $("#numberFormatSection"+count).show();
+  }else{
+    $("#numberFormatSection"+count).hide();
+  }
+}
+// -->
+</script>

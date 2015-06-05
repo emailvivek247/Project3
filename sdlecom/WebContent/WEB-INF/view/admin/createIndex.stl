@@ -1,0 +1,81 @@
+<script type="text/javascript">
+function checkform()
+{	
+    $('.errorListItem').remove();
+    $('.successListItem').remove();
+	
+   	
+   	var nametxt = $("#name").val()
+   	 $.ajax({
+        type: 'post',
+        url: 'validateIndexName.do',
+        data: {name: nametxt},
+        success: function(data){
+        	
+	    	if (data != null && data != "" && data.items.count > 0) {	    	
+	    	 $.each(data.items, function(i,item){
+	    	    $('.statusMessages').append("<li class='errorListItem'>Index " + item.Error + "</li>");
+	    	    $('#submitCreate').addClass('disabled');
+	    	    $("#submitCreate").attr("disabled", "disabled");	    	    
+		     });
+		    } else {		    
+		     	$('.statusMessages').append("<li class='successListItem'>Index name is valid and available</li>");
+		     	 $('#submitCreate').removeClass('disabled');
+		     	$("#submitCreate").removeAttr("disabled");
+		    }
+	   	}
+    });
+   	
+   	
+   	
+}
+function createIndex(){
+	$.post("createIndex.do",
+    {name: $("#name").val()},
+    function(data){
+    	if (data != null) {
+    	 $.each(data.items, function(i,item){
+    	    $('.statusMessages').append("<li class='errorListItem'>Index " + item.Error + "</li>");
+    	    $('#submitCreate').addClass('disabled');
+    	    $("#submitCreate").attr("disabled", "disabled");
+	     });
+	    } else {
+	     	$('.statusMessages').append("<li class='successListItem'>Index name is valid and available</li>");
+	     	$('#submitCreate').removeClass('disabled');
+	     	$("#submitCreate").removeAttr("disabled");
+	    }
+   	}, "json");
+}
+</script>
+<div id="createIndexDialog" class="window" style="background-color:#ffffff;">
+<div align="right"><a href="#" class="closeIndexCreation" id="closeIndexCreation"></a></div>
+<div  align="center">
+	<b>Create an Index</b>
+</div>
+<br />
+<ul class="statusMessages" style="background: transparent;"></ul>
+<form name="createIndexFrm" id="createIndexFrm" method="post" action="createIndex.do">
+<input type="hidden" name="operation" value="create">
+<table id="t" cellpadding="5" cellspacing="0" border="0">
+<tr>
+	<td align=right valign=top nowrap><b>Name:</b></td>
+	<td align=left valign=top nowrap><input type="text" class="requiredField" maxlength="16" name="name" id="name" size="40" onblur="checkform()"></td>
+</tr>
+<tr>
+	<td></td><td align=left valign=top><div class="instructions">Index name can not be changed later. <br />It is not case sensitive. <br />Specify from 1 to 30 characters using <br />letters (A-Z, a-z) or numbers (0-9)</div></td>
+</tr>
+<tr><td align=right valign=top nowrap width="18%"><b>Type:</b></td>
+	<td align=left valign=top nowrap><input type="radio" name="data_source_type" value="0" checked> Database, <i>Select data via database connection</i><br></td>
+</tr>
+<tr>
+	<td align=right valign=top nowrap width="18%"><b>Display Name:</b></td><td align=left valign=top nowrap><input type="text" maxlength="30" name="displayName" id="displayName" size="40" value=""></td>
+</tr>
+<tr>
+	<td align=right valign=top nowrap width="18%"><b>Description:</b></td><td align=left valign=top nowrap><textarea name="desc" id="desc" cols="75" rows="3" wrap="virtual"></textarea></td>
+</tr>
+<tr>
+	<td colspan="2" align=center valign=top nowrap><button type="submit" class="general ui-corner-all" name="submitCreate" id="submitCreate" onclick="createIndexFrm.operation.value='create'; document.createIndexFrm.submit(); return false;">Create</button></td>
+</tr>	
+</table>
+</form>
+</div>

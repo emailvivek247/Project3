@@ -1,0 +1,111 @@
+#set($dir = '/templates/multiSearchVm' )
+#parse("$dir/pageHeader.vm")
+
+#parse("/templates/globalNav.vm")
+#parse("$dir/searchBox.vm")
+#errorMarkup()
+
+#templateInclude("searchResultHeader.vm")
+
+#macro(getValue $_p $_i $_name)
+  #set($_p = false)
+  #set($_p = $request.getAttribute("${_i}${_name}"))
+  #if(!$_p)
+    #set($_p = $request.session.getAttribute("${_i}${_name}"))
+  #end
+  #if(!$_p)
+    #set($_p = $request.getAttribute("${_name}"))
+  #end
+  #if(!$_p)
+    #set($_p = $request.session.getAttribute("${_name}"))
+  #end
+#end
+
+#useHighlightTag('<span style="background-color:#00ff00">' '</span>')
+<table width="100%" cellpadding="5" cellspacing="0" border="0">
+<tr valign="top">
+<td width="15%">
+
+<table class="box">
+  <tr><th>
+    Results from each index
+  </th></tr>
+    <tr><td><span style="font-size:10pt;">
+#foreach($i in [1..$numIndex])
+  #getValue($total $i "total")
+  #if($total && $total>0)
+    #getValue($indexDisplayName $i "indexDisplayName")
+    #getValue($indexName $i "indexName")
+    #getValue($templateName $i "templateName")
+    #if($templateName)
+      #if( $templateUtil.getTemplateFile($indexName, $templateName, "documents.vm" ).exists() )
+        + <a href="#${i}${indexName}">#if($indexDisplayName)$indexDisplayName#else${indexName}#end(${total})</a><br />
+      #end
+    #end
+  #end
+#end
+    </span></td></tr>
+</table><br />
+
+
+#foreach($i in [1..$numIndex])
+  #getValue($total $i "total")
+  #if($total && $total>0)
+    #getValue($indexDisplayName $i "indexDisplayName")
+    #getValue($indexName $i "indexName")
+    #getValue($templateName $i "templateName")
+    #getValue($filterIndexName $i "filterIndexName")
+    #getValue($filterColumnCounts $i "filterColumnCounts")
+    #getValue($dc $i "dc")
+    #if($templateName)
+      #if( $templateUtil.getTemplateFile($indexName, $templateName, "narrowBy.vm" ).exists() )
+        #parse( "/templates/${indexName}/${templateName}/narrowBy.vm" )
+      #end
+    #end
+  #end
+#end
+
+
+
+</td>
+<td width="85%">
+
+#foreach($i in [1..$numIndex])
+  #getValue($total $i "total")
+  #if($total && $total>0)
+    #getValue($indexDisplayName $i "indexDisplayName")
+    #getValue($indexName $i "indexName")
+    #getValue($templateName $i "templateName")
+    #if($templateName)
+      #getValue($docs $i "docs")
+      #getValue($summarizer $i "summarizer")
+      #if( $templateUtil.getTemplateFile($indexName, $templateName, "documents.vm" ).exists() )
+
+<table width=100% border=0 cellpadding=0 cellspacing=0>
+<tr><td> </td></tr>
+  <tr>
+    <td bgcolor=#3366cc><img width=1 height=1 alt=""></td>
+  </tr>
+</table>
+<table width=100% border=0 cellpadding=0 cellspacing=0 bgcolor=#d2e4fc>
+  <tr>
+    <td bgcolor=#d2e4fc nowrap><font size=+1> <a name="${i}${indexName}"><b>#if($indexDisplayName)$indexDisplayName#else${dc.name}#end</b></font></a> </td>
+    <td bgcolor=#d2e4fc align=right nowrap><font size=-1 color=#000000>
+      results <b>1</b> - <b>#if($total>5)5#else$total#end</b> of <b>$total</b> for <b>$q</b>.
+      #if($total>5)<a href="search.do?indexName=$!{indexName}&q=$!{URLEncodedQuery}">(more...)</a>#end </font></td>
+  </tr>
+</table>
+        #parse( "/templates/${indexName}/${templateName}/documents.vm" )
+
+      #end
+    #end
+  #end
+  <br/>
+#end
+</td>
+</tr>
+</table>
+
+<hr>
+
+</body></html>

@@ -1,0 +1,38 @@
+<#noparse>
+
+<#assign display=JspTaglibs["http://displaytag.sf.net"]>
+
+</#noparse>
+	<#assign excludedParams =  "searchType ">
+	<#foreach c in displayColumns>
+		<#assign excludedParams =  excludedParams + c + " " + c + "_select" + " ">
+	</#foreach>
+<#noparse>
+
+<#if searchResult.docs?has_content>
+    <#assign ResultId =0>
+	<@display.table name="searchResult.docs" id="doc" export=true requestURI="/search.do" excludedParams="</#noparse>${excludedParams}<#noparse>">
+	  <#include "document.stl">
+	  <@display.setProperty name="export.title" value="Search Criteria :${Request.searchForm.searchQuery}" />  
+	</@display.table>
+<#else>
+ <#include "noResults.stl"> 
+</#if>
+
+</#noparse>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	oTable = $('#doc').dataTable({
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bSort": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		"aaSorting": []
+	});
+} );
+</script>

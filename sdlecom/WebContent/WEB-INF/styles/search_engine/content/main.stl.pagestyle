@@ -1,0 +1,37 @@
+<#if includeSyndicate><#noparse>
+<#assign rssUrl = "?indexName=" + indexName + "&templateName=" + templateName + "&q=" + URLEncodedQuery + "&rss=1">
+</#noparse></#if>
+<#noparse>
+<@com.useHighlightTag '<span class="highlight">', '</span>' />
+
+<#include "layout.stl">
+<@layout title="</#noparse>${title}<#noparse>">
+</#noparse>
+
+<#if hasGlobalNavigation><#noparse><#include "/templates/globalNav.stl"></#noparse></#if>
+<#if includeBriefcase><#noparse><#include "/templates/globalBriefCase.stl"></#noparse></#if>
+<#noparse>
+<#include "searchBox.stl">
+<@com.errorMarkup/>
+<#include "displayPagination.stl">
+<#include "map.stl">
+<#include "searchResultHeader.stl">
+</#noparse><#if includeSortBy><#noparse><#include "sortBy.stl"></#noparse></#if><#noparse>
+<br>
+
+ <table class="main"><tr valign="top"><td class="mainLeft">
+ </#noparse>
+  <#if includeNarrowBy><#noparse><div id="narrowBy"><#include "narrowBy.stl"></div></#noparse></#if>
+  <#if includeRecentSearches><#noparse><#include "recentSearches.stl"></#noparse></#if>
+  <#if includeSyndicate><#noparse><#include "syndicate.stl"></#noparse></#if>
+ <#noparse>
+ </td><td class="mainRight">
+  <div id="documents"><#include "documents.stl"></div>
+ </td></tr></table>
+ 
+ <#include "displayPagination.stl">
+
+</#noparse>
+ <#if includeResultsPerPage><#noparse><#include "resultsPerPage.stl"></#noparse></#if><#noparse>
+</@layout>
+</#noparse>

@@ -1,0 +1,69 @@
+##
+##  assumed in the context
+##         indexName, // already opened
+##
+
+#set( $title= ${indexName} )
+#set( $selectedMenu = 'dataset' )
+#set( $selectedToptab = "status" )
+#set( $selectedSubtab = "log" )
+
+#set($schedulerTool = $toolLoader.load("net.javacoding.xsearch.utility.SchedulerTool"))
+#set($logUtil = $toolLoader.load("net.javacoding.xsearch.utility.LogUtil"))
+
+#openFieldset('Log Details')
+
+<table width="95%" border="0" id="refreshStatus">
+  <tr>
+    <td> Log of $indexName
+#if( $schedulerTool.isRunning($indexName))
+    Running
+#end
+    </td>
+   <!--<td align="center">
+<script language="javascript" src="resources/javascripts/xp_progress.js"></script>
+<script type="text/javascript">
+var bar1= createBar(300,15,'white',1,'black','#464646',85,7,3,"");
+</script>
+    </td>
+     <td id="zone">
+      <button id="refreshButton" class="dashboard">Loading...</button>
+    </td>-->
+    <td align=right>
+      <a href="preference.do">Configure Indexing Log</a>
+      #if($logUtil.existsLongLog($indexName))
+        <a href="downloadLog.do?indexName=$indexName">Download Full Log</a>
+      #end
+    </td>
+  </tr>
+</table>
+
+<div id="response" class="log"></div>
+
+<script type="text/javascript" src="$link.getContextPath()/resources/javascripts/refreshLog.js"></script>
+<script type="text/javascript">
+var flip = "Start"; // global to save state
+toggleStartStopButton('$indexName');
+repeatClient('$indexName');
+</script>
+
+<br />
+<!--
+For this example running log:
+<pre>
+INFO 2005-03-24 00:53:01,087- [2184:8:1839][0:2:1837]37.4K(9.1):40.7K(8.1)/s
+</pre>
+The first line means:
+<ul class="ulstyle">
+<li>2184 documents to fetch;
+<li>8 threads on fetching;
+<li>1839 documents have been fetched; 
+<li>0 documents need to index;
+<li>2 threads on writing indexes;
+<li>1837 documents have been indexed;
+<li>37.4KB/s fetching;
+<li>9.1 documents fetching;
+<li>40.7KB/s writing index;
+<li>8.1 documents writing index;
+-->
+#closeFieldset()

@@ -1,0 +1,246 @@
+<@layout.basic menu="dataset/template/create" hasWizard=true>
+
+<#assign jumperParams = "scaffoldName=" + scaffold.longName>
+
+<#macro alternate_bgcolor>
+  <#if _bgcolor == "#eeeeee">
+    <#assign _bgcolor = "#e0e0e0">
+  <#else>
+    <#assign _bgcolor = "#eeeeee">
+  </#if>
+${_bgcolor}
+</#macro>
+
+<#macro listVariable(v)>
+<#assign variableCounter = variableCounter + 1 >
+<#if v.type == "separator">
+    <#if v.position == "start">       
+      <#if v.status == "open">
+        <p class="scaffold_head"><span class="active"></span>${v.header}</p>
+      	<div class="scaffold_body openScaffoldWindow">
+      <#else>
+      	<p class="scaffold_head"><span class="inactive"></span>${v.header}</p>
+      	<div class="scaffold_body">
+      </#if>
+    <#elseif v.position == "end">
+      </div>
+    <#elseif v.position == "">
+      </div>      
+      <#if v.status == "open">
+        <p class="scaffold_head"><span class="active"></span>${v.header}</p>
+      	<div class="scaffold_body openScaffoldWindow">
+      <#else>
+        <p class="scaffold_head"><span class="inactive"></span>${v.header}</p>
+      	<div class="scaffold_body">
+      </#if>  
+    </#if>
+    <#return> 
+</#if>
+<table width="100%">  
+  <tr>
+  <td valign="top" width="20%">
+    <#if v.columnTypeShortName?has_content >
+      <a href="configDisplayableColumns.do?indexName=${indexName}">${v.name}</a>
+    <#else>
+      <#if v.prompt?has_content>${v.prompt}:</#if>
+    </#if>
+  </td><td>
+  <#if v.type == "string">
+    <input type="text" name="variable${variableCounter}" id="variable${variableCounter}" value="${v.defaultValue}" size="${v.size}" />
+  <#elseif v.type == "column">
+    <#include "region/columnWizard.stl">
+  <#elseif v.type == "boolean">
+    <input type="checkbox" name="variable${variableCounter}" id="${v.name}" <#if v.defaultValue != false>checked="checked"</#if> value="1">&nbsp;
+    <description>${v.description?if_exists}</description>
+  <#elseif v.type == "multiselectcolumn">
+    <#include "region/columnMultiSelection.stl">
+  <#elseif v.type == "htmlelement">
+    <#include "region/displayHtmlElement.stl">
+  <#elseif v.type == "columns">
+    <#include "region/columnsSelection.stl">
+  </#if>
+  <#if v.description?has_content && v.description != "" && v.type != "boolean">
+    <div class="description">${v.description}</div>
+  </#if>
+  <#if (v.children?has_content && v.children.size()>0) >
+    <div class="children">
+            <#foreach child in v.children>
+                <@listVariable child />
+            </#foreach>
+    </div>
+  </#if>
+  </td>
+</tr>
+</table>
+</#macro>
+
+<#include "region/columnWizard_js.stl" parse="n" >
+
+<!-- Script for multiselect start-->
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.comboselect.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.selso.js"></script>
+<link rel="stylesheet" type="text/css" href="${request.getContextPath()}/resources/styles/jquery.comboselect.css" />
+<!-- Script for multiselect End-->
+
+<#include "/WEB-INF/view/admin/region/breadcrumb.stl">
+<@com.errorMarkup "error"/>
+<@com.messageMarkup/>
+
+<#assign scaffoldManager = new("com.fdt.sdl.styledesigner.ScaffoldManager")>
+
+
+<span id="contextPath" style="display:none">${request.getContextPath()}</span>
+<form method="post" action="createTemplate.do">
+  <input type="hidden" name="operation" value="create" />
+  <input type="hidden" name="indexName" value="${indexName}" />
+  <input type="hidden" name="scaffoldName" value="${scaffold.longName}" />
+  <table width="100%">
+  <tr valign="top">
+  <td align="center" width="20%">
+     <#if scaffold.isChart>
+        <script type="text/javascript" src="${request.getContextPath()}/smartcharts/js/SmartCharts.js"></script>
+        <script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/renderChart.js"></script>
+        <div id="ChartDiv" class="ChartDiv" style="vertical-align: middle; width: 350px; height: 350px; text-align: center" border="0">
+        </div>
+     <#elseif scaffold.isMap>
+         <link href="styles/dd.css" rel="stylesheet" type="text/css" />
+         <script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/mapValidation.js"></script>         
+         <img src="${request.getContextPath()}/${scaffoldManager.getPreviewImageSrc(scaffold)}" width="185" height="126" border="0" alt="${scaffold.name}"/>
+     <#else>          
+        <img src="${request.getContextPath()}/${scaffoldManager.getPreviewImageSrc(scaffold)}" width="185" height="126" border="0" alt="${scaffold.name}"/>
+     </#if> 
+  <br/>
+    <b>${scaffold.name}</b>
+    <table border="0"><tr><td style="text-align: center; width:250px;">
+      Page Style Name:<br/>
+     <#if scaffold.isPartial>
+      <p align="center"><select name="templateName">
+       <option value="">Choose an existing Page Style</option>
+       <#foreach t in templates>
+       <option value="${t.name}">${t.name}</option>
+       </#foreach>
+      </select></p>
+     <#elseif scaffold.isMap>
+      <p align="center"><select name="templateName">
+       <option value="">Choose an existing page Style</option>
+       <#foreach t in templates>
+       <option value="${t.name}">${t.name}</option>
+       </#foreach>
+      </select></p>
+     <#elseif scaffold.isChart>
+      <p align="center"><select name="templateName">
+       <option value="">Choose an existing page Style</option>
+       <#foreach t in templates>
+       <option value="${t.name}">${t.name}</option>
+       </#foreach>
+      </select></p>
+     <#else>
+      <p align="center"><input type="text" name="templateName" size="18" value="" /></p>
+     </#if>
+      <p align="center"><button type="submit" class="general">Create</button></p>     
+     <#if !scaffold.isPartial && !scaffold.isChart !scaffold.isMap>
+      <p align="left"><input type="checkbox" name="overwrite" value="Y" />Overwrite existing page style.</p>
+     </#if>     
+     <p align="left"><b>Description</b></p>
+     <p align="left">${scaffold.description?if_exists}</p>
+    </td></tr></table>
+  </td><td>
+   <div align="right"><a class="expand_pageStyleDesigner" href="#">Expand All</a>&nbsp&nbsp&nbsp<a class="collapse_pageStyleDesigner" href="#">Collapse All</a></div>
+    <@com.section2 "Page View Configuration - (${scaffold.name})", "100%">    
+     <p>${scaffold.notes?if_exists}</p>   
+       <div class="scaffold_list"> 
+            <#assign variableCounter = 0 >
+              <#foreach v in scaffold.variables>
+                 <#if v.type != "reference" && v.type != "columns_html">
+                    <@listVariable v />
+                  </#if>
+              </#foreach>
+        </div>
+    </@com.section2>
+  </td></tr></table>
+</form>
+<script>
+$().ready(function() {
+$("#accordion").accordion({ autoHeight: false });
+<#if scaffold.isChart>
+  renderChart();
+</#if>
+  $(document).ready(sortDropDownListByText);
+  $("input[name^='variable']").click(function(){
+    if ($(this).is(":checked")){
+      $(this).parent().find('.children').show('slow');
+    }else{
+      $(this).parent().find('.children').hide('slow');
+    }
+  });
+});
+function sortDropDownListByText() {
+    $("select" ).each(function() {
+        var selectedValue = $(this).val();
+        $(this).html($("option", $(this)).sort(function(a, b) {
+             return a.text == b.text ? 0 : a.text < b.text ? -1 : 1
+        }));
+        $(this).val(selectedValue);
+    });
+}
+        function moveUp(obj) {
+                var rightSel =  $(obj).parent().parent().find('select.csright');
+                var selectedDx = rightSel.find("option:selected");
+                var selectDx = rightSel.find("option");
+                var prev = selectedDx.first().prev();
+                var hPrev = selectedDx.find("[value=" + prev.val() + "]");
+    
+                selectedDx.each(function() {
+                    selectedDx.insertBefore(prev);
+                    //selectedDx.find("[value=" + $(this).val() + "]").insertBefore(hPrev); // HIDDEN SELECT
+                });
+                return false;
+        }
+
+        function moveDown(obj) {
+                var rightSel =  $(obj).parent().parent().find('select.csright');
+                var selectedDx = rightSel.find("option:selected");
+                var selectDx = rightSel.find("option");
+                var prev = selectedDx.last().next();
+                var hPrev = selectedDx.find("[value=" + prev.val() + "]");
+    
+                selectedDx.each(function() {
+                    selectedDx.insertAfter(prev);
+                    //selectedDx.find("[value=" + $(this).val() + "]").insertBefore(hPrev); // HIDDEN SELECT
+                });
+        }
+
+        function moveToFirst(obj) {
+            var rightSel =  $(obj).parent().parent().find('select.csright');
+            var selectDx = rightSel.find("option");
+            var selectedDx = rightSel.find("option:selected");  
+            var first = selectDx.first();
+            var hFirst = rightSel.find("[value=" + first.val() + "]");
+
+            selectedDx.each(function() {
+                if (selectedDx.val() != selectDx.val()) {	
+                	$(this).insertBefore(first);
+                }                
+                //rightSel.find("[value=" + $(this).val() + "]").insertBefore(hFirst);  // HIDDEN SELECT
+            });
+        }
+
+        function moveToLast(obj) {
+             var rightSel =  $(obj).parent().parent().find('select.csright');
+             var selectDx = rightSel.find("option");
+             var selectedDx = rightSel.find("option:selected");        
+             var last = selectDx.last();
+             var hLast = rightSel.find("[value=" + last.val() + "]");
+
+             selectedDx.each(function() {             		
+                    if (selectedDx.last().val() != selectDx.last().val())
+                    {
+                    	$(this).insertAfter(last);
+                    	last = this;
+                    }	                
+	                //rightSel.find("[value=" + $(this).val() + "]").insertAfter(hLast);    // HIDDEN SELECT                
+             });
+        }
+</script>
+
+</@>

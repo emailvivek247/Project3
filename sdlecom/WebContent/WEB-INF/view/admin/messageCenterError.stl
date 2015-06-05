@@ -1,0 +1,152 @@
+<#import "dashboardHeader.stl" as layout>
+<@layout.basic menu="system/messageCenter">
+
+	<style>
+
+		/* The following styles are just to make the page look nice. */
+
+		/* Workaround to show Arial Black in Firefox. */
+		@font-face
+		{
+			font-family: 'arial-black';
+			src: local('Arial Black');
+		}
+
+		*[contenteditable="true"]
+		{
+			padding: 10px;
+		}
+
+		#container
+		{
+			width: 960px;
+			margin: 30px auto 0;
+		}
+
+		#header
+		{
+			overflow: hidden;
+			/*padding: 0 0 30px;
+			border-bottom: 5px solid #05B2D2;*/
+			position: relative;
+		}
+
+		#headerLeft,
+		#headerRight
+		{
+			width: 100%;
+			overflow: hidden;
+		}
+
+		#headerLeft
+		{
+			padding: 10px 1px 1px;
+			text-align:center;
+		}
+
+		#headerLeft h2,
+		#headerLeft h3
+		{
+			margin: 0;
+			overflow: hidden;
+			font-weight: normal;
+		}
+
+		#headerLeft h2
+		{
+			font-family: "Arial Black",arial-black;
+			font-size: 2.6em;
+			line-height: 1.1;
+			text-transform: uppercase;
+		}
+
+		#headerLeft h3
+		{
+			font-size: 1.3em;
+			line-height: 1.1;
+			margin: .2em 0 0;
+			color: #666;
+		}
+
+		#footer{
+			text-align:center;
+		}
+		#welcomMsgCenterTitle{
+			text-align:center;
+		}
+		#msgContentTitle h2{
+			text-align:left;
+		}
+		#successMessageContainer{
+			width:700px;
+			background:#fff;
+			padding:40px;
+			margin:0 auto;
+			-webkit-border-radius: 25px;
+			-moz-border-radius: 25px;
+			border-radius: 25px;
+			border:10px solid #ff0000; 
+		}
+		#successCont{
+			font-size:2em;
+			display:block;
+			margin-bottom:10px;
+		}
+		#successSubCont{
+			font-size:1.5em;
+		}
+	</style>
+
+<div id="container">
+	<div id="successMessageContainer">
+		<div id="headerLeft">
+			<span id="successCont">
+				Oops, something went wrong!
+			</span>
+			<span id="successSubCont">
+				<a href="${request.getContextPath()}/admin/messageCenter.do" target="_new">Click here to go back to Message Center Admin and try again</a>
+			</span>
+		</div>
+	</div>
+<div id="footer">
+	<hr>
+	<p id="copy">
+		Copyright &copy; 2015, <a class="samples" href="www.granicus.com">Granicus</a>
+	</p>
+</div>
+   <script type="text/javascript">
+	     $(document).ready(function() {
+	     
+			$( "#tabs" ).tabs({
+		                cookie: {
+		                    // store cookie for a day, without, it would be a session cookie
+		                    expires: 0
+		                },
+		                select:function(event, ui) {
+		                     $(".important").hide();                                           
+		                }
+		            });
+		            $('#mainContent').show();
+	      });
+
+			
+    	function publishMessages() {
+			messageContentOfDiv = document.getElementById("messageContentDiv");
+			messageContentOfDivVal = messageContentOfDiv.innerHTML;
+    		document.getElementById("htmlMessageContent").value = messageContentOfDivVal;
+    	}
+    	
+    	function valForm(form){
+    		messageContentOfDiv = document.getElementById("messageContentDiv");
+			messageContentOfDivVal = messageContentOfDiv.innerHTML;
+    		
+	    	if(messageContentOfDivVal == null || messageContentOfDivVal == '' || messageContentOfDivVal == "<p><br></p>"){
+	    			var cancelMsg = confirm("Message Center has no content. Do you wish to erase everything?");
+					if (cancelMsg == false){
+					    return false;	    			
+					}
+			}
+    	}	      
+	</script>
+
+</@>

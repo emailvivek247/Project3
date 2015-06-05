@@ -1,0 +1,25 @@
+<#macro displayOption(selectedValue, optionValue, optionText)>
+  <#if jumperAction?has_content>
+    <#assign _optionValue = jumperAction + optionValue>
+  <#else>
+    <#assign _optionValue = optionValue>
+  </#if>
+  <#if jumperParams?has_content>
+    <#assign _optionValue = _optionValue + "&" + jumperParams>
+  </#if>
+  <option value="${_optionValue}"<#if selectedValue == optionValue> selected</#if>>${optionText}</option>
+</#macro>
+<#assign serverConfiguration = new("net.javacoding.xsearch.config.ServerConfiguration")>
+<#assign _menu_sc = serverConfiguration.getServerConfiguration()>
+<td style="text-align:right" align="right"><span id="jumper" style="text-align:right" align="right">
+<form name="sys" id="sys" action="desktop.do" method="GET">
+ <label class="highlight" for="sys">Select Index: </label>
+ 	<select class="jumpmenu" name="sys" id="sys" onChange="location=options[selectedIndex].value;">
+  <#foreach _menu_dc in _menu_sc.getDatasetConfigurations(true)>
+   <#call displayOption("?indexName=" + indexName, "?indexName=" + _menu_dc.name, _menu_dc.name)>
+  </#foreach>
+ </select>
+<noscript><input type="submit" value="Go"></noscript>
+</form>
+</span></td>
+

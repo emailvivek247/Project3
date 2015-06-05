@@ -1,0 +1,28 @@
+## $Id: systemMenu.vm 5790 2009-07-07 06:32:53Z cylu $
+## Renders top-level and sub-level tabs
+#if( ! $indexName )
+  #set( $indexname = $dc.getName() )
+#end
+#macro( displayTab $selectedTab $linkShortName $link $text $imageName $isNewWindow )
+  #if($isNewWindow == "true")
+ 	 <li class="headlink"><a class="noBorder" style="color:#EDF7F7" href="$link" target="_blank">
+  #else
+  	<li class="headlink"><a class="noBorder" style="color:#EDF7F7" href="$link">
+  #end
+  #if($imageName != "")
+  	<img src="images/$imageName" width="24" height="24" border="0" alt=""/><br/>
+  #end
+  #if($selectedTab == $linkShortName)<b>#end
+  $text#if($selectedTab == $linkShortName)</b>#end  
+  </a></li>
+#end
+  <ul id="cssdropdown"> 
+  #displayTab( $selectedToptab 'dashboard'         'desktop.do'           'Desktop'  ''    'false'    )
+  #displayTab( $selectedToptab 'siteAdmin'         'preference.do'        'Site Administration'     ''    'false' )
+  #set($isSecurityEnabled = $request.getServletContext().getInitParameter("isSecurityEnabled") )
+  #if($isSecurityEnabled == "true")
+	  #displayTab( $selectedToptab 'securityAdministration'         'securityadministration.do'        'Security'     ''    'false' )
+	  ##displayTab( $selectedToptab 'alertAdministration'         'configAlertSchedule.do'        'Alerts'     ''    'false' )
+  #end
+  #displayTab( $selectedToptab 'instanceJob'        'instanceJob.do'        'Instance Timer'  ''    'false'    )     
+ </ul>

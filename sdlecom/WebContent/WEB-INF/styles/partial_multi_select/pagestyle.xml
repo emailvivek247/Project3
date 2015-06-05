@@ -1,0 +1,20 @@
+<scaffold order="10" isPartial="true">
+  <name>Multi-Selection</name>
+  <description><![CDATA[
+  Select multiple values for a field. It generates a new file "multiSelect_&lt;column name&gt;.stl", 
+  and applicable to templates with "narrowBy_extra.stl".
+  ]]></description>
+  <variables>  
+    <separator header="Select Column" position="start" status="open"/>
+    <multi-select-column-variable name="columnName">
+      <prompt>Select Column</prompt>
+      <description>Choose a column with a limited list of values.</description>
+      <columnSelector>isFilterable,isString</columnSelector>
+      <isShowContent>true</isShowContent>
+    </multi-select-column-variable>
+    <separator position="end"/>
+  </variables>
+  <operations>
+    <include type="prepend" withColumnName="true" file="multiSelect.stl" toFile="narrowBy_extra.stl"/>
+  </operations>
+</scaffold>

@@ -1,0 +1,21 @@
+<#noparse>
+<style type="text/css">
+.resultsPerPage {float:right}
+.resultsPerPage a.disabled{ text-decoration: none; }
+.resultsPerPage a.enabled{}
+</style>
+<div class="resultsPerPage" >
+  <font size='2'>Items per page:
+    <#assign noStartNoLengthQueryString = pageStyleUtil.addOrSetQuery(noStartQueryString, "length", null)>
+    <#assign resultsPerPage = [</#noparse>${numberResultList}<#noparse>]>
+    <#list resultsPerPage as x>
+      <#if (searchResult.length == x) >
+        <a class="disabled" >${x}</a>
+      <#else>
+        <a href="?${noStartNoLengthQueryString}&length=${x}" class="enabled">${x}</a>
+      </#if>
+      <#if x_has_next>|</#if>
+    </#list>
+  </font>
+</div>
+</#noparse>

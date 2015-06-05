@@ -1,0 +1,45 @@
+<#noparse>
+<#assign num_pages = (searchResult.total/searchResult.length)?int>
+
+<#if num_pages*searchResult.length < searchResult.total>
+ <#assign num_pages = num_pages + 1>
+</#if>
+<#assign current_page_index = (searchResult.start/searchResult.length)?int + 1>
+
+<#assign startItemIndex = (current_page_index-1)*searchResult.length + 1>
+<#assign endItemIndex = current_page_index*searchResult.length>
+<#if (endItemIndex>searchResult.total)>
+ <#assign endItemIndex = searchResult.total>
+</#if>
+ <TotalResults>${total}</TotalResults>
+ <TotalPages>${num_pages}</TotalPages>
+ <CurrentPage>${current_page_index}</CurrentPage>
+ <PageLength>${length}</PageLength>
+ <StartItemIndex>${startItemIndex}</StartItemIndex>
+ <EndItemIndex>${endItemIndex}</EndItemIndex>
+ <RequestProcessingTime>${searchTime}</RequestProcessingTime>
+ <QueryString><![CDATA[${q}]]></QueryString>
+<Items>
+ 
+  <#if searchResult.docs?has_content>
+  <#foreach doc in searchResult.docs>
+  <Item>
+</#noparse>
+
+  <#foreach c in displayColumns>
+    <#assign column = dc.getColumn(c)>
+   <${c}><![CDATA[<#if column.getAnalyzerName() = "com.fdt.sdl.analyzer.DateAnalyzer">
+   <#if doc.get("</#noparse>${c}<#noparse>")?has_content>
+	   <#noparse>${pageStyleUtil.format(doc.get("</#noparse>${c}<#noparse>"), "yyyymmdd", "mm/dd/yyyy")}</#noparse>
+   </#if>
+   <#elseif column.isDate><#noparse>${date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("</#noparse>${c}<#noparse>"))}</#noparse>
+   <#elseif column.isNumber><#noparse>${number.format("###0.##",doc.get("</#noparse>${c}<#noparse>"))}</#noparse>
+   <#else><#noparse>${searchResult.highlight(doc, "</#noparse>${c}<#noparse>")}</#noparse></#if>]]></${c}>
+  </#foreach>
+
+<#noparse>
+  </Item>
+  </#foreach>
+  </#if>
+</Items>
+</#noparse>

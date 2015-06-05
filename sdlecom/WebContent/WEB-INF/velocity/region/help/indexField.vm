@@ -1,0 +1,20 @@
+<h3>Index Field Types</h3>
+
+The following are the types of fields available:
+<ol>
+<li><b>Keyword</b>: The text stored in the value part of this field is indexed and stored in the index.</li>
+<li><b>UnIndexed</b>: The text stored in the value part of this field is stored in the index but is not indexed, so it can not be searched.</li>
+<li><b>UnStored</b>: The text stored in the value part of this field is analyzed with a specific tokenizer and indexed so that it can be searched but is not stored in the index.</li>
+<li><b>Text</b>: The text stored in the value part of this field is analyzed with a specific tokenizer and indexed so that it can be searched but is stored in the index.</li>
+<li><b>Compressed Text</b>: Same as Text, but it is compressed in the index. Usually good for long strings.</li>
+<li><b>Only as Parameter</b>: Only passed to Child SQLs as parameter. It's not put into the index.
+<li><b>Keyword + Boost Factor</b>: Just like <b>Keyword</b>. If it's a number, it'll be used as a boost factor.
+<li><b>Only as Boost Factor</b>: If it's a number, it'll be used to boost the document ranking. The value itself is not put into the index.
+</ol>
+<p>
+Sometimes it is useful to store indexed text in the index itself using <b>Text</b> or <b>Compressed Text</b> fields. 
+For example, if you want to show highlighted search words in the original text. 
+Having the original text cached in the index makes this possible. <br />
+For applications where search results need to show only files matching a query, using an <b>UnStored</b> field saves room in the index. <br />
+<b>UnIndexed</b> fields are often used to store the original document type (e.g., file, Web URL, database query to get the indexed data, etc.) and the original data location (e.g., file path, URL, etc.).
+<p>

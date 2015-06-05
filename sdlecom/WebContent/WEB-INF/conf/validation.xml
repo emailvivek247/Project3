@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE form-validation PUBLIC "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.0//EN"
+          "http://jakarta.apache.org/commons/dtds/validator_1_0.dtd">
+<!--
+  Copyright 2004.
+
+  $Id: validation.xml 5790 2009-07-07 06:32:53Z cylu $
+-->
+<form-validation>
+  <formset>
+    <form name="configConnectionForm">
+      <field property="jdbcdriver" depends="required">
+        <arg0 key="jdbcdriver"/>
+      </field>
+      <field property="dbUrl" depends="required">
+        <arg0 key="dburl"/>
+      </field>
+      <field property="dbUsername" depends="required">
+        <arg0 key="dbusername"/>
+      </field>
+      <field property="dbPassword" depends="required">
+        <arg0 key="dbpassword"/>
+      </field>
+      <field property="dbcpValidationQuery" depends="required">
+        <arg0 key="dbcpvalidationquery"/>
+      </field>
+    </form>
+  </formset>
+</form-validation>

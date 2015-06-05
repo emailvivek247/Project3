@@ -1,0 +1,486 @@
+<#import "dashboardHeader.stl" as layout>
+
+<@layout.basic menu="system/dashboard">
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/operation.js"></script>
+<#include "/WEB-INF/velocity/region/dashboard/includeFloatieStyleJavascript.vm" parse="n">
+<br />
+
+<@com.errorMarkup/>
+<@com.messageMarkup/>
+
+<#macro warn(warning)><b>${warning}</b></#macro>
+<#macro prompt(promptname)>  <b>${promptname}:</b></#macro>
+<#assign indexStatus = new("net.javacoding.xsearch.status.IndexStatus")>
+<#assign schedulerTool = new("net.javacoding.xsearch.utility.SchedulerTool")>
+<#assign dirSizeChecker = new("net.javacoding.xsearch.core.DirectorySizeChecker")>
+<#assign sm = new("net.javacoding.xsearch.search.searcher.SearcherManager")>
+<#assign vmTool = new("net.javacoding.xsearch.utility.VMTool")>
+<#assign fileUtil = new("net.javacoding.xsearch.utility.FileUtil")>
+
+<form name="zs" id="zs" method="get" action="search.do" onsubmit="return clickSearch();">
+    <input type="hidden" name="indexName" id="indexName" value="" />
+</form>
+<style>
+.ui-tabs .ui-tabs-panel {  border-width: 1px; }
+</style>
+<div id="tabs" class="maindashboard dashboardContent"  width="80%"> 
+      <ul> 
+            <li><a href="#tabs-1">Indexes</a></li> 
+            <li><a href="scheduledTasks.admin">Scheduled Tasks</a></li>
+            <li><a href="searchReport.admin">Search Usage</a></li> 
+      </ul> 
+    <div id="tabs-1"> 
+        <form name="frmIndexAction" id="frmIndexAction" method="post" action="desktop.do">
+        <input type="hidden" name="act" id="action" value="list" />
+        <input type="hidden" name="indexNameToCopy" id="indexNameToCopy" value="" />
+        <p style="width:90%" class="center">
+          <span style="font-weight:bold;">Search Indexes:</span>          
+          <input type="text" id="txtSearch" name="txtSearch" maxlength="20" size="55" />&nbsp;
+          <img id="imgSearch" src="${request.getContextPath()}/resources/styles/images/searchIcon.png" alt="Cancel Search" title="Cancel Search" style="cursor:pointer;" />          
+        </p>
+        <p style="width:90%" align="right"><input type="button" name="" id="toggleIndexDetails" value="Show Index Details"/></p>
+        <table id="tblSearch" class="xsearchtable" style="width:90%">
+        <thead>
+        <tr>
+          <th width="100px"><input type="checkbox" name="indexSelectAll" id="indexSelectAll" /> Select</th>
+          <th colspan=2>Name</th>
+          <th nowrap>Size(MB)</th>
+          <th width="150px" nowrap>Indexing Actions Created</th>
+          <th width="150px" nowrap>Indexing Actions Enabled</th>
+          <th nowrap colspan="2">Actions</th>
+        </tr>
+        </thead>
+        <#assign totalSchedulesSetCount = 0>
+        <#assign totalEnabledSchedulesCount = 0>
+        <#foreach dc in dcs>
+          <#assign indexName = dc.name>
+          <tr bgcolor="#eeeeee">
+            <td align="center"><input type="checkbox" name="indexSelect" id="indexSelect" value="${indexName}" /></td>
+            <td colspan=2 align="center" style="text-weight:bold" nowrap><a href="configBasic.do?indexName=${indexName}" <@com.tip 'Configure the index'/> > ${indexName}  (${dc.displayName})</a></td>
+          <#if !dc.isValid()>
+            <td colspan="5" class="error">The configuration file is corrupt.</td>
+          <#else>
+            <td nowrap align=right>
+              ${dirSizeChecker.init(dc).getIndexDirectorySizeInMB()?string("0.##")}
+            </td>
+            <td nowrap align=right>
+              <#if dc.schedules?has_content><#assign totalSchedulesSetCount = totalSchedulesSetCount + dc.schedules?size>${dc.schedules?size}<#else>None</#if>
+            </td>
+            <td nowrap align=right>
+                <#assign enabledScheduleCount = 0>
+                <#foreach schedule in dc.schedules>
+                      <#if schedule.isEnabled >
+                        <#assign enabledScheduleCount = enabledScheduleCount + 1>
+                      </#if>                      
+                </#foreach>
+                <#if enabledScheduleCount &gt; 0 ><#assign totalEnabledSchedulesCount = totalEnabledSchedulesCount + enabledScheduleCount>${enabledScheduleCount}<#else><#if dc.schedules?has_content>0<#else>None</#if></#if>
+            </td>
+            <td valign="middle" align="right" nowrap>
+            	<#include "dashboard/action_list.stl">
+            </td>
+            <td>
+          <button type="button" class="go" onClick="jumptolink('action${dc_index}')">Go</button>
+            </td>
+          </tr>
+          <tr class="indexDetails">
+            <td>&nbsp;</td>
+            <td colspan="7">
+              <table width="100%" border="0">
+               <tr>
+                <td align="left">
+                  <ul class="ulstyle">
+                  <#if !U.isEmpty(indexStatus.getError(indexName))>
+                    <li><@warn indexStatus.getError(indexName)/></li>
+                  </#if>
+                  <#if dc.workingQueueDataquery?has_content && U.isEmpty(dc.workingQueueDataquery.sql) && dc.dataSourceType==0>
+                    <li><a href="configWorkingQueue.do?indexName=${indexName?if_exists}"><@warn "Configure query to fectch document list"/></a></li>
+                  </#if>
+                  <#if schedulerTool.isRunning(dc)>
+                    <li><a href="showIndexLog.do?indexName=${indexName?if_exists}">${fileUtil.readFile(schedulerTool.getRunningfile(dc))?if_exists}</a>
+                    <#assign _time = vmTool.longToDate(schedulerTool.getRunningfile(dc).lastModified())>
+                     since ${_time?string("yyyy-MM-dd HH:mm:ss")}
+                    </li>
+                  </#if>
+                  <li>Index Directory: ${dc.getIndexDirectoryFile()}
+                    <#if !vmTool.checkExists(dc.getIndexDirectoryFile())>
+                      <@warn "(Directory does not exists! <a href='configBasic.do?indexName=" + indexName + "'>Edit directory setting</a>)"/>
+                    </#if>
+                  </li>
+                  <#if !U.isEmpty(dc.subscriptionUrl)>
+                   <li>
+                    Subscribing ${dc.subscriptionUrl}
+                   </li>
+                  </#if>
+                  <li>
+                  <#if dc.isScheduled>
+                    <a href="listSchedules.do?indexName=${indexName}">Scheduled</a>:
+                    <ul>
+                    <#foreach schedule in dc.schedules>
+                      <#if schedule.isEnabled >
+                        <li><a href="configSchedule.do?indexName=${indexName}&indexingMode=${schedule.indexingMode?html}">
+                        ${schedule.indexingMode},
+        	            <#if schedule.isInterval>
+        	              Every ${schedule.interval?if_exists} minutes
+        	            <#else>
+        	              Cron Setting [0 ${schedule.cronSetting?if_exists}]
+                        </#if>
+                        </a></li>
+                      </#if>
+                    </#foreach>
+                    </ul>
+                  <#else>
+                    <a href="listSchedules.do?indexName=${indexName}">Not Scheduled</a>
+                  </#if>
+                  </li>
+                  <li>
+                    <span <@com.tip 'This is the range of modified time of already retreived and indexed Documents'/> >Indexed Content Time Span: ${indexStatus.getExistingPeriodTable(dc)?if_exists}</span>
+                  </li>
+                  <#assign searcherProvider = sm.getSearcherProvider(dc.name)?if_exists>
+                  <#if searcherProvider?has_content>
+                    <#if dc.isInMemorySearch>
+                    <li>
+                      <a href="configSearchInMemory.do?indexName=${indexName?if_exists}" <@com.tip 'Choose to load the whole index into memory or simply leave it on hard disk'/>>Search Mode</a>:
+                      <#if searcherProvider.isInMemorySearch()>
+                        Loaded whole index into Memory
+                      <#else>
+                        Fell back to disk-based index search because index is larger than <a href="http://www.google.com/search?q=increase+jvm+out+of+memory" target="_blank">available jvm memory</a>.
+                      </#if>
+                    </li>
+                    </#if>
+                  </#if>
+                  <#if dc.defaultTemplateName?has_content>
+                    <#assign t = templateUtil.getTemplate(indexName, dc.defaultTemplateName)>
+                    <#if t?has_content>
+                      <li><a href="listTemplates.do?indexName=${indexName?if_exists}" <@com.tip 'Choose a default template'/>>Default Template</a>: <a href="editTemplate.do?indexName=${indexName?if_exists}&templateName=${dc.defaultTemplateName}" <@com.tip 'Edit this template'/>>${t.getLongname()?if_exists}(${dc.defaultTemplateName})</a></li>
+                    </#if>
+                  <#else>
+                    <li><@warn "No default display template!"/>: <a href="listScaffolds.do?indexName=${indexName?if_exists}">Create Template</a></li>
+                  </#if>
+                  </ul>
+                </td>
+               </tr>
+              </table>
+            </td>
+          </tr>
+          </#if>
+        </#foreach>
+        </table>
+        <table width="80%" align="center" style="text-align:center;" border="0">
+            <tr>
+                 <td style="display:inline;">
+                 <div>
+                    <button type="submit" name="btnCreatee" id="btnCreate" value="#createIndexDialog">Create Index</button>
+                    <button type="submit" name="btnDelete" id="btnDelete"  onclick="clickDelete(); return false;">Delete Index(es)</button>
+                    <button type="submit" name="btnCopy" id="btnCopy"  onclick="clickCopy(); return false;">Copy Index</button>
+                    <button type="submit" name="btnDownload" id="btnDownload"  onclick="clickDownload(); return false;">Download Index Configuration(s)</button>
+                    <#if totalSchedulesSetCount &gt; 0 && (totalEnabledSchedulesCount &lt; totalSchedulesSetCount)>
+                        <a name="enableTimers" id="enableTimers" href="">Enable All Timers</a>
+                    </#if>
+                    <#if totalSchedulesSetCount &gt; 0 && totalEnabledSchedulesCount &gt; 0 >
+                        <a name="disableTimers" id="disableTimers" href="">Disable All Timers</a>
+                    </#if>
+                </div>    
+                </td>   
+            </tr>
+        </table>
+    </form>
+    <form name="uploadForm" id="uploadForm" method="post" action="upload.do" enctype="multipart/form-data">
+        <table width="70%" align="center" border="0">               
+          <tr>
+             <td align="right" style="padding:1em;">
+                        <input type="file" name="file1" id="file1" size="40" />
+             </td>
+             <td style="padding:1em;">
+                    <button type="submit" name="btnUpload" id="btnUpload">Upload Zipped Index Configuration(s)</button>                        
+             </td>
+          </tr>
+          
+        </table>
+    </form>
+</div>    
+
+
+<div id="divEnableTimers" class="modal" title="Enable Timers on All Indexes">
+    Before enabling timers for all the indexes please check the below items, <br /><br />
+    1. Please make sure you do not have any instance level timers turned on that can conflict with the index level timers. <br /><br />
+    2. Enabling timers on all indexes will enable the all the timers. Please make sure there are no undesired indexing actions created on the indexes.<br /><br />
+    Do you want to enable timers for all the indexes? <br /><br />  
+    <div id="divEnableTimers_Message" style="color:#ED1C43;font-weight:bold;"></div>      
+</div>
+<div id="divDisableTimers" class="modal" title="Disable Timers on All Indexes">
+    This action will disable only the timers set at the index level for all the indexes. <br /><br /> 
+    The instance level timers will not be disabled. <br /><br />
+    Do you want to disable timers for all the indexes?    
+</div>
+<form name="downloadForm" method="post" action="download.do">
+<input name="indexesToDownload" type="hidden" value=""/>
+</form>
+
+<div id="boxes">
+	<#include "createIndex.stl">
+	<div id="mask"></div>	
+</div>
+<div style="text-align:right;width:100%;font-size: 12px;">
+	Build Number: ${pageStyleUtil.getBuildVersion()}&nbsp;&nbsp;|&nbsp;&nbsp;Build Date&nbsp;${pageStyleUtil.getBuildDate()}
+</div>
+<script type="text/javascript">	
+ 		var limit="0:5"	
+ 	    var refreshStatus = "refresh"; 
+		$(document).ready(function() {		   
+      		$("#tabs").tabs(); 
+			$('.indexDetails').hide()
+			$( "#btnCreate" ).button({ icons: {primary:'ui-icon-plus'} });
+			$( "#btnDelete" ).button({ icons: {primary:'ui-icon-trash'} });
+			$( "#enableTimers" ).button({ icons: {primary:'ui-icon-play'} });
+			$( "#disableTimers" ).button({ icons: {primary:'ui-icon-stop'} });
+			$( "#btnCopy" ).button({ icons: {primary:'ui-icon-copy'} });
+			$( "#btnDownload" ).button({ icons: {primary:'ui-icon-disk'} });
+			$( "#btnUpload" ).button({ icons: {primary:'ui-icon-arrowthickstop-1-n'} });
+			$('#cssdropdown li.headlink').hover(
+			function() { $('ul', this).css('display', 'block'); },
+			function() { $('ul', this).css('display', 'none'); });   	
+			$('button[name=btnCreatee]').click(function(e) {
+				e.preventDefault();
+				var id = $(this).attr('value');
+				var maskHeight = $(document).height();
+				var maskWidth = $(window).width();
+				$('#mask').css({'width':maskWidth,'height':maskHeight});
+				$('#mask').fadeIn(200);
+				$('#mask').fadeTo("fast",0.8);
+				var winH = $(window).height();
+				var winW = $(window).width();				
+				//$(id).css('top',  winH/2-$(id).height()/2);
+				//$(id).css('left', winW/2-$(id).width()/2);
+				//$(id).fadeIn(400);
+				$('#createIndexDialog').css('left', winW/2-$('#createIndexDialog').width()/2);				
+				$('#createIndexDialog').show();
+			});
+			$('#submitCreate').addClass('disabled');
+			$("#submitCreate").attr("disabled", "disabled");  
+			
+			$('.window .closeIndexCreation').click(function (e) {
+				e.preventDefault();
+				$('#mask').hide();
+				$('.window').hide();
+				$('.errorListItem').remove();
+    			$('.successListItem').remove();
+			});
+			//$('#mask').click(function () {
+			//	$(this).hide();
+			//	$('.window').hide();
+			//});
+			$("#indexSelectAll").click(function() {
+				if ($(this).is(':checked') == true) { 
+           			$('input[name=indexSelect]').attr('checked', true);
+           		}
+           		else
+           		{
+           			$('input[name=indexSelect]').attr('checked', false);   
+           		}
+           });
+           $('input[name=indexSelect]').click(function(e) {
+				if ($(this).is(':checked') == false) { 
+           			$('#indexSelectAll').attr('checked', false);
+           		}           		
+           });
+           $('#toggleIndexDetails').click(function() {
+           		$('.indexDetails').toggle();
+           		if ( $('.indexDetails').is(":visible") ) {
+					$('#toggleIndexDetails').val("Hide Index Details");
+				}
+				else
+				{
+					$('#toggleIndexDetails').val("Show Index Details");
+				}
+           });
+           $('#toggleTimers').click(function() {
+               if ( $('.indexDetails').is(":visible") ) {
+                    $('#toggleIndexDetails').val("Hide Index Details");
+                }
+                else
+                {
+                    $('#toggleIndexDetails').val("Show Index Details");
+                }
+           });
+           
+           $('#mainContent').show();
+	   });
+            
+      jQuery.expr[":"].containsNoCase = function(el, i, m) {
+               var search = m[3];
+               if (!search) return false;
+               return eval("/" + search + "/i").test($(el).text());
+           };
+           jQuery(document).ready(function() {
+               jQuery('li:contains(\'DotNetNuke\')').css('color', '#0000ff').css('font-weight', 'bold');
+               
+               jQuery('#imgSearch').click(function() {
+               resetSearch();
+           });
+
+             jQuery('#txtSearch').keyup(function(event) {
+                 if (event.keyCode == 27) {
+                       resetSearch();
+                   }
+               });
+
+               jQuery('#txtSearch').keyup(function() {
+                   if (jQuery('#txtSearch').val().length > 1) {
+                       jQuery('#tblSearch tr').hide();
+                       jQuery('#tblSearch tr:first').show();
+                       jQuery('#tblSearch tr td:containsNoCase(\'' + jQuery('#txtSearch').val() + '\')').parent().show();
+                       jQuery('#imgSearch').show();
+                   }
+                   else if (jQuery('#txtSearch').val().length == 0) {
+                       resetSearch();
+                   }
+
+                   if (jQuery('#tblSearch tr:visible').length == 1) {
+                       jQuery('.norecords').remove();
+                       jQuery('#tblSearch').append('<tr class="norecords"><td colspan="5" class="Normal">No records were found</td></tr>');
+                   }
+               });
+           });
+
+           function resetSearch() {
+               jQuery('#txtSearch').val('');
+               jQuery('#tblSearch tr').show();
+               jQuery('.norecords').remove();
+               
+               jQuery('#txtSearch').focus();
+               if ( $('.indexDetails').is(":visible") ) {
+					$('#toggleIndexDetails').val("Hide Index Details");
+				}
+				else
+				{
+					$('#toggleIndexDetails').val("Show Index Details");
+				}
+           }
+           
+            if ($("#tblSearch").find("tr").size() > 1)
+		    {
+		    	$(function() {
+				     $("#tblSearch")
+					.tablesorter({ headers: { 0: { sorter: false}, 1: {sorter: false}, 2: {sorter: false}, 3: {sorter: false} } });
+					//Uncomment the below line to enable pagination
+					//.tablesorterPager({container: $("#pager")});
+				 });		          
+		    }
+           
+      $(document).ready(function() {
+      
+          var ops = "1";
+          
+          $("#enableTimers").click(function() {
+                $("#divEnableTimers_Message").empty();
+                $( "#divEnableTimers" ).dialog( "open" );           
+                return false;
+          });
+          $( "#disableTimers" ).click(function() {
+                $( "#divDisableTimers" ).dialog( "open" );           
+                return false;
+          });
+          
+          $('#customMessageDiv').hide();
+          
+          $( "#divEnableTimers" ).dialog({
+                autoOpen: false,
+                height: "auto",
+                width: 400,
+                modal: true,
+                resizable: false,
+                draggable: false,           
+                buttons: [
+                    {
+                        id: "btnEnableTimers",
+                        text: "Enable Timers",
+                        click: function() {
+                            var username = $("input#editusername").val();
+                            var firstName = $("input#editfirstName").val();
+                            var lastname = $("input#editlastName").val();
+                            var phoneNumber = $("input#editphoneNumber").val();
+                            var dataString = 'username='+ username + '&firstName=' + firstName + '&lastName=' + lastname + '&phoneNumber=' + phoneNumber;
+                            $("#btnUpdateDetails").hide();
+                            $("#btnCloseUpdateDetails").hide(); 
+                            $("img#processing").show();                     
+                            $.ajax({      
+                                type: "POST",
+                                url: "enableTimers.admin",
+                                success: function(data) {
+                                  $.each(data, function(i,item){
+                                         if (item.code == "SUCCESS") {
+                                            $( "#divEnableTimers" ).dialog("close");
+                                         } else if (item.code == "ERROR") {
+                                            var indexList = item.description.split(",");
+                                            var messageBuilder = "";   
+                                            $.each(indexList, function(index, value) { 
+                                               messageBuilder = messageBuilder + "<li>" + value + "</li>";
+                                            });
+                                            messageBuilder = "Error: Timers cannot be enabled <br /><br /> The below indexes have scheduled actions as a part of the at least one of the instance timers.<ul>" + messageBuilder + "</ul>";                                                                                     
+                                            $("#divEnableTimers_Message").append(messageBuilder);   
+                                         }      
+                                  });       
+                                },
+                                error:(function() { })
+                            });                    
+                        }
+                    },
+                    {
+                        id: "btnCancelEnableTimers",
+                        text: "Cancel",
+                        click: function() { ops = "0"; $( this ).dialog("close"); }
+                    }
+                ],
+                beforeClose: function(event, ui) { if(ops == "1") {location.reload(true);}}
+            });
+            
+            
+            $( "#divDisableTimers" ).dialog({
+                autoOpen: false,
+                height: 230,
+                width: 400,
+                modal: true,
+                resizable: false,
+                draggable: false,           
+                buttons: [
+                    {
+                        id: "btnDisableTimers",
+                        text: "Disable Timers",
+                        click: function() {
+                            var username = $("input#editusername").val();
+                            var firstName = $("input#editfirstName").val();
+                            var lastname = $("input#editlastName").val();
+                            var phoneNumber = $("input#editphoneNumber").val();
+                            var dataString = 'username='+ username + '&firstName=' + firstName + '&lastName=' + lastname + '&phoneNumber=' + phoneNumber;
+                            $("#btnUpdateDetails").hide();
+                            $("#btnCloseUpdateDetails").hide(); 
+                            $("img#processing").show();                     
+                            $.ajax({
+                                type: "POST",
+                                url: "disableTimers.admin",               
+                                success: function(data) {
+                                    $.each(data, function(i,item){
+                                         var elementID = "#" + item.code;   
+                                         if (item.code == "SUCCESS") {
+                                            $( "#divDisableTimers" ).dialog("close"); 
+                                         } else if (item.code == "ERROR") {
+                                             //Handle Later             
+                                         }                                               
+                                  });       
+                                },
+                                error:(function() { })
+                            });                   
+                        }
+                    },
+                    {
+                        id: "btnCancelDisableTimers",
+                        text: "Cancel",
+                        click: function() { ops = "0"; $( this ).dialog("close"); }
+                    }
+                ],
+                beforeClose: function(event, ui) { if(ops == "1") {window.location.href=window.location.href;}}
+            });  
+         });     
+</script>
+
+</@layout.basic>

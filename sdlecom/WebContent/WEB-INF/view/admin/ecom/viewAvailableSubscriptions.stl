@@ -1,0 +1,340 @@
+<#include "/admin/lib/include.stl" />
+<@loginLayout encoding="utf-8">
+<#assign form  =JspTaglibs["http://www.springframework.org/tags/form"]>
+<#assign spring=JspTaglibs["http://www.springframework.org/tags"]>
+<link rel="stylesheet" href="resources/styles/validationEngine.jquery.css" type="text/css" />
+<link rel="stylesheet" href="resources/styles/login.css" />
+<link rel="stylesheet" href="resources/styles/jquery-ui-1.8.11.base.css" />
+<link rel="stylesheet" href="resources/styles/jquery-ui-custom-ext.css" />
+<link rel="stylesheet" href="resources/styles/prompt.css" />
+<script type="text/javascript" src="resources/javascripts/jquery.min.js"/></script>
+<script type="text/javascript" src="resources/javascripts/jquery.browser.js"></script>
+<script type="text/javascript" src="resources/javascripts/jquery-ui.min.js"/></script>
+<script type="text/javascript" src="resources/javascripts/jquery.validationEngine-en.js"></script>
+<script type="text/javascript" src="resources/javascripts/jquery.validationEngine.js"></script>
+<script type="text/javascript" src="resources/javascripts/prompt.js"></script>
+<script type="text/javascript" src="resources/javascripts/jquery.tools.tip_overlay.min.js"></script>
+
+<style>
+div.ADCSI {
+    width:700px;
+}
+span.ADCSI_leftcol {
+    width: 150px;
+    text-align:right;
+    display: inline-block;
+}
+span.ADCSI_rightcol {
+    width: 650px;
+}
+
+table#subscriptionDetails {
+	border-collapse: collapse;
+	margin: 10px;
+}
+
+table#subscriptionDetails td {
+	padding: 5px 5px;
+}
+
+table#subscriptionDetails tr.paid {
+	color: #527838;
+}
+
+table#subscriptionDetails tr.unPaid {
+	color: #ED1C43;
+}
+
+th.header{
+	color: #039;
+	border-bottom: 2px solid #6678B1;
+	padding: 5px 5px;
+}
+
+td.footer{
+	color: #039;
+	border-top: 2px solid #6678B1;
+	padding: 5px 5px;
+}
+.ui-button-text {
+	color:white;
+}
+a.ui-state-hover span.ui-button-text {
+	color:#734d99;
+}
+span.alert {
+	color: #ED1C43;
+}
+.right {
+	text-align:right;
+}
+
+
+.simple_overlay {
+	display:none;
+	z-index:10000;
+	background-color:#333;
+	width:675px;
+	min-height:200px;
+	border:1px solid #666;
+	-moz-box-shadow:0 0 90px 5px #000;
+	-webkit-box-shadow: 0 0 90px #000;
+}
+.simple_overlay .close {
+	background-image:url('resources/images/overlayclose.png');
+	position:absolute;
+	right:-15px;
+	top:-15px;
+	cursor:pointer;
+	height:35px;
+	width:35px;
+}
+.details {
+	margin:10px;
+	color:#fff;
+	text-align:center;
+}
+
+.details_inner {
+	text-align:left;
+	margin:10px;
+}
+.details h3 {
+	color:#aba;
+	font-size:15px;
+	margin:0 0 -10px 0;
+}
+.toolTipHandler {
+	cursor:pointer;
+}
+</style>
+<div class="content">
+	<div style="width: 650px; margin-left: auto;margin-right:auto;margin-top:100px;">
+		<div id="ADCSI" class="ADCSI" style="margin-top: 0px; margin-bottom: 12px;">
+			<div class="ADCSI_title" id="ADCSI_title">
+				<span style="width:40%;text-align:left;vertical-align:top;display:inline-block;">
+					<i class="fa fa-plus green" style="font-size:18px;"></i>&nbsp;<b><@spring.message code="form.name.addNewSubscription" /></b></span>
+				<span style="width:58%;text-align:right;display:inline-block;">
+					<i class="fa fa-info-circle blue" style="font-size:15px;"></i>&nbsp;<a href="accountInformation.admin"><@spring.message code="security.ecommerce.label.returnToAccountInfo" /></a>&nbsp;(${user.username})
+				</span>
+			</div>
+			<form id="frmAddSubscription" name="frmAddSubscription" action="addSubscription.admin" method="post" autocomplete="off">
+		    <center><h4><@spring.message code="security.ecommerce.message.addSubscription" /></h4></center>
+		    <div style="text-align: center;padding-top: 30px;padding-bottom: 10px;">
+				<#if FAILURE_MSG?has_content>
+					<span class="alert" style="text-align:left;">${FAILURE_MSG}</span>
+				</#if>
+				<#if BUSSINESS_EXCP?has_content>
+				    <span class="alert" style="text-align:left;">
+					Error: <br />
+					${BUSSINESS_EXCP}
+					</span>
+				</#if>
+			</div>
+			<div class="ADCSI_row">
+			<span class="ADCSI_rightcol" style="display: inline-block; ">
+				<span><b><@spring.message code="security.authentication.selectSite" /></b>
+					<select id="siteId" name="siteId" class="validate[required]" style="width:250px" tabindex="7">
+			            <#if sites?has_content>
+
+				            <#foreach site in sites>
+				               <#if (selectedSites?has_content)>
+		                          <#foreach siteId in selectedSites>
+		                                <#if (siteId == site.id?string)>
+		                                    <option value="${site.id}" selected>${site.getState()} - ${site.description}</option>
+		                                <#else>
+		                                    <option value="${site.id}">${site.getState()} - ${site.description}</option>
+		                                </#if>
+		                          </#foreach>
+		                      <#else>
+			                      <#if site.name == defaultSiteName>
+	                                  <option value="${site.id}" selected>${site.state} - ${site.description}</option>
+		                          <#else>
+		                              <option value="${site.id}">${site.state} - ${site.description}</option>
+		                          </#if>
+		                      </#if>
+		                    </#foreach>
+	                    </#if>
+	                </select>
+					<table width="100%" id="subscriptionDetails">
+						<th class="header" width="100px"><@spring.message code="security.ecommerce.label.select" />
+						</th>
+						<th class="header" width="400px"><@spring.message code="security.ecommerce.label.subscription" />
+						</th>
+						<th class="header" width="70px"><@spring.message code="security.ecommerce.label.fee" />
+						</th>
+						<th class="header" width="150px"><@spring.message code="security.ecommerce.label.subscriptionType" />
+						</th>
+					<#assign siteCounter = 0>
+					<#list sites as site>
+						<#assign siteCounter = siteCounter + 1>
+						<#assign accessList = site.getAccess()>
+						<tr class="subscriptioninfo site-${site.id}" style="display:none;">
+							<th class="siteName" colspan="4">${site.getState()} - ${site.description}
+								<#if site.getSubscriptionValidationText()?has_content>
+									<a class="toolTipHandler" title="${site.name} Subscription Rules"><img src="resources/images/info.png" rel="#${site.name}_subval"/></a>
+								</#if>
+								<div class="simple_overlay" id="${site.name}_subval">
+								<div class="details">
+									<h3>${site.name}</h3>
+									<h4><@spring.message code="security.ecommerce.alert.subscriptionRules" /></h4>
+									<div class="details_inner">
+										<p>
+											${site.getSubscriptionValidationText()}
+										</p>
+									</div>
+								</div>
+							</div>
+							</th>
+						</tr>
+						<#list  accessList as access>
+							<#assign isSubscribed = false >
+							<#if subscriptions?has_content>
+								<#list subscriptions as subscription>
+									<#if access.id = subscription.accessId>
+										<#assign isSubscribed = true >
+									</#if>
+								</#list>
+							</#if>
+							<#if access.isVisible()>
+								<tr class="subscriptioninfo site-${site.id}" style="display:none;">
+									<#if access.accessType="RECURRING_SUBSCRIPTION">
+				 		 				<#assign accessType = "recurring" />
+				 		 			<#elseif access.accessType="NON_RECURRING_SUBSCRIPTION">
+				 		 				<#assign accessType = "nonRecurring" />
+				 		 			<#elseif access.accessType="FREE_SUBSCRIPTION">
+				 		 				<#assign accessType = "free" />
+				 		 			</#if>
+				 		 			<#if isSubscribed>
+					 		 		<td><input type="checkbox" name="oldSubscription" class="accessGroup${siteCounter} ${accessType}" checked="checked" disabled="disabled" value="${access.id}" /></td>
+					 		 		<#else>
+					 		 		<td><input type="checkbox" class="accessGroup${siteCounter} ${accessType}" name="newSubscription" value="${access.id}" /></td>
+					 		 		</#if>
+
+					 		 		<td>${access.description}</td>
+					 		 		<td>${access.getSubscriptionFee().getFee()?string.currency}</td>
+					 		 		<td><#if access.accessType="RECURRING_SUBSCRIPTION">
+					 		 				<@spring.message code="security.ecommerce.label.recurring" />
+					 		 			<#elseif access.accessType="NON_RECURRING_SUBSCRIPTION">
+					 		 				<@spring.message code="security.ecommerce.label.payAsYouGo" />
+					 		 			<#elseif access.accessType="FREE_SUBSCRIPTION">
+					 		 				<@spring.message code="security.ecommerce.label.free" />
+					 		 			<#elseif access.accessType="CERTIFIED_NON_RECURRING_SUBSCRIPTION">
+					 		 				<@spring.message code="security.ecommerce.label.certified" />
+					 		 			</#if>
+					 		 		</td>
+					 		 	</tr>
+				 		 	</#if>
+						</#list>
+					 </#list>
+					 <tr>
+						<td class="footer" colspan="4"></td>
+					 </tr>
+					 </table>
+				</span>
+			</span>
+			</div>
+			<span class="alert" style="margin:30px; "><i class="fa fa-exclamation-circle red" style="font-size:15px;"></i>&nbsp;<@spring.message code="security.ecommerce.label.viewInformation" /></span>
+			<div style="text-align: center;padding-top: 30px;padding-bottom: 10px;">
+				<a name="btnAddSubscription" id="btnAddSubscription" style="display:none"><@spring.message code="security.ecommerce.addSubscription" /></a>
+			</div>
+
+			</form>
+	</div>
+</div>
+
+<script type="text/javascript">
+		$(document).ready(function(){
+		$('tr.subscriptioninfo').hide();
+					if ( $("#siteId").val()!="" ){
+						var siteIdTemp = ".site-" + $("#siteId").val();
+						$(siteIdTemp).show();
+						$("#btnAddSubscription").show();
+					} else {
+						$("#btnAddSubscription").hide();
+					}
+		});
+		$(function() {
+			$( "#btnAddSubscription" ).button({
+	            icons: {
+	                primary: "ui-icon-cart"
+	            }
+	        });
+	        $( "#btnCancel" ).button({
+	            icons: {
+	                primary: "ui-icon-alert"
+	            }
+	        });
+	        $("img[rel]").overlay();
+
+	        sortDropDownListByText();
+		});
+
+		$("#btnAddSubscription").click(function() {
+		if ($("input[name=newSubscription]:checked").val() != null) {
+			/* Planned to handle in Business Rule Validator on server side
+			var isValidAccessList = checkUniqueAccess();
+				if (!isValidAccessList) {
+					$.prompt('<@spring.message code="security.ecommerce.label.oneAccessPerTypePerSite" />');
+					return;
+				} */
+				$.prompt('<@spring.message code="security.ecommerce.label.confirmAddSubscription" />',{
+				    buttons:{Cancel:false,Confirm:true},
+				    focus:1,
+					submit: function(v,m,f){
+								if(m) { submitAddForm(); }
+								else { return true; }
+					}
+
+				});
+
+		} else {
+			$.prompt('<@spring.message code="security.ecommerce.label.noNewSubscription" />');
+		}
+		});
+
+		function checkUniqueAccess() {
+		    var isAccessListValid = true;
+			var availableSites = $("th.siteName").length;
+			var i=1;
+			while (i<=availableSites) {
+			   var name1 = "input.accessGroup" + i + ".recurring:checked";
+			   var name2 = "input.accessGroup" + i + ".nonRecurring:checked";
+			   var name3 = "input.accessGroup" + i + ".free:checked";
+			   if ($(name1).length > 1 || $(name1).length > 1 || $(name1).length > 1) {
+			   		isAccessListValid = false;
+			   		return isAccessListValid;
+			   }
+			   i++;
+			}
+			return isAccessListValid;
+		}
+
+		function submitAddForm() {
+			document.frmAddSubscription.submit();
+		}
+		$("#siteId").change(function () {
+			$('tr.subscriptioninfo').hide();
+			if ( $("#siteId").val()!="" ){
+				var siteIdTemp = ".site-" + $("#siteId").val();
+				$(siteIdTemp).show();
+				$("#btnAddSubscription").show();
+			} else {
+				$("#btnAddSubscription").hide();
+			}
+		});
+
+		function sortDropDownListByText() {
+		    $("select").each(function() {
+		        var selectedValue = $(this).val();
+		        var foption =$(this).find('option:first');
+		        var soptions = $("option:not(:first)", $(this)).sort(function(a, b) {
+		            return a.text == b.text ? 0 : a.text < b.text ? -1 : 1
+		        });
+		        $(this).html(soptions).prepend(foption);
+		        $(this).val(selectedValue);
+		    });
+		}
+
+</script>
+</@loginLayout>

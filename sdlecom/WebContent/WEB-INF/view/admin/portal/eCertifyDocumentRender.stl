@@ -1,0 +1,120 @@
+<#assign form  =JspTaglibs["http://www.springframework.org/tags/form"]>
+<#assign spring=JspTaglibs["http://www.springframework.org/tags"]>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><title>Arizona eCertify</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />		
+<link rel="shortcut icon" href="resources/custom_resources/images/favicon.ico"/>
+<link rel="stylesheet" href="resources/styles/validationEngine.jquery.css" type="text/css" />
+<link rel="stylesheet" href="resources/styles/login.css" />
+<link rel="stylesheet" href="resources/styles/jquery-ui-1.8.11.base.css" />
+<link rel="stylesheet" href="resources/styles/jquery-ui-custom-ext.css" />
+
+<link rel="stylesheet" href="resources/custom_resources/styles/jqueryui/custom.css" type="text/css" media="all"/>
+<link rel="stylesheet" href="resources/custom_resources/styles/screen.css" type="text/css" media="all"/>
+<!-- Skin stylesheet -->
+<link class="skins" rel="stylesheet" href="resources/custom_resources/styles/skins/silver.css" type="text/css" media="all"/>
+<link rel="stylesheet" type="text/css" href="resources/custom_resources/javascripts/fancybox/jquery.fancybox-1.3.0.css" media="screen"/>
+<!--[if IE 7]>
+<link rel="stylesheet" href="resources/custom_resources/styles/ie7.css" type="text/css" media="all"/>
+<![endif]-->
+
+<script type="text/javascript" src="resources/javascripts/jquery.min.js"/></script>
+<script type="text/javascript" src="resources/javascripts/jquery-ui.min.js"/></script>
+<script type="text/javascript" src="resources/javascripts/jquery.validationEngine-en.js"></script>
+<script type="text/javascript" src="resources/javascripts/jquery.validationEngine.js"></script>
+<script type="text/javascript" src="resources/javascripts/jquery.cookie.js"></script>
+
+
+
+<!-- Jquery and plugins -->
+<script type="text/javascript" src="resources/custom_resources/javascripts/fancybox/jquery.fancybox-1.3.0.js"></script>
+<script type="text/javascript" src="resources/custom_resources/javascripts/jquery.easing.js"></script>
+<script type="text/javascript" src="resources/custom_resources/javascripts/anythingSlider.js"></script>
+<script type="text/javascript" src="resources/custom_resources/javascripts/jquery.validate.js"></script>
+<script type="text/javascript" src="resources/custom_resources/javascripts/hint.js"></script>
+<script type="text/javascript" src="resources/custom_resources/javascripts/cufon.js"></script>
+<script type="text/javascript" src="resources/custom_resources/fonts/Colaborate_Thin.font.js"></script>
+<script type="text/javascript" src="resources/custom_resources/javascripts/browser.js"></script>
+<script type="text/javascript" src="resources/custom_resources/javascripts/custom.js"></script>
+
+<style>
+div.ADCSI {
+	width: 550px;
+}
+span.ADCSI_leftcol {
+	width: 150px;
+	text-align:right;
+	display: inline-block;
+}
+</style>
+
+<style type="text/css" media="print">
+BODY {display:none;visibility:hidden;}
+</style>
+
+
+</head>
+<body class="page">
+
+	<#if SDLDMSDocument?has_content && SDLDMSDocument.getFileExtension()?has_content>
+			
+				<#assign fileExtension = SDLDMSDocument.getFileExtension() >
+				<#if fileExtension?contains("tif")>	
+					<#assign converter = new("com.fdt.common.util.TIFFToPDFConverter")>					
+					<#if (converter.convert(SDLDMSDocument.getFile(), "", 159,159,159,90,0,true,baos,false,1,true) == true)>  		 
+						${response.reset()}
+						${response.resetBuffer()}
+						${response.setContentType("application/pdf")}
+						${response.setHeader("Content-Disposition",  " inline; filename=document.pdf" )}
+						${response.setHeader("Expires", " 0")}
+						${response.setHeader("Cache-Control", " must-revalidate, post-check=0, pre-check=0" )} 
+						${response.setHeader("Pragma" , "public")}      
+						${baos.writeTo(response.getOutputStream())}
+						${response.getOutputStream().flush()}
+					<#else>
+						<br />
+						<br />
+						<center><b>Image is Unavailable. Please contact Granicus Support at support@amcad.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
+						<center><img title="Preview" </center>
+					</#if>
+				<#elseif fileExtension?contains("pdf")>
+					<#assign baos  = pageStyleUtil.getByteArrayOutputStreamFromByteArray(SDLDMSDocument.getFile()) >
+					<#if baos?has_content> 			
+							${response.reset()}
+							${response.resetBuffer()}
+							${response.setContentType("application/pdf")}
+							${response.setHeader("Content-Disposition",  " inline; filename=document.pdf" )}
+							${response.setHeader("Expires", " 0")}
+							${response.setHeader("Cache-Control", " must-revalidate, post-check=0, pre-check=0" )} 
+							${response.setHeader("Pragma" , "public")}      
+							${baos.writeTo(response.getOutputStream())}
+							${response.getOutputStream().flush()}       
+					<#else>
+						<br />
+						<br />
+						<center><b>Image is Unavailable. Please contact Granicus Support at support@amcad.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
+						<center><img title="Preview" </center>
+					</#if>				
+				<#else>				
+					<br />
+					<br />
+					<center><b>Image is Unavailable. Please contact Granicus Support at support@amcad.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
+					<center><img title="Preview" </center>				
+				</#if>
+	<#elseif SDLDMSDocument?has_content && SDLDMSDocument.getErrorCode()?has_content>
+		<br />
+		<br />
+		<center><b>${SDLDMSDocument.getErrorCode()} Image is Unavailable. Please contact Granicus Support at support@amcad.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
+		<center><img title="Preview" </center>
+	<#else>
+		<br />
+		<br />
+		<center><b>Image is Unavailable. Please contact Granicus Support at support@amcad.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
+		<center><img title="Preview" </center>
+	</#if>
+
+
+</body>
+</html>

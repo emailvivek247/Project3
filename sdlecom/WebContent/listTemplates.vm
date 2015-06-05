@@ -1,0 +1,135 @@
+## $Id: listTemplates.vm 5787 2009-07-07 06:28:25Z cylu $
+
+#set( $title = $msg.get("title") )
+#set( $selectedMenu = 'dataset' )
+#set( $selectedToptab = "template" )
+#set( $selectedSubtab = "list" )
+
+
+#macro( tableRowError $somevalue )
+  <tr><td class="error">&nbsp;$!somevalue</td></tr>
+#end
+
+<script type="text/javascript">
+function countSelects() {
+  var selects = document.getElementsByName('templateSelect');
+  var count = 0;
+  for (i = 0; i < selects.length; i++) {
+    if (selects[i].checked) {
+      count++;
+      if (count == 1) {
+        document.f.templateName.value = selects[i].value;
+      }
+    }
+  }
+  return count;
+}
+
+function preview() {
+  var count = countSelects();
+  if (count == 1) {
+    document.f.target = "preview";
+    document.f.operation.value = "preview";
+    var q = document.f.q.value;
+    document.f.q.value = encodeURIComponent(q);
+    document.f.submit();
+    document.f.q.value = q;
+    document.f.target = "_parent";
+  } else if (count == 0) {
+    alert("Please select a template to preview.");
+  } else if (count > 1) {
+    alert("Please select only one template to preview.");
+  }
+}
+
+function copy() {
+  var count = countSelects();
+  if (count == 1) {
+    document.f.operation.value = "copy";
+    document.f.submit();
+  } else if (count == 0) {
+    alert("Please select a template to copy.");
+  } else if (count > 1) {
+    alert("Please select only one template to copy.");
+  }
+}
+
+function clickDelete() {
+  if (countSelects() < 1 || !confirm("Are you sure you want to delete the selected template(s)?")) {
+    return;
+  }
+  document.f.operation.value = "delete";
+  document.f.submit();
+}
+</script>
+
+<form name="f" id="f" method="post" action="listTemplates.do">
+<input type="hidden" name="operation" id="operation" value="list" />
+<input type="hidden" name="indexName" id="indexName" value="${indexName}" />
+<input type="hidden" name="templateName" id="templateName" value="" />
+<br />
+#errorMarkupForProperty("error")
+#if(! $request.getParameter("operation"))
+#addNextMessage("If you haven't done it, now you may go to <a href='configSchedule.do?indexName=$indexName'>Schedule Data Retrieval</a><br />Or you may go to <a href='desktop.do'>Desktop</a> to manually start an one-time indexing action.")
+#end
+#messageMarkup()
+#openFieldset("Available Styles")
+<table align="center" class="xsearchtable" rules="GROUPS">
+<colgroup></colgroup>
+<colgroup span="3"></colgroup>
+<colgroup></colgroup>
+<colgroup></colgroup>
+<colgroup></colgroup>
+<tr><th>Select</th><th width="5%" style="border:none">PC</th><th width="5%" style="border:none">Tablet</th><th width="5%" style="border:none">Mobile</th><th>Name</th><th>Display Name</th><th>Description</th></tr>
+#foreach( $t in $templates )
+<tr>
+  <td align="center"><input type="checkbox" name="templateSelect" id="templateSelect" value="$t.name" /></td>
+  <td align="center"><input type="radio" name="pc" id="pc" value="$t.name" #if($t.name==$dc.defaultTemplateName)checked="checked"#end /></td>
+  <td align="center"><input type="radio" name="tablet" id="tablet" value="$t.name" #if($t.name==$dc.tabletTemplateName)checked="checked"#end /></td>
+  <td align="center"><input type="radio" name="mobile" id="mobile" value="$t.name" #if($t.name==$dc.mobileTemplateName)checked="checked"#end /></td>
+  <td nowrap="nowrap"><img src="$link.getContextPath()/resources/images/template.png"> <a href="editTemplate.do?indexName=$indexName&templateName=$t.name">$t.name</a></td>
+  <td>$!{t.longname}&nbsp;</td>
+  <td>$!{t.description}&nbsp;</td>
+</tr>
+#end
+</table>
+<br><br>
+<table align="center" border="0">
+  		<tr>  			
+  			<td align="left">	
+  				<button class="general" type="submit" name="btnDelete" id="btnDelete" onClick="clickDelete();return false;">Delete</button>
+  			</td>
+  			<td align="right">
+				<button class="twowords" type="submit" name="submitSave" id="submitSave" onClick="f.operation.value='save';document.f.submit();return false;">Save Default</button>
+  			</td>
+  		</tr>	
+</table>
+<br><br>
+<table align="center" border="0">
+	<tr>  
+  		<td>	    
+  			<button class="general" type="submit" name="btnCopy" id="btnCopy" onclick="copy(); return false;">Copy</button>
+  		</td>	
+  		<td>
+    		With Page Style:
+    	</td>
+    	<td>	 
+    		<input type="text" name="tn" id="tn" size="20" value="" />
+    	</td>
+    	<td width="50px">  			
+  		</td>  			
+  		<td>
+  			<button class="general" type="submit" name="btnPreview" id="btnPreview" onclick="preview(); return false;">Preview</button>
+  		</td>  		
+  		<td>	
+    		Using Testing Query: 
+    	</td>
+    	<td>
+    		<input type="text" name="q" id="q" size="20" value="" />
+    	</td>	
+   </tr>
+</table>
+#closeFieldset()
+<br />
+
+</form>

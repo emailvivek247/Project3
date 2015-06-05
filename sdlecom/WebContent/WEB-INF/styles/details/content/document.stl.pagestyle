@@ -1,0 +1,39 @@
+<#noparse>
+ <tr>
+  </#noparse>
+  <#foreach c in displayColumns>
+    <#assign column = dc.getColumn(c)>
+    <#if column.getAnalyzerName() = "com.fdt.sdl.core.analyzer.DateAnalyzer">
+      <#noparse>
+        <#if doc.get("</#noparse>${c}<#noparse>")?has_content>
+            <td>${pageStyleUtil.format(doc.get("</#noparse>${c}<#noparse>"), "yyyymmdd", "mm/dd/yyyy")}</td>
+        <#else>
+            <td>&nbsp;</td>
+        </#if>          
+      </#noparse>
+   <#elseif column.isNumber>
+	         <#noparse><td>${number.format("###0.##",doc.get("</#noparse>${c}<#noparse>"))}</td></#noparse>
+   <#elseif column.isDate>      	
+  		    <#noparse><td>${date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("</#noparse>${c}<#noparse>"))}</td></#noparse>
+    <#else>      
+            <#noparse><td>${searchResult.highlight(doc, "</#noparse>${c}<#noparse>")}</td></#noparse>
+	 </#if>
+  </#foreach>
+  <#if includeScoreColumn>
+    <#noparse>
+  <td>${doc.score?string("0.###")}</td>
+    </#noparse>
+  </#if>
+  <#if includeMapNavigation>    
+    <#noparse>
+        <td>
+        <input type="button" class="groovybutton" OnClick="navigate(${ResultId}, false)" value="View on map">
+        <input type="button" class="groovybutton" OnClick="navigate(${ResultId}, true)" value="Show Property">
+        </td>
+        <#assign ResultId = ResultId  + 1>
+    </#noparse>    
+  </#if>
+  <#noparse>
+ </tr>
+</#noparse>
+ 

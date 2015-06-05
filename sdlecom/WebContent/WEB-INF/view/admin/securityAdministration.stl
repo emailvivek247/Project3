@@ -1,0 +1,78 @@
+<#import "dashboardHeader.stl" as layout>
+<@layout.basic menu="system/securityAdministration">
+
+<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/jmesa/jmesa-pdf.css" type="text/css" media="all">
+<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/jmesa/jmesa.css" type="text/css" media="all">
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jmesa/jmesa.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jmesa/jquery.jmesa.js"></script>
+
+
+<#macro section2(somevalue)>
+ <@com.section2 somevalue>
+  <table width="100%" cellpadding="5" cellspacing="0" border="1">
+  <#nested>
+  </table>
+ </@com.section2>
+</#macro>
+
+<form name="f" method="post" action="preference.do" style="padding: 0 100px 0 100px">
+<input type="hidden" name="operation" value="list">
+<br />
+<@com.errorMarkup/>
+<@com.messageMarkup/>
+
+<div id="compGroupA" class="demo" width="80%" style="border:0px">
+  <div id="tabs" class="dashboardContent" width="80%" style="border:0px;">
+      <ul style="background:none; border:0px; margin:0 0 0 0; padding: 0 0 0 0; text-align: center;">
+            <li><a href="viewLoggedInUsers.admin">View LoggedIn Users</a></li>
+      </ul>
+  </div>
+</div>
+
+</form>
+<div style="text-align:right;padding-right:20px;font-size: 12px;">
+	Build Number: ${pageStyleUtil.getBuildVersion()}&nbsp;&nbsp;|&nbsp;&nbsp;Build Date&nbsp;${pageStyleUtil.getBuildDate()}
+</div>
+<script type="text/javascript">
+	  
+ $(document).ready(function() {
+       $("#tabs").tabs({
+	    spinner: 'Loading...',
+	    cache: false,
+	    ajaxOptions: {cache: false}
+	  });
+	  beginrefresh();
+	  $('#mainContent').show();
+  });
+	<!--
+		//enter refresh time in "minutes:seconds" Minutes should range from 0 to inifinity. Seconds should range from 0 to 59
+		var limit="0:5"
+		
+		if (document.images){
+			var parselimit=limit.split(":")
+			parselimit=parselimit[0]*60+parselimit[1]*1
+		}
+		function beginrefresh(){
+			if (!document.images)
+			return
+				if (parselimit==1) {
+					//window.location.reload()
+					$('#tabs').tabs('load', 0);
+				}
+				else{ 
+					parselimit-=1
+					curmin=Math.floor(parselimit/60)
+					cursec=parselimit%60
+					if (curmin!=0)
+						curtime=curmin+" minutes and "+cursec+" seconds left until page refresh!"
+					else
+						curtime=cursec+" seconds left until page refresh!"
+					window.status=curtime
+					setTimeout("beginrefresh()",1000)
+				}
+		}
+		
+		//-->
+</script>
+
+</@>

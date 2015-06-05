@@ -1,0 +1,38 @@
+<#import "dashboardHeader.stl" as layout>
+<@layout.basic menu="system/alertAdministration">
+<@com.section2 "Alert Configuration">
+    <table class="xsearchtable">
+      <tr>
+        <th>Enabled</th><th>Timings</th><th>Action</th>
+      </tr>
+      <tr>
+      <td><#if isEnabled > Enabled <#else> Not Enabled </#if></td>
+      <td>
+        <#if isInterval>
+          Every ${interval}  minutes
+        <#else>
+          Cron Setting [${cronTrigger}]
+        </#if>
+      </td>
+      <td>
+        <a href="configAlertSchedule.do?operation=delete">Delete</a>
+      </td>
+      </tr>
+    </table>    
+</@com.section2>
+   <script type="text/javascript">
+	     $(document).ready(function() {
+	            $( "#tabs" ).tabs({
+	                cookie: {
+	                    // store cookie for a day, without, it would be a session cookie
+	                    expires: 0
+	                },
+	                select:function(event, ui) {
+	                     $(".important").hide();                                           
+	                }
+	            });
+	            $('#mainContent').show();
+	      });
+	</script>
+
+</@>

@@ -1,0 +1,50 @@
+<script type="text/javascript">
+	var timeout = 0;
+	var closetimer = 0;
+	var ddmenuitem = 0;
+	function mopen(id)
+	{
+		$("#"+id).parent().find("a.headerItem").addClass("headerSelect")
+	    mcancelclosetime();
+	    if(ddmenuitem) ddmenuitem.style.visibility = 'hidden';
+	    ddmenuitem = document.getElementById(id);
+	    ddmenuitem.style.visibility = 'visible';
+	
+	}
+	function mclose()
+	{
+	    if(ddmenuitem) ddmenuitem.style.visibility = 'hidden';
+	    $(ddmenuitem).parent().find("a.headerItem").removeClass("headerSelect")
+	}
+	function mclosetime()
+	{
+	    closetimer = window.setTimeout(mclose, timeout);
+	}
+	function mcancelclosetime()
+	{
+	    if(closetimer)
+	    {
+	        window.clearTimeout(closetimer);
+	        closetimer = null;
+	    }
+	}
+	document.onclick = mclose;	
+</script>
+<#if request.getRemoteUser()?has_content && request.getServletContext().getInitParameter("isSecurityEnabled") == "true">
+<ul class="headerList">
+	<li>
+		<#if request.getServletContext().getInitParameter("isShoppingCartEnabled") == "true">
+			<#assign shoppingCartSize = pageStyleUtil.getshoppingCartSize(request)>
+			<a href="reviewShoppingCart.admin" style="margin-right:4px;vertical-align:top;" class="inactive headerItem" ><img src="resources/images/shoppingCart.png" /><span id="shoppingCartItems" style="vertical-align:top;"><#if shoppingCartSize = 0>  Shopping cart is Empty<#else>${shoppingCartSize} Item(s) in the Shopping Cart</#if></span></a>
+		</#if>
+    </li>
+	<li>
+		<#assign user = pageStyleUtil.getUser(request)>
+		<a href="#" style="margin-right:5px;" class="inactive headerItem" onmouseover="mopen('m2')" onmouseout="mclosetime()">${request.getRemoteUser()}<span class="ui-icon ui-icon-triangle-1-s">&nbsp;&nbsp;&nbsp;</span></a>
+        <div id="m2" style="margin-right:40px;width:147px" class="ui-widget-content" onmouseover="mcancelclosetime()" onmouseout="mclosetime()">
+	        <a class="headerSubMenuItem" href="accountInformation.admin">&nbsp;&nbsp;Account Settings&nbsp;&nbsp;&nbsp;</a>	        
+	        <a class="headerSubMenuItem" href="logout.admin">&nbsp;&nbsp;Log Out</a>	        
+        </div>
+    </li>
+</ul>
+</#if>

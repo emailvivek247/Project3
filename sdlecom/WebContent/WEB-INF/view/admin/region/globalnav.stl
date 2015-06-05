@@ -1,0 +1,38 @@
+<#macro displayTab(selectedTab, linkShortName, link, text, imageName, isNewWindow, firstLink)>
+  <#if firstLink == "false">
+  <td>|</td>
+  </#if>
+ <#if imageName != "">
+    <td><img src="images/${imageName}" /></td>
+ </#if>
+ <#if selectedTab == linkShortName><b></#if>
+  <#if isNewWindow == "true">
+ 	 <td align=left nowrap><a style="color:black" href="${link}" target="_blank">${text}</a></td>
+  <#else>
+  	<td align=left nowrap><a style="color:black" href="${link}">${text}</a></td>
+  </#if>
+  <#if selectedTab == linkShortName></b></#if>
+</#macro>
+<div class="ui-corner-all designerGlobalNav">
+<table height="20px" cellpadding="0" cellspacing="10" width="100%" style="font-size: 12px;">
+
+<tr style="color: black;">
+  <#--<td align=left nowrap><img src="${request.getContextPath()}/resources/images/appLogo.png" alt="Logo place holder image"/></td>-->
+  <#if request.getServletContext().getInitParameter("is508Enabled") == "true">
+    <td width="100%"><a href="http://www.ok.gov/accessibility/" style="text-decoration:underline;">Oklahoma Accessible Electronic and Information Technology</a></td>
+   
+  <td width="100%"><a href="" style="text-decoration:underline;" >Skip Navigation</a></td>
+  <#else>
+  	<td width="100%">&nbsp;</td>
+  </#if>
+  <td align=right nowrap>${date.full}</td>
+  <#if adminUser?has_content>
+  <@displayTab selectedToptab, "documentation", "http://sdlguide.wiki.zoho.com", "Help", "", "true", "false"/>
+  <@displayTab selectedToptab, "logOut", "logout.do", "Sign Out", "", "false", "false"/>
+  </#if>
+</tr>
+</table>
+<#if adminUser?has_content>
+    <#include "systemMenu.stl">
+</#if>
+</div>

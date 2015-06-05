@@ -1,0 +1,11 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><title>$!{title}</title>
+<meta http-equiv="content-type" content="text/html; charset=${WebserverStatic.encoding}" />
+<link rel="stylesheet" href="resources/styles/application.css" />
+</head>
+<body link="#0000ff" vlink="#0000ff" bgcolor="white" leftmargin="4" topmargin="0" marginheight="4" marginwidth="4">
+#errorMarkupForSearchResults()
+#messageMarkupForSearchResults()
+<br /><br /><br /><br />
+</body></html>

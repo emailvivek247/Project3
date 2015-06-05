@@ -1,0 +1,144 @@
+<@layout.basic menu="dataset/dataset/advanced_settings">
+
+<#macro section2(somevalue)>
+ <@com.section2 somevalue>
+  <table width="100%" cellpadding="5" cellspacing="0" border="0">
+  <#nested>
+  </table>
+ </@com.section2>
+ <br/>
+</#macro>
+
+<form name="f" method="post" action="datasetOptions.do?indexName=${indexName}">
+<input type="hidden" name="operation" value="list">
+<br />
+
+<@com.messageMarkup/>
+<script type="text/javascript">
+      $(function() {
+            $("#tabs").tabs();
+      });
+</script>
+<div id="compGroupA" class="demo">
+  <div id="tabs">
+      <ul>
+            <li><a href="#tabs-1">Index Storage</a></li>
+            <li><a href="#tabs-2">Fetching Data</a></li>
+            <li><a href="#tabs-3">Empty Query Option</a></li>
+            <#-- <li><a href="#tabs-4">Security</a></li> --> 
+      </ul>
+      <div id="tabs-1">
+		<#--
+		  <@com.trTextInput "Max Index Size(MB)", "indexMaxSize", dc.indexMaxSize?if_exists>
+		    <br/>Index Directory minimum disk space: at least 4 times of index size.<br /> or 2 times if working directory is on a different hard disk. <br/>If retrieved content is larger than the limit, older content will be pruned.
+		  </@com.trTextInput>
+		--> 
+		 <table> 
+		  <@com.trTextInput "Prune Old Index", "prunePercentage", dc.prunePercentage?if_exists, 4, "To ">
+		    % of <b>Max Index Size</b> when index size is over limit.<br />
+		  </@com.trTextInput>
+		  <@com.trTextInput "Working Directory", "workDirectory", dc.workDirectory?if_exists>
+		    <br/>Working Directory minimum disk space: at least 3 times of index size.
+		    <br/>Can be absolute path or Relative to Index Directory.
+		    <br/>Complete path: ${dc.workDirectoryFile?if_exists}
+		    <#if !dc.workDirectoryFile.exists()>
+		      <b>The directory does not exist!</b>"
+		    <#elseif !dc.workDirectoryFile.canWrite()>
+		      <b>The directory is not writable!</b>
+		    </#if>
+		  </@com.trTextInput>
+		  <@com.trTextInput "Merge New Index", "mergePercentage", dc.mergePercentage?if_exists, 4, "When it's at least ">
+			  % of total(new and old) Index Size
+			  <br/>Useful when the index is large and index updating is frequent. 
+			  <br/>Default to 5%. You can set it to 0 if index is small and merging indexes doesn't take too long.
+		  </@com.trTextInput>
+		  <@com.tr2td "Merge Hours">
+		    <input type="checkbox" name="mergeHoursEnabled" value="true" <#if dc.mergeHours.enabled>checked="checked"</#if> />
+		    Only Merge Indexes During Hours Between
+		    <input type="text" name="mergeHoursBegin" size="1" value="${dc.mergeHours.begin?string}"/>:00~
+		    <input type="text" name="mergeHoursEnd" size="1" value="${dc.mergeHours.end?string}"/>:00
+		    to prevent busy disk operations from slowing down the search.
+		  </@com.tr2td>
+		  <@com.tr2td "Wait Time">
+		  <input type="text" name="numberOfHoursBeforeDeletion" size="1" value="${dc.numberOfHoursBeforeDeletion?if_exists}"/>
+             If an indexing process gets crashed, this is the time that any subsequent Indexing action has to wait.  
+          </@com.tr2td>
+		  </table>
+	 </div>
+	 <div id="tabs-2">
+	 	<table>
+			  <#if dc.dataSourceType==0 >
+			   <@com.trTextInput "Maximal Fetcher Threads", "fetcherThreadsCount", dc.fetcherThreadsCount?if_exists, 4>
+			    If you have <b>Subsequent Queries</b>, increase this value will increase data throughput.
+			   </@com.trTextInput>
+			  </#if>
+			  <@com.trTextInput "Maximal Writer Threads", "writerThreadsCount", dc.writerThreadsCount?if_exists, 4>
+			    If data volume is large, increase the number of writers may speedup index creation.
+			    <br/>However, larger numbers will cause resource competition. Default to 3, suitable for most cases.
+			  </@com.trTextInput>
+			  <@com.tr2td "Optimize Index">
+			    <input type="checkbox" name="isOptimizeNeeded" value="on"<#if dc.isOptimizeNeeded> checked</#if>>
+			     Optimize index files. Enable this will merge index files from several writer threads into one large file. <br/>
+			     It will take a longer time to finish indexing. You may want to disable this when you have large amount of data. 
+			  </@com.tr2td>
+			  <@com.trTextInput "Max Field Length", "maxFieldLength", dc.maxFieldLength?if_exists, 4, "Index First ">
+			    words in each field.<br/>
+			    Words more than this number will be skipped.
+			  </@com.trTextInput>
+			  <@com.trTextInput "Indexing JVM Memory Size", "jvmMaxHeapSize", dc.jvmMaxHeapSize?if_exists, 4, "When indexing, set <b>JVM Max Heap Size</b> to ">
+			    MB <br/>Maximize memory for J2EE Container, and keep <br ><b>total memory(container+indexing) < available physical memory</b>
+			  </@com.trTextInput>
+			  <@com.trTextInput "Indexing Document Buffer", "documentBufferSizeMB", dc.documentBufferSizeMB?if_exists, 4, "When indexing, set <b>Memory Buffer</b> to ">
+			    MB <br/>Memory Size allocated for content to index before flushing to disk. You need to keep <br ><b>Indexed Document Buffer < Indexing JVM Memory Size</b>
+			  </@com.trTextInput>
+			  <@com.trTextInput "Maximal Open Files", "maxOpenFiles", dc.maxOpenFiles?if_exists, 4, "When indexing, limit to maximal ">
+			    open files <br/>Maximal open files allowed by the OS. Default to 800, no need to change it in most cases. On windows it can be up to 2035.
+			  </@com.trTextInput>
+			  <#if dc.dataSourceType==0 >
+			   <@com.trTextInput "List Fetch Size", "listFetchSize", dc.listFetchSize?if_exists, 4, "When fetching the document list, get ">
+			    rows from the database when more rows are needed.
+			    <br/>Gives the JDBC driver a hint as to the number of rows that should be fetched from the database when more rows are needed. 
+			    If the value specified is zero, then the hint is ignored.<br/>Fetching <b>more rows</b> will demand <b>more memory</b> when indexing.
+			   </@com.trTextInput>
+			  </#if>
+			  <a name="urlToPing"></a>
+			  <@com.trTextInput "URL To Ping", "urlToPing", dc.urlToPing?if_exists >
+			    <br/>Format: <i>http://www.yoursite.com/ImHere.do</i>
+			    <br/>Send a simple http request to this URL right after finishing indexing to announce.
+			    <br/>Useful when load balancing, or just let the main server know your IP address so it knows where to forward the search request.
+			  </@com.trTextInput>
+		  </table>	  
+		</div>
+		<div id="tabs-3">
+		  <table>
+			  <@com.tr2td "Empty Query Match All">
+			    <input type="checkbox" name="isEmptyQueryMatchAll" id="isEmptyQueryMatchAll" 
+			      value="on"<#if dc.isEmptyQueryMatchAll> checked</#if>>
+			     Return All Documents if the query is empty
+			  </@com.tr2td>
+		  </table>	  
+		</div>
+		<div id="tabs-4">
+		 <table>
+		  <@com.trTextInput "Allowed IP or Host Name List", "allowedIpList", dc.allowedIpList?if_exists>
+		    <br/>This is to allow remote index operation without login. 
+		    <br/>Example: 192.168.1.*, 192.168.1.12?, *.abcdef.com 
+		    <br/>
+		      Operations are: content deletion, refresh index, shut down index, schedule a job, etc.
+		  </@com.trTextInput>
+		  </table> 
+		</div>
+		<table width="100%" cellpadding="5px">
+		<tr>
+		<td>
+		</td>
+		<td>
+		<@com.actionSubmitButton "f", "submitSave", "Save", "save"/>
+		</td></tr>
+		</table>
+		</div>
+  </div>
+
+</form>
+
+</@>

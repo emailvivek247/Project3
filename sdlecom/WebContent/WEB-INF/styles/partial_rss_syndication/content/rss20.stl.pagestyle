@@ -1,0 +1,56 @@
+<#noparse><?xml version="1.0" encoding="${encoding}"?>
+${response.setContentType("application/rss+xml; charset=" + encoding)}
+<#if searchResult.datasetConfiguration.modifiedDateColumn.columnName?has_content>
+	<#assign modifiedDateColumnName = searchResult.datasetConfiguration.modifiedDateColumn.columnName>
+</#if>
+
+<rss version="2.0">
+  <channel>
+    <title><![CDATA[RSS Feed for the search: ${q}]]></title>
+    <link>${(WebserverStatic.getServerURL() + "search.do?indexName=" + indexName + "&templateName=" + templateName + "&q=" + URLEncodedQuery)?html}</link>
+    <description><![CDATA[RSS feed from Search Platform]]></description>
+    <#assign date1 = new("java.util.Date")>
+    <ttl>5</ttl>
+    <pubDate>${date1?string("EEE, d MMM yyyy hh:mm:ss z")}</pubDate>      
+<#foreach doc in searchResult.docs>
+	</#noparse>
+	  <#assign idColumnName =  '${primaryKey?replace("doc.get(", "")?replace("$", "")?replace("{", "")?replace("}", "")?replace(")", "")}' >
+	  <#assign idColumnName = idColumnName?replace("\"", "")>
+	<#noparse>
+    <item>
+      <title><![CDATA[</#noparse>${titleColumn}<#noparse>]]></title>
+      <link><![CDATA[</#noparse>${linkToContent}${idColumnName}:"${primaryKey}"<#noparse>]]></link>
+      <description><![CDATA[</#noparse>      
+			<#if additionalColumns?has_content>
+			   <#foreach c in additionalColumns>
+			     <br/><b>${c}</b>:
+			     <#assign column = dc.getColumn(c)>
+			     <#if column.getAnalyzerName() = "com.fdt.sdl.core.analyzer.DateAnalyzer">
+			     <#noparse>
+			    		<#if doc.get("</#noparse>${c}<#noparse>")?has_content>
+							${pageStyleUtil.format(doc.get("</#noparse>${c}<#noparse>"), "yyyymmdd", "mm/dd/yyyy")}&nbsp;<b>(MM/DD/YYYY)</b>
+						</#if>  	
+			     </#noparse>
+			     <#elseif column.isNumber><#noparse>${number.format("###0.##",doc.get("</#noparse>${c}<#noparse>"))}</#noparse>
+			     <#elseif column.isDate><#noparse>${date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("</#noparse>${c}<#noparse>"))}</#noparse>
+			     <#else><#noparse>${doc.get("</#noparse>${c}<#noparse>")}</#noparse>
+			     </#if>
+			   </#foreach>
+			</#if>
+      <#noparse>]]></description>
+      <#if modifiedDateColumnName?has_content>
+       <#if doc.getDate(modifiedDateColumnName)?has_content>
+        <pubDate>${doc.getDate(modifiedDateColumnName)?string("EEE, d MMM yyyy hh:mm:ss z")}</pubDate>
+       <#else>
+        <#assign date1 = new("java.util.Date")>
+        <pubDate>${date1?string("EEE, d MMM yyyy hh:mm:ss z")}</pubDate> 
+       </#if>
+       <#else>
+	       <#assign date1 = new("java.util.Date")>
+	       <pubDate>${date1?string("EEE, d MMM yyyy hh:mm:ss z")}</pubDate>
+      </#if>
+    </item>
+</#foreach>
+  </channel>
+</rss>
+</#noparse>

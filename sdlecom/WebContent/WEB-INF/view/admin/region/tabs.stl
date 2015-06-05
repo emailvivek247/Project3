@@ -1,0 +1,6 @@
+<#if selectedMenu == "dataset">
+  <#include "/WEB-INF/view/admin/region/datasetMenu.stl">
+<#else>
+<#--moved to globalnav.vm-->
+<#--  #parse("$region/systemMenu.vm")-->
+</#if>

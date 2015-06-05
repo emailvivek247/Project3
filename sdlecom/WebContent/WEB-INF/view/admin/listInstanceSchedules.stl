@@ -1,0 +1,97 @@
+<#import "dashboardHeader.stl" as layout>
+<@layout.basic menu="system/alertAdministration">
+
+<h3>List Of Instance Job Schedules</h3>
+<br />
+<#assign dirSizeChecker = new("net.javacoding.xsearch.core.DirectorySizeChecker")>
+<table id="tb2Search" class="xsearchtable"> 
+
+            <thead>
+            <tr>
+              <th nowrap>Schedule Name</th>
+              <th nowrap>Select Index Actions</th>
+              <th nowrap>Indexing Frequency </th>
+              <th nowrap>Status </th>               
+              <th nowrap >Enable|Disable  Delete</th>
+            </tr>
+            </thead>
+    <#assign instanceJobScheduleList = instanceJobSchedules?keys>
+     
+    <#if instanceJobScheduleList?has_content>
+        <#list instanceJobScheduleList as iterator>
+            <#assign instanceJobSchedule = instanceJobSchedules[iterator]> 
+            <#assign scheduleName = instanceJobSchedule.scheduleName >
+            <#assign schedule = instanceJobSchedule.getSchedule() >
+            <#assign modelMap = instanceJobSchedule.getModelMap() >
+            <tr>
+            <#if scheduleName?has_content>
+                    <td  align = "center" > <a href="viewInstanceJob.admin?scheduleName=${pageStyleUtil.encodeURL(scheduleName)}&operation=${pageStyleUtil.encodeURL(scheduleName)}"> ${scheduleName} </a>   </td>
+            </#if>
+             <td align = "center">
+             <table id="tblSearch" align = "center" style="width:350px">
+                <thead>
+                    <tr>
+                      <th nowrap>Index Name</th>
+                      <th nowrap>Action</th>
+                      <th nowrap >Order</th>
+                    </tr>
+                </thead> 
+            <#assign keyList = modelMap?keys>
+                <#if keyList?has_content>
+                    <#list keyList as key>
+                        <#assign flag =  key?index_of("actionorder_") >
+                        <#if key?has_content && (flag > -1) >
+                            <#assign selectedIndex =  key?substring(12) >
+                                  <tr bgcolor="#eeeeee"> 
+                                      <td align="center" style="text-weight:bold" nowrap><a href="configBasic.do?indexName=${selectedIndex}" >${selectedIndex}  (${selectedIndex}) </a></td>  
+                                      <td valign="middle" align="right" nowrap>
+                                      <#include "dashboard/read_action_list.stl">
+                                      </td>
+                                      <td valign="middle" align="right" nowrap>
+                                      <#assign key2 = "actionorder_${selectedIndex}">
+                                      ${modelMap[key2]}
+                                      </td>                                          
+                                  </tr> 
+                          </#if>        
+                    </#list>  
+                </#if>
+                </table>
+            </td>
+             <#if schedule?has_content >
+                 <#if schedule.isInterval>
+                   <td  align = "center" > Every ${schedule.interval?if_exists} minutes  </td>
+                <#else>
+                   <td  align = "center"> Cron Setting [0 ${schedule.cronSetting?if_exists}]  </td>
+                </#if>
+             </#if>
+            <#if schedule?has_content && schedule.isEnabled>
+                <td  align = "center" > Enabled   </td>  
+            <#else>
+                <td  align = "center" > Disabled  </td>        
+            </#if>       
+                                                               
+            <#if schedule?has_content>
+                <td  align = "center" > 
+                    <#if schedule?has_content && schedule.isEnabled>
+                     <a href="disableJob.admin?scheduleName=${pageStyleUtil.encodeURL(scheduleName)}"> <img src="${request.getContextPath()}/resources/images/disable-timer.png" alt="Disable" title="Disable"> </a>
+                    <#else>
+                     <a href="enableJob.admin?scheduleName=${pageStyleUtil.encodeURL(scheduleName)}"> <img src="${request.getContextPath()}/resources/images/enable-timer.png" alt="Enable" title="Enable">  </a>     
+                    </#if>
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a href="deleteInstanceJob.admin?operation=${pageStyleUtil.encodeURL(scheduleName)}"> Delete </a> 
+                
+                </td>
+            </#if>
+            </tr>     
+        </#list>
+    </#if> 
+</table>
+    <ul>
+      <li><a href="viewInstanceJob.admin">Add A New Instance Job</a>
+    </ul>
+<script>
+$(document).ready(function() {
+         $('#mainContent').show();
+});
+</script>
+  
+</@>

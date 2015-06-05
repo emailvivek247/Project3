@@ -1,0 +1,83 @@
+## original floatie http://dynamicdrive.com/dynamicindex5/linkfloaties.htm
+<script type="text/javascript">
+var actions = [];
+function addAction(url, commands, name, description){
+  var a ={};
+  a.name = name;
+  a.url = url;
+  a.commands = commands;
+  a.description = description;
+  actions.push(a);
+}
+</script>
+
+      #macro( addDescription $_descriptionText )
+		  actionDescriptions${indexName}[$javascript_counter]="$_descriptionText <a href=\'javascript:hidefloatie()\'>Hide Box</a>"
+    	#set($javascript_counter = $javascript_counter + 1)
+      #end
+      ##this logic flow is copied from below
+          <script type="text/javascript">
+		  var actionDescriptions${indexName}=new Array()
+		  actionDescriptions${indexName}[0]= "Need to select an action"
+      	  #set($javascript_counter = 1)
+          #addDescription("Start/Stop indexing" )
+          #if(! $schedulerTool.isRunning($indexName))
+            #addDescription("Retrieve only documents newer than existing documents.")
+            #addDescription("Retrieve newer documents, and find missed documents." )
+            #addDescription("Retrieve all documents and re-build the whole index from scratch." )
+            #addDescription("Fetch generated index from another server." )
+            #addDescription("If you changed to a new Analyzer, all the documents need to be analyzed again and indexed again." )
+            #addDescription("If sometimes duplications are found, this will delete duplicated documents determined by primary key" )
+          #else
+            #addDescription("Signal current indexing process to stop." )
+          #end
+          #addDescription("Remove/Delete some index files" )
+          #addDescription("If some directory is locked by previous indexing process" )
+          #addDescription("Clean Index(temp included): Remove all index data." )
+          #addDescription("Clean Temporary Index: Remove temporary indexes" )
+          #addDescription("Other Controls" )
+          #addDescription("Refresh Index: Read index data from the disk again if index data is updated." )
+          #addDescription("Make Offline: Disable Searching")
+          </script>
+      ##this logic flow is copied from below
+      #macro( displayOption $_action $_cmd $_optionText )
+      	#if($_action)
+        <option value="$!{_action}?indexName=$!{indexName}&cmd=$!{_cmd}&text=$!{_optionText}">&nbsp;&nbsp;<div style="font-weight:bold;">$_optionText</div></option>
+        #else
+        <option value="">$_optionText</option>
+        #end
+      #end
+      
+      #macro( displayOptionGroup $_action $_cmd $_optionText )
+      	#if($_cmd == "first")
+      		<OPTGROUP LABEL="$!{_optionText}">        
+        #elseif ($_cmd == "last")
+        	</OPTGROUP>
+        #else
+	        </OPTGROUP>
+	  		<OPTGROUP LABEL="$!{_optionText}">
+        #end
+      #end
+      
+      <select class="jumpmenu" name="action" id="action" onChange="showfloatie(actionDescriptions${indexName}[this.selectedIndex], event)">
+          <option value="" selected></option>           
+          #displayOptionGroup(false "first" "Indexing" )
+          #if(! $schedulerTool.isRunning($dc))
+            #displayOption("scheduleAJob.do" $WebserverStatic.webConfiguration.getCommand("Incremental Indexing") "Incremental Indexing" )            
+            #displayOption("scheduleAJob.do" $WebserverStatic.webConfiguration.getCommand("Re-create Index") "Create Whole Index" )
+            #displayOption("scheduleAJob.do" $WebserverStatic.webConfiguration.getCommand("Subscribe Index") "Fetch Subscribed Index" )            
+            #displayOption("scheduleAJob.do" "unlockStoppedIndex buildDictionaryIfNeeded maybeBuildSynonyms reIndexing" "Re-Analyze" )
+            #displayOption("scheduleAJob.do" "deleteDuplicates" "Delete Duplicates" )
+          #else
+            #displayOption("stopIndexing.do" "" "Stop Current Indexing" )
+          #end
+          #displayOptionGroup(false, "", "Spell Check")
+      	  #displayOption("scheduleAJob.do", $WebserverStatic.getWebConfiguration().getCommand("Re-create Spelling Dictionary"), "Re-Build Spell Check Dictionary" )      	  
+          #displayOptionGroup(false "" "Clean Index" )
+          #displayOption("scheduleAJob.do" "unlockStoppedIndex" "Unlock Index" )
+          #displayOption("scheduleAJob.do" "delete" "Clean Index" )
+          #displayOptionGroup(false "" "Other Control" )
+          #displayOption("refreshIndex.do" "" "Refresh Index" )
+          #displayOption("shutdownIndex.do"    "" "Make Offline")
+          #displayOptionGroup(false "last" "" )          
+      </select>      

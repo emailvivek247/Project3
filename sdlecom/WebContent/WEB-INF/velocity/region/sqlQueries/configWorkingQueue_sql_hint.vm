@@ -1,0 +1,15 @@
+#openContainer("width:60%;")
+<div id="containerHeader"><span class="left">Hint for Parent Query</span>&nbsp;#toggleADiv("working_queue_query_hint" "toggle_wq_hint" "<img src='$link.getContextPath()/resources/images/expand.gif' alt='expand'>" "<img src='$link.getContextPath()/resources/images/collapse.gif' alt='collapse'>" "block")</div>
+<table border="0" id="working_queue_query_hint">
+<tr><td><hr width=100% size=1 noshade></td></tr>
+<tr><td><b>Recommended</b>: select <b>Primary Key</b> column and <b>Modified Date</b> column from the tables, and order by descending <b>Modified Date</b>.</td></tr>
+#if($dc.jdbcdriver == 'oracle.jdbc.driver.OracleDriver')
+<tr><td><b>SQL Hint:</b> Use hint like<pre>
+SELECT/*+ FIRST_ROWS(10) */ article_id, modified_date
+FROM articles
+ORDER BY 2 desc</pre></td></tr>
+#end
+<tr><td><b>Child Queries</b> can be used for 1~m associations</td></tr>
+</table>#displayADiv("working_queue_query_hint")
+#closeContainer()
+

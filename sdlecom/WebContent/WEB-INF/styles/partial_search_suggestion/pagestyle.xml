@@ -1,0 +1,9 @@
+<scaffold order="14" isPartial="true">
+  <name>Search Suggestion</name>
+  <description>Add jQuery based search suggestion. Applicable to templates with searchBox_extra.stl file.</description>
+  <variables>
+  </variables>
+  <operations>
+    <include type="append" withColumnName="false" file="search_suggestion.stl" toFile="searchBox_extra.stl"/>
+  </operations>
+</scaffold>

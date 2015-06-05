@@ -1,0 +1,14 @@
+<#noparse>
+<#if !searchResult.docs?has_content || searchResult.docs.size() <= 0>
+	<h4 class="noResults">
+</#noparse>	
+<#if txtNoResultText?has_content>
+		${txtNoResultText}
+<#else>
+	No Results Found!
+</#if>
+
+<#noparse>
+	</h4>
+</#if>
+</#noparse>

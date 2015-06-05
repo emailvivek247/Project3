@@ -1,0 +1,69 @@
+<#assign fileUtil = new("net.javacoding.xsearch.utility.FileUtil")>
+<#assign serverConfiguration = new("net.javacoding.xsearch.config.ServerConfiguration")>
+<#assign sc = serverConfiguration.getServerConfiguration()>
+
+<@layout.basic menu="dataset/dataset/indexBasic" hasWizard=true>
+
+<#macro tableRowError(somevalue)>
+  <tr><td>&nbsp;</td><td colspan="2" class="error">&nbsp;${somevalue?if_exists}</td></tr>
+</#macro>
+
+<form name="f" method="post" action="configBasic.do?indexName=${indexName}">
+<input type="hidden" name="operation" value="list">
+<br />
+<@com.errorMarkup "error">
+  <li>"Now you may go to <a href='configConnection.do?indexName=${indexName}'>Configure JDBC Connection</a></li>
+</@com.errorMarkup>
+<@com.messageMarkup/>	
+<@com.section2 title="Index Information" width='70%'>
+<table id="t" width="100%" cellpadding="5" cellspacing="0" border="0">
+<@com.tr2td "Name">${dc.name?if_exists}</@com.tr2td>
+<@com.tr2td "Type">
+ <#if dc.dataSourceType == 0>
+   Database, <i>Select data via database connection</i>
+ </#if>
+</@com.tr2td>
+<@com.trTextInput "Display Name", "displayName",  dc.displayName, 40 />
+<@com.trTextInput "Display Order","displayOrder", dc.displayOrder, 4 >
+  When it's >=0 , the search is included on <a href='home.do'>Front Page</a>. <br /> All searches are displayed ordered by this value.
+</@com.trTextInput>
+<@com.tr2td "Description">
+  <textarea name="desc" id="desc" cols="60" rows="3" wrap="virtual">${dc.description?if_exists}</textarea>
+</@com.tr2td>
+<@com.tr2td "Directory">
+  <input type="text" name="dir" id="dir" size="60" value="${dc.indexdir}">
+</@com.tr2td>
+
+<@com.tr2td>
+  <input type="checkbox" name="moveDir" id="moveDir" value="1">
+  <label for="moveDir">Move old index content to the new directory</label>
+  <br />
+  <input type="checkbox" name="deleteDir" id="deleteDir" value="1">
+  <label for="deleteDir">Delete old directory</label>
+  <br />
+  <input type="checkbox" name="prefixIndexRootDirectory" id="prefixIndexRootDirectory" value="1" <#if dc.prefixIndexRootDirectory>checked="checked"</#if> <#if !sc.indexRootDirectory?has_content> disabled="true" </#if>>
+  <label for="prefixIndexRootDirectory">Prefix index directory with the instance index root directory</label>
+	<br /><br />
+	Instance index root direcotry : ${sc.indexRootDirectory}
+	<br /><br />
+	 Index directory path: ${dc.getIndexDirectory()?if_exists}
+	<br />
+	
+</@com.tr2td>
+
+
+<#if !fileUtil.getFile(dc.getIndexDirectory()).exists()>
+  <@tableRowError "The index directory does not exist." />
+</#if>
+
+<tr align="left">
+  <td></td>	
+  <td text-align="left">	
+  <@com.actionSubmitButton "f", "submitSave", "Save", "save" />
+  <td>
+</tr>
+</table>
+</@com.section2>
+</form>
+
+</@>

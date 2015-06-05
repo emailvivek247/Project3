@@ -1,0 +1,262 @@
+<#import "dashboardHeader.stl" as layout>
+<@layout.basic menu="system/messageCenter">
+<script>
+
+		// This code is generally not necessary, but it is here to demonstrate
+		// how to customize specific editor instances on the fly. This fits well
+		// this demo because we have editable elements (like headers) that
+		// require less features.
+
+		// The "instanceCreated" event is fired for every editor instance created.
+		CKEDITOR.on( 'instanceCreated', function( event ) {
+			var editor = event.editor,
+				element = editor.element;
+
+			// Customize editors for headers and tag list.
+			// These editors don't need features like smileys, templates, iframes etc.
+			if ( element.is( 'h1', 'h2', 'h3' ) || element.getAttribute( 'id' ) == 'taglist' ) {
+				// Customize the editor configurations on "configLoaded" event,
+				// which is fired after the configuration file loading and
+				// execution. This makes it possible to change the
+				// configurations before the editor initialization takes place.
+				editor.on( 'configLoaded', function() {
+
+					// Remove unnecessary plugins to make the editor simpler.
+					editor.config.removePlugins = 'colorbutton,find,flash,font,' +
+						'forms,iframe,image,newpage,removeformat,' +
+						'smiley,specialchar,stylescombo,templates';
+
+					// Rearrange the layout of the toolbar.
+					editor.config.toolbarGroups = [
+						{ name: 'editing',		groups: [ 'basicstyles', 'links' ] },
+						{ name: 'undo' },
+						{ name: 'clipboard',	groups: [ 'selection', 'clipboard' ] },
+						{ name: 'about' }
+					];
+				});
+			}
+		});
+
+
+	
+function cancelMsgCenter() {
+	var cancelMsg = confirm("Do you wish to exit the Message Center? Any unsaved changes will be lost.");
+	if (cancelMsg == true){
+    window.location.replace("${request.getContextPath()}/admin/desktop.do");
+    }
+}
+
+	</script>
+	<style>
+
+		/* The following styles are just to make the page look nice. */
+
+		/* Workaround to show Arial Black in Firefox. */
+		@font-face
+		{
+			font-family: 'arial-black';
+			src: local('Arial Black');
+		}
+
+		*[contenteditable="true"]
+		{
+			padding: 10px;
+		}
+
+		#container
+		{
+			width: 960px;
+			margin: 30px auto 0;
+		}
+
+		#header
+		{
+			overflow: hidden;
+			/*padding: 0 0 30px;
+			border-bottom: 5px solid #05B2D2;*/
+			position: relative;
+		}
+
+		#headerLeft,
+		#headerRight
+		{
+			width: 100%;
+			overflow: hidden;
+		}
+
+		#headerLeft
+		{
+			padding: 10px 1px 1px;
+			text-align:center;
+		}
+
+		#headerLeft h2,
+		#headerLeft h3
+		{
+			margin: 0;
+			overflow: hidden;
+			font-weight: normal;
+		}
+
+		#headerLeft h2
+		{
+			font-family: "Arial Black",arial-black;
+			font-size: 2.6em;
+			line-height: 1.1;
+			text-transform: uppercase;
+		}
+
+		#headerLeft h3
+		{
+			font-size: 1.3em;
+			line-height: 1.1;
+			margin: .2em 0 0;
+			color: #666;
+		}
+
+		#footer{
+			text-align:center;
+		}
+		#welcomMsgCenterTitle{
+			text-align:center;
+		}
+		#msgContentTitle h2{
+			text-align:left;
+		}
+		#messageContentDiv{
+			background:#fff;
+			min-height:500px;
+			border:1px solid #CFCFCF;
+			-webkit-border-radius: 5px;
+			-moz-border-radius: 5px;
+			border-radius: 5px;
+		}
+		#emptyMessagesFillerCont{
+			font-size:1.3em;
+			color:#E6E6E6;
+			text-align:center;
+			display:block;
+		}
+		.msgFormBtns{
+		  background: #00578a;
+		  background-image: -webkit-linear-gradient(top, #00578a, #003c61);
+		  background-image: -moz-linear-gradient(top, #00578a, #003c61);
+		  background-image: -ms-linear-gradient(top, #00578a, #003c61);
+		  background-image: -o-linear-gradient(top, #00578a, #003c61);
+		  background-image: linear-gradient(to bottom, #00578a, #003c61);
+		  -webkit-border-radius: 10;
+		  -moz-border-radius: 10;
+		  border-radius: 10px;
+		  font-family: Arial;
+		  color: #ffffff;
+		  font-size: 1.2em;
+		  padding: 8px 17px 8px 17px;
+		  text-decoration: none;
+		  cursor:pointer;
+		}
+	.msgFormBtns:hover{	
+		  background: #0070b5;
+		  background-image: -webkit-linear-gradient(top, #0070b5, #004675);
+		  background-image: -moz-linear-gradient(top, #0070b5, #004675);
+		  background-image: -ms-linear-gradient(top, #0070b5, #004675);
+		  background-image: -o-linear-gradient(top, #0070b5, #004675);
+		  background-image: linear-gradient(to bottom, #0070b5, #004675);
+		  text-decoration: none;
+		  cursor:pointer;
+  }
+		#saveMessagesBtn{
+			margin-top:10px;
+		}
+		#cancelButtonCont{
+			display: inline;
+			float:right;
+			margin-top:-40px;
+		}
+	</style>
+
+<div id="container">
+	<div id="header">
+		<div id="headerLeft">
+			<h2 id="welcomMsgCenterTitle" contenteditable="false">
+				WELCOME TO THE MESSAGE CENTER
+			</h2>
+			<h3 contenteditable="false">
+				Use the below space to add messages, notifications, or general updates that you wish for your users to see</br>
+				Just click within the designated "Messages" area and type away.
+			</h3>
+		</div>
+	</div>
+	<div id="msgContentWrapper">
+		<div id="msgContentTitle">
+			<h2>Messages</h2>
+		</div>
+<form id="submitMessages" name="submitMessages" action="adminMessage.do" method="post" onsubmit="return valForm(this)">
+		<div id="messageContentDiv" name ="messageContentDiv" contenteditable="true">
+			<#if messageContent?has_content>
+				${messageContent?trim}
+			</#if>
+		</div>
+		<input type="hidden" name="htmlMessageContent" id="htmlMessageContent" value="" />
+		<input type="hidden" name="lastUpdatedDateTime" id="lastUpdatedDateTime" value="<#if messageContent?has_content>${lastUpdatedDateTime}</#if>"/>
+		<div id="submitButtonCont" style="display: inline;">
+			<span>
+				<input type="submit" class="msgFormBtns" name="saveMessagesBtn" id="saveMessagesBtn" onclick="publishMessages()" value="Publish">
+			</span>
+		</div>
+</form>		
+		<div id="cancelButtonCont">
+			<span>
+				<input type="submit" class="msgFormBtns" name="cancelMessagesBtn" id="cancelMessagesBtn" onclick="cancelMsgCenter()" value="Cancel">
+			</span>
+		</div>	
+	</div>
+</div>
+<div id="footer">
+	<hr>
+	<p id="copy">
+		Copyright &copy; 2015, <a class="samples" href="www.granicus.com">Granicus</a>
+	</p>
+</div>
+   <script type="text/javascript">
+	     $(document).ready(function() {
+	     
+			$( "#tabs" ).tabs({
+		                cookie: {
+		                    // store cookie for a day, without, it would be a session cookie
+		                    expires: 0
+		                },
+		                select:function(event, ui) {
+		                     $(".important").hide();                                           
+		                }
+		            });
+		            $('#mainContent').show();
+	      });
+
+			
+    	function publishMessages() {
+			messageContentOfDiv = document.getElementById("messageContentDiv");
+			messageContentOfDivVal = messageContentOfDiv.innerHTML;
+			document.getElementById("htmlMessageContent").value = messageContentOfDivVal;
+    	}
+    	
+    	function valForm(form){
+    		messageContentOfDiv = document.getElementById("messageContentDiv");
+			messageContentOfDivVal = messageContentOfDiv.innerHTML;
+
+			if (messageContentOfDivVal.length < 50) {
+					var smallStringMessage = confirm("Message Center is either empty or has less than 50 characters. Do you wish to proceed?");
+					if (smallStringMessage == false){
+					    return false;	    			
+					}
+			}
+					
+	    	if(messageContentOfDivVal == null || messageContentOfDivVal == '' || messageContentOfDivVal == "<p><br></p>"){
+	    			var cancelMsg = confirm("Message Center has no content. Do you wish to erase everything?");
+					if (cancelMsg == false){
+					    return false;	    			
+					}
+			}
+    	}	      
+	</script>
+
+</@>

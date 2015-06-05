@@ -1,0 +1,33 @@
+<#import "registrationHeader.stl" as layout>
+<@layout.basic menu = "system/dashboard">
+
+
+<div id="content" style="margin-top:50px;">
+	<div id="content_wrapper" style="width:600px;margin:20px auto;background:#fff;padding:15px;border:3px solid #adadad;-webkit-border-radius: 15px;-moz-border-radius: 15px;border-radius: 15px;">
+		<h1>ROAM Admin Log In Page</h1>
+		<div id="main_content">
+			<div id="image" style="display:inline;">
+				<img src="../resources/images/login.png" alt="User LogIn Icon" title="User LogIn Icon"/>&nbsp;
+			</div>
+			<div id="inputDiv" style="margin:30px 175px 0 0;display:inline;float:right;">
+				<form name="f" method="post"">
+				<input type="hidden" name="operation" value="login">	
+					<span class="bold" style="font-weight:bold;">User Name:&nbsp;</span><span><input type="text"  name="username" id="adminUser" value='${request.getParameter("username")}' style="width: 150px;margin-bottom:10px;" Maxlength="30"></span>
+					<br/>
+					<span class="bold" style="font-weight:bold;">Password:&nbsp;</span><span style="padding-left:8px;"><input type="password"  name="password" id="password" style="width: 150px;margin-bottom:10px;" Maxlength="30"></span>
+					<br/>
+					<span class="bold" style="font-weight:bold;"><label style="white-space: nowrap;"><input type="checkbox" name="remeberme" style="margin-bottom:10px;">&nbsp; <font size="-1">Remember me for 2 weeks. </font></label></span>
+					<br/>
+					<span><@com.actionSubmitButton "f", "submitLogin", "Sign In", "login"/></span>
+				</form>
+			</div>
+		</div><!--END #main_content-->
+	</div><!--END #CONTENT_WRAPPER-->
+</div><!--END #CONTENT-->
+
+<br />
+<br />
+
+
+
+</@>

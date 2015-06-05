@@ -1,0 +1,126 @@
+@charset "utf-8";
+/* CSS Document */
+
+html, body {
+	background-color:#fff;
+	color:#000;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:11px;
+	padding-top:10px;
+}
+a link{
+	color:#E78F08;
+}
+h4, h3 {
+	color:#555;
+}
+ol#login-fields, ol#signup-fields{
+	list-style: none outside;	
+}
+td{
+	display:inline;
+}
+fieldset{
+	border:0px;
+}
+form fieldset ol li label {
+    color: #555;
+	display: block;
+	float: left;
+	font-weight: bold;
+	line-height: 1;
+	margin: 8px 10px 0 0;
+	width: 110px;
+}
+input.text, input.password, textarea {
+	background: white;
+	border: 2px solid #DDD;
+	padding: 2px;
+}
+input.text:hover{
+	border: 2px #EB8F00 solid;
+}
+input#j_username, input#j_password, input#j_password{
+	margin-bottom:20px;
+}
+form#login fieldset ol li label, form#signup fieldset ol li label{
+	float:none;
+	text-align:left;
+	height:18px;
+	width:250px;
+}
+li#remember-me label{
+	display:inline;
+	float:none;
+}
+li#terms label{
+	display:inline;
+	float:none;
+}
+li#tips{
+	font-size:150%;
+}
+input.submit{
+	margin-top:10px;
+	cursor:pointer;
+}
+table#terms-of-use{
+	margin-left:38px;
+}
+div.form-box{
+	margin:-10px 0 0 -120px;
+	width:300px;
+}
+div.wrapper, div#main, div#main-signup{
+	width:620px;
+	margin: 0 auto;
+}
+div#main{
+	margin:0 auto;
+	padding: 0;
+	position:relative;
+	width:600px;
+	height:400px;
+}
+div#main-signup{
+	margin:0 auto;
+	padding: 0;
+	position:relative;
+	width:800px;
+	height:400px;
+}
+div#tips{
+	float:right;
+	position:absolute;
+	top:5%;
+	right:0%;
+	line-height: 2 em;
+	
+}
+div#tabs{
+	background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0.3, rgb(205,205,205)),
+    color-stop(0.88, rgb(255,255,255))
+    );
+    background-image: -moz-linear-gradient(
+    center bottom,
+    rgb(205,205,205) 30%,
+    rgb(255,255,255) 88%
+    );
+    position: absolute;
+	top: 50%;
+	left: 50%;
+	width:800px;
+	height:400px;	
+	margin-top: -20em;
+	margin-left: -34em;
+	-moz-border-radius: 10px;
+	border-radius:10px;
+	border: 2px solid #E78F08;
+	border-top:0px;
+	padding: 0;
+}
+

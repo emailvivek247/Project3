@@ -1,0 +1,48 @@
+## $Id: uploadFile.vm 5787 2009-07-07 06:28:25Z cylu $
+
+#set( $title = $msg.get("title") )
+#set( $selectedMenu = 'dataset' )
+#if($_selectedToptab)#set( $selectedToptab = $_selectedToptab )#end
+#if($_selectedSubtab)#set( $selectedSubtab = $_selectedSubtab )#end
+#if($_jumperAction)#set( $jumperAction = $_jumperAction )#end
+
+<script type="text/javascript">
+function addFile() {
+  var table = document.getElementById('filetable');
+  var index = table.rows.length - 2;
+  var row = table.insertRow(index);
+  var cell = row.insertCell(0);
+  cell.innerHTML = "<b>"+index+"</b>&nbsp;<input type='file' name='file" + index + "' id='file" + index + "' size='40' />";
+  cell = row.insertCell(1);
+  cell.innerHTML = "<input type='text' name='renamefile" + index + "' id='renamefile" + index + "' size='40' value='' />";
+}
+</script>
+
+<br />
+#errorMarkup()
+#messageMarkup()
+<form name="f" id="f" method="post" action="uploadFile.do" enctype="multipart/form-data">
+<input type="hidden" name="operation" value="upload" />
+<table id="filetable" align="center" cellpadding="2" cellspacing="0" border="0">
+  <tr>
+  		<th>File</th>
+  		<th colspan="2">Rename (optional)</th>
+  </tr>
+  <tr>
+    <td><b>1</b>&nbsp;<input type="file" name="file1" id="file1" size="40" /></td>
+    <td colspan="2"><input type="text" name="renamefile1" id="renamefile1" size="40" value="" /></td>
+  </tr>
+  <tr>
+    <td colspan="3"><button type="button" name="" class="query" id="" onclick="addFile(); return false;">Add another file</button></td>
+  <tr>
+    <td align="right">Total upload cannot exceed <b>10MB</b>
+    <td><button type="submit" class="general" name="btnUpload" id="btnUpload">Upload</button></td>
+    #if( $forwardName )
+      #set( $cancelLocation = "$link.setAction($forwardName).addQueryData('indexName', $indexName)&$urlParams" )
+    #else
+      #set( $cancelLocation = $link.setForward('welcome') )
+    #end
+    <td><button type="submit" class="general" name="btnCancel" id="btnCancel" onclick="window.location='$cancelLocation'; return false;">Cancel</button></td>
+  </tr>
+</table>
+</form>

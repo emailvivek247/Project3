@@ -1,0 +1,247 @@
+<#include "/admin/lib/include.stl" />
+<@loginLayout encoding="utf-8">
+<#assign form  =JspTaglibs["http://www.springframework.org/tags/form"]>
+<#assign spring=JspTaglibs["http://www.springframework.org/tags"]>
+<link rel="stylesheet" href="resources/styles/validationEngine.jquery.css" type="text/css" />
+<link rel="stylesheet" href="resources/styles/login.css" />
+<link rel="stylesheet" href="resources/styles/jquery-ui-1.8.11.base.css" />
+<link rel="stylesheet" href="resources/styles/jquery-ui-custom-ext.css" />
+<link rel="stylesheet" href="resources/styles/tablesorter_blue/style.css" />
+<script type="text/javascript" src="resources/javascripts/jquery.min.js"/></script>
+<script type="text/javascript" src="resources/javascripts/jquery-ui.min.js"/></script>
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.validationEngine-en.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.validationEngine.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.cookie.js"></script>
+<script type="text/javascript" src="resources/javascripts/jquery.printElement.min.js"/></script>
+<script type="text/javascript" src="resources/javascripts/jquery.tablesorter.js"></script>
+<script type="text/javascript" src="resources/javascripts/jquery.tablesorter.pager.js"></script>
+
+
+<style>
+div.ADCSI {
+	width:80%;
+}
+div.ADCSI_row {
+	margin-right: 20px;
+}
+ul {
+	list-style-type: square;
+}
+.paid {
+	color: #527838;
+}
+
+.unPaid {
+	color: #ED1C43;
+}
+td.center {
+	text-align:center;
+}
+td.right {
+	text-align:right;
+}
+td.left {
+	text-align:left;
+}
+div.headerLabel	 {
+	  width:100%;
+	  font-weight:bold;
+	  padding: 20px;
+	  text-align:center;
+}
+#printArea {
+	padding: 20px;
+}
+table#subscriptionDetails {
+	border-collapse: collapse;
+	margin: auto;
+}
+
+table#subscriptionDetails td {
+	padding: 5px 5px;
+}
+
+table#subscriptionDetails tr.paid {
+	color: #527838;
+}
+
+table#subscriptionDetails tr.unPaid {
+	color: #BF5468;
+}
+
+th.header{
+	color: #039;
+	border-bottom: 2px solid #6678B1;
+	padding: 5px 5px;
+}
+td.header{
+	color: #039;
+	border-bottom: 2px solid #6678B1;
+	padding: 5px 5px;
+}
+th.subheader{
+	color: #039;
+	border-top: 1px solid #6678B1;
+	text-align:left;
+	padding: 5px 5px;
+}
+td.footer{
+	color: #039;
+	border-top: 2px solid #6678B1;
+	padding: 5px 5px;
+}
+.paid {
+	color: #527838;
+}
+
+.unPaid {
+	color: #ED1C43;
+}
+</style>
+	<div class="content">
+		<div style="width:90%;min-width:900px;margin-left:auto;margin-right:auto;margin-top:100px;">
+			<div id="ADCSI" class="ADCSI" style="margin-top:0px; margin-bottom: 12px;">
+				<div class="ADCSI_title" id="ADCSI_title">
+					<span style="width:49%;text-align:left;display:inline-block;"><b><@spring.message code="form.name.receipt" /></b></span>
+					<span style="width:49%;text-align:right;display:inline-block;"><a href="logout.admin"><@spring.message code="security.authentication.logout" /></a>&nbsp;(${user.username})</a></span>
+				</div>
+				<#if payAsUGoTransaction?has_content && payAsUGoTransaction?size &gt; 0>
+
+				<div id="printArea">
+					<div class="headerLabel"><@spring.message code="form.name.receipt" /></div>
+					<b><@spring.message code="security.ecommerce.label.customerName" />:</b> ${payAsUGoTransaction.userFirstName} ${payAsUGoTransaction.userLastName}<br />
+					<b><@spring.message code="security.ecommerce.label.receiptDate" />:</b> ${pageStyleUtil.getDateInTimezone(payAsUGoTransaction.transactionDate,payAsUGoTransaction.site.timeZone)}<br />
+					<b><@spring.message code="security.ecommerce.label.certifiedDocument"/>(s):</b> <#if payAsUGoTransaction.isCertified()>Yes<#else>No</#if><br />
+					<b><@spring.message code="security.ecommerce.transactionReference" />:</b> ${payAsUGoTransaction.txRefNum} <br />
+					<#if payAsUGoTransaction.getCardNumber()?has_content>
+							<b><@spring.message code="security.ecommerce.label.cardCharged" />:</b> ***********${payAsUGoTransaction.getCardNumber()} <br />
+					</#if>
+					<#if payAsUGoTransaction.getAccountName()?has_content>
+						<b><@spring.message code="security.ecommerce.label.accountName" />:</b> ${payAsUGoTransaction.getAccountName()} <br />
+					</#if>
+					<#if payAsUGoTransaction.getOrigTxRefNum()?has_content>
+					<b><@spring.message code="security.ecommerce.orgtransactionReference" />:</b> ${payAsUGoTransaction.origTxRefNum} <br />
+					</#if>
+					<b><@spring.message code="security.ecommerce.label.site" />:</b> ${payAsUGoTransaction.getSite().getName()}<br />
+					<br /><br /><br />
+					<#if  payAsUGoTransaction.getPayAsUGoTxItems()?has_content && (payAsUGoTransaction.getPayAsUGoTxItems()?size > 0) && !payAsUGoTransaction.getOrigTxRefNum()?has_content>
+					<table width="100%" id="subscriptionDetails">
+						<tr ><td class="header" colspan="6"><@spring.message code="security.ecommerce.label.purchases" /></td></tr>
+						<th class="header"><@spring.message code="security.ecommerce.label.productId" /></th>
+						<th class="header"><@spring.message code="security.ecommerce.label.productType" /></th>
+						<#if payAsUGoTransaction.isCertified()> <th class="header"><@spring.message code="security.ecommerce.label.certifiedDocumentNumber" /></th> </#if>
+						<th class="header"><@spring.message code="security.ecommerce.label.pageCount" /></th>
+						<th class="header"><@spring.message code="security.ecommerce.label.comments" /></th>
+						<th class="header"><@spring.message code="security.ecommerce.label.fee" /></th>
+						<th class="header hiddenRecieptColumn"><@spring.message code="security.ecommerce.label.DownloadOrView" /></th>
+						<#assign TotalTxAmount = payAsUGoTransaction.getTotalTxAmount()>
+						<#list payAsUGoTransaction.getPayAsUGoTxItems() as purchasedItem>
+						<tr>
+							<td style="text-align:center;">${purchasedItem.getProductId()}</td>
+							<td style="text-align:center;">${purchasedItem.getProductType()}</td>
+							<#if payAsUGoTransaction.isCertified()> <td style="text-align:center;"><#if purchasedItem.certifiedDocumentNumber?has_content> ${purchasedItem.certifiedDocumentNumber} </#if></td></#if>
+							<td style="text-align:center;">${purchasedItem.getPageCount()}</td>
+							<td style="text-align:center;"><#if purchasedItem.getComments()?has_content> ${purchasedItem.getComments()}</td></#if>
+							<td class="right" style="text-align:right;">${purchasedItem.getTotalTxAmount()?string.currency}</td>
+							<td style="text-align:center;" class="hiddenRecieptColumn">
+								<#if purchasedItem.getDownloadURL()?has_content && !purchasedItem.isRefunded()>
+									<#if purchasedItem.documentAvailable>
+										<a href="${purchasedItem.getDownloadURL()}&isDownload=Y&downloadDocument=Y&isPrintingAllowed=true&isFillWatermark=false&opacity=1" target="_blank"><img alt="Download Document" title="Download Document" width="30px" height="30px" style="border:0px;" src="resources/images/downloadDocument.png"/></a>
+										&nbsp;&nbsp;
+										<a href="${purchasedItem.getDownloadURL()}&isDownload=Y&downloadDocument=N&isPrintingAllowed=true&isFillWatermark=false&opacity=1" target="_blank"><img alt="View Document" title="View Document" width="30px" height="30px" style="border:0px;" src="resources/images/viewDocument.png"/></a>
+									<#else>
+										<@spring.message code="security.ecommerce.label.expired" />
+									</#if>
+								<#else>
+									<@spring.message code="security.ecommerce.label.refunded" />
+									</#if>
+							</td>
+						</tr>
+					 	</#list>
+		                <tr>
+		                <#if payAsUGoTransaction.isCertified()>
+							<td class="footer right" colspan="5"><@spring.message code="security.ecommerce.totalBalance" /></td>
+						<#else>
+							<td class="footer right" colspan="4"><@spring.message code="security.ecommerce.totalBalance" /></td>
+						</#if>
+
+						<td class="footer right"  style="text-align:right;">${ payAsUGoTransaction.getTotalTxAmount()?string.currency}</td>
+						<td class="footer right"></td>
+					 	</tr>
+					</table>
+					<br /><br /><br />
+					</#if>
+					<#if  payAsUGoTransaction.getPayAsUGoTxItems()?has_content && (payAsUGoTransaction.getPayAsUGoTxItems()?size > 0) && payAsUGoTransaction.getOrigTxRefNum()?has_content>
+					<table width="100%" id="subscriptionDetails">
+						<tr ><td class="header" colspan="6"><@spring.message code="security.ecommerce.label.refunds" /></td></tr>
+						<th class="header"><@spring.message code="security.ecommerce.label.transactionDate" /></th>
+						<th class="header"><@spring.message code="security.ecommerce.label.productId" /></th>
+						<th class="header"><@spring.message code="security.ecommerce.label.productType" /></th>
+						<th class="header"><@spring.message code="security.ecommerce.label.pageCount" /></th>
+						<th class="header"><@spring.message code="security.ecommerce.label.fee" /></th>
+						<#assign TotalTxAmount = 0>
+						<#list payAsUGoTransaction.getPayAsUGoTxItems() as purchasedItem>
+						<#if purchasedItem.isRefunded()>
+						<tr>
+							<td style="text-align:center;">${pageStyleUtil.getDateInTimezone(payAsUGoTransaction.transactionDate,payAsUGoTransaction.site.timeZone)}</td>
+							<td style="text-align:center;">${purchasedItem.getProductId()}</td>
+							<td style="text-align:center;">${purchasedItem.getProductType()}</td>
+							<td style="text-align:center;">${purchasedItem.getPageCount()}</td>
+							<td class="right" style="text-align:right;"><#if purchasedItem.isRefunded()> - ${purchasedItem.getTotalTxAmount()?string.currency}<#else>${purchasedItem.getTotalTxAmount()?string.currency}</#if></td>
+						</tr>
+						</#if>
+						<#if purchasedItem.isRefunded()>
+							<#assign TotalTxAmount = TotalTxAmount + purchasedItem.getTotalTxAmount()>
+						</#if>
+					 	</#list>
+		                <tr>
+						<td class="footer right" colspan="4"><@spring.message code="security.ecommerce.totalRefunds" /></td>
+						<td class="footer right"  style="text-align:right;">${TotalTxAmount?string.currency}</td>
+					 	</tr>
+					</table>
+					</#if>
+				</div>
+				</#if>
+			<br /><br />
+			<div style="text-align:left;padding-left:20px;color:red;">
+				<@spring.message code="security.ecommerce.label.webPaymentDetailsFinePrint" />
+			</div>
+			<br /><br />
+			<div style="width:100%;text-align:center;">
+				<a id="printRecepit" style="cursor:pointer;"><img src="resources/images/print.png" /><@spring.message code="security.ecommerce.label.printReceipt" /></a>
+			</div>
+			<div style="height:40px;text-align:center;" class="ADCSI_title" id="ADCSI_title">
+				<table>
+					<tr>
+						<td class="left" style="white-space: nowrap">
+							<span><a href="paymenthistory.admin"><@spring.message code="security.ecommerce.label.returnTo" /> <@spring.message code="security.ecommerce.label.paymentHistory" /></a></span>
+						</td>
+						<td style="white-space: nowrap">
+							<span style="height:40px;"><img style="border:0px;;" src="resources/images/history.png"/></span>
+						</td>
+						<td style="width:100%">
+
+						</td>
+						<td style="white-space: nowrap">
+							<span><a href="checkSubscription.admin"><@spring.message code="security.ecommerce.label.continueToSearchPage" /></a></span>
+						</td>
+						<td class="right" style="white-space: nowrap">
+							<span style="height:40px;"><img style="border:0px;" src="resources/images/continueSearch.png"/></span>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+       $(document).ready(function() {
+         $("#printRecepit").click(function() {
+             printElem({ overrideElementCSS: ['resources/styles/table.css'],pageTitle:'<@spring.message code="security.ecommerce.label.paymentHistory" />' });
+         });
+       });
+		 function printElem(options){
+		     $('#printArea').printElement(options);
+		 }
+
+    </script>
+</@loginLayout>

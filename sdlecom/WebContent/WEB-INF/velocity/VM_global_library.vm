@@ -1,0 +1,261 @@
+## Display all queued Struts errors
+#macro (errorMarkup)
+  #if( $errors.exist() )
+    <div class="important error" style="margin-left: 0.5in; margin-right: 0.5in;">
+    <table border="0" summary="Important">
+    <tr><td rowspan="2" align="center" valign="top" width="25">
+    <span class="ui-icon ui-icon-alert"></span></td>
+    <th align="left">Error</th></tr>
+    <tr><td colspan="2" align="left" valign="top"><ul style="padding:0 0 0 0; margin:0 0 0 0">
+    #foreach( $e in $errors.all )
+      <li>$e</li>
+    #end
+    #if($_nextError)
+      <li>$_nextError</li>
+    #end
+    </ul></td></tr>
+    </table></div>
+  #end
+#end
+
+## Display all queued Struts errors
+#macro (errorMarkupForSearchResults)
+  #if( $errors.exist() )
+    <div align="center" style="margin-top:50px;">
+    <table border="0" summary="Important">
+    <th align="left">Message</th></tr>
+    <tr><td colspan="2" align="left" valign="top"><ul style="padding:0 0 0 0; margin:0 0 0 0">
+    #foreach( $e in $errors.all )
+      <li>$e</li>
+    #end
+    #if($_nextError)
+      <li>$_nextError</li>
+    #end
+    </ul></td></tr>
+    <tr><td colspan="2" align="right" valign="top"><a href="javascript:history.go(-1)">Go Back</a></td>
+    </tr>
+    </table></div>
+  #end
+#end
+
+## Display all queued Struts messages
+#macro( messageMarkupForSearchResults)
+  #if( $messages.exist() )
+    <div align="center" style="margin-top:50px;">
+    <table border="0" summary="Important">
+    <th align="left">Message</th></tr>
+    <tr><td colspan="2" align="left" valign="top"><ul style="padding:0 0 0 0; margin:0 0 0 0">
+    #foreach ($m in $messages.all)
+      <li>$m</li>
+    #end
+    #if($_nextMessage)
+      <li>$_nextMessage</li>
+    #end
+    </ul></td></tr>
+        <tr><td colspan="2" align="right" valign="top"><a href="javascript:history.go(-1)">Go Back</a></td>
+        </tr>
+    </table></div>
+  #end
+#end
+
+
+## Display all queued Struts errors for a particular property
+#macro (errorMarkupForProperty $property)
+  #if( $errors.exist($property) )
+    <div class="important" style="margin-left: 0.5in; margin-right: 0.5in;">
+    <table border="0" summary="Important">
+    <tr><td rowspan="2" align="center" valign="top" width="25">
+    <span class="ui-icon ui-icon-alert"></span></td>
+    <th align="left">Error</th></tr>
+    <tr><td colspan="2" align="left" valign="top"><ul style="padding:0 0 0 0; margin:0 0 0 0">
+    #foreach($e in $errors.get($property) )
+      <li>$e</li>
+    #end
+    #if($_nextError)
+      <li>$_nextError</li>
+    #end
+    </ul></td></tr>
+    </table></div>
+  #end
+#end
+
+## Display all queued Struts messages
+#macro( messageMarkup )
+  #if( $messages.exist() )
+    <div class="important success" style="margin-left: 0.5in; margin-right: 0.5in;">
+    <table border="0" summary="Important">
+    <tr><td rowspan="2" align="center" valign="top" width="25">
+    <img alt="[Message]" src="$link.getContextPath()/resources/images/note.gif"></td>
+    <th align="left">Message</th></tr>
+    <tr><td colspan="2" align="left" valign="top"><ul style="padding:0 0 0 0; margin:0 0 0 0">
+    #foreach ($m in $messages.all)
+      <li>$m</li>
+    #end
+    #if($_nextMessage)
+      <li>$_nextMessage</li>
+    #end
+    </ul></td></tr>
+    </table></div>
+  #end
+#end
+#macro( addNextMessage $_v )
+  #if( $messages.exist() )
+    #set($_nextMessage = $_v)
+  #end
+#end
+#macro( addNextError $_v )
+  #if( $errors.exist() )
+    #set($_nextError = $_v)
+  #end
+#end
+
+## display a tip when #tip('...') is called inside <div> or <a>
+##
+#macro( tip $the_Tip)
+#set( $hasToolTip =  true )
+#set( $_the_Tip =  false )
+#set($_the_Tip = $escapeChars.forHTMLTag( $!{the_Tip.replaceAll("\n","<br />")} ) )
+class="tooltip" title="$!{_the_Tip}"
+#end
+
+## big button, used with application.css
+##
+#macro( actionSubmitButton $formName $buttonName $displayName $actionValue )
+<button class="general" type="submit" name="$buttonName" id="$buttonName" onclick="${formName}.operation.value='$actionValue'; document.${formName}.submit(); return false;">$displayName</button>
+#end
+
+## display a gap of time
+#macro( displayElapsedTime $_date )
+#set($_digits = [0,0,0,0] )
+#set($_digits = $vmTool.getElapsedTime($_date) )
+#set($_printed = 0 )
+#foreach( $_v in $_digits)#if($_v > 0 && $_printed < 2 || $velocityCount == 4 && $_printed == 0) ${_v} $msg.get("time.$velocityCount")#if( $_v > 1 )$msg.get("time.plural")#end
+#set( $_printed = $_printed + 1 )
+#end
+#end
+#end
+
+## td for prompt
+#macro( promptTD $promptname )
+<td align=right valign=top nowrap width="18%">#if($promptname)<b>$promptname:</b>#else&nbsp;#end</td>
+#end
+
+## to render fieldset
+## Usage: #openFieldset() .... #closeFieldset()
+##  note: the open/close already have a table embracing the content
+##
+#macro( openFieldset $_legend)
+<div id="effect" class="ui-widget-content">
+		<h3 class="ui-widget-header" style="margin:0px 0px 10px 0px;">$_legend</h3>
+#end
+#macro( closeFieldset )
+</div>
+#end
+
+## to render rounded corner container
+## Usage: #openContainer() .... #closeContainer()
+##  note: the open/close already have a table embracing the content
+##
+#macro( openContainer $_style)
+<div class="modulecontainer sidebar" #if($_style)style="$_style"#end><div class="first"><span class="first"></span><span class="last"></span></div><div>
+#end
+#macro( containerHeader $_left $_right)
+<div id="containerHeader"><span class="left">$!{_left}</span>&nbsp;$!{_right}</div>
+#end
+#macro( closeContainer )
+</div><div class="last"><span class="first"></span><span class="last"></span></div></div>
+#end
+
+## toggle a div
+## to use it
+## 	 put #toggleADiv() where you want to show the toggle control div
+##  put #displayADiv() right after the div being toggled
+##
+#macro(toggleADiv $_beingToggledDivId $_toggleDivId $_showText $_hideText $_display)
+#if(!$isCookiejsIncluded)
+<script type="text/javascript" src="$link.getContextPath()/resources/javascripts/cookie.js"></script>
+  #set($isCookiejsIncluded = true)
+#end
+<script type="text/javascript">
+function Toggle_${_beingToggledDivId}()
+{
+var d = document.getElementById("$_beingToggledDivId");
+var cookiename = escape(window.location+"$_toggleDivId");
+if(d){
+if(d.style.display == 'none'){
+  d.style.display = 'block';
+  setCookie(cookiename, 'block');
+}else{
+  d.style.display = 'none';
+  setCookie(cookiename, 'none');
+}
+}
+
+var t = document.getElementById("$_toggleDivId");
+if(t){
+if(d && d.style.display == 'none'){
+  t.innerHTML = "$_showText";
+}else{
+  t.innerHTML = "$_hideText";
+}
+}
+}
+var cookiename = escape(window.location+"$_toggleDivId");
+var shDisplay = getCookie(cookiename);
+document.write("<span id=\"$_toggleDivId\" onclick=\"Toggle_${_beingToggledDivId}();\" style=\"cursor:pointer;cursor:hand;\">");
+if(shDisplay == 'none') document.write("$_showText");
+else if(shDisplay == 'block') document.write("$_hideText");
+else{
+  document.write(#if($_display=="none")"$_showText"#else"$_hideText"#end);
+  shDisplay = "$_display";
+}
+document.write("</span>");
+</script>
+#end
+#macro(displayADiv $_beingToggledDivId)
+<script type="text/javascript">
+var d = document.getElementById("$_beingToggledDivId");
+if (d) {
+  d.style.display = shDisplay;
+}
+</script>
+#end
+
+## render results in template
+##
+#macro( templateInclude $_pageName )
+  #if( !$_template_path )
+    #if( !("1" == $isExample) )
+      #set( $_template_path = $templateUtil.getTemplatePath($indexName, $templateName) )
+    #else
+      #set( $_template_path = $templateUtil.getExampleTemplatePath($templateName) )
+    #end
+  #end
+  #set( $_full_name = "$_template_path/$_pageName" )
+  #parse( $_full_name )
+#end
+
+## Online Help
+##
+#macro (onlineHelp $prompt $pageName $anchor)
+<span  style='cursor:pointer;cursor:hand;' onClick="window.open('help.vm?page=$pageName#$anchor','','height=400,width=550,resizable=1,scrollbars=yes,toolbar=no,menubar=no,location=no'); return false">	
+&nbsp;$prompt&nbsp;<img ALIGN=ABSMIDDLE  src="images/question.gif" border="0" width="12" height="11"  alt='Click for Online Help'>
+</span>
+#end
+
+## Online Help, another version, with icon first
+##
+#macro (onlineHelpWithIconFirst $prompt $pageName $anchor)
+<span  style='cursor:pointer;cursor:hand;' onClick="window.open('help.vm?page=$pageName#$anchor','','height=400,width=550,resizable=1,scrollbars=yes,toolbar=no,menubar=no,location=no'); return false">	
+<img ALIGN=ABSMIDDLE  src="images/question.gif" border=0 width=12 height=11  alt='Click for Online Help'>&nbsp;$prompt&nbsp;
+</span>
+#end
+
+#macro (highlight $_content)$summarizer.getHighlighted($_content)#end
+#macro (summarize $_content)$summarizer.getSummary($_content)#end
+#macro (useHighlightTag $_prefix $_suffix)
+#if($summarizer)$summarizer.setHighlightPrefix($_prefix)$summarizer.setHighlightSuffix($_suffix)#end
+#end
+#macro (useTimeFormat $_timeFormat)$dateFormat.applyPattern($_timeFormat)#end
+#macro (displayTime $_time)$dateFormat.format($vmTool.stringToDate($_time))#end
+#macro (escapeHTML $text)$escapeChars.forHTMLTag($text)#end

@@ -1,0 +1,117 @@
+#set( $title = $msg.get("title") )
+#set( $selectedMenu = 'dataset' )
+#set( $selectedToptab = "dataset" )
+#set( $selectedSubtab = "data" )
+
+#set( $jumperAction = "configDataSelect.do" )
+
+#set( $columnTypes = $WebserverStatic.webConfiguration.columnClassNames )
+#set( $indexFieldTypes = $WebserverStatic.webConfiguration.indexFieldTypes )
+
+#macro( promptTD $promptname )
+<td align=right valign=top nowrap width="5%">#if($promptname)<b>$promptname:</b>#else&nbsp;#end</td>
+#end
+
+#macro( tableRowMultiLineInput $promptname $inputname $somevalue )
+  <tr>#promptTD($promptname)<td><textarea class="resizable" name="$inputname" id="$inputname" cols="90" rows="20" wrap="virtual">$!somevalue</textarea></td></tr>
+#end
+
+## Keep VTL statements in the same line to output a single-line HTML.
+## Javascript has trouble handling multi-line strings.
+#macro( dropdownList $lov $listname $selected )<select name=$listname style="width:12em;">#foreach( $name in $lov.keySet() )
+#set( $value = $lov.get($name) )<option value=$lov.get($name) #if($value==$selected)selected='selected'#end>$name</option>#end</select>#end
+
+#macro( columnTypeDropdownList $lov $listname $selected )<select name=$listname>#foreach( $name in $lov.keySet() )
+#set( $value = $lov.get($name) )<option value=$lov.get($name) #if($value==$selected)selected='selected'#end>$name</option>#end</select>#end
+
+#macro( columnTableRow $c )
+  <tr>
+    <td>$c.columnIndex</td>
+    <td>$c.columnName<input type="hidden" name="columnName" id="columnName" value="$c.columnName"></td>
+    <td>
+      #columnTypeDropdownList( $columnTypes "columnType" $c.columnType )
+      <input type="hidden" name="columnPrecision" value="$c.columnPrecision">
+      <input type="hidden" name="columnScale" value="$c.columnScale">
+    </td>	
+    <td align="center" #if($c.isPrimaryKey)style="background-image: url('$link.getContextPath()/resources/images/key1.png');background-repeat: no-repeat;background-position: top right"#end><input type="checkbox" name="primaryKey$c.columnIndex" id="primaryKey$c.columnIndex" value="1" #if($c.isPrimaryKey)checked="checked"#end onClick="singleCheck($c.columnIndex,'primaryKey')"></td>
+    <td align="center" #if($c.isModifiedDate)style="background-image: url('$link.getContextPath()/resources/images/alarmclock.png');background-repeat: no-repeat;background-position: top right"#end><input type="checkbox" name="modifiedDate$c.columnIndex" id="modifiedDate$c.columnIndex" value="1" #if($c.isModifiedDate)checked="checked"#end onClick="singleCheck($c.columnIndex,'modifiedDate')"></td>
+    <td>#dropdownList( $indexFieldTypes "indexFieldType" $c.indexFieldType )</td>
+  </tr>
+#end
+
+<script type="text/javascript">
+function singleCheck(index, name) {
+  var len = document.getElementById('columntable').rows.length
+  for (var i = 1; i < len; i++) {
+    if (i != index) {
+      document.f.elements[name+i].checked = false;
+    }
+  }
+}
+</script>
+
+<a name="top"></a>
+<br />
+#parse("/WEB-INF/velocity/region/sqlQueries/navigateQueries.vm")
+
+<form name="f" method="post" action="configWorkingQueue.do?indexName=${indexName}">
+<input type="hidden" name="operation" value="list">
+<br />
+#errorMarkup()
+#if($request.getParameter("operation") == 'save')
+#addNextMessage("Now you may go to <a href='configContent.do?indexName=$indexName'>Create a new Child SQL Query</a><br />Or you may go to <a href='listScaffolds.do?indexName=$indexName'>Create a Page Style From Designer</a>")
+#end
+#messageMarkup()
+
+<script type="text/javascript">
+      $(function() {
+            $("#tabs").tabs();
+      });
+</script>
+
+<div id="compGroupA" class="demo">
+  <div id="tabs">
+      <ul>
+            <li><a href="#tabs-1">Parent Query</a></li>
+            <li><a href="#tabs-2">Column Configuration</a></li>
+      </ul>
+      <div id="tabs-1">
+			<table width="100%" cellpadding="5" cellspacing="0" border="0">
+			    #tableRowMultiLineInput( "SQL" "sql" $!{query.sql} )
+			    <tr><td>&nbsp;</td><td style="color: #F72A43; font-weight:bold">Note: The columns names in the query should not have spaces and any special characters. The column names can be formatted for display using the Display Name.
+                </td></tr>
+			    <tr><td>&nbsp;</td><td>#parse("/WEB-INF/velocity/region/sqlQueries/configWorkingQueue_sql_hint.vm")</td></tr>
+                <tr><td>&nbsp;</td>
+			    <td>
+			    <button class="dashboard" type="submit" name="submitSave" id="submitSave" onClick="f.operation.value='populateColumns'; document.f.submit(); return false;">Generate Configure Columns</button>    
+			</td></tr>
+			#parse("/WEB-INF/velocity/region/sqlQueries/queryResultSet.vm")
+			</table>
+	   </div>	
+
+	   <div id="tabs-2">
+			<table id="columntable" class="xsearchBaseTable">
+			<tr align="center"><th>Column Index</th><th>Column Name</th><th>Database Column Type</th><th>Primary Key</th><th>Modified Date</th><th>Index Column Type</th></tr>
+			#foreach( $c in $query.columns )
+			#columnTableRow( $c )
+			#end
+			</table>
+			<br/>
+			#parse("/WEB-INF/velocity/region/sqlQueries/column_indexfield_hint.vm")
+	   </div>
+	   <table align="left" style="margin-left: 25%;">
+		<tr align="left">
+			<td>#actionSubmitButton( "f" "submitTest" $!msg.get("button.test") "test" )</td>
+			<td>#actionSubmitButton( "f" "submitSave" $!msg.get("button.save") "save" )</td>
+			<td><input type="checkbox" name="notest" id="notest" value="1"><label for="notest">Save without validation</label></td>
+		</tr>
+		</table>
+	</div>
+</div>
+
+
+#parse("/WEB-INF/velocity/region/sqlQueries/columnSelect_js.vm")
+</form>
+
+#parse("/WEB-INF/velocity/region/resizable_textarea.vm")
+

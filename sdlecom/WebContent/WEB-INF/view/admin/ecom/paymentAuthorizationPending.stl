@@ -1,0 +1,196 @@
+<#include "/admin/lib/include.stl" />
+<@loginLayout encoding="utf-8">
+<#assign form  =JspTaglibs["http://www.springframework.org/tags/form"]>
+<#assign spring=JspTaglibs["http://www.springframework.org/tags"]>
+<link rel="stylesheet" href="resources/styles/validationEngine.jquery.css" type="text/css" />
+<link rel="stylesheet" href="resources/styles/login.css" />
+<link rel="stylesheet" href="resources/styles/jquery-ui-1.8.11.base.css" />
+<link rel="stylesheet" href="resources/styles/jquery-ui-custom-ext.css" />
+<script type="text/javascript" src="resources/javascripts/jquery.min.js"/></script>
+<script type="text/javascript" src="resources/javascripts/jquery-ui.min.js"/></script>
+<style>
+div.ADCSI {
+	width: 900px;
+}
+span.ADCSI_leftcol {
+	width: 130px;
+	text-align:right;
+	display: inline-block;
+}
+div.ADCSI_row {
+	margin-right: 20px;
+}
+table#checkSubscriptionDetails{
+	width:100%;
+}
+table#checkSubscriptionDetails tr {
+	width:100%;
+
+}
+td.subscriptionDetails {
+	width:70%;
+	text-align:left;
+
+}
+td.paymentDetails {
+	background: #55a003 url(resources/styles/images/redGrad.png) 50% 50% repeat-x;
+	color: white;
+	width:30%;
+	text-align:center;
+	height:200px;
+	font-weight:bold;
+}
+#pay {
+	background: #55a003 url(resources/styles/images/greenGrad.png) 50% 50% repeat-x;
+	color: #ffffff;
+}
+#pay:hover {
+	background: #55a003 url(resources/styles/images/greenGrad.png) 50% 50% repeat-x;
+	color: #ffffff;
+}
+.ui-button-text {color:#ffffff}
+a.ui-state-hover span.ui-button-text {color:#ffffff}
+table#subscriptionDetails {
+	border-collapse: collapse;
+	margin: 10px;
+}
+
+table#subscriptionDetails td {
+	padding: 5px 5px;
+}
+
+table#subscriptionDetails tr.paid {
+	color: #527838;
+}
+
+table#subscriptionDetails tr.unPaid {
+	color: #ED1C43;
+}
+
+th.header{
+	color: #039;
+	border-bottom: 2px solid #6678B1;
+	padding: 5px 5px;
+}
+
+th.subheader{
+	color: #039;
+	border-top: 1px solid #6678B1;
+	padding: 5px 5px;
+}
+
+
+td.footer{
+	color: #039;
+	border-top: 2px solid #6678B1;
+	padding: 5px 5px;
+}
+.extLink {
+	background: #55a003 url(resources/styles/images/greenGrad.png) 50% 50% repeat-x;
+	color: #ffffff;
+}
+.left {
+	text-align:left;
+}
+.right {
+	text-align:right;
+}
+
+</style>
+
+	<div class="content">
+		<div style="width: 900px; height:200px; margin-left: auto;margin-right:auto;margin-top:100px;">
+			<div id="ADCSI" class="ADCSI" style="margin-top: 0px; margin-bottom: 12px;">
+			<div class="ADCSI_title" id="ADCSI_title">
+				<span style="width:49%;text-align:left;display:inline-block;"><b><@spring.message code="form.name.subscriptionDetails" /></b></span>
+				<span style="width:49%;text-align:right;display:inline-block;"><a href="accountInformation.admin"><b><@spring.message code="form.name.accountInformation" /></b></a> | <a href="logout.admin"><@spring.message code="security.authentication.logout" /></a>&nbsp;(${user.username})</a></span>
+			</div>
+			<table id="checkSubscriptionDetails">
+				<tr>
+					<td class="subscriptionDetails">
+						<center><i class="fa fa-list" style="font-size:18px;"></i>&nbsp;<b><@spring.message code="form.name.currentUnpaidSubscriptions" /></b></center>
+
+							<table width="95%" id="subscriptionDetails">
+							<th class="header"><@spring.message code="security.ecommerce.label.subscription" /></th>
+							<th class="header"><@spring.message code="security.ecommerce.label.isAuthorizationRequired" /></th>
+							<th class="header"><@spring.message code="security.ecommerce.label.accessAuthorizationStatus" /></th>
+							<th class="header"><@spring.message code="security.ecommerce.label.fee" /></th>
+							<#assign totalDue = 0>
+							<#list sites as site>
+								<tr>
+									<th class="subheader" colspan="4">${site.name}</th>
+								</tr>
+								<#assign accessList = site.getAccess()>
+								<#list  accessList as access>
+									<#if access.isAuthorized()>
+							       		<#assign totalDue = totalDue + access.getSubscriptionFee().getFee()>
+							        </#if>
+							        <tr>
+									<td>${access.description}</td>
+									<td><#if access.isAuthorizationRequired()><@spring.message code="security.ecommerce.label.yes" /><#else><@spring.message code="security.ecommerce.label.no" /></#if></td>
+									<td><#if access.isAuthorized()><@spring.message code="security.ecommerce.label.authorized" /><#else><@spring.message code="security.ecommerce.label.pending" /></#if></td>
+									<td class="right">${access.getSubscriptionFee().getFee()?string.currency}</td>
+									</tr>
+								</#list>
+			                </#list>
+			                <tr>
+								<td class="footer" colspan="4"></td>
+						 	</tr>
+						 </table>
+					</td>
+			        <#if totalDue &gt; 0>
+						<td class="paymentDetails">
+				            	<div class="alert"><@spring.message code="security.ecommerce.totalAmountDue" /> ${totalDue?string.currency}</div>
+								<#if user.isCardAvailable()>
+									<#if !user.isCreditCardActive() && !(request.getServletContext().getInitParameter("isDBService") == "true")>
+									    <p><a class="extLink" href="viewAccountInformation.admin?return_url=${request.getRequestURL()}"><@spring.message code="security.ecommerce.label.cardExpiredUpdateRequired" /></a></p>
+									<#else>
+										<p><b><@spring.message code="security.ecommerce.label.cardOnFile" /></b>&nbsp;********${user.getCreditCard().number}</p>
+										<a href="paymentInfo.admin" id="pay"><@spring.message code="security.ecommerce.label.proceedToPayment" /></a>
+									</#if>
+								<#else>
+									<#if request.getServletContext().getInitParameter("isDBService") == "true">
+										<a href="paymentInfo.admin" id="pay"><@spring.message code="security.ecommerce.label.proceedToPayment" /></a>
+									<#else>
+									<p><b><@spring.message code="security.ecommerce.label.cardRequired" /></b></p>
+									<p><b><a class="extLink" href="viewAccountInformation.admin?return_url=${request.getRequestURL()}"><@spring.message code="security.ecommerce.label.addCardToAccount" /></a></b></p>
+									</#if>
+								</#if>
+						</td>
+					</#if>
+                </tr>
+			</table>
+			<div style="text-align: left;padding-top: 30px;padding-bottom: 10px;padding-right:20px;margin-left:15px;">
+       			<span class="unPaid">
+       				<b><@spring.message code="security.ecommerce.label.importantInformation" /></b><br /><br />
+       				* <@spring.message code="security.ecommerce.alert.acceptOnlyAuthorizedPayments" /><br /><br />
+       				 <#if isAuthorizationPending?has_content && isAuthorizationPending>
+       				 * <@spring.message code="security.ecommerce.alert.AuthorizationPendingNote" />
+       				 </#if>
+       			</span>
+   			</div>
+
+   			<#if (hasFreeAccess?has_content && hasFreeAccess) || (hasActivePaidAcccess?has_content && hasActivePaidAcccess)>
+     		    <div style="width:100%;text-align:center">
+     			    <br /><a class="extLink" id="continueFreeAccess" href="search.do"><@spring.message code="security.ecommerce.label.continueToSearchPage" /></a><br /><br />
+     			</div>
+     		</#if>
+		</div>
+	</div>
+
+<script type="text/javascript">
+		$(function() {
+			$( "#pay" ).button({
+	            icons: {
+	                primary: "ui-icon-cart"
+	            }
+	        });
+	        $( ".extLink" ).button();
+	        $( "#continueFreeAccess" ).button({
+	            icons: {
+	                primary: "ui-icon-search"
+	            }
+	        });
+		});
+</script>
+</@loginLayout>

@@ -1,0 +1,6 @@
+<#assign html=JspTaglibs["http://struts.apache.org/tags-html"]>
+<HTML>
+<H1>
+<@html.errors/>
+</H1>
+</HTML>

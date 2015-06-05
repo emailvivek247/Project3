@@ -1,0 +1,20 @@
+<script type="text/javascript">
+var jdbcDrivers = [];
+function addDriver(driver, available, dir, version){
+  var d = driver.jdbcdriver;
+  d.name = d['@name'];
+  d.available = available;
+  d.dir = dir;
+  d.version = version;
+  jdbcDrivers.push(d);
+}
+<#foreach j in WebserverStatic.getWebConfiguration().jdbcdrivers>
+  addDriver(${j.toJson()}, ${j.available?string}, '${j.dir}', '${j.version}' );
+</#foreach>
+var d = {};
+d.name = 'other...';
+d.available = false;
+d.dir = '&lt;new_directory_name&gt;';
+d.version = '';
+jdbcDrivers.push(d);
+</script>

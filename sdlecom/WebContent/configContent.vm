@@ -1,0 +1,193 @@
+#set( $title = $msg.get("title") )
+#set( $selectedMenu = 'dataset' )
+#set( $selectedToptab = "dataset" )
+#set( $selectedSubtab = "data" )
+
+<script type="text/javascript" src="$link.getContextPath()/resources/javascripts/jquery.flydom.js"></script>
+
+#set( $jumperAction = "configDataSelect.do" )
+
+#set( $columnTypes = $WebserverStatic.webConfiguration.columnClassNames )
+#set( $indexFieldTypes = $WebserverStatic.webConfiguration.indexFieldTypes )
+#set( $previousColumns = $dc.getFecthedColumns($id))
+
+#macro( promptTD $promptname )
+<td align=right valign=top nowrap width="5%">#if($promptname)<b>$promptname:</b>#else&nbsp;#end</td>
+#end
+
+#macro( dropdownList $lov $listname $selected )
+  <select name=$listname style="width:12em;">
+  #foreach( $name in $lov.keySet() )
+    #set( $value = $lov.get($name) )
+    <option value=$lov.get($name) 
+    #if($value==$selected)selected='selected'#end>
+    $name
+    </option>
+  #end
+  </select>
+#end
+
+#macro( columnTableRow $c )
+  <tr>
+    <td>$c.columnIndex</td>
+    <td>$c.columnName<input type="hidden" name="columnName" id="columnName" value="$c.columnName"></td>
+    <td>
+      #dropdownList( $columnTypes "columnType" $c.columnType )
+      <input type="hidden" name="columnPrecision" value="$c.columnPrecision">
+      <input type="hidden" name="columnScale" value="$c.columnScale">
+    </td>
+    <td align="center"><input type="checkbox" name="aggregate$c.columnIndex" id="aggregate$c.columnIndex" value="1" #if($c.isAggregate)checked="checked"#end onClick="validateAggregate($c.columnIndex)"></td>
+    <td>
+      #set($found = false )
+      #foreach( $column in $previousColumns)
+        #if($column.columnName == $c.columnName)
+          #set($found = true )
+        #end
+      #end
+      #if($found)
+        Recurring Column Name<input type="hidden" name="indexFieldType" value="">
+      #else
+        #dropdownList( $indexFieldTypes "indexFieldType" $c.indexFieldType )
+      #end
+    </td>
+  </tr>
+#end
+
+<script type="text/javascript">
+function validateAggregate(index) {
+  if (document.f.elements['columnType'][index-1].value != "java.lang.String") {
+    document.f.elements['aggregate'+index].checked = false;
+    alert("Aggregate is for String type columns only.");
+    return;
+  }
+  //var len = document.getElementById('columntable').rows.length
+  //for (var i = 1; i < len; i++) {
+  //  if (i != index) {
+  //    document.f.elements['aggregate'+i].checked = false;
+  //  }
+  //}
+}
+
+function clickDelete() {
+  if (!confirm("Are you sure you want to delete this query?")) {
+    return;
+  }
+  document.f.operation.value = "delete";
+  document.f.submit();
+}
+</script>
+
+<br />
+#parse("/WEB-INF/velocity/region/sqlQueries/navigateQueries.vm")
+
+<form name="f" method="post" action="configContent.do">
+<input type="hidden" name="indexName" id="indexName" value="$!{indexName}">
+<input type="hidden" name="operation" value="list">
+<input type="hidden" name="id" id="id" value="$id">
+<br />
+#errorMarkup()
+#messageMarkup()
+
+
+<script type="text/javascript">
+      $(function() {
+            $("#tabs").tabs();
+      });
+</script>
+
+<div id="compGroupA" class="demo">
+  <div id="tabs">
+      <ul>
+            <li><a href="#tabs-1">Edit Child Query</a></li>
+            <li><a href="#tabs-2">Configure Columns</a></li>
+      </ul>
+      <div id="tabs-1">
+			<table width="100%" cellpadding="5" cellspacing="0" border="0">
+			<tr>#promptTD("SQL")<td><textarea class="resizable" name="sql" id="sql" cols="90" rows="6" wrap="virtual">#if($query.sql)$!{query.sql}#else-- you can reference parameters from previous query results
+			-- by using question mark(?) to bind variables
+			-- for example, 'select * from article where article_id = ?'
+			-- and select from the parameters table below#end</textarea></td></tr>
+			
+			<tr>#promptTD("Parameters")<td>
+			<table id="paramtable" class="xsearchLeftTable">
+			<tr><th>Select</th><th>Index</th><th>Column from Previous Query</th><th>Testing Value</th><th>Binding Variable</th></tr>
+			</table>
+			<table border="0">
+			<tr>
+				<td nowrap>
+					<button type="button" name="" class="general" id="" title="Add a parameter" onclick="addParamRow()">Add</button>
+				</td>
+				<td>	
+					<button type="button" name="" class="query" id="" title="Delete selected parameter(s)" onclick="deleteParamRows()">Delete Selected</button>
+				</td>
+				<td>	
+					<button type="button" name="" class="query" id="" title="Insert a parameter before selected parameter(s)" onclick="insertParamRows()">Insert Before Selected</button>
+				</td>
+			</tr>
+			</table>
+			</td></tr>
+			
+			<tr>#promptTD('Batch')<td>
+			<input type="checkbox" name="chooseBatch" value="1" #if($query.isBatchNeeded)checked="checked"#end>
+			Process this query in a batch of 
+			<input type="text" name="batchSize" id="batchSize" value="$!{query.batchSize}" size=5>
+			for performance.</a>
+			</td></tr>
+			
+			<tr>#promptTD('Cache')<td>
+			<input type="checkbox" name="chooseCache" value="1" #if($query.isCacheNeeded)checked="checked"#end>
+			Enable cache on this query if not in batch mode. Recommended for list of limited possible values for memory concern.
+			</td></tr>
+			
+			<tr>#promptTD('Empty Parameter')<td>
+			<input type="checkbox" name="isSkippingNullParameters" value="1" #if($query.isSkippingNullParameters)checked="checked"#end>
+			Skip Empty Parameters without warning in the log.
+			</td></tr>
+			
+			<tr><td>&nbsp;</td><td>
+			<button class="dashboard" type="submit" name="submitSave" id="submitSave" onClick="f.operation.value='populateColumns'; document.f.submit(); return false;">Automatically Generate Columns</button>
+			</td></tr>
+			
+			#parse("/WEB-INF/velocity/region/sqlQueries/queryResultSet.vm")
+			
+			</table>
+	 </div>
+	 
+		<div id="tabs-2">
+					<table id="columntable" class="xsearchtable">
+					<tr><th>Index</th><th>Name</th><th>Type</th><th>Concatenate</th><th>Index Field Type</th></tr>
+					#foreach( $c in $query.columns )
+					#columnTableRow( $c )
+					#end
+					</table>
+					<br/>
+					#parse("/WEB-INF/velocity/region/sqlQueries/column_indexfield_hint.vm")
+		 </div>
+	</div>
+</div>	
+
+
+<table width="45%"  border="0">
+<tr>
+	<td>
+#actionSubmitButton( "f" "submitTest" $!msg.get("button.test") "test" )
+	</td>	
+	<td>
+		<input type="checkbox" name="notest" id="notest" value="1"><label for="notest">Save without validation</label>
+	</td>
+	<td>	
+#actionSubmitButton( "f" "submitSave" $!msg.get("button.save") "save" )
+	</td>
+	<td>	
+		<button class="general" name="btnDelete" id="btnDelete" onclick="clickDelete(); return false;">Delete</button>
+	</td>
+</tr>
+</table>
+
+</form>
+
+#parse("/WEB-INF/velocity/region/sqlQueries/parameter_controls.vm")
+
+#parse("/WEB-INF/velocity/region/sqlQueries/columnSelect_js.vm")
+
+#parse("/WEB-INF/velocity/region/resizable_textarea.vm")

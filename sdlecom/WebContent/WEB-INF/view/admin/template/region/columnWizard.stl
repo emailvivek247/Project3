@@ -1,0 +1,72 @@
+<#assign dateFormats = WebserverStatic.getWebConfiguration().dateFormats>
+<#assign numberFormats = WebserverStatic.getWebConfiguration().numberFormats>
+<#macro columnList(count, selected, className)>
+ <select name="variable${count}" id="variable${count}" onChange="changeColumn(${count})" <#if className?has_content>class="${className}"</#if> >
+  <option value="">Select a document field</option>
+  <#foreach c in dc.columns>
+    <#if c.indexFieldType != "UnStored" && c.indexFieldType != "Parameter">
+      <option value="${c.columnName}|${c.columnTypeShortName}" <#if c.columnName == selected>selected="selected"</#if>>
+       ${c.columnName} ...... (${c.columnTypeShortName})
+      </option>
+    </#if>
+  </#foreach>
+ </select>
+</#macro>
+<#macro checkbox(name, label, checked=false)>
+ <input type="checkbox" name="${name}" id="${name}" value="1" <#if checked?has_content && checked>checked="checked"</#if>>
+ <label for="${name}">${label}</label>
+</#macro>
+<#macro dateFormatList(count, selected)>
+ <select name="dateFormat${count}" id="dateFormat${count}">
+  <#local date = new("java.util.Date") >
+  <option value=""></option>
+  <#foreach format in dateFormats><option value="${format}" <#if format == selected>selected="selected"</#if>>
+    <#if format == "relative">Relative Time (1 hour 8 minutes ago)<#else>${date?string(format)}</#if></option>
+  </#foreach>
+ </select>
+</#macro>
+<#macro numberFormatList(count, selected)>
+<#local number = 1234567.89>
+<select name="numberFormat${count}" id="numberFormat${count}">
+<option value=""></option>
+  <#foreach format in numberFormats><option value="${format}" <#if format == selected>selected="selected"</#if>>
+    ${number?string(format)}
+  </option>
+  </#foreach></select>
+</#macro>
+
+<#if variableCounter?has_content>
+<#assign count = variableCounter>
+<#else>
+<#assign count = 0>
+</#if>
+
+<@columnList count, v.defaultValue.columnName?if_exists, v.className?if_exists />
+
+<#if dc.findColumn(v.getColumnName())?has_content >
+<#assign columnType = dc.findColumn(v.getColumnName()).getColumnTypeShortName()>
+<#else>
+<#assign columnType = 'String'>
+</#if>
+<!--
+<#if !v.className?has_content>
+
+<span id="dateFormatSection${count}">Time Format<#call dateFormatList(count, v.defaultValue.dateFormat?if_exists)></span>
+
+<span id="numberFormatSection${count}">Number Format<#call numberFormatList(count, v.defaultValue.numberFormat?if_exists)></span>
+
+<span id="modifiers${count}">
+
+<#if v.defaultValue.type == 'stringcolumn'>
+ <#call checkbox("isHTMLEscaped" + count, "HTML escaped", v.defaultValue.isHTMLEscaped())>
+ <#call checkbox("isHighlighted" + count, "Highlighted", v.defaultValue.isHighlighted())>
+ <#call checkbox("isSummarized" + count, "Summarized", v.defaultValue.isSummarized())>
+<#else>
+ <#call checkbox("isHTMLEscaped" + count, "HTML escaped")>
+ <#call checkbox("isHighlighted" + count, "Highlighted")>
+ <#call checkbox("isSummarized" + count, "Summarized")>
+</#if>
+
+</span>
+</#if>
+-->

@@ -1,0 +1,77 @@
+## $Id: configWildcard.vm 3504 2006-02-14 03:33:47Z cylu $
+
+#set( $title = $msg.get("title") )
+#set( $selectedMenu = 'dataset' )
+#set( $selectedToptab = "search" )
+#set( $selectedSubtab = "security" )
+
+
+#macro(alternate_bgcolor)
+  #if($_bgcolor=='#ffffff')
+    	#set($_bgcolor="#e6e6e6")
+  #else
+    #set($_bgcolor='#ffffff')
+  #end
+#end
+
+#macro( tableRowShortInput $promptname $prefix $suffix $inputname $somevalue )
+  #alternate_bgcolor()
+  <tr bgcolor="$_bgcolor">#promptTD($promptname)<td>$!{prefix}<input type="text" name="$inputname" id="$inputname" size="5" value="$!somevalue">$suffix</td></tr>
+#end
+
+#macro( tableRowComment $somevalue )
+  <tr bgcolor="$_bgcolor"><td>&nbsp;</td><td colspan="1">$!somevalue</td></tr>
+#end
+
+<form name="f" method="post">
+<input type="hidden" name="indexName" value="$!{dc.name}">
+<input type="hidden" name="operation" value="save">
+<br />
+#errorMarkup()
+#messageMarkup()
+
+#openFieldset("Security Configuration")
+<div class="help">
+<p><b>User-Level Secure Search</b> reads end user name from <b>request.getPrincipal.getName()</b>. 
+<p>If your documentation has a column storing user name, and <b>Secure Search</b> is enabled, an automatic security filter will be applied, so only documents that have matching username in the column are returned. </pp>
+<p>So to use <b>User-Level Secure Search</b>, the requirements are:
+<ul class="ulstyle">
+  <li>Documents has a column storing Username</li>
+  <li>Username can be read by <b>request.getPrincipal.getName()</b></li>
+</ul>
+<p>For more information on J2EE security, please search the web or consult your J2EE container manual.
+
+</div>
+
+
+#macro( tableRowCheckbox $promptname $sometext $inputname $somevalue )
+  #alternate_bgcolor()
+  <tr bgcolor="$_bgcolor"><td width="20%"><b>$promptname</b></td><td><input type="checkbox" name="$inputname" id="$inputname" value="Y" #if($somevalue)checked#end>$sometext</td></tr>
+#end
+
+<table width="100%" cellpadding="5" cellspacing="0" border="0">
+#tableRowCheckbox( "User-Level Secure Search" "Enable" "isSecure" $dc.isSecure )
+</table>
+<table id="columntable" class="xsearchtable">
+<tr><th>Column</th><th>Type</th><th>Field Type</th><th>Display Name</th><th>Secure By</th></tr>
+#foreach ($c in $columns)
+    #alternate_bgcolor()
+    <tr bgcolor="$_bgcolor">
+      <td align="center">$c.columnName</td>
+      <td align="center">$c.columnTypeShortName</td>
+      <td align="center">$c.indexFieldType</td>
+      <td align="center">$!{c.displayName}</td>
+      <td align="center"><input type="radio" name="secureColumn" value="$!{c.columnName}" #if($c.isSecure)checked="checked"#end></td>
+    </tr>
+#end
+</table>
+<br />
+
+<table width="80%" cellpadding="5" cellspacing="0" border="0" align="center">
+<tr><td>&nbsp;</td><td align="center">
+#actionSubmitButton( "f" "submitSave" $!msg.get("button.save") "save" )
+</td></tr>
+#closeFieldset()
+</table>
+
+</form>

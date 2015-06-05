@@ -1,0 +1,162 @@
+<scaffold order="4" >
+  <name>Server-Side Sortable Table</name>
+  <description><![CDATA[A Sortable Table, with server-side sorting and filterable categories. 
+  ]]></description>
+  <variables>
+    <separator header="Basic Configuration" position="start" status="open"/>
+    <string-variable name="title" size="50">
+      <prompt>Title</prompt>
+      <description>The title of the page</description>
+      <defaultValue class="string-value">
+        <value>Page Title</value>
+      </defaultValue>
+    </string-variable>
+	<textarea rows="3" cols="50" name="txtNoResultText">
+            <prompt>No Result Text</prompt>
+            <description>Enter the text that should appear if the search returned no results</description>                                    
+    </textarea>	  
+    <column-variable name="idColumn" className="hiddenElement">    
+      <columnSelector>isPrimaryKey</columnSelector>
+      <defaultValue class="string-column-value">
+        <highlighted>false</highlighted>
+        <summarized>false</summarized>
+        <HTMLEscaped>false</HTMLEscaped>
+      </defaultValue>
+    </column-variable> 
+    <separator position="end"/>
+    <separator header="Facette Configuration" position="start"/>
+    <boolean-variable name="includeNarrowBy">
+      <prompt>Facet Search</prompt>
+      <description><![CDATA[Narrow search results by <a href="configFilterableColumns.do">filterable columns<a>(can be configured later)]]></description>
+      <children>
+        <string-variable name="narrowByMaxLimit" size="10">
+          <prompt>Maximum Number of Choices</prompt>
+          <description>Some field can have a large number of narrowBy choices. Limiting this can speed up page response time.</description>
+          <defaultValue class="string-value">
+            <value>50</value>
+          </defaultValue>
+        </string-variable>
+        <string-variable name="narrowByMoreLimit" size="10">
+          <prompt>Displayed Number of Choices</prompt>
+          <description>By default only display this many number of narrowBy choices.</description>
+          <defaultValue class="string-value">
+            <value>25</value>
+          </defaultValue>
+        </string-variable>
+      </children>
+      <defaultValue class="boolean-value">
+        <value>true</value>
+      </defaultValue>
+    </boolean-variable>
+    <separator position="end"/>
+    <separator header="Column Configuration" position="start"/>  
+    <columns-variable name="displayColumns">
+      <prompt>Additional Columns</prompt>
+      <description>Select Columns to display.</description>
+      <columnSelector>isDisplayable</columnSelector>
+    </columns-variable>
+    <columns-variable name="advancedSearchColumns">
+      <prompt>Advanced Search Columns</prompt>
+      <description>Select Columns for advanced search. Or you can use column wizard when editing the template.</description>
+      <columnSelector>isDisplayable</columnSelector>
+    </columns-variable>
+    <boolean-variable name="includeBriefcase">
+      <prompt>Briefcase to store search results</prompt>
+      <description>Include briefcase to store selected search results. Note: Index Should have a PRIMARY KEY and also you need to select the title column. Title column is by default primary key of the index.</description>
+      <defaultValue class="boolean-value">
+        <value>false</value>
+      </defaultValue>
+    </boolean-variable>
+    <column-variable name="titleColumn" >
+      <prompt>Title for the selected record</prompt>   
+      <description>This is a mandatory field.</description> 
+      <defaultValue class="string-column-value">
+        <highlighted>false</highlighted>
+        <summarized>false</summarized>
+        <HTMLEscaped>false</HTMLEscaped>
+      </defaultValue>
+    </column-variable>
+    <string-variable name="brifcaseSize" size="50">
+      <prompt>Briefcase Size</prompt>
+      <description>Set the number of items that can be added to the briefcase by the users. By default this is set to 10</description>
+      <defaultValue class="string-value">
+        <value>10</value>
+      </defaultValue>
+    </string-variable> 
+    <columns-variable name="briefcaseColumns">
+      <prompt>Briefcase Content Columns</prompt>
+      <description>Select Columns that should be part of the Briefcase.</description>
+      <columnSelector>isDisplayable</columnSelector>
+    </columns-variable>
+    <separator position="end"/>
+    <separator header="Enhancements" position="start"/>
+    <boolean-variable name="inclusiveRangeSearch">
+      <prompt>Include bound values in range search</prompt>
+      <description>Select this option if you like to make the range columns in advance search to include the lower and upper bound values specified. By default this option is selected. </description>
+      <defaultValue class="boolean-value">
+        <value>true</value>
+      </defaultValue>
+    </boolean-variable> 
+    <boolean-variable name="includeResultsPerPage">
+      <prompt>Customizable Results Per Page</prompt>
+      <description>Configurable Results Per Page</description>
+      <defaultValue class="boolean-value">
+        <value>true</value>
+      </defaultValue>
+    </boolean-variable>    
+    <boolean-variable name="includeScoreColumn">
+      <prompt>Include Search Score</prompt>
+      <description>Included Score Column</description>
+      <defaultValue class="boolean-value">        
+      </defaultValue>
+    </boolean-variable>
+        <boolean-variable name="includeRecentSearches">
+      <prompt>Recent Search History</prompt>
+      <description>Display recent search queries stored in cookies</description>
+      <defaultValue class="boolean-value">
+        <value>true</value>
+      </defaultValue>
+    </boolean-variable>         
+    <boolean-variable name="hasGlobalNavigation">
+      <prompt>Global Index Navigation</prompt>
+      <description>Included Link To Search on Other indexes on top of the search result page</description>
+      <defaultValue class="boolean-value">
+        <value>true</value>
+      </defaultValue>
+    </boolean-variable>
+    <!-- <boolean-variable name="includeSyndicate">
+          <prompt>RSS Syndication</prompt>
+          <description>Links to RSS/Atom feeds</description>
+          <defaultValue class="boolean-value">
+            <value>false</value>
+          </defaultValue>
+    </boolean-variable> -->
+    <separator position="end"/>
+    <separator header="Select Theme" position="start"/> 
+    <select name="theme" className="imgSelect">
+        <prompt>Select Theme</prompt>
+        <child-element>
+        	<option selected="selected" value="glossy-classic"  name="Glossy Classic"/>
+		    <option value="glossy-black"  name="Glossy Black"/>
+            <option value="glossy-blue"  name="Glossy Blue"/>
+            <option value="glossy-brown"  name="Glossy Brown"/>
+            <option value="glossy-browngreen"  name="Glossy Brown and Green"/>
+            <option value="glossy-gray"  name="Glossy Gray"/>
+            <option value="glossy-green"  name="Glossy Green"/>
+            <option value="glossy-lightgreen"  name="Glossy Lime Green"/>
+            <option value="glossy-orange"  name="Glossy Orange"/>
+            <option value="glossy-red"  name="Glossy Red"/>
+            <option value="glossy-yellow"  name="Glossy Yellow"/>
+            <option value="blue"  name="Plain Blue"/>
+            <option value="slate"  name="Plain Slate"/>
+            <option value="orange"  name="Plain Orange"/>
+            <option value="litegreen"  name="Plain Light Green"/>          
+        </child-element>           
+        <javascript-event>onChange</javascript-event>
+        <javascript>javascript:previewTheme()</javascript>
+    </select>
+    <img name="themePreview" src="resources/images/themes/theme-glossy-blue.png" alt="Default Theme">
+    </img>
+    <separator position="end"/>
+  </variables>
+</scaffold>

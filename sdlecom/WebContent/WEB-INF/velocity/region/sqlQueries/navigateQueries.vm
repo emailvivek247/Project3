@@ -1,0 +1,22 @@
+<table width="100%"><tr><td>&nbsp;</td><td>
+#set($_NeedToShowCreateLink = false)
+#if($id)
+  <a href="configWorkingQueue.do?indexName=$indexName" #tip("$!{dc.workingQueueDataquery.sql}")>Parent Query</a>
+#else
+  <span #tip("$!{dc.workingQueueDataquery.sql}")>Parent Query</span>
+  #set($_NeedToShowCreateLink = true)
+#end
+#foreach( $q in $dc.getContentDataqueryArray() )
+  #if($id == $velocityCount)
+    >> <span #tip("$!{q.sql}")>Child Query $velocityCount</span>
+    #set($_NeedToShowCreateLink = true)
+  #else
+    >> <a href="configContent.do?indexName=$indexName&id=$velocityCount" #tip("$!{q.sql}")>Child Query $velocityCount</a>
+  #end
+#end
+#if($_NeedToShowCreateLink)
+  >> <a href="configContent.do?indexName=$indexName">Create New Child Query</a>
+#else
+  >> Create New Child Query
+#end
+</td></tr></table>

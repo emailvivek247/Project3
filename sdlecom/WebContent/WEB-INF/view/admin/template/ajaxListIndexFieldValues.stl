@@ -1,0 +1,14 @@
+<br/>
+<table class="xsearchLeftTable">
+  <tr><th>&nbsp;</th><th>Actual Value</th></tr>
+ <#foreach v in values>
+  <tr><td>${v_index+1}</td><td>${v}</td></tr>
+ </#foreach>
+ <#if (value_count>10) >
+  <tr><td>11</td><td>...</td></tr>
+ </#if>
+ <tr><th>Total</th><th>${value_count}</th></tr>
+</table>
+
+<br/>
+<br/>

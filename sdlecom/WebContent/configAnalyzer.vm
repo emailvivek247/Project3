@@ -1,0 +1,151 @@
+## $Id: configAnalyzer.vm 5787 2009-07-07 06:28:25Z cylu $
+
+#set( $title = $msg.get("title") )
+#set( $selectedMenu = 'dataset' )
+#set( $selectedToptab = 'dataset' )
+#set( $selectedSubtab = 'analyzer' )
+
+
+#set($dirSizeChecker = $toolLoader.load("net.javacoding.xsearch.core.DirectorySizeChecker"))
+
+#macro( caption $somevalue )
+<font size=+1><b>$somevalue</b></font>
+#end
+#macro( tableRowSingleLineInput $promptname $inputname $somevalue )
+  <tr>#promptTD($promptname)<td><input type="text" name="$inputname" id="$inputname" size="80" value="$!somevalue"></td></tr>
+#end
+
+#macro( tableRowShortInput $promptname $prefix $suffix $inputname $somevalue )
+  <tr>#promptTD($promptname)<td>$!{prefix}<input type="text" name="$inputname" id="$inputname" size="5" value="$!somevalue">$suffix</td></tr>
+#end
+
+#macro( tableRowComment $somevalue )
+  <tr><td>&nbsp;</td><td colspan="1">$!somevalue</td></tr>
+#end
+#macro( tableRowCaption $somevalue )
+  <tr><td>&nbsp;</td><td colspan="1">&nbsp;#caption( $!somevalue )</td></tr>
+  ##tableRowComment( #caption( $!somevalue ) )
+#end
+
+#macro( tableRowMultiLineInput $promptname $inputname $somevalue )
+  <tr>#promptTD($promptname)<td><textarea name="$inputname" id="$inputname" cols="80" rows="6" wrap="virtual">$!somevalue</textarea></td></tr>
+#end
+
+#macro( analyzerDropdownList $analyzers $listname $selected $columnName)
+  <select name="$listname" id="$listname" onChange="changeAnalyzer(this,'$columnName')">
+  #if (!$columnName.equals('global'))
+   <option value="default|default" #if(!$selected)selected="selected"#end>Use Global Algorithm</option>
+   #end
+  #foreach( $a in $analyzers.values() )
+    <option value="$a.className|$a.language" #if($a.className==$selected)selected="selected"#end>$a.name</option>
+  #end
+  </select>
+#end
+
+<script type="text/javascript">
+<!--
+function changeAnalyzer(analyzerList,columnName) {
+  var a = analyzerList.options[analyzerList.selectedIndex];
+  var globalAlgorithm = a.value.split("|")[0];
+  var globalLanguage = a.value.split("|")[1];
+  document.forms['f'].elements['language_'+columnName].value = globalLanguage;
+  document.forms['f'].elements['analyzerClassName_'+columnName].value = globalAlgorithm;
+}
+// -->
+</script>
+
+<form name="f" method="post" action="configAnalyzer.do">
+<input type="hidden" name="operation" value="list">
+<input type="hidden" name="indexName" id="indexName" value="$indexName">
+<br />
+#errorMarkup()
+#if($$math.toInteger($dirSizeChecker.init($dc).getIndexDirectorySize())>20)
+#addNextMessage("Now you may go to <a href='desktop.do'>Desktop</a> to <b>Re-Analyze</b> the existing content with the new Alogorithm.")
+#end
+#messageMarkup()
+
+<script type="text/javascript">
+      $(document).ready(function() {
+             $("#tabs").tabs({ cookie: { expires: 0, name: "tab_select" } });
+      });
+</script>
+
+<div id="compGroupA" class="demo">
+  <div id="tabs">
+      <ul>
+            <li><a href="#tabs-1">Choose an Algorithm</a></li>
+            <li><a href="#tabs-2">Test Algorithm</a></li>
+      </ul>
+      <div id="tabs-1">
+			<table cellpadding="5" cellspacing="0" border="0">
+				#set( $wc = $WebserverStatic.webConfiguration )
+				#set( $analyzers = $wc.analyzers )
+				<tr>#promptTD("Global Algorithm")<td>#analyzerDropdownList( $analyzers "analyzer" $dc.analyzerName 'global')
+					<input type="hidden" name="language_global" id="language_global" size="40" value="$!{dc.language}" >
+					<input type="hidden" name="analyzerClassName_global" id="analyzerClassName_global" size="65" value="$!{dc.analyzerName}">
+					</td>
+				</tr>
+				<tr>#promptTD("Column Algorithm (Optional)")<td>
+				<table id="columntable" class="xsearchBaseTable" align=left>
+				<tr align="center"><th>Column<br/>Index</th><th>Column</th><th>Type</th><th>Field Type</th><th>Algorithm</th><th>Synonyms<br/>&<br/>Stop Words</th></tr>
+				#foreach ($c in $columns)
+				    <tr>
+				      <td>$c.columnIndex</td>
+				      <td>$c.columnName</td>
+				      <td>$c.columnTypeShortName</td>
+				      <td>$c.indexFieldType</td>
+				      <td>#analyzerDropdownList( $analyzers "analyer_$c.columnName" $c.analyzerName $c.columnName) &nbsp;
+				      <input type="hidden" name="analyzerClassName_$c.columnName" id="analyzerClassName_$c.columnName"  value="$!{c.analyzerName}" >
+				      <input type="hidden" name="language_$c.columnName" id="language_$c.columnName" value="$!{c.analyzerName}" >
+				      </td>
+				      <td align="center"><input type="checkbox" name="synonym_stopword_$c.columnName" id="synonym_stopword_$c.columnName" value="1" #if($c.needSynonymsAndStopwords)checked="checked"#end/></td>
+				    </tr>
+				#end
+			</table>
+			</td></tr>
+			<tr><td>&nbsp;</td><td>
+			Note: Synonyms file is <i>WEB-INF/data/dictionary/synonyms.txt</i>, Stop Words file is <i>WEB-INF/data/dictionary/stopwords.txt</i>
+			
+			</td></tr>
+			<tr align="left"><td></td><td align="left" text-align="left">
+			#actionSubmitButton( "f" "submitSave" $!msg.get("button.save") "save" )
+			</td></tr>
+			
+			
+			
+			</table>
+	  </div>	
+
+	  <div id="tabs-2">
+				<table cellpadding="5" cellspacing="0" border="0">
+				#set($testString = $U.getText($testString, "The quick brown fox jumped over the lazy dogs.") )
+				#tableRowMultiLineInput('Test String' 'testString' $testString)
+				<tr><td>&nbsp;</td><td>
+				#actionSubmitButton( "f" "submitTest" $!msg.get("button.test") "test" )
+				&nbsp;&nbsp;&nbsp;<a href="showIndexStatus.do?indexName=$indexName">See Existing Content</a>
+				</td></tr>
+				</table>
+				
+				#set( $analyzerUtil = $toolLoader.load("net.javacoding.xsearch.utility.AnalyzerUtil"))
+				
+				<div class="scrollTable">
+				<table class="xsearchtable">
+				<tr><th>Analyzer</th><th>Analyzed Result</th></tr>
+				#foreach( $a in $analyzers.values() )
+				  <tr>
+				  	<td #tip("$!{a.description}")>$a.name</td>
+				  	<td>
+				    #foreach($t in $analyzerUtil.tokensFromAnalysis($a.className, $testString))
+				    	[$escapeChars.forHTMLTag(${t.termText()})]
+				    #end
+				  	</td>
+				  </tr>
+				#end
+				</table>
+				</div>
+				
+	    </div>
+	</div>
+</div>	
+
+</form>
