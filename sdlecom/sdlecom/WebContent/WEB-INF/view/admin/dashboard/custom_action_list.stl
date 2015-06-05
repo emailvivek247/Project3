@@ -1,9 +1,0 @@
-  <select class="jumpmenu" name="action_${dc.name}" id="action_${dc.name}" onChange="showfloatie(actionDescriptions${indexName}[this.selectedIndex], event)">
-    <#assign key = "action_${dc.name}" >
-      <option value="" selected ></option>    
-      <option value="Incremental Indexing" <#if modelMap[key]?has_content && modelMap[key] == "Incremental Indexing">selected</#if> >Incremental</option>
-      <option value="Incremental Indexing with Thorough Deletion Detection" <#if modelMap[key]?has_content && modelMap[key] == "Incremental Indexing with Thorough Deletion Detection">selected</#if> >Incremental + Deletion</option>
-      <option value="Re-create Index" <#if modelMap[key]?has_content && modelMap[key] == "Re-create Index">selected</#if> >Re-create</option>
-      <option value="Re-create Spelling Dictionary" <#if modelMap[key]?has_content && modelMap[key] == "Re-create Spelling Dictionary">selected</#if> >Re-create Spell Check Dictionary</option>
-      <option value="Refresh Index" <#if modelMap[key]?has_content && modelMap[key] == "Refresh Index">selected</#if> >Refresh Index</option>
-  </select>

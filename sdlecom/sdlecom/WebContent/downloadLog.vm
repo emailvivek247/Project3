@@ -1,7 +1,0 @@
-##
-##
-#set( $layout = "Empty.vm" )
-$response.setHeader("Content-disposition",'attachment;filename="Indexing.log"')
-$response.setContentType("text/plain")
-#set($logUtil = $toolLoader.load("net.javacoding.xsearch.utility.LogUtil"))
-$logUtil.getLongLogContent($indexName)

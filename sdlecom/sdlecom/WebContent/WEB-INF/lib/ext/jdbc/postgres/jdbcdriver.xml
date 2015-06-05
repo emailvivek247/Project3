@@ -1,6 +1,0 @@
-    <jdbcdriver name="Postgres">
-      <class>org.postgresql.Driver</class>
-      <url-format><![CDATA[jdbc:postgresql:database, jdbc:postgresql://host/database, jdbc:postgresql://host:port/database]]></url-format>
-      <url-example><![CDATA[jdbc:postgresql://<i>hostname</i>/<i>dbname</i>]]></url-example>
-      <validate-sql>SELECT 1</validate-sql>
-    </jdbcdriver>

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<xsearch basedir="." password="2B8F772BE4948F1A4F5CCF571FE2E354D6B13A0742B78313" adminuser="4509A773D406819FC2E2221BD84B8F2F864092CB009D7969">
-  <search-log-size-in-MB>10</search-log-size-in-MB>
-  <index-root-directory><![CDATA[C:\index]]></index-root-directory>
-  <logging-configuration>
-    <smtp-host><![CDATA[localhost]]></smtp-host>
-    <threshold>ERROR</threshold>
-  </logging-configuration>
-</xsearch>

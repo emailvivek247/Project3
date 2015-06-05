@@ -1,9 +1,0 @@
-
-<script type="text/javascript" src="resources/javascripts/jquery.ui.tabs.min.js"></script>
-<link rel="stylesheet" href="styles/jquery.ui.tabs.css" />
-
-<script type="text/javascript">
-  $(function() {
-    $('#tabs > ul').tabs();
-  });
-</script>

@@ -1,6 +1,0 @@
-    <jdbcdriver name="SQLServer">
-      <class>com.microsoft.sqlserver.jdbc.SQLServerDriver</class>
-      <url-format><![CDATA[]]></url-format>
-      <url-example><![CDATA[jdbc:sqlserver://<i>hostname</i>;instanceName=<i>Instance Name</i>;databaseName=<i>Database Name</i>]]></url-example>
-      <validate-sql>SELECT 1</validate-sql>
-    </jdbcdriver>

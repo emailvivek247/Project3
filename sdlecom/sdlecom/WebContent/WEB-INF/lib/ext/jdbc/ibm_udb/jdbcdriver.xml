@@ -1,7 +1,0 @@
-    <jdbcdriver name="IBM UDB">
-      <class>com.ibm.db2.jcc.DB2Driver</class>
-      <url-format><![CDATA[]]></url-format>
-      <url-example><![CDATA[jdbc:db2://<i>hostname</i>:5000/<i>dbname</i> <br/>
-        Need to put license jar on classpath
-      ]]></url-example>
-    </jdbcdriver> 
