@@ -1,3 +1,0 @@
-<@layout.basic menu="dataset/template/create" hasWizard=true>
-<#include "ajaxListScaffolds.stl">
-</@layout.basic>

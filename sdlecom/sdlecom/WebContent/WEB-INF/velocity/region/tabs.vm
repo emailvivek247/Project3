@@ -1,8 +1,0 @@
-## $Id: tabs.vm 5790 2009-07-07 06:32:53Z cylu $
-## Renders top-level and sub-level tabs
-#if($selectedMenu == 'dataset')
-  #parse("$region/datasetMenu.vm")
-#else
-##moved to globalnav.vm
-##  #parse("$region/systemMenu.vm")
-#end

@@ -1,7 +1,0 @@
-<#assign key1 = "action_${selectedIndex}" >
-<#if !modelMap[key1]?has_content></#if>
-<#if modelMap[key1]?has_content && modelMap[key1] == "Incremental Indexing">Incremental</#if>
-<#if modelMap[key1]?has_content && modelMap[key1] == "Incremental Indexing with Thorough Deletion Detection">Incremental + Deletion</#if>
-<#if modelMap[key1]?has_content && modelMap[key1] == "Re-create Index">Re-create</#if> 
-<#if modelMap[key1]?has_content && modelMap[key1] == "Re-create Spelling Dictionary">Re-create Spell Check Dictionary</#if>
-<#if modelMap[key1]?has_content && modelMap[key1] == "Refresh Index">Refresh Index</#if>

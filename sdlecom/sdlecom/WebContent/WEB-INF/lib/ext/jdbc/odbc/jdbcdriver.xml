@@ -1,6 +1,0 @@
-    <jdbcdriver name="JDBC-ODBC">
-      <class>sun.jdbc.odbc.JdbcOdbcDriver</class>
-      <url-format><![CDATA[jdbc:odbc:dbname]]></url-format>
-      <url-example><![CDATA[jdbc:odbc:<i>dbname</i>]]></url-example>
-      <validate-sql></validate-sql>
-    </jdbcdriver>
