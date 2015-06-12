@@ -44,6 +44,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.jmesa.view.component.Column;
 import org.jmesa.view.component.Row;
 import org.jmesa.view.component.Table;
@@ -766,9 +767,12 @@ public class AccountSettingsController extends AbstractBaseController {
 
 	@RequestMapping(value="/viewPayAsUGoPaymentDetails.admin", method=RequestMethod.GET)
 	public ModelAndView getPayAsUGoPaymentDetails(HttpServletRequest request, @RequestParam Long webTxId,
-			@RequestParam String userName,  @RequestParam(defaultValue="N") String isRefund) {
+			@RequestParam (required=false) String userName,  @RequestParam(defaultValue="N") String isRefund) {
 		ModelAndView modelAndView = this.getModelAndView(request, ECOM_PAYASUGO_PAYMENT_DETAILS);
 		User user = this.getUser(request);
+		if(StringUtils.isBlank(userName)) {
+			userName = user.getUsername();
+		}
 		PayAsUGoTx payAsUGoTransaction = this.getService().getPayAsUGoTransactionDetail(webTxId, userName, isRefund);
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("payAsUGoTransaction", payAsUGoTransaction);
