@@ -1,0 +1,79 @@
+<#include "/WEB-INF/view/admin/layout/OtherBasic.stl">
+<@indexLayout title="Search Platform" encoding="utf-8">
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/tp.js"></script>
+<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/tp.css" />
+<script type="text/javascript" src="templates/resources/jquery.watermarkinput.js"></script>
+<link rel="shortcut icon" href="${request.getContextPath()}/favicon.ico"/>
+<#assign visibleIndexes = 0>
+<style type="text/css">
+
+    .italic {font-style:italic}
+
+ </style>
+<table width="80%" align="center" border="0">         
+            <tr>
+            <td width="2%">&nbsp</td> 
+            <td align="left"><img style="width:"src="templates/Images/okcseal.png" /></td>
+                        <td align="center"><a href = "http://www.amcad.com"><img src="templates/Images/ROAM3-1.png" border = "0" /></a></td>
+           <td align="right"><img src="templates/Images/okcclerk.png" /></td>
+            <td width="2%">&nbsp</td> 
+                        </tr>
+            </table>
+            </br>
+<div id="control" style="margin-left:auto; margin-right:auto;width:80%; ">
+<#foreach dc in dcs>
+<#if dc.isValid() && dc.displayOrder &gt;= 0 && dc.getDefaultTemplateName()?has_content>
+    <#assign visibleIndexes = visibleIndexes + 1>    
+    <#assign _controlString = _controlString + "," + "'" + dc.name + "'">
+    <div id="${dc.name}" title="${dc.displayName}" style="height:500px;">
+    <br/>
+    <form method="get" action="search.do">
+        <input type="hidden" name="searchType" value="1">
+        <table align="center" border="0">
+            <tr>
+                <td align="right">
+                    <input type="hidden" name="indexName" value="${dc.name}">               
+                    <input class="text" type="text" id="text" name="q" size="81" maxlength="2048" value="${HTMLEncodedQuery}">
+                <#if dc.name="okopr">
+                    <input type="hidden" name="searchable" value="Name,Instrument,RecDate,DesigStatus,PartyRole,IndexType,DocType,LegalType,Lot,Block,Acreage,Unit,PID,Subdivision,Detail,Section,township,Call1,Call2,Call3,Call4">
+                    <input type="hidden" name="sortBy" id="sortBy" value="NameSort,RecDateFilter">
+                                    <input type="hidden" name="desc" id="desc" value="N">
+                                </#if>
+                <#if dc.name="ucc">
+                    <input type="hidden" name="searchable" value="Name,Instrument,RecDate,DesigStatus,PartyRole,IndexType,DocType,Freeform,Collateral, BigCollateral">
+                    <input type="hidden" name="sortBy" id="sortBy" value="NameSort,RecDateFilter">
+                                    <input type="hidden" name="desc" id="desc" value="N">
+                
+                                </#if>
+                </td>   
+                <td >   
+                    <button type="submit" class="search">Search</button>
+                </td>
+            </tr>
+        </table>    
+    </form>
+    <br/>
+    </div>
+</#if> 
+ </#foreach>
+</div>
+<script type="text/javascript">
+    jQuery(function($){
+       $("#text").Watermark("Please Enter Name of Individual or Business");
+       $("#text").addClass('italic');
+    });
+
+    function checkWaterMarkText() {
+    if ($("#text").val() == "Please Enter Name of Individual or Business") {
+        $("#text").val("");
+    }
+    }
+</script>
+<#if visibleIndexes &gt; 0> 
+    <script type="text/javascript">
+    <!--    
+    tpSet('control', 'tabs'${_controlString});
+    // -->
+    </script>
+</#if> 
+</@indexLayout>

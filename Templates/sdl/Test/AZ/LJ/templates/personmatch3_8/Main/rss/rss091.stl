@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="${encoding}"?>
+${response.setContentType("text/xml; charset=" + encoding)}
+<rss version="0.91">
+  <channel>
+    <title><![CDATA[This is an example from SDL: ${q}]]></title>
+    <link>${(WebserverStatic.getServerURL() + "search.do?indexName=" + indexName + "&templateName=" + templateName + "&q=" + URLEncodedQuery)?html}</link>
+    <description><![CDATA[RSS feed from Search Platform]]></description>
+<#foreach doc in searchResult.docs>
+    <item>
+      <title><![CDATA[${doc.get("PERSON_ALIAS_ID")}:]]></title>
+      <link>http://www.sample.com/id=${doc.get("PERSON_ALIAS_ID")}</link>
+      <description><![CDATA[]]></description>
+    </item>
+</#foreach>
+  </channel>
+</rss>

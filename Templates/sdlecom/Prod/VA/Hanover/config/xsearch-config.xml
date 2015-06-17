@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="31FE3E433145BF6B14AA05DAF5A9C33891CCDC04CFCD5FF3" adminuser="E2B388911E5A2DADBA9EA16C9D01A137EAB70AF35EBBF6DC">
+  <index-root-directory><![CDATA[D:\index\hanover\]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[5C2E0E807E65C464D0BA29846068BABA4C34BF728D792D51E068E11792B97C122230EDD50A412AEC195A4A87C50FCAFDCC7A6C92DD8CC5CE1C9C805094E6AAEB]]></db-url>
+      <db-username><![CDATA[A74F6CFDCD0DB06B19B34FF337D2C957AC820F6AC0D881D5]]></db-username>
+      <db-password><![CDATA[53CF8CDA6F5EB8C7967E02EF2B98175A492307C52EBD145A]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+   <instance-job-schedule id="0">
+  <schedule-name><![CDATA[RECREATE]]></schedule-name>
+  <job-data-string><![CDATA[opr,Re-create Index|images,Re-create Index|details,Re-create Index|reference,Re-create Index|dash_opr_count,Re-create Index|dash_opr_docs,Re-create Index|documenttypes,Re-create Index|oprcert,Re-create Index|booktype,Re-create Index|indexname,Re-create Index|bookname,Re-create Index|histbookimages,Re-create Index|histindex,Re-create Index|]]></job-data-string>
+   <schedule id="0">
+    <is-enabled>true</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>0,30 5 ? * 2,3,4,5,6,7</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+    </instance-job-schedule>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

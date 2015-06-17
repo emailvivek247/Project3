@@ -1,0 +1,35 @@
+<#macro layout(title="")>
+<html><head><title>ROAM</title>
+<meta http-equiv="content-type" content="text/html; charset=${encoding}">
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/theme-blue.css" type="text/css" media="print, projection, screen" />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/prompt.css" type="text/css" media="print, projection, screen" />
+<link rel="stylesheet" href="templates/resources/basketMobile.css" type="text/css" media="projection, screen" />
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/sdl-min.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/calendar_us.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/prompt.js"></script>
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/calendar.css" media="print, projection, screen" />
+<link rel="shortcut icon" href="favicon.ico"/>
+<script type="text/javascript">
+function initialize() {
+<#assign q = pageStyleUtil.encodeURL(searchResult.request.getParameter("q")) lq = pageStyleUtil.encodeURL(searchResult.request.getParameter("lq"))
+	 start = searchResult.request.getParameter("start") searchable = pageStyleUtil.encodeURL(searchResult.request.getParameter("searchable"))
+     searchType = searchResult.request.getParameter("searchType") isPhoneticSearch = request.getParameter("isPhoneticSearch")>
+<#if !searchType?has_content>
+	searchType = 1	
+</#if>
+   setCookie('searchstring', '<#if q?has_content>q=${q}</#if><#if lq?has_content>&lq=${lq}</#if><#if start?has_content>&start=${start}</#if><#if searchable?has_content>&searchable=${searchable}</#if><#if searchType?has_content>&searchType=${searchType}</#if><#if isPhoneticSearch?has_content>&isPhoneticSearch=${isPhoneticSearch}</#if>');
+}
+</script>
+
+</head>
+<body onKeyPress="trapKeyBoardEvents(event)" onLoad="initialize()">
+<table width="100%"><tr><td>
+<#if request.isUserInRole('VABEACH_FREE_ACCESS') || request.isUserInRole('VABEACH_IMAGE_ACCESS') || request.isUserInRole('VABEACH_ADMIN') || request.isUserInRole('ROAM_ADMIN')>
+<#nested>
+<#else>
+You are not authorized to view this page. 
+</#if>
+</td></tr></table>
+</body></html>
+</#macro>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="2B8F772BE4948F1A4F5CCF571FE2E354D6B13A0742B78313" adminuser="4509A773D406819FC2E2221BD84B8F2F864092CB009D7969">
+  <index-root-directory><![CDATA[E:\index\sussex\]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[17BD0B5B8A9F14FC2911708F08444B1F7F4340B9A7722E55F0F2269334F59E9929F73A0D2AB920EA838D144B7B474D700EE3A138B882E81DD0A1E6517A12E0EB5B910A9ED813F32437845D9F6A2EB8EF452A17913DFB5499]]></db-url>
+      <db-username><![CDATA[4B1D8AFA5B389519478487550443B3456BD3E19626315F62]]></db-username>
+      <db-password><![CDATA[DAA1686ED782781E13077429F232B230E30C6FCE736222EF]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

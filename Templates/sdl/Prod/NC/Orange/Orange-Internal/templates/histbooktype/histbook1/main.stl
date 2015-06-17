@@ -1,0 +1,21 @@
+<!--  -->
+<@com.useHighlightTag '<span class="highlight">', '</span>' />
+<#include "layout.stl">
+<@layout title="Page Title" encoding="${searchResult.encoding}">
+
+
+
+ <@com.errorMarkup/>
+ 
+  <#include "map.stl">
+ <#include "searchResultHeader.stl">
+ <#include "sortBy.stl"> 
+ <br>
+ <table class="main"><tr valign="top"><td class="mainLeft">
+  <div id="narrowBy"><#include "narrowBy.stl"></div>  
+ </td><td class="mainRight">
+  <div id="documents"><#include "documents.stl"></div>
+ </td></tr></table>
+ 
+ 
+</@layout>

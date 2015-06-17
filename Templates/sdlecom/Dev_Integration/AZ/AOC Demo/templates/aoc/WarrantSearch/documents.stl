@@ -1,0 +1,44 @@
+<#assign display=JspTaglibs["http://displaytag.sf.net"]>
+
+<#if searchResult.docs?has_content>
+    <#assign ResultId =0>
+    <@display.table name="searchResult.docs" id="doc" export=true requestURI="/search.do" excludedParams="searchQuery searchType Name Name_select CaseNumber CaseNumber_select DOB DOB_select SSN SSN_select LicenseNumber LicenseNumber_select Race Race_select Sex Sex_select ">
+      <#include "document.stl">
+    </@display.table>
+<#else>
+ <#include "noResults.stl"> 
+</#if>
+
+
+<script type="text/javascript">
+$(function() {      
+    $("#doc").tablesorter({widgets: ['zebra']});
+    $(".cartLink").click(function() {
+    	var dataString = 'indexName=imageindex&lq=Instrument:' + $(this).attr("title");
+    	$.ajax({
+	      type: "POST",
+	      url: "${request.getContextPath()}/search.do",
+	      data: dataString,      
+	      success: function(data) {
+	      	$.each(data, function(i,item){	    		    
+	    		 if (item.code == "EXISTS") {
+	    		 	var txt = item.description + "You can view your purchase using the below link, <br/> <a target='_blank' href='viewPayAsUGoPaymentDetails.admin?webTxId=" + item.moduleName + "'>View Purchase</a>";		
+					$.prompt(txt);
+	    		 } else if (item.code == "SUCCESS") {
+	    		 	if (item.count == 0) {
+	    				$("span#shoppingCartItems").text('  Shopping cart is Empty');
+	    				$.prompt(item.description);
+	    			} else {
+	    				$("span#shoppingCartItems").text('  ' + item.count + ' Item(s) in the Shopping Cart');
+	    				$.prompt(item.description);
+	    			}
+	    		 } else {
+	    			$.prompt(item.description); 
+	    		 }
+	          });     
+	      }
+	    });
+    return false;
+	});
+}); 
+</script>

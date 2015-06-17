@@ -1,0 +1,30 @@
+@charset "utf-8";
+/* PAGINATION for glossy-blue */
+.paginationHolder a {
+	background-color: white;
+	border: solid 1px #333333;
+	color: #333333;
+}
+.paginationHolder a:visited {
+    color: #333333;
+}
+.paginationHolder a, .paginationHolder span {
+    background:#fff /*url(glossy-blue-button.gif)*/);
+}
+span.text {
+    background: none;
+}
+.paginationHolder .current {
+    background:#000066 /*url(glossy-blue-button.gif)*/;
+    color: #ffffff;
+    border: solid 1px #000066;
+}
+.paginationHolder .current.prev, .paginationHolder .current.next{
+    color:#000066;
+    border-color:#000066;
+    background:#fff /*url(glossy-blue-button.gif)*/);
+}
+a.goPaginate {
+	background:#000066 url(ui-bg_gloss-wave_75_2191c0_500x100.png) repeat-x 50% 50%;
+	color:#EAF5F7;
+}

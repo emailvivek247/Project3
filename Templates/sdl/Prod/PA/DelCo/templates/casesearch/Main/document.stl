@@ -1,0 +1,70 @@
+<#-- *Assign variables for Phonetic Search -->
+<#assign searchable = request.getParameter("searchable")>
+<#assign phonetic = "PhoneticName,CASE_NUMBER,CaseType,CaseTypeDesc,DOB,LicenseNumber,PartyRole,StatuteNumber,StatuteDescription,ActiveWarrantFlag,CaseFilingDate">
+<#assign search = "DisplayName,CASE_NUMBER,CaseType,CaseTypeDesc,DOB,LicenseNumber,PartyRole,StatuteNumber,StatuteDescription,ActiveWarrantFlag,CaseFilingDate">
+
+
+
+          <@display.column media="html" indexColumnName="CASE_NUMBER" title="${searchResult.datasetConfiguration.getColumn(\"CASE_NUMBER\").displayName}">
+            <a href="${request.getContextPath()}/search.do?indexName=docketcase&templateName=case&lq=${pageStyleUtil.encodeURL("CASE_NUMBER:\"" + doc.get("CASE_NUMBER") + "\"")}">${searchResult.highlight(doc, "CASE_NUMBER")}</a>
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="CASE_NUMBER" title="${searchResult.datasetConfiguration.getColumn(\"CASE_NUMBER\").displayName}">
+            ${doc.get("CASE_NUMBER")}
+          </@display.column>
+
+<#if isPhoneticSearch == "1">
+          <@display.column media="html" indexColumnName="PhoneticName" title="${searchResult.datasetConfiguration.getColumn(\"PhoneticName\").displayName}">
+            ${searchResult.highlight(doc, "PhoneticName")} 
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="PhoneticName" title="${searchResult.datasetConfiguration.getColumn(\"PhoneticName\").displayName}">
+            ${doc.get("PhoneticName")}
+          </@display.column>
+      <#else> 
+            <@display.column media="html" indexColumnName="DisplayName" title="${searchResult.datasetConfiguration.getColumn(\"DisplayName\").displayName}">
+            ${searchResult.highlight(doc, "DisplayName")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="Name" title="${searchResult.datasetConfiguration.getColumn(\"DisplayName\").displayName}">
+            ${doc.get("DisplayName")}
+          </@display.column>
+</#if>
+          <@display.column media="html" indexColumnName="PartyRole" title="${searchResult.datasetConfiguration.getColumn(\"PartyRole\").displayName}">
+            ${searchResult.highlight(doc, "PartyRole")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="PartyRole" title="${searchResult.datasetConfiguration.getColumn(\"PartyRole\").displayName}">
+            ${doc.get("PartyRole")}
+          </@display.column>
+          
+          <@display.column media="html" indexColumnName="CourtType" title="${searchResult.datasetConfiguration.getColumn(\"CourtType\").displayName}">
+            ${searchResult.highlight(doc, "CourtType")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="CourtType" title="${searchResult.datasetConfiguration.getColumn(\"CourtType\").displayName}">
+            ${doc.get("CourtType")}
+          </@display.column>
+          
+           <@display.column media="html" indexColumnName="CaseTypeDesc" title="${searchResult.datasetConfiguration.getColumn(\"CaseTypeDesc\").displayName}">
+            ${searchResult.highlight(doc, "CaseTypeDesc")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="CaseTypeDesc" title="${searchResult.datasetConfiguration.getColumn(\"CaseTypeDesc\").displayName}">
+            ${doc.get("CaseTypeDesc")}
+          </@display.column>
+          
+          <#--<@display.column media="html" indexColumnName="CaseFilingDate" title="${searchResult.datasetConfiguration.getColumn(\"CaseFilingDate\").displayName}">
+            ${searchResult.highlight(doc, "CaseFilingDate")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="CaseFilingDate" title="${searchResult.datasetConfiguration.getColumn(\"CaseFilingDate\").displayName}">
+            ${doc.get("CaseFilingDate")}
+          </@display.column>-->
+          
+           <@display.column media="html" indexColumnName="CaseFilingDate" title="${searchResult.datasetConfiguration.getColumn(\"CaseFilingDate\").displayName}">
+            <#if doc.get("CaseFilingDate")?has_content>
+               ${pageStyleUtil.format(doc.get("CaseFilingDate"), "yyyymmdd", "mm/dd/yyyy")}
+            </#if>              
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="CaseFilingDate" title="${searchResult.datasetConfiguration.getColumn(\"CaseFilingDate\").displayName}">
+            <#if doc.get("CaseFilingDate")?has_content>
+               ${pageStyleUtil.format(doc.get("CaseFilingDate"), "yyyymmdd", "mm/dd/yyyy")}
+            </#if>      
+          </@display.column>
+          
+         
+          

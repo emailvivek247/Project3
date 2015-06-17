@@ -1,0 +1,161 @@
+<#assign urlEncoder = new("net.javacoding.xsearch.utility.EscapeChars")>
+<#if (searchResult.docs?has_content && searchResult.docs.size() > 0) >
+ 
+<#assign yearDataxml = "">
+<#assign monthDataxmlTemp = "">
+<#assign totalyears = 0>
+<#assign totalDocs = 0>
+<#assign year = 0>
+<#assign month = 0>   
+<#assign yearDocumentCount = 0>
+<#assign monthDocumentCount = "">
+<#foreach doc in searchResult.docs>
+   <#assign totalDocs = totalDocs + doc.get("DOCUMENTCOUNT")?number>  
+   <#if (year?number != doc.get("YEAR")?number)>
+      <#assign totalyears = totalyears + 1>  
+      <#if (year?number > 0)>            
+            <#assign yearDataxml = yearDataxml + "%set label='">
+            <#assign link1 = "j-displayMonthlyStats-" + year>  
+            <#assign yearDataxml = yearDataxml + year?string + "' value='" + yearDocumentCount?string + "' link='${link1}'/>">
+            <#assign monthDataxmlTemp = monthDataxmlTemp + year?string + ":" + monthDocumentCount + ",">
+      </#if>
+     <#assign year = doc.get("YEAR")>
+     <#assign month = doc.get("DIVISION")>   
+     <#assign yearDocumentCount = doc.get("DOCUMENTCOUNT")?number>
+     <#assign monthDocumentCount = doc.get("DIVISION") + "-" + doc.get("DOCUMENTCOUNT")>              
+   <#else>     
+      <#assign yearDocumentCount = yearDocumentCount?number + doc.get("DOCUMENTCOUNT")?number>
+      <#assign monthDocumentCount = monthDocumentCount + "|" + doc.get("DIVISION") + "-" + doc.get("DOCUMENTCOUNT")> 
+      <#assign month = doc.get("DIVISION")>  
+   </#if>
+</#foreach>
+
+<#assign yearDataxml = yearDataxml + "%set label='">
+<#assign link1 = "j-displayMonthlyStats-" + year> 
+<#assign yearDataxml = yearDataxml + year?string + "' value='" + yearDocumentCount?string + "' link='${link1}'/>">
+<#assign monthDataxmlTemp = monthDataxmlTemp + year?string + ":" + monthDocumentCount>
+
+<script language="JavaScript">
+
+   if (window.innerWidth || window.innerHeight){ 
+       docwidth = window.innerWidth; 
+       docheight = window.innerHeight; 
+   }
+   if (document.body.clientWidth || document.body.clientHeight){ 
+       docwidth = document.body.clientWidth; 
+       docheight = document.body.clientHeight; 
+   }   
+   docwidth = Math.round(docwidth * 0.9);
+   docheight = Math.round(docheight * 0.9);
+   if (docwidth < 1000){
+       docwidth = 1000;}
+   if (docheight < 700){
+       docheight = 700;}
+ 
+   var chart1 = new SmartCharts("smartcharts/charts/Column3D.swf?noCache="+new Date().toGMTString(), "chart" + ${chartID} + "Id", (docwidth * 0.7).toString(), (docheight * 0.45).toString(), "0", "1");
+   chart1.setDataXML("<chart exportEnabled='1' exportAtClient='1' exportHandler='fcExporter1' exportFileName='ROAM-Dashboard - Yearly Case Distribution' showBorder='0' toolTipSepChar=' - ' borderAlpha='10' staggerLines='2' use3DLighting='1' palette='2' borderColor ='09417C' baseFontSize ='11' baseFontColor='09417C' rotateNames='1' bgColor=''  bgAlpha='20'   toolTipBgColor='' caption='Yearly Case Distribution'  xAxisName='Year' yAxisName='Documents' showValues='0' decimals='0' formatNumberScale='0'  showAboutMenuItem='0' slantLabels='0' showFCMenuItem='0' imageSave='1' logoURL='images/amcadlogo.png' logoLink='http://www.amcad.com' logoPosition='BR' logoAlpha='50'>" + "'${yearDataxml}'".replace(/%set/g,"<set") + "</chart>?noCache="+new Date().toGMTString());
+   chart1.render('yearDistChartDiv');
+
+   var Grid1 = new SmartCharts("smartcharts/charts/SSGrid.swf?noCache="+new Date().toGMTString(), "grid" + ${chartID} + "Id", "200", "200", "0", "1");
+   Grid1.setDataXML("<chart exportEnabled='1' exportAtClient='1' exportHandler='fcExporter1' exportFileName='ROAM-Dashboard - Yearly Case Distribution' showBorder='0' toolTipSepChar=' - ' borderAlpha='10' staggerLines='2' use3DLighting='1' palette='2' borderColor ='09417C' baseFontSize ='11' baseFontColor='09417C' rotateNames='1' bgColor=''  bgAlpha='20'   toolTipBgColor='' caption='Yearly Case Distribution'  xAxisName='Year' yAxisName='Documents' showValues='1' decimals='0' formatNumberScale='0'  showAboutMenuItem='0' slantLabels='0' showFCMenuItem='0' imageSave='1' logoURL='images/amcadlogo.png' logoLink='http://www.amcad.com' logoPosition='BR' logoAlpha='50'>" + "'${yearDataxml}'".replace(/%set/g,"<set") + "</chart>?noCache="+new Date().toGMTString());
+   Grid1.addVariable('showShadow', '1');
+   Grid1.render('yearDistGridDiv');
+   $(".yearDistGridDiv").css("display", "none");
+
+
+   displayMonthlyStats('${year}');
+   loadDoctypeDist('${year}@${month}')
+
+function displayMonthlyStats(year){
+
+    year = year.replace("=undefined","");
+    $(".docTypeDistChartDiv").css("visibility", "hidden");
+    var monthData = '${monthDataxmlTemp}'.split(",");
+    var monthDataxml = ""; 
+    for(i=0; i<monthData.length; i++) { 
+       if (monthData[i].substring(0,4) == year){
+          spdata = monthData[i].split(":")[1];
+          var monthlyData = spdata.split("|");
+          for(j=0; j<monthlyData.length; j++) {
+              var intMonth = monthlyData[j].split("-")[0];
+              var strMonth = "";
+              var docCount =  monthlyData[j].split("-")[1];
+              strMonth = intMonth;
+              link2 = "j-loadDoctypeDist-" + year + "@" + intMonth
+              monthDataxml = monthDataxml + "<set label='" + strMonth + "' value='" + docCount + "' + link='" + link2 + "'/>"
+          }
+       } 
+    }
+    var chartCaption = "Document Distribution by Year - (" + year + ")";    
+    var chart2 = new SmartCharts("smartcharts/charts/Pie3D.swf?noCache="+new Date().toGMTString(), "chart" + ${chartID} + "Id", (docwidth * 0.3).toString(), (docheight * 0.45).toString(), "0", "1");
+    chart2.setDataXML("<chart exportEnabled='1' exportAtClient='1' exportHandler='fcExporter1' exportFileName='ROAM-Dashboard - " + chartCaption + "' showPercentageValues='0' showBorder='0' animation='0' borderColor='000000' borderThickness='0' borderAlpha='20' use3DLighting='1' palette='2' formatNumber='1' formatNumberScale='0' decimals='2' borderColor ='09417C' baseFontSize ='11' baseFontColor='09417C' rotatenames='0' bgAlpha='100' caption='" + chartCaption + "'  showValues='1' showFCMenuItem='0' imageSave='1' logoURL='images/amcadlogo.png' logoLink='http://www.amcad.com' logoPosition='BR' logoAlpha='50'>" + monthDataxml + "</chart>?noCache="+new Date().toGMTString());
+    chart2.render('monthDistChartDiv');
+
+   var Grid2 = new SmartCharts("smartcharts/charts/SSGrid.swf?noCache="+new Date().toGMTString(), "grid" + ${chartID} + "Id", (docwidth * 0.3).toString(), (docheight * 0.45).toString(), "0", "1");
+   Grid2.setDataXML("<chart exportEnabled='1' exportAtClient='1' exportHandler='fcExporter1' exportFileName='ROAM-Dashboard - " + chartCaption + "' showPercentageValues='0' decimals='0' showBorder='0' animation='0' borderColor='000000' borderThickness='0' borderAlpha='20' use3DLighting='1' palette='2' formatNumber='0' formatNumberScale='0' borderColor ='09417C' baseFontSize ='11' baseFontColor='09417C' rotatenames='0' bgAlpha='100' caption='" + chartCaption + "'  showValues='1' showFCMenuItem='0' imageSave='1' logoURL='images/amcadlogo.png' logoLink='http://www.amcad.com' logoPosition='BR' logoAlpha='50'>" + monthDataxml + "</chart>?noCache="+new Date().toGMTString());
+   Grid2.addVariable('showShadow', '1');
+   Grid2.render('monthDistGridDiv');
+   $(".monthDistGridDiv").css("display", "none");
+    
+} 
+   
+function loadDoctypeDist(yearandmonth){
+        yearandmonth = yearandmonth.replace("=undefined", "");
+        year=yearandmonth.split("@")[0];
+        month=yearandmonth.split("@")[1];
+        var useScrollChart = "N";
+        var sMonth = month;
+        $(".docTypeDistChartDiv").css("visibility", "visible");
+        var doctypeDataXML;
+        var categories = "<categories>";
+        var url = "search.do?searchType=1&indexName=dash_opr_docs&templateName=JSON&q=YEAR:\"" + year + "\"+DIVISION:\"" + month + "\""; 
+            $.getJSON(url,
+            function(data){
+                $.each(data.items, function(i,item){
+                       categories = categories + "<category label='" + item.CASETYPE.toUpperCase() + "' />";
+                       link3 = "j-openwindow-" + year + "@" + month + "@" + item.CASETYPE;
+                       if (useScrollChart == "Y"){
+                           doctypeDataXML = doctypeDataXML + "<set value='" + item.DOCUMENTCOUNT + "' link='" + link3 + "'/>";
+                       }
+                       else {
+                           doctypeDataXML = doctypeDataXML + "<set label='" + item.CASETYPE.toUpperCase() + "' value='" + item.DOCUMENTCOUNT + "' link='" + link3 + "'/>";
+                       }
+  
+                                              
+                });
+            categories = categories + "</categories>";
+            var chartCaption = "Case Type Distribution (" + sMonth + " - " + year + ")"; 
+            if (useScrollChart == "Y"){  
+                doctypeDataXML = categories +  "<dataset>" + doctypeDataXML + "</dataset>";
+                var chart3 = new SmartCharts("smartcharts/charts/ScrollColumn2D.swf?noCache="+new Date().toGMTString(), "chart" + ${chartID} + "Id", (docwidth * 0.8).toString(), (docheight * 0.8).toString(), "0", "1");
+                chart3.setDataXML("<chart exportEnabled='1' exportAtClient='1' exportHandler='fcExporter1' exportFileName='ROAM-Dashboard - " + chartCaption + "' useRoundEdges='1' scrollColor='09417C' use3DLighting='1' showBorder= '0' palette='2' borderColor ='09417C' baseFontSize ='11' baseFontColor='09417C' rotateNames='1' bgColor='ffffff'  bgAlpha='100'  toolTipBgColor='' caption='" + chartCaption + "'  xAxisName='Document Type' yAxisName='Document Count' showValues='1' decimals='0' formatNumberScale='0'  showAboutMenuItem='0'  showFCMenuItem='0' imageSave='1' logoURL='images/amcadlogo.png' logoLink='http://www.amcad.com' logoPosition='BR' logoAlpha='50'>" + doctypeDataXML + "</chart>?noCache="+new Date().toGMTString());
+                
+                var Grid3 = new SmartCharts("smartcharts/charts/SSGrid.swf?noCache="+new Date().toGMTString(), "chart" + ${chartID} + "Id", (docwidth * 0.8).toString(), (docheight * 0.8).toString(), "0", "1");
+                Grid3.setDataXML("<chart exportEnabled='1' exportAtClient='1' exportHandler='fcExporter1' exportFileName='ROAM-Dashboard - " + chartCaption + "' useRoundEdges='1' scrollColor='09417C' use3DLighting='1' showBorder= '0' palette='2' borderColor ='09417C' baseFontSize ='11' baseFontColor='09417C' rotateNames='1' bgColor='ffffff'  bgAlpha='100'  toolTipBgColor='' caption='" + chartCaption + "'  xAxisName='Document Type' yAxisName='Document Count' showValues='1' decimals='0' formatNumberScale='0'  showAboutMenuItem='0'  showFCMenuItem='0' imageSave='1' logoURL='images/amcadlogo.png' logoLink='http://www.amcad.com' logoPosition='BR' logoAlpha='50'>" + doctypeDataXML + "</chart>?noCache="+new Date().toGMTString());
+            }
+            else {
+                var chart3 = new SmartCharts("smartcharts/charts/Column3D.swf?noCache="+new Date().toGMTString(), "grid" + ${chartID} + "Id", (docwidth * 0.8).toString(), (docheight * 0.8).toString(), "0", "1");
+                chart3.setDataXML("<chart exportEnabled='1' exportAtClient='1' exportHandler='fcExporter1' exportFileName='ROAM-Dashboard  - " + chartCaption + "' use3DLighting='1' showBorder= '0' palette='2' borderColor ='09417C' baseFontSize ='11' baseFontColor='09417C' rotateNames='1' bgColor='ffffff'  bgAlpha='100'  toolTipBgColor='' caption='" + chartCaption + "'  xAxisName='Document Type' yAxisName='Document Count' showValues='0' decimals='0' formatNumberScale='0'  showAboutMenuItem='0'  showFCMenuItem='0' imageSave='1' logoURL='images/amcadlogo.png' logoLink='http://www.amcad.com' logoPosition='BR' logoAlpha='50'>" + doctypeDataXML + "</chart>?noCache="+new Date().toGMTString());
+                
+                var Grid3 = new SmartCharts("smartcharts/charts/SSGrid.swf?noCache="+new Date().toGMTString(), "grid" + ${chartID} + "Id", (docwidth * 0.8).toString(), (docheight * 0.8).toString(), "0", "1");
+                Grid3.setDataXML("<chart exportEnabled='1' exportAtClient='1' exportHandler='fcExporter1' exportFileName='ROAM-Dashboard  - " + chartCaption + "' use3DLighting='1' showBorder= '0' palette='2' borderColor ='09417C' baseFontSize ='11' baseFontColor='09417C' rotateNames='1' bgColor='ffffff'  bgAlpha='100'  toolTipBgColor='' caption='" + chartCaption + "'  xAxisName='Document Type' yAxisName='Document Count' showValues='0' decimals='0' formatNumberScale='0'  showAboutMenuItem='0'  showFCMenuItem='0' imageSave='1' logoURL='images/amcadlogo.png' logoLink='http://www.amcad.com' logoPosition='BR' logoAlpha='50'>" + doctypeDataXML + "</chart>?noCache="+new Date().toGMTString());
+            }
+            chart3.render('docTypeDistChartDiv'); 
+            $(".docTypeDistChartDiv").css("display", "");
+            Grid3.addVariable('showShadow', '1');
+            Grid3.render('docTypeDistGridDiv');
+            $(".docTypeDistGridDiv").css("display", "none");
+          });       
+}
+
+function toggleChartandGrid(id1, id2){ 
+ //$(id1).css("visibility", "visible");
+ //$(id2).css("visibility", "hidden");
+ $(id1).css("display", "");
+ $(id2).css("display", "none");
+}
+
+ </script>
+<#else>
+ <#include "noResults.stl"> 
+</#if>

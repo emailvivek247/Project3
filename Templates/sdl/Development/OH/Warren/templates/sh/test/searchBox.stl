@@ -1,0 +1,44 @@
+<script type="text/javascript">
+    function postBasicSearch() {
+        try {   
+            setCookie('test' + document.getElementById("q").name, document.getElementById("q").value, 0);
+            document.getElementById("lq").value = '';
+            document.search_${searchResult.indexName}.method = "get";
+            document.getElementById('searchQuery').value = document.getElementById('q').value
+            document.search_${searchResult.indexName}.action = "search.do";
+            document.search_${searchResult.indexName}.searchType.value = "1";
+            document.search_${searchResult.indexName}.submit();
+        } catch (err) {
+            $.prompt(err.message,{buttons:{Ok:true},	prefix:'extblue'});
+        }
+    } 
+</script>
+<form name="search_${searchResult.indexName}" id="search_${searchResult.indexName}">
+    <input type="hidden" name="indexName" value="${searchResult.indexName}">
+    <input type="hidden" name="templateName" value="${searchResult.templateName}">
+    <input type="hidden" name="searchQuery" id="searchQuery">
+    <input type="hidden" name="lq" id="lq">
+    <input type="hidden" name="searchType" id="searchType" value="${Request.searchForm.searchType}">
+    
+            
+            <table  align="center" >
+                <tr >
+                        <td align="right">
+                            <input type="text" class="text" name="q" id="q" size="41" maxlength="2048" value="${searchResult.userInput?html}">
+                                <#if Request.searchForm.searchType = "1">
+                                    <script language="javascript">  
+                                          document.getElementById('q').focus();
+                                    </script>
+                                </#if>
+                        </td>
+                        <td align="left">   
+                            <button type="button" class="search" onclick="javascript:postBasicSearch()">Search</button>
+                        </td>
+                </tr>       
+            </table>
+            
+
+
+        
+</form>
+<#include "searchBox_extra.stl">

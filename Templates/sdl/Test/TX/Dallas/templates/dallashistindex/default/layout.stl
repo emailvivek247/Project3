@@ -1,0 +1,31 @@
+<#macro layout(title="", encoding="utf-8")>
+<html><head><title>Historical Index</title>
+<meta http-equiv="content-type" content="text/html; charset=${encoding}">
+<#--<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/theme-base.css" type="text/css" media="print, projection, screen" />-->
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/theme-blue.css" type="text/css" media="print, projection, screen" />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/prompt.css" type="text/css" media="print, projection, screen" />
+<link rel="stylesheet" href="templates/resources/basket.css" type="text/css" media="projection, screen" />
+<link rel="stylesheet" href="templates/dallasclerkopr/Main/resource/imageViewer.css" type="text/css" media="projection, screen" />
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.tablesorter.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/prompt.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/sdl-min.js"></script>
+<script type="text/javascript" src="templates/dallasclerkopr/Main/resource/jquery.prettyPhoto.js"></script>
+<link rel="shortcut icon" href="favicon.ico"/>
+</head>
+<body>
+
+<script type="text/javascript">
+$(document).ready(function(){
+$(".gallery a[rel^='prettyPhoto']").prettyPhoto({theme:'light_rounded',animationSpeed:'fast',slideshow:false,autoplay_slideshow: false,overlay_gallery: false,keyboard_shortcuts: true,opacity:0.3});
+   //$('a.pphoto').click(function() {
+     //  event.preventDefault(); 
+       //alert($(this).attr('href'));
+       //$.fn.prettyPhoto();
+       //$.prettyPhoto.open($(this).attr('href'),$(this).attr('title'),'');
+   //});
+});
+</script>
+<#nested>
+</body></html>
+</#macro>

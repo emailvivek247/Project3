@@ -1,0 +1,57 @@
+<@com.useHighlightTag '<span style="background-color:#B2C9FA">', '</span>' />
+<#include "layout.stl">
+<@layout title="ROAM" encoding="${searchResult.encoding}">
+
+<#include "/templates/globalNav.stl">
+<#if pageStyleUtil.isUserInRoleGroup('OFFICIAL_ROLE', request) || pageStyleUtil.isUserInRoleGroup('ADMIN_ROLE', request)>
+ <#include "searchBox.stl">
+ <@com.errorMarkup/>
+
+<table width="100%" margin="0" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+  <td style="width:25%;">
+<table border=0 cellpadding=0 cellspacing=0 ><tr>
+
+<td>
+    <font size="2">Mode: <a href="${request.getContextPath()}/search.do?indexName=collinml<#if isPhoneticSearch?has_content>&isPhoneticSearch=${isPhoneticSearch}</#if>&templateName=Main&q=${q}&searchable=${searchable}<#if searchQuery?has_content>&searchQuery=${searchQuery}</#if><#if searchType?has_content>&searchType=${searchType}</#if><#if sortBy?has_content>&sortBy=${sortBy}</#if><#if desc?has_content>&desc=${desc}</#if><#if asc?has_content>&asc=${asc}</#if>">PC</a></font>|<font size="2"><a href="${request.getContextPath()}/search.do?indexName=collinml<#if isPhoneticSearch?has_content>&isPhoneticSearch=${isPhoneticSearch}</#if>&templateName=Mobile&q=${q}&searchable=${searchable}<#if searchQuery?has_content>&searchQuery=${searchQuery}</#if><#if searchType?has_content>&searchType=${searchType}</#if><#if sortBy?has_content>&sortBy=${sortBy}</#if><#if desc?has_content>&desc=${desc}</#if><#if asc?has_content>&asc=${asc}</#if>">Mobile</a></font>|<font size="2"><a href="${request.getContextPath()}/search.do?indexName=collinml<#if isPhoneticSearch?has_content>&isPhoneticSearch=${isPhoneticSearch}</#if>&templateName=Tablet&q=${q}&searchable=${searchable}<#if searchQuery?has_content>&searchQuery=${searchQuery}</#if><#if searchType?has_content>&searchType=${searchType}</#if><#if sortBy?has_content>&sortBy=${sortBy}</#if><#if desc?has_content>&desc=${desc}</#if><#if asc?has_content>&asc=${asc}</#if>">Tablet</a></font>    
+</td>
+</tr>
+  </table></td>
+
+
+<td style="width:50%;"><#include "displayPagination.stl"></td>
+
+
+
+<td style="width:25%;">
+</td>
+</tr>
+</table>
+<br>
+ <#include "searchResultHeader.stl">
+<br>
+ <table class="main"><tr valign="top"><td class="mainLeft">
+  <div id="narrowBy"><#include "narrowBy.stl"></div>
+  <#include "recentSearches.stl">
+  
+ </td><td class="mainRight">
+  <div id="documents"><#include "documents.stl"></div>
+ </td></tr></table>
+
+ <#include "displayPagination.stl">
+
+<#-- *Add table for footer with AMCAD logo -->
+<BR>
+ <BR>
+
+<table width="100%" border="0">
+ <tr>
+  <td width=15%><a href = "http://www.amcad.com"> <img src="templates/collinml/Main/resource/AmCad-Small-New-Logo.png"  border = "0"></a></td>
+  <td width="70%" align="center"><font color=#696969>Copyright &copy; 1986 - 2012 American Cadastre LLC (dba AmCad & AmCad Digital Conversions)</font></td>
+  <td width="15%"><#include "resultsPerPage.stl"></td>
+ </tr>
+</table>
+<#else>
+Mobile Device templates are premium features. Please subscribe to one of the Collin County premium subscriptions in order to use this page.
+</#if>
+</@layout>

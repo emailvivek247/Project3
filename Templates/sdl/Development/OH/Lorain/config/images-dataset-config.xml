@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset name="Images" exportedBy="null" createdAt="Wed Aug 06 15:11:58 EDT 2014">
+  <display-order>-1</display-order>
+  <description><![CDATA[Images]]></description>
+  <index-dir>images</index-dir>
+  <is-prefix-root-index-directory>true</is-prefix-root-index-directory>
+  <use-server-db-connection>true</use-server-db-connection>
+  <number-of-hours-before-deletion>6</number-of-hours-before-deletion>
+  <work-directory>_work</work-directory>
+  <temporary-index-minimal-merge-percentage>1.0</temporary-index-minimal-merge-percentage>
+  <merge-hours enabled="false" begin="1" end="3"/>
+  <fetcher-threads>7</fetcher-threads>
+  <writer-threads>3</writer-threads>
+  <index-max-size>100000.0</index-max-size>
+  <language>Any</language>
+  <analyzer-name>com.fdt.sdl.core.analyzer.NumberLowerCaseAnalyzer</analyzer-name>
+  <data-source-type>0</data-source-type>
+  <fetcher-configuration dir="null">
+  </fetcher-configuration>
+  <dataquery name="WorkingQueue" batch-size="128" is-skipping-null-parameters="false">
+    <sql><![CDATA[
+SELECT 
+	B.STITCHED_PATH+CAST(DI.DOCUMENT_NAME AS VARCHAR)+'.PDF' AS 'Path'
+   ,DS.EVENT_ENTRY_ID AS 'EventEntryID'
+   ,DS.CASE_ID AS 'CaseID'
+FROM BATCH B INNER JOIN BATCHACCESS BA 
+ON B.BATCH_ID = BA.BATCH_ID
+INNER JOIN SPLIT_BATCH_ACCESS SBA ON SBA.BATCHACCESS_ID = BA.BATCHACCESS_ID INNER JOIN DOCUMENT_INFORMATION DI 
+ON DI.SPLIT_BATCH_ACCESS_ID = SBA.ID
+inner join DOCUMENT_STORAGE DS
+on DI.ID = DS.EXTERNAL_DMS_ID
+WHERE DS.SEALED_DOC_FLG <> 'Y'
+AND DS.IS_RESTRICTED_FLG <> 'Y'
+AND DS.IS_VOID <> 'Y'
+AND DS.REMOVE_PUBLIC_ACCESS_FLG <> 'Y'
+AND ISNULL(BA.IS_LOCKED, '') <> 'Y'
+    ]]></sql>
+    <column>
+      <column-name>Path</column-name>
+      <display-name><![CDATA[Path]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>EventEntryID</column-name>
+      <display-name><![CDATA[EventEntryID]]></display-name>
+      <column-index>2</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CaseID</column-name>
+      <display-name><![CDATA[CaseID]]></display-name>
+      <column-index>3</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <default-template>Image</default-template>
+  <tablet-template>Image</tablet-template>
+  <mobile-template>Image</mobile-template>
+  <searcher-max-active>8</searcher-max-active>
+  <searcher-when-exhausted>1</searcher-when-exhausted>
+  <searcher-max-wait>10000</searcher-max-wait>
+  <searcher-max-idle>7</searcher-max-idle>
+  <is-in-memory-search>false</is-in-memory-search>
+  <jvm-max-heap-size>1024</jvm-max-heap-size>
+  <document-buffer-size-mb>512</document-buffer-size-mb>
+  <allowed-ip-list>*</allowed-ip-list>
+  <is-empty-query-match-all>false</is-empty-query-match-all>
+  <date-weight-formula>
+    <time-weight time="600" weight="12.0"/>
+    <time-weight time="1800" weight="11.0"/>
+    <time-weight time="3600" weight="10.0"/>
+    <time-weight time="21600" weight="9.0"/>
+    <time-weight time="43200" weight="8.0"/>
+    <time-weight time="86400" weight="7.0"/>
+    <time-weight time="1296000" weight="6.0"/>
+    <time-weight time="2678400" weight="5.0"/>
+    <time-weight time="5356800" weight="4.0"/>
+    <time-weight time="8035200" weight="3.0"/>
+    <time-weight time="16070400" weight="2.0"/>
+    <time-weight time="32140800" weight="1.3"/>
+    <time-weight time="64281600" weight="1.2"/>
+    <time-weight time="96422400" weight="1.1"/>
+    <time-weight time="128563200" weight="1.05"/>
+    <time-weight time="160704000" weight="1.04"/>
+    <time-weight time="192844800" weight="1.03"/>
+    <time-weight time="224985600" weight="1.02"/>
+    <time-weight time="321408000" weight="1.01"/>
+  </date-weight-formula>
+  <spell-checking enabled="true"></spell-checking>
+</dataset>

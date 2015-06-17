@@ -1,0 +1,61 @@
+
+  		  <@display.column media="html" indexColumnName="CaseID" title="${searchResult.datasetConfiguration.getColumn(\"CaseID\").displayName}">
+		   	${searchResult.highlight(doc, "CaseID")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseID" title="${searchResult.datasetConfiguration.getColumn(\"CaseID\").displayName}">
+		   	${doc.get("CaseID")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="ChargeClass" title="${searchResult.datasetConfiguration.getColumn(\"ChargeClass\").displayName}">
+		   	${searchResult.highlight(doc, "ChargeClass")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="ChargeClass" title="${searchResult.datasetConfiguration.getColumn(\"ChargeClass\").displayName}">
+		   	${doc.get("ChargeClass")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="ChargeCode" title="${searchResult.datasetConfiguration.getColumn(\"ChargeCode\").displayName}">
+		   	${searchResult.highlight(doc, "ChargeCode")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="ChargeCode" title="${searchResult.datasetConfiguration.getColumn(\"ChargeCode\").displayName}">
+		   	${doc.get("ChargeCode")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="ChargeDescription" title="${searchResult.datasetConfiguration.getColumn(\"ChargeDescription\").displayName}">
+		   	${searchResult.highlight(doc, "ChargeDescription")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="ChargeDescription" title="${searchResult.datasetConfiguration.getColumn(\"ChargeDescription\").displayName}">
+		   	${doc.get("ChargeDescription")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="ChargeName" title="${searchResult.datasetConfiguration.getColumn(\"ChargeName\").displayName}">
+		   	${searchResult.highlight(doc, "ChargeName")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="ChargeName" title="${searchResult.datasetConfiguration.getColumn(\"ChargeName\").displayName}">
+		   	${doc.get("ChargeName")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="ChargeType" title="${searchResult.datasetConfiguration.getColumn(\"ChargeType\").displayName}">
+		   	${searchResult.highlight(doc, "ChargeType")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="ChargeType" title="${searchResult.datasetConfiguration.getColumn(\"ChargeType\").displayName}">
+		   	${doc.get("ChargeType")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="Disposition" title="${searchResult.datasetConfiguration.getColumn(\"Disposition\").displayName}">
+		   	${searchResult.highlight(doc, "Disposition")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="Disposition" title="${searchResult.datasetConfiguration.getColumn(\"Disposition\").displayName}">
+		   	${doc.get("Disposition")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="DispositionDate" title="${searchResult.datasetConfiguration.getColumn(\"DispositionDate\").displayName}">
+		   	${searchResult.highlight(doc, "DispositionDate")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DispositionDate" title="${searchResult.datasetConfiguration.getColumn(\"DispositionDate\").displayName}">
+		   	${doc.get("DispositionDate")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="OffenseDateFrom" title="${searchResult.datasetConfiguration.getColumn(\"OffenseDateFrom\").displayName}">
+		   	${searchResult.highlight(doc, "OffenseDateFrom")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="OffenseDateFrom" title="${searchResult.datasetConfiguration.getColumn(\"OffenseDateFrom\").displayName}">
+		   	${doc.get("OffenseDateFrom")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="OffenseDateTo" title="${searchResult.datasetConfiguration.getColumn(\"OffenseDateTo\").displayName}">
+		   	${searchResult.highlight(doc, "OffenseDateTo")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="OffenseDateTo" title="${searchResult.datasetConfiguration.getColumn(\"OffenseDateTo\").displayName}">
+		   	${doc.get("OffenseDateTo")}
+		  </@display.column>

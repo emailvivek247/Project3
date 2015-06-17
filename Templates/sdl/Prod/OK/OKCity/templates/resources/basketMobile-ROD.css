@@ -1,0 +1,74 @@
+.basketMobileROD {
+    position: absolute;
+    top: 35px;
+    right: 0;
+    display: none;
+    background: #F7F7F7;
+    border:1px solid #111111;
+    width: 70%;
+    height: 85%;
+    padding: 5px 15px 30px 20px;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-weight:bold; 
+    margin:4px 6px 4px 6px;
+    font-size: 15pt;
+    overflow: auto;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+    text-align:center;
+    z-index: 1;
+}
+
+.basketMobileROD table {
+    font-size: 15px;
+    text-align: center;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-weight: normal; 
+    color: #404040; 
+    background-color: #fafafa; 
+    border: 1px #6699CC solid; 
+    border-collapse: collapse;
+    border-spacing: 0px;
+    width:100%;
+    height:auto;
+}
+
+.basketContentMobile {
+    text-align:center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.basketContentMobile table {
+    margin-left: auto;
+    margin-right: auto; 
+    background: whitesmoke;
+    border-collapse: collapse;
+}
+.basketContentMobile table th, .basketContentMobile table td {
+  border: 1px silver solid;
+  padding: 0.2em;
+}
+.basketContentMobile table th {
+  background: #245fab url(blue-bar-solid.png) 53% 53% repeat-x;
+  text-align: left;
+  color: #fff;
+}
+.basketContentMobile table caption {
+  margin-left: inherit;
+  margin-right: inherit;
+}
+
+a.triggerROD{
+position: absolute;
+text-decoration: none;
+top: 5px; 
+right: -10px;
+color:#fff;
+padding: 0px;
+background:url(images/closedCaseMobile.png) 0 0 no-repeat;
+display: block;
+height:40px;
+width:60px;
+
+}

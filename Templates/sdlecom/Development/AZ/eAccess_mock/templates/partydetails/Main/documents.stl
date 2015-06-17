@@ -1,0 +1,133 @@
+
+<#if searchResult.docs?has_content>
+   <table id="party" class="tablesorter">
+	<thead>
+		<tr>
+			<th>${searchResult.datasetConfiguration.getColumn("ParticipantPrefixName").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("ParticipantFirstName").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("ParticipantMiddleName").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("ParticipantLastName").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("ParticipantSuffixName").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("BirthDate").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("ParticipantRoleDescription").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("PartyCity").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("PartyStateCode").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("TTEAPFlag").displayName}</th>
+		</tr>
+	</thead>
+	<tbody>
+	<#assign ResultId =0>
+	<#foreach doc in searchResult.docs>
+	<#assign loopCounter = 0>
+	   	<tr>
+			<td>${searchResult.highlight(doc, "ParticipantPrefixName")}</td>
+			<td>${searchResult.highlight(doc, "ParticipantFirstName")}</td>
+			<td>${searchResult.highlight(doc, "ParticipantMiddleName")}</td>
+			<td>${searchResult.highlight(doc, "ParticipantLastName")}</td>
+			<td>${searchResult.highlight(doc, "ParticipantSuffixName")}</td>
+			<td>${searchResult.highlight(doc, "BirthDate")}</td>
+			<td>${searchResult.highlight(doc, "ParticipantRoleDescription")}</td>
+			<td>${searchResult.highlight(doc, "PartyCity")}</td>
+			<td>${searchResult.highlight(doc, "PartyStateCode")}</td>
+			<td>${searchResult.highlight(doc, "TTEAPFlag")}</td>
+			<#assign loopCounter = loopCounter + 1>
+		</tr>
+	 </#foreach>
+	
+	 </tbody>
+    </table>
+<#elseif searchResult.xstreamdocs?has_content>
+	 <table id="party" class="tablesorter">
+		 <thead>
+		     <tr>
+			<th>${searchResult.datasetConfiguration.getColumn("ParticipantPrefixName").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("ParticipantFirstName").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("ParticipantMiddleName").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("ParticipantLastName").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("ParticipantSuffixName").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("BirthDate").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("ParticipantRoleDescription").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("PartyCity").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("PartyStateCode").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("TTEAPFlag").displayName}</th>
+		    </tr>
+		 </thead>
+		 <tbody>
+		<#assign ResultId =0>
+		<#foreach doc in searchResult.xstreamdocs>
+		<#assign loopCounter = 0>
+			<tr>
+				<td>${searchResult.highlight(doc, "ParticipantPrefixName")}</td>
+				<td>${searchResult.highlight(doc, "ParticipantFirstName")}</td>
+				<td>${searchResult.highlight(doc, "ParticipantMiddleName")}</td>
+				<td>${searchResult.highlight(doc, "ParticipantLastName")}</td>
+				<td>${searchResult.highlight(doc, "ParticipantSuffixName")}</td>
+				<td>${searchResult.highlight(doc, "BirthDate")}</td>
+				<td>${searchResult.highlight(doc, "ParticipantRoleDescription")}</td>
+				<td>${searchResult.highlight(doc, "PartyCity")}</td>
+				<td>${searchResult.highlight(doc, "PartyStateCode")}</td>
+				<td>${searchResult.highlight(doc, "TTEAPFlag")}</td>
+				<#assign loopCounter = loopCounter + 1>
+			</tr>
+		 </#foreach>
+		</tbody>
+	</table>
+<#else>
+<table id="party" class="tablesorter">
+	 <thead>
+	 	<tr>
+	  
+			<th>${searchResult.datasetConfiguration.getColumn("ParticipantPrefixName").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("ParticipantFirstName").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("ParticipantMiddleName").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("ParticipantLastName").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("ParticipantSuffixName").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("BirthDate").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("ParticipantRoleDescription").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("PartyCity").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("PartyStateCode").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("TTEAPFlag").displayName}</th>
+		</tr>
+	 </thead>
+	 <tbody>
+	<#assign ResultId =0>
+	 <#foreach doc in searchResult.docs>
+	 
+	<#foreach doc in searchResult.docs>
+		
+	   <#assign loopCounter = 0>
+	   
+	   	<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+
+			<#assign loopCounter = loopCounter + 1>
+		</tr>
+	 </#foreach>
+</#foreach>
+	 </tbody>
+	</table>
+
+</#if>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	oTable = $('#party').dataTable({
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bSort": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		"aaSorting": []
+	});
+} );
+</script>

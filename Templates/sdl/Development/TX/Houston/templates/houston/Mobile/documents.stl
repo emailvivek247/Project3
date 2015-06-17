@@ -1,0 +1,31 @@
+<#if (searchResult.docs?has_content && searchResult.docs.size() > 0) >
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+     <p class="result">
+     <br/><b>${searchResult.datasetConfiguration.getColumn("Instrument").displayName}</b>:${searchResult.highlight(doc, "Instrument")}
+          <br/><b>Recorded Date</b>:
+                     <#if doc.get("EventDateDisplay")?has_content>
+<#--	                 ${pageStyleUtil.format(doc.get("EventDateDisplay"), "yyyy-MM-dd HH:mm:ss", "MM/dd/yyyy HH:mm:ss a")} 	   	-->
+	                 ${pageStyleUtil.format(doc.get("EventDateDisplay"), "yyyy-MM-dd HH:mm:ss", "MM/dd/yyyy")} 	   	
+
+    	             </#if>
+    
+ <#if isPhoneticSearch == "1">
+ 	   <br/><b>${searchResult.datasetConfiguration.getColumn("PhoneticName").displayName}</b>:${searchResult.highlight(doc, "PhoneticName")}      
+       <#else>
+            <br/><b>${searchResult.datasetConfiguration.getColumn("Name").displayName}</b>:${searchResult.highlight(doc, "Name")}
+       </#if>  
+      <br/><b>${searchResult.datasetConfiguration.getColumn("PartyRole").displayName}</b>:${searchResult.highlight(doc, "PartyRole")}
+      <br/><b>${searchResult.datasetConfiguration.getColumn("DocType").displayName}</b>:${searchResult.highlight(doc, "DocType")}
+      
+      
+      
+
+
+
+<br/>&nbsp;
+ </#foreach>
+<#else>
+ <#include "noResults.stl"> 
+</#if>
+

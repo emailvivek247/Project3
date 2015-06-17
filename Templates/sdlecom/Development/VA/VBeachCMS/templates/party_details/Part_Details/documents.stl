@@ -1,0 +1,107 @@
+
+<A HREF="javascript:history.go(-1)">« Back to search results</a>
+<center><#include "/templates/globalNav.stl"></center>
+<br><br>
+<#foreach doc in searchResult.docs>
+	<#if doc.get("PersonSealed") = "Y">
+		<center><font size = "3" color = "red"><B>SEALED PERSON</B></font></center>
+	</#if>
+	<#if doc.get("PartyConfidential") = "Y">
+		<center><font size = "3" color = "blue"><B>CONFIDENTIAL PARTY</B></font></center>
+	</#if>
+</#foreach>
+
+	<#assign partyCounter = 0>
+	<#if searchResult.docs?has_content>
+		<#foreach doc in searchResult.docs>
+			<#foreach PartyID in doc.getValues("PartyID")>
+				<#assign partyCounter = 1>   
+       <#break>
+			</#foreach>
+		</#foreach>
+	</#if>
+	
+	<#-- General Party Info -->
+<b>Party</b>
+<#if searchResult.docs?has_content>
+	<#if (partyCounter > 0)>
+		<table id="party" class="tablesorter">
+			<thead>
+				<tr>
+					<th class="ui-state-default">Name</th>
+				</tr>
+			</thead>
+			<tbody>
+					<#foreach doc in searchResult.docs>
+						<#foreach PartyID in doc.getValues("PartyID")>					
+						<#assign FirstName = doc.getValues("FirstName")>
+						<#assign MiddleName = doc.getValues("MiddleName")>
+						<#assign LastName = doc.getValues("LastName")>
+						<#assign SuffixName = doc.getValues("SuffixName")>				
+						<#assign loopCounter = 0>					
+				<tr>
+					<td>${LastName[loopCounter]?replace('|', '&nbsp;')} ${SuffixName[loopCounter]?replace('|', '&nbsp;')}, ${FirstName[loopCounter]?replace('|', '&nbsp;')} ${MiddleName[loopCounter]?replace('|', '&nbsp;')}</td>
+						<#assign loopCounter = loopCounter + 1>								
+						<#assign caseNumberKey = doc.getValues("PartyID")>
+				</tr>
+					</#foreach>
+					</#foreach>
+
+			 </tbody>
+		</table>
+	</#if>
+	<#else>
+  <center><b>No additional information provided.</b></center>
+</#if>	
+
+	<#-- Containers-->	
+	
+	<div id="partycase"></div>
+	<div id="partydemographic"></div>
+	<div id="partyaddress"></div>
+	<div id="partyalias"></div>
+	<div id="partylicense"></div>
+	<div id="partyphone"></div>
+		
+<script type="text/javascript">
+		$(document).ready(function() {
+		var url1 = "search.do?indexName=partycase&templateName=PartyCase&lq=PartyID%3A%22<#list caseNumberKey as PartyID>${PartyID}</#list>%22";
+		$('#partycase').load(url1);
+		var url2 = "search.do?indexName=partydemographic&templateName=PartyDemo&lq=PartyID%3A%22<#list caseNumberKey as PartyID>${PartyID}</#list>%22";
+		$('#partydemographic').load(url2); 
+		var url3 = "search.do?indexName=partyaddress&templateName=PartyAddress&lq=PartyID%3A%22<#list caseNumberKey as PartyID>${PartyID}</#list>%22";
+		$('#partyaddress').load(url3);
+		var url4 = "search.do?indexName=partyalias&templateName=PartyAlias&lq=PartyID%3A%22<#list caseNumberKey as PartyID>${PartyID}</#list>%22";
+		$('#partyalias').load(url4);
+		var url5 = "search.do?indexName=partylicense&templateName=PartyLicense&lq=PartyID%3A%22<#list caseNumberKey as PartyID>${PartyID}</#list>%22";
+		$('#partylicense').load(url5);
+		var url6 = "search.do?indexName=partyphone&templateName=PartyPhone&lq=PartyID%3A%22<#list caseNumberKey as PartyID>${PartyID}</#list>%22";
+		$('#partyphone').load(url6);
+
+	oTable = $('#party').dataTable({
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bSort": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		"aaSorting": []
+	});
+
+} );
+</script>
+ </tbody>
+</table>
+
+<br><br>
+
+
+
+
+
+ 
+
+ 
+
+

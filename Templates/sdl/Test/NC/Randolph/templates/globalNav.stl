@@ -1,0 +1,98 @@
+<script type="text/javascript">
+var timeout         = 500;
+var closetimer      = 0;
+var ddmenuitem      = 0;
+function mopen(id)
+{
+    mcancelclosetime();
+    if(ddmenuitem) ddmenuitem.style.visibility = 'hidden';
+    ddmenuitem = document.getElementById(id);
+    ddmenuitem.style.visibility = 'visible';
+}
+function mclose()
+{
+    if(ddmenuitem) ddmenuitem.style.visibility = 'hidden';
+}
+function mclosetime()
+{
+    closetimer = window.setTimeout(mclose, timeout);
+}
+function mcancelclosetime()
+{
+    if(closetimer)
+    {
+        window.clearTimeout(closetimer);
+        closetimer = null;
+    }
+}document.onclick = mclose;
+</script>
+
+<#assign indexCount = 0>
+<#foreach dc in dcs>
+	  <#if dc.isValid() && (dc.displayOrder>=0) && dc.getDefaultTemplateName()?has_content>
+	  	<#assign indexCount = indexCount + 1>
+	  </#if>	
+</#foreach>
+<table width="100%"  border="0" cellpadding="0" cellspacing="0">
+  <tr>
+  <td>
+<table border=0 cellpadding=0 cellspacing=0 ><tr>
+<td><a class=<#if indexName == "randolph">"active"<#else>"inactive"</#if> href="search.do?indexName=randolphsyn&q=${searchResult.getURLEncodedClearQuery()}&searchable=Name,Instrument,RECDATE,PartyRole,IndexType,DocType,Book,Page,Lot,Unit,SectionNum,Subdivision,Township,Other,DESIGSTATUS,GPIN,ProjectNum,RdNum,Desc2,Desc3,Phase,Acreage,Building"><font size = "2pt" style="text-decoration:underline;margin-right:10px;">Randolph</font></a></td>
+
+<td><a class=<#if indexName == "histbook">"active"<#else>"inactive"</#if> href="search.do?indexName=histbook&q=${searchResult.getURLEncodedClearQuery()}&searchable=">
+<font size = "2pt" style="text-decoration:underline">Historical Book</font></a></td>
+</tr>
+
+  </table></td>
+    <td><table align="right" border="0" cellpadding="0" cellspacing="0" >
+      <tr>
+        <td width="10px" align = "right"></td>
+        
+        <td align = "right"><font size = "2pt" style="text-decoration:underline"><a href = "${request.getContextPath()}/search.do?indexName=documenttypes&templateName=ROAMHelp&q=&length=300#NCARD">NCARD Minimum Standards for Indexing</a></font></td> 
+        
+        <td width="10px" align = "right"></td>
+        
+        <td align = "right"><font size = "2pt" style="text-decoration:underline"><a href = "${request.getContextPath()}/search.do?indexName=documenttypes&templateName=ROAMHelp&q=&length=300#PRIVACY">Privacy Notice</a></font></td>    
+        
+        <td width="10px" align = "right"></td>
+        <td align = "right"><font size = "2pt" style="text-decoration:underline"><a href = "${request.getContextPath()}/search.do?indexName=documenttypes&templateName=ROAMHelp&q=&length=300">ROAM Help</a></font></td>    
+    </table></td>
+  </tr>
+</table>
+<#--Comment out new code for global nav
+<table class="ui-state-default" border=0 cellpadding=0 cellspacing=0 width="100%">
+	<tr>
+		<td style="width:100%" >
+			<div style="float:left;">
+			  <#if indexCount &gt; 0>
+			 	<ul class="headerList">
+				<#foreach dc in dcs>			 
+				  <#if dc.isValid() && (dc.displayOrder>=0) && dc.getDefaultTemplateName()?has_content>
+				    <li class="<#if indexName == dc.name>ui-state-active </#if>ui-state-default">
+				      <a href="search.do?indexName=${dc.name}&q=${searchResult.getURLEncodedClearQuery()}">${dc.displayName}</a>
+				    </li>
+				  </#if>  
+				</#foreach>
+				</ul>
+			   </#if>
+			</div>
+			<div style="float:right;">
+				<#include "/web-inf/view/admin/layout/loginMenu.stl">
+			</div>
+		</td>		
+	</tr>
+</table>-->
+<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "true">
+<div style="width:100%;text-align:right;" >
+<#if user.isCardAvailable() && !user.isCreditCardActive()>
+	<a href="ccinfo.admin"><img src="resources/images/ccExpired.gif" alt="Credit Card Expired" /></a>
+</#if>
+<#if user.isPaymentDue()>
+	<img src="resources/images/paymentPending.gif" alt="Payment Pending" />
+</#if> 
+</div>
+</#if> 
+	
+
+
+

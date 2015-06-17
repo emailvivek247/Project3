@@ -1,0 +1,5 @@
+<template>
+  <longname>Tax Appraisal Main Details Template</longname>
+  <description>Client Side Sortable Template with Smart Navigation, Tabs, and Map used for Tax Appraisal Details</description>
+  <defaultLength>30</defaultLength>
+</template>

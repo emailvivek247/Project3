@@ -1,0 +1,47 @@
+  		  <@display.column media="html" indexColumnName="CASE_NUMBER" title="${searchResult.datasetConfiguration.getColumn(\"CASE_NUMBER\").displayName}">
+		   	<a href="${request.getContextPath()}/search.do?indexName=judgementdetails,judgementdetails2&templateName=details&lq=${pageStyleUtil.encodeURL("CASE_NUMBER:\"" + doc.get("CASE_NUMBER") + "\"")}">${searchResult.highlight(doc, "CASE_NUMBER")}</a>
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CASE_NUMBER" title="${searchResult.datasetConfiguration.getColumn(\"CASE_NUMBER\").displayName}">
+		   	${doc.get("CASE_NUMBER")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="JUDGEMENT_FOR" title="${searchResult.datasetConfiguration.getColumn(\"JUDGEMENT_FOR\").displayName}">
+		   	${searchResult.highlight(doc, "JUDGEMENT_FOR")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="JUDGEMENT_FOR" title="${searchResult.datasetConfiguration.getColumn(\"JUDGEMENT_FOR\").displayName}">
+		   	${doc.get("JUDGEMENT_FOR")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="JUDGEMENT_AGAINST" title="${searchResult.datasetConfiguration.getColumn(\"JUDGEMENT_AGAINST\").displayName}">
+		   	${searchResult.highlight(doc, "JUDGEMENT_AGAINST")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="JUDGEMENT_AGAINST" title="${searchResult.datasetConfiguration.getColumn(\"JUDGEMENT_AGAINST\").displayName}">
+		   	${doc.get("JUDGEMENT_AGAINST")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="JUDGEMENT_ISSUED_TYP" title="${searchResult.datasetConfiguration.getColumn(\"JUDGEMENT_ISSUED_TYP\").displayName}">
+		   	${searchResult.highlight(doc, "JUDGEMENT_ISSUED_TYP")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="JUDGEMENT_ISSUED_TYP" title="${searchResult.datasetConfiguration.getColumn(\"JUDGEMENT_ISSUED_TYP\").displayName}">
+		   	${doc.get("JUDGEMENT_ISSUED_TYP")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="CASE_FILING_DT" title="${searchResult.datasetConfiguration.getColumn(\"CASE_FILING_DT\").displayName}">
+		   		${date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("CASE_FILING_DT"))}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CASE_FILING_DT" title="${searchResult.datasetConfiguration.getColumn(\"CASE_FILING_DT\").displayName}">
+		   		${date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("CASE_FILING_DT"))}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="JUDGMENT_AMOUNT" title="${searchResult.datasetConfiguration.getColumn(\"JUDGMENT_AMOUNT\").displayName}">
+		   		${number.format("###0.##",doc.get("JUDGMENT_AMOUNT"))}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="JUDGMENT_AMOUNT" title="${searchResult.datasetConfiguration.getColumn(\"JUDGMENT_AMOUNT\").displayName}">
+		   		${number.format("###0.##",doc.get("JUDGMENT_AMOUNT"))}
+		  </@display.column>
+
+
+
+<#--
+		  <@display.column media="html" indexColumnName="CASE_TYP_DESC" title="${searchResult.datasetConfiguration.getColumn(\"CASE_TYP_DESC\").displayName}">
+		   	${searchResult.highlight(doc, "CASE_TYP_DESC")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CASE_TYP_DESC" title="${searchResult.datasetConfiguration.getColumn(\"CASE_TYP_DESC\").displayName}">
+		   	${doc.get("CASE_TYP_DESC")}
+		  </@display.column>
+-->

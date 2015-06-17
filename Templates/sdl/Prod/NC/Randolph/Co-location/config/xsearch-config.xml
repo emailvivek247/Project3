@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="3431DD156E16BCC7E2A6EFD7A6F8066AF659BA5B50DA0F00" adminuser="02805BAE91AED6163F95FDDA8CF91EFAC0F7A293CEB64922">
+  <index-root-directory><![CDATA[D:\index\randolph\]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[F161DD9283E92F6EC3DE7960462C2065C4FAE22B17E28F07DBD3A87C5307EA8ABD37CFBCEF96C014580ECB83BCBBEF302751F0316EEDB9BE21AB47F8545855E5]]></db-url>
+      <db-username><![CDATA[D168FCB259A4A72EBBDED90C6BF173341325806F179D9C7B]]></db-username>
+      <db-password><![CDATA[2927B1E78ED5322D2BAC0F9BE6DA5375EF612A7FAA86A420]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+   <instance-job-schedule id="0">
+  <schedule-name><![CDATA[NIGHLY]]></schedule-name>
+  <job-data-string><![CDATA[randolphsyn,Re-create Index|randolphdetails,Re-create Index|randolphimages,Re-create Index|oprcert,Re-create Index|documenttypes,Re-create Index|reference,Re-create Index|doctype,Re-create Index|]]></job-data-string>
+   <schedule id="0">
+    <is-enabled>true</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>0 5 ? * 2,3,4,5,6,7</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+    </instance-job-schedule>
+   <instance-job-schedule id="0">
+  <schedule-name><![CDATA[HISTORICAL]]></schedule-name>
+  <job-data-string><![CDATA[histbook,Re-create Index|histbookimages,Re-create Index|histbooktype,Re-create Index|]]></job-data-string>
+   <schedule id="0">
+    <is-enabled>true</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>0 0 ? * 2,3,4,5,6,7</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+    </instance-job-schedule>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

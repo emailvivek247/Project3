@@ -1,0 +1,6 @@
+ <tr>
+  <td>${number.format("###0.##",doc.get("SEQKEY"))}</td>
+  <td>${number.format("###0.##",doc.get("SEQ_KEY"))}</td>
+  <td>${searchResult.highlight(doc, "REFNUM")}</td>
+  <td>${searchResult.highlight(doc, "LEGACYREFNNUM")}</td>
+ </tr>

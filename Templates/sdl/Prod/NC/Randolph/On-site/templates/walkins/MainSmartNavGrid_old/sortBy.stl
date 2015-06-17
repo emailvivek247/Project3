@@ -1,0 +1,52 @@
+<script type="text/javascript">
+function sort() {
+    var sE = null, url;
+	sE = document.getElementById('sortColumns');
+	if(sE && (url = sE.options[sE.selectedIndex].value)) {
+	//alert(url);
+	location.href = url;
+	}    
+}
+</script>
+
+
+<#macro displaySortBy(c)>
+  <#if c == "Relevance">
+    <#if sortBy?has_content>
+      <#assign _href = pageStyleUtil.addOrSetQuery(noStartQueryString, "sortBy", null)>
+      <#assign _href = pageStyleUtil.addOrSetQuery(_href, "desc", null)>
+      <option value="?${_href}">Relevance</option>     
+    <#else>
+    <option selected="selected">Relevance</option> 
+    </#if>
+  <#elseif sortBy == c.columnName>
+  <option selected="selected">${c.displayName}</option>
+  <#else>
+    <#assign _href = pageStyleUtil.addOrSetQuery(noStartQueryString, "sortBy", "SortName")>    
+    <#if !c.isDescending>
+	    <#assign _href = pageStyleUtil.addOrSetQuery(_href, "desc", "N")>	
+    <#else>
+	    <#assign _href = pageStyleUtil.addOrSetQuery(_href, "desc", "Y")>	
+    </#if>    
+     <option value="?${_href}">${c.displayName}</option>    
+  </#if>
+</#macro>
+<#if (dc.sortableColumns.size() > 0) >
+<input type="hidden" name="sortBy" id="sortBy" value="SortName,RecDateFiler">
+
+<table id="sortActions" width=100% border=0 cellpadding=0 cellspacing=0>
+  <tr>
+    <td align=left>
+    </td>
+    <td align=right nowrap>Sort by 
+    <Select id="sortColumns" onChange="sort();">    
+    <#call displaySortBy("Relevance")>
+    <#foreach c in dc.sortableColumns>
+      ,
+      <#call displaySortBy(c)>
+    </#foreach>
+    </Select>
+    </td>
+  </tr>
+</table>
+</#if>

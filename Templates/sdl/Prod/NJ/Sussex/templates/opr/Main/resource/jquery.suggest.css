@@ -1,0 +1,44 @@
+.acResults {
+	padding: 0;
+	marging: 0;
+	border: 1px solid WindowFrame;
+	background-color: Window;
+	overflow: hidden;
+	z-index: 10000;
+	list-style: none;
+	position: absolute;
+	display: none;
+}
+
+.acResults ul {
+	margin: 0;
+	padding: 0;
+	list-style-position: outside;
+	list-style: none;	
+}
+
+.acResults ul li {
+	margin: 0px;
+	padding: 2px 5px;
+	cursor: pointer;
+	display: block;
+	font: menu;
+	font-size: 12px;
+	overflow: hidden;
+}
+.ac_results li {
+        padding: 2px 5px;
+        white-space: nowrap;
+        color: #101010;
+        text-align: left;
+}
+.acLoading {
+	background : url('indicator.gif') right center no-repeat;
+}
+
+.acSelect {
+	background-color: Highlight;
+	color: HighlightText;
+}
+
+

@@ -1,0 +1,30 @@
+
+
+<#assign display=JspTaglibs["http://displaytag.sf.net"]>
+
+
+<#if searchResult.docs?has_content>
+    <#assign ResultId =0>
+	<@display.table name="searchResult.docs" id="doc" export=true requestURI="/search.do" excludedParams="searchQuery searchType AppDesc AppDesc_select CaseID CaseID_select CaseNumber CaseNumber_select CourtSessionID CourtSessionID_select HearingDesc HearingDesc_select HearingResult HearingResult_select Judge Judge_select SessionDate SessionDate_select ">
+	  <#include "document.stl">
+	</@display.table>
+<#else>
+ <#include "noResults.stl"> 
+</#if>
+
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	oTable = $('#doc').dataTable({
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bSort": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		"aaSorting": []
+	});
+} );
+</script>

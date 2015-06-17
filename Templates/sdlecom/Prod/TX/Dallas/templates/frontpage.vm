@@ -1,0 +1,141 @@
+#set($layout = "OtherDefault.vm")
+<script type="text/javascript" src="styles/tp.js"></script>
+
+<link rel="stylesheet" href="styles/tp.css" />
+<link rel="shortcut icon" href="/Globe.ico"/>
+
+
+            <table width="80%" align="center" border="0">         
+            <tr>
+			<td width="2%">&nbsp</td> 
+			<td align="left"><img src="templates/Images/Seal2.JPG" /></td>
+                        <td align="center"><a href = "granicus.com"><img src="templates/Images/ROAM.gif" border = "0" /></a></td>
+			<td align="right"><img src="templates/Images/Warren2.JPG" /></td>
+			<td width="2%">&nbsp</td> 
+                        </tr>
+            </table>
+
+<br>
+<br>
+
+
+<div id="controla" style="margin-left:auto; margin-right:auto;width:80%; ">
+
+#foreach( $dc in $dcs )
+  #if($dc.isValid() && $dc.displayOrder >= 0 && $dc.getDefaultTemplateName())
+  	
+    #set($_controlStringa = "$!{_controlStringa},'${dc.name}'")
+<div id="${dc.name}" title="${dc.displayName}" style="height:100px;">
+<br/>
+
+
+
+<form method="get" action="search.do">
+            <input type="hidden" name="searchType" value="1">
+            #if($dc.name == "dallasclerkopr")
+            
+            <input type="hidden" name="searchable" value="Name,Instrument,RECDATE,DESIGSTATUS,PartyRole,IndexType,DocType,Book,Page,Lot,Block,CityBlock,MapBook,MapPage,MapInstrumentNumber,Subdivision,CityTown,Freeform,Location">
+            
+            #elseif ($dc.name == "dallasml")
+            
+            <input type="hidden" name="searchable" value="Name,LicenseNum,Instrument,RECDATE1DISPLAY,RECDATE1SEARCH,RECDATE2,PartyRole,DocType,Location">
+            
+            
+            #end
+          
+            
+            <table align="center" border="0">
+                        <tr>
+                                    <td align="right">
+					<input type="hidden" name="indexName" value="$!{dc.name}">
+					<input type="hidden" name="templateName" value="$!{templateName}">
+					 #if($dc.name == "dallashistorical" || $dc.name == "dallashistbook" || $dc.name == "dallashistindex")
+						Go To: <a href="${request.getContextPath()}/search.do?indexName=dallashistindex">Dallas Historical Index Search</a>
+						</br>
+						</br>
+						       <a href="${request.getContextPath()}/search.do?indexName=dallashistbook">Dallas Historical Book Search</a>
+					 #else
+						<input class="text" type="text" name="q" size="81" maxlength="2048" value="$!{HTMLEncodedQuery}">
+				         
+                                    </td>   
+                                    <td >   
+                                                <button type="submit" class="search">Search</button>
+                                    </td>
+                                         #end  
+                        </tr> 
+
+</table>
+
+</form>
+
+<br/>
+</div>
+
+  #end
+#end
+</div>
+
+<br>
+
+<div id="control" style="margin-left:auto; margin-right:auto;width:80%;">
+
+#foreach( $dc in $dcs )
+  #if($dc.isValid() && $dc.displayOrder >= 0 && $dc.getDefaultTemplateName())
+    #set($_controlString = ",'MessageCenter'")
+<div id="MessageCenter" title="Message Center" style="height:auto;">
+<br/>
+My office has continued our efforts to provide the best services and technology available both in Texas and throughout the Country. In order to increase the overall searchability of our records, our ROAM site has been updated to include Phonetic Search functionality. This functionality allows users to search based on how a name is pronounced, not just how it is spelled. In the future my office may charge a fee for the use of these, and other, premium features that we intend to add to the ROAM site, however for now we have provided them to you free of charge.
+<br /><br />
+- John F Warren, Dallas County Clerk
+<br><br>
+Learn help tips about ROAM <a href = "${request.getContextPath()}/search.do?indexName=documenttypes&templateName=ROAMHelp&q=&length=300">HERE</a>! Read ROAM's User Manual <a href="${request.getContextPath()}/templates/QuickTips.pdf">HERE</a>!
+			<br><br> View ROAM's latest Dashboard functionality <a href = "${request.getContextPath()}/search.do?indexName=dash_opr_count&q=&length=10000&sortBy=YEAR&desc=N">HERE</a>!
+			<br> <!-- <br>The old website can be accessed at <a href= "http://dallas.landrecordsonline.com">Dallas.LandRecordsonline.com</a>. -->
+			<ul>
+			<!-- <li><a href = "http://dallas.landrecordsonline.com/marriageapplication.aspx">Click to Submit an Online Marriage Application</a></li>
+			<li><a href = "http://dallas.landrecordsonline.com/publicfilings.aspx">Click Here to File an Assumed Name</a></li> -->
+			<li><a href = "${request.getContextPath()}/templates/file.stl">Click Here to File an Assumed Name or Submit an Online Marriage Application</a></li></ul>
+			</font>			
+
+
+<br/>
+
+</div>
+
+  #end
+#end
+</div>
+
+#if($dcs.size() > 0)
+
+<script type="text/javascript">
+<!--
+tpSet('control', 'tabs' $!{_controlString});
+// -->
+</script>
+
+
+<script type="text/javascript">
+<!--
+tpSet('controla', 'tabs' $!{_controlStringa});
+// -->
+</script>
+
+
+#else
+
+<script type="text/javascript">
+<!--
+window.location='login.do';
+// -->
+</script>
+#end
+
+<br><br>
+<table width="100%" border="0">
+ <tr>
+  <td width="100%" align="center"><font size="2pt" color=#696969>Copyright &copy; <script>document.write(new Date().getFullYear())</script> Granicus, INC.</font></td>
+ </tr>
+</table>
+
+

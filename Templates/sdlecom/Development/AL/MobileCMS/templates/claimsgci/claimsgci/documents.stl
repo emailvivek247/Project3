@@ -1,0 +1,71 @@
+
+<#if searchResult.docs?has_content>
+<table id="claimsgci" class="tablesorter">
+ <thead>
+ 	<tr>
+	  <th>${searchResult.datasetConfiguration.getColumn("Claimant").displayName}</th>
+	  <th>${searchResult.datasetConfiguration.getColumn("Amount").displayName}</th>
+	  <th>${searchResult.datasetConfiguration.getColumn("ClaimDate").displayName}</th>
+	  <th>${searchResult.datasetConfiguration.getColumn("Status").displayName}</th>
+	  <th>${searchResult.datasetConfiguration.getColumn("DateFiled").displayName}</th>
+ 	</tr>
+ </thead>
+ <tbody>
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+  
+   <tr>
+	<td>${searchResult.highlight(doc, "Claimant")}</td>
+	<td>${number.format("###0.##",doc.get("Amount"))}</td>
+	<td>${date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("ClaimDate"))}</td>
+	<td>${searchResult.highlight(doc, "Status")}</td>
+	<td>${date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("DateFiled"))}</td>
+   </tr>
+
+ </#foreach>
+ </tbody>
+</table> 
+<#else>
+	<table id="claimsgci" class="tablesorter">
+	 <thead>
+	 	<tr>
+		  <th>${searchResult.datasetConfiguration.getColumn("Claimant").displayName}</th>
+		  <th>${searchResult.datasetConfiguration.getColumn("Amount").displayName}</th>
+		  <th>${searchResult.datasetConfiguration.getColumn("ClaimDate").displayName}</th>
+		  <th>${searchResult.datasetConfiguration.getColumn("Status").displayName}</th>
+		  <th>${searchResult.datasetConfiguration.getColumn("DateFiled").displayName}</th>
+	 	</tr>
+	 </thead>
+	 <tbody>
+	<#assign ResultId =0>
+	 <#foreach doc in searchResult.docs>
+	  
+	   <tr>
+		<td><b><i>No party information available.</i></b></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	   </tr>
+	
+	 </#foreach>
+	 </tbody>
+</table> 
+</#if>
+
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	oTable = $('#claimsgci').dataTable({
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bSort": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		"aaSorting": []
+	});
+} );
+</script>

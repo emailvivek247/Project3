@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset name="Party Search INTERNAL" exportedBy="null" createdAt="Thu Sep 19 10:46:54 EDT 2013">
+  <display-order>-1</display-order>
+  <description><![CDATA[]]></description>
+  <index-dir>partysearch</index-dir>
+  <is-prefix-root-index-directory>true</is-prefix-root-index-directory>
+  <use-server-db-connection>true</use-server-db-connection>
+  <work-directory>_work</work-directory>
+  <temporary-index-minimal-merge-percentage>80.0</temporary-index-minimal-merge-percentage>
+  <merge-hours enabled="true" begin="0" end="24"/>
+  <fetcher-threads>1</fetcher-threads>
+  <writer-threads>1</writer-threads>
+  <index-max-size>100000.0</index-max-size>
+  <schedules>
+   <schedule id="0">
+    <is-enabled>false</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>2</interval>
+    <cron-setting>3,8,13,18,23,28,33,38,43,48,53,58 * * * ?</cron-setting>
+    <indexing-mode>Incremental Indexing with Thorough Deletion Detection</indexing-mode>
+   </schedule>
+  </schedules>
+  <language>Any</language>
+  <analyzer-name>com.fdt.sdl.core.analyzer.NumberLowerCaseAnalyzer</analyzer-name>
+  <data-source-type>0</data-source-type>
+  <fetcher-configuration dir="null">
+  </fetcher-configuration>
+  <data-sources>
+    <data-source>
+      <name>default</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-password>$enc$null</db-password>
+    </data-source>
+  </data-sources>
+  <dataquery name="WorkingQueue" batch-size="128" is-skipping-null-parameters="false">
+    <sql><![CDATA[
+SELECT DISTINCT
+CASE_NUMBER AS 'CaseNumber',
+PARTY_ID AS 'PartyID',
+CASE_ID AS 'CaseID',
+LAST_NAME AS 'LastName',
+FIRST_NAME AS 'FirstName',
+MIDDLE_NAME AS 'MiddleName',
+SUFFIX_NAME AS 'SuffixName',
+DISPLAYNAME AS 'DisplayName',
+DISPLAYNAME AS 'DisplayNameSort',
+CONVERT(varchar(10), DOB, 101) AS 'DateofBirth',
+HAIR_COLOR_DESC AS 'HairColor',
+EYE_COLOR_DESC AS 'EyeColor',
+HEIGHT AS 'Height',
+WEIGHT AS 'Weight',
+SSN AS 'SSN',
+SPN AS 'SPN',
+SEX AS 'Sex',
+LICENSE_NUM AS 'DriverLicense',
+ADDRESS_LINE1_TXT AS 'AddressLine1',
+ADDRESS_LINE2_TXT AS 'AddressLine2',
+CITY_NAME AS 'City',
+STATE_NAME AS 'State',
+POSTAL_CD AS 'Zip',
+STREET_ADDRESS AS 'DisplayAddress',
+PERSON_SEALED AS 'PersonSealed',
+PARTY_RESTRICTED AS 'PartyRestricted',
+DATE_TIME_MOD
+FROM ACM_V_ESPARTYSEARCH
+WHERE (CASE_SEALED = 'N' AND PERSON_SEALED = 'N' AND PARTY_RESTRICTED = 'N')
+AND CASE_VOID = 'N'
+AND PARTY_VOID = 'N'
+AND PARTY_ROLE_DESC IN ('PLAINTIFF', 'DEFENDANT')
+AND COURT_CD IN ('CRIMINAL', 'CIVIL')
+ORDER BY DISPLAYNAME, DATE_TIME_MOD DESC
+    ]]></sql>
+    <column>
+      <column-name>CaseNumber</column-name>
+      <display-name><![CDATA[Case Number]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>PartyID</column-name>
+      <display-name><![CDATA[PartyID]]></display-name>
+      <column-index>2</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <primary-key>true</primary-key>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>CaseID</column-name>
+      <display-name><![CDATA[CaseID]]></display-name>
+      <column-index>3</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>LastName</column-name>
+      <display-name><![CDATA[Last Name]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+    </column>
+    <column>
+      <column-name>FirstName</column-name>
+      <display-name><![CDATA[First Name]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+    </column>
+    <column>
+      <column-name>MiddleName</column-name>
+      <display-name><![CDATA[Middle Name]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+    </column>
+    <column>
+      <column-name>SuffixName</column-name>
+      <display-name><![CDATA[Suffix Name]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>DisplayName</column-name>
+      <display-name><![CDATA[Party]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>DisplayNameSort</column-name>
+      <display-name><![CDATA[DisplayNameSort]]></display-name>
+      <column-index>9</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-sortable>true</is-sortable>
+      <is-searchable search-weight="3.0">true</is-searchable>
+    </column>
+    <column>
+      <column-name>DateofBirth</column-name>
+      <display-name><![CDATA[DOB]]></display-name>
+      <column-index>10</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <analyzer-name>com.fdt.sdl.core.analyzer.DateAnalyzer</analyzer-name>
+    </column>
+    <column>
+      <column-name>HairColor</column-name>
+      <display-name><![CDATA[Hair Color]]></display-name>
+      <column-index>11</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>EyeColor</column-name>
+      <display-name><![CDATA[Eye Color]]></display-name>
+      <column-index>12</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>Height</column-name>
+      <display-name><![CDATA[Height]]></display-name>
+      <column-index>13</column-index>
+      <column-type precision="5" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>Weight</column-name>
+      <display-name><![CDATA[Weight]]></display-name>
+      <column-index>14</column-index>
+      <column-type precision="5" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>SSN</column-name>
+      <display-name><![CDATA[SSN]]></display-name>
+      <column-index>15</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>SPN</column-name>
+      <display-name><![CDATA[SPN]]></display-name>
+      <column-index>16</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>Sex</column-name>
+      <display-name><![CDATA[Sex]]></display-name>
+      <column-index>17</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>DriverLicense</column-name>
+      <display-name><![CDATA[Driver License]]></display-name>
+      <column-index>18</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>AddressLine1</column-name>
+      <display-name><![CDATA[Address Line 1]]></display-name>
+      <column-index>19</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>AddressLine2</column-name>
+      <display-name><![CDATA[Address Line 2]]></display-name>
+      <column-index>20</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>City</column-name>
+      <display-name><![CDATA[City]]></display-name>
+      <column-index>21</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>State</column-name>
+      <display-name><![CDATA[State]]></display-name>
+      <column-index>22</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>Zip</column-name>
+      <display-name><![CDATA[Zip]]></display-name>
+      <column-index>23</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>DisplayAddress</column-name>
+      <display-name><![CDATA[Address]]></display-name>
+      <column-index>24</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>PersonSealed</column-name>
+      <display-name><![CDATA[PersonSealed]]></display-name>
+      <column-index>25</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>PartyRestricted</column-name>
+      <display-name><![CDATA[PartyRestricted]]></display-name>
+      <column-index>26</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>DATE_TIME_MOD</column-name>
+      <display-name><![CDATA[DATE_TIME_MOD]]></display-name>
+      <column-index>27</column-index>
+      <column-type>java.sql.Timestamp</column-type>
+      <modified-date>true</modified-date>
+      <index-field-type>KeywordDateHierarchical</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+    </column>
+  </dataquery>
+  <dataquery name="Deletion" is-delete-only="true">
+    <sql><![CDATA[
+SELECT RT.TAB_PK_KEY
+FROM ROAM_TRACK RT
+WHERE 
+RT.DATE_TIME_MOD > DATEADD(mi, -10, GETDATE()) AND RT.TAB_NAME = 'ACM_PARTY' AND
+RT.DML_TYP IN ('D', 'U') 
+UNION ALL
+SELECT PARTY_ID
+FROM ACM_V_ESPARTYSEARCH ES INNER JOIN ROAM_TRACK RT
+ON ES.CASE_ID = RT.PK_KEY
+WHERE 
+RT.DATE_TIME_MOD > DATEADD(mi, -10, GETDATE()) AND 
+RT.DML_TYP IN ('D', 'U') AND 
+((ES.CASE_SEALED = 'Y' OR ES.PERSON_SEALED = 'Y' AND COURT_CD IN ('CRIMINAL','CIVIL')) OR CASE_VOID = 'Y' OR PARTY_VOID = 'Y')
+    ]]></sql>
+  </dataquery>
+  <dataquery name="Incremental">
+    <sql><![CDATA[
+SELECT DISTINCT
+CASE_NUMBER AS 'CaseNumber',
+PARTY_ID AS 'PartyID',
+CASE_ID AS 'CaseID',
+LAST_NAME AS 'LastName',
+FIRST_NAME AS 'FirstName',
+MIDDLE_NAME AS 'MiddleName',
+SUFFIX_NAME AS 'SuffixName',
+DISPLAYNAME AS 'DisplayName',
+CONVERT(varchar(10), DOB, 101) AS 'DateofBirth',
+HAIR_COLOR_DESC AS 'HairColor',
+EYE_COLOR_DESC AS 'EyeColor',
+HEIGHT AS 'Height',
+WEIGHT AS 'Weight',
+SSN AS 'SSN',
+SPN AS 'SPN',
+SEX AS 'Sex',
+LICENSE_NUM AS 'DriverLicense',
+ADDRESS_LINE1_TXT AS 'AddressLine1',
+ADDRESS_LINE2_TXT AS 'AddressLine2',
+CITY_NAME AS 'City',
+STATE_NAME AS 'State',
+POSTAL_CD AS 'Zip',
+STREET_ADDRESS AS 'DisplayAddress',
+PERSON_SEALED AS 'PersonSealed',
+PARTY_RESTRICTED AS 'PartyRestricted',
+RT.DATE_TIME_MOD
+FROM ACM_V_ESPARTYSEARCH PT INNER JOIN ROAM_TRACK RT
+ON PT.CASE_ID = RT.PK_KEY
+WHERE (CASE_SEALED = 'N' AND PERSON_SEALED = 'N' OR COURT_CD = 'JAPPL')
+AND CASE_VOID = 'N'
+AND PARTY_VOID = 'N'
+AND PARTY_ROLE_DESC IN ('PLAINTIFF', 'DEFENDANT')
+AND COURT_CD IN ('CRIMINAL', 'CIVIL')
+AND RT.DML_TYP IN ('I', 'U')
+AND (RT.DATE_TIME_MOD > ? OR RT.DATE_TIME_MOD > DATEADD(mi, -15, GETDATE()))
+ORDER BY RT.DATE_TIME_MOD DESC
+    ]]></sql>
+  </dataquery>
+  <default-template>PartySearch</default-template>
+  <tablet-template>PartySearch</tablet-template>
+  <mobile-template>PartySearch</mobile-template>
+  <searcher-max-active>8</searcher-max-active>
+  <searcher-when-exhausted>1</searcher-when-exhausted>
+  <searcher-max-wait>10000</searcher-max-wait>
+  <searcher-max-idle>7</searcher-max-idle>
+  <is-in-memory-search>false</is-in-memory-search>
+  <jvm-max-heap-size>1024</jvm-max-heap-size>
+  <document-buffer-size-mb>512</document-buffer-size-mb>
+  <is-wildcard-allowed>true</is-wildcard-allowed>
+  <min-wildcard-prefix-length>2</min-wildcard-prefix-length>
+  <allowed-ip-list>localhost</allowed-ip-list>
+  <date-weight-formula>
+    <time-weight time="600" weight="12.0"/>
+    <time-weight time="1800" weight="11.0"/>
+    <time-weight time="3600" weight="10.0"/>
+    <time-weight time="21600" weight="9.0"/>
+    <time-weight time="43200" weight="8.0"/>
+    <time-weight time="86400" weight="7.0"/>
+    <time-weight time="1296000" weight="6.0"/>
+    <time-weight time="2678400" weight="5.0"/>
+    <time-weight time="5356800" weight="4.0"/>
+    <time-weight time="8035200" weight="3.0"/>
+    <time-weight time="16070400" weight="2.0"/>
+    <time-weight time="32140800" weight="1.3"/>
+    <time-weight time="64281600" weight="1.2"/>
+    <time-weight time="96422400" weight="1.1"/>
+    <time-weight time="128563200" weight="1.05"/>
+    <time-weight time="160704000" weight="1.04"/>
+    <time-weight time="192844800" weight="1.03"/>
+    <time-weight time="224985600" weight="1.02"/>
+    <time-weight time="321408000" weight="1.01"/>
+  </date-weight-formula>
+  <spell-checking enabled="true"></spell-checking>
+</dataset>

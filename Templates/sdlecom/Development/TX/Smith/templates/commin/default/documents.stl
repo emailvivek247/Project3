@@ -1,0 +1,41 @@
+
+
+<#assign display=JspTaglibs["http://displaytag.sf.net"]>
+
+
+<#if searchResult.docs?has_content>
+    <#assign ResultId =0>
+	<@display.table name="searchResult.docs" id="doc" export=true requestURI="/search.do" excludedParams="searchType Instrument Instrument_select Page Page_select FullText FullText_select ">
+	  <#include "document.stl">
+	  <@display.setProperty name="export.title" value="Search Criteria :${Request.searchForm.searchQuery}" />  
+	</@display.table>
+<#else>
+ <#include "noResults.stl"> 
+</#if>
+
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	oTable = $('#doc').dataTable({
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bSort": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		"aaSorting": []
+	});
+} );
+
+
+$(".gallery a[rel^='prettyPhoto']").prettyPhoto({theme:'light_rounded',animationSpeed:'fast',slideshow:false,autoplay_slideshow: false,overlay_gallery: false,keyboard_shortcuts: true,opacity:0.3});
+   //$('a.pphoto').click(function() {
+     //  event.preventDefault(); 
+       //alert($(this).attr('href'));
+       //$.fn.prettyPhoto();
+       //$.prettyPhoto.open($(this).attr('href'),$(this).attr('title'),'');
+   //});
+
+</script>

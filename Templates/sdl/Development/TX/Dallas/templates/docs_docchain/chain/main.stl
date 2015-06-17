@@ -1,0 +1,15 @@
+<@com.useHighlightTag '<span style="background-color:#00ff00">', '</span>' />
+<#include "layout.stl">
+<@layout title="Document Chain" encoding="${searchResult.encoding}">
+<a id="backLink" HREF="javascript:history.go(-1)" >« Back</a> &nbsp; &nbsp;
+<div style="width:930px;text-align:justify;">
+<p> <b>**Note:</b> The below document chaining graphic is interactive. If you wish to view the details of a specific document in the chain, you can simply click on the document icon and the details will display to the right. 
+	    You can also reposition the document icons around the screen by right-clicking anywhere inside of the boredered document chain table (except directly on the document icons) and selecting "Enable Drag". 
+	    This will enable you to drag and reposition the document icons anywhere within the bordered table. For more help, click <a href="">HERE</a>.
+</p>
+</div>
+ <@com.errorMarkup/> 
+ 
+ <#include "documents.stl">
+ 
+</@layout>

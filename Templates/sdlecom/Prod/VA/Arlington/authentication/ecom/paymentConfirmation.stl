@@ -1,0 +1,220 @@
+<#include "/admin/lib/include.stl" />
+<@loginLayout encoding="utf-8">
+<#assign form  =JspTaglibs["http://www.springframework.org/tags/form"]>
+<#assign spring=JspTaglibs["http://www.springframework.org/tags"]>
+<link rel="stylesheet" media="all" href="resources/styles/validationEngine.jquery.css" type="text/css" />
+<link rel="stylesheet" media="all" href="resources/styles/login.css" />
+<link rel="stylesheet" media="all" href="resources/styles/jquery-ui-1.8.11.base.css" />
+<link rel="stylesheet" media="all" href="resources/styles/jquery-ui-custom-ext.css" />
+<link rel="stylesheet" media="all" href="resources/styles/table.css" media="print"/>
+<script type="text/javascript" src="resources/javascripts/jquery.min.js"/></script>
+<script type="text/javascript" src="resources/javascripts/jquery-ui.min.js"/></script>
+<script type="text/javascript" src="resources/javascripts/jquery.printElement.min.js"/></script>
+
+<!--ARL HEADER-->
+	<meta name="msapplication-TileColor" content="#015CB9">
+	<meta name="msapplication-TileImage" content="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-144x144.png">
+	<link rel="shortcut icon" href="https://d1rn8z435cu2eh.cloudfront.net/favicon.ico" sizes="16x16 32x32 64x64" type="image/x-icon">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-152x152.png" sizes="152x152">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-144x144.png" sizes="144x144">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-120x120.png" sizes="120x120">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-114x114.png" sizes="114x114">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-72x72.png" sizes="72x72">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-57x57.png" sizes="57x57">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon.png">
+	<link rel='stylesheet' id='open-sans-pt-sans-css'  href='resources/styles/OpenSans.css' type='text/css' media='all' />
+	
+	<script type="text/javascript">
+	var _gas = _gas || [];
+	_gas.push(['_setAccount', 'UA-23381988-1']); // All ACG
+	_gas.push(['_trackPageview']);
+	_gas.push(['_gasTrackOutboundLinks']);
+	_gas.push(['_gasTrackMailto']);
+	_gas.push(['_gasTrackDownloads', {
+	  category: 'Download',
+	  extensions: ['']
+	}]);
+	_gas.push(['_gasTrackYoutube', {
+	  percentages: [1, 20, 40, 60, 80],
+	  category: 'YouTube Video'
+	}]);
+	_gas.push(['_gasTrackVimeo', {
+	  category: 'Vimeo Video'
+	}]);
+	_gas.push(['_gasTrackAudio']);
+	_gas.push(['_gasTrackVideo']);
+	(function () {
+	  var ga = document.createElement('script');
+	  ga.type = 'text/javascript';
+	  ga.async = true;
+	  ga.src = 'resources/javascripts/gas.min.js';
+	  var s = document.getElementsByTagName('script')[0];
+	  s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+<!--END ARL HEADER-->
+
+<style>
+div.ADCSI {
+	width: 1000px;
+	text-align:center;
+}
+span.ADCSI_leftcol {
+	width: 130px;
+	text-align:right;
+	display: inline-block;
+}
+div.ADCSI_row {
+	margin-right: 20px;
+}
+ul { 
+	list-style-type: square; 
+}
+table#subscriptionDetails {
+	border-collapse: collapse;
+	margin: auto;
+}
+
+table#subscriptionDetails td {	
+	padding: 5px 5px;
+}
+
+table#subscriptionDetails tr.paid {	
+	color: #527838;
+}
+
+table#subscriptionDetails tr.unPaid {	
+	color: #BF5468;
+}
+
+th.header{
+	color: #039;
+	border-bottom: 2px solid #6678B1;
+	padding: 5px 5px;
+}
+td.header{
+	color: #039;
+	border-bottom: 2px solid #6678B1;
+	padding: 5px 5px;
+}
+th.subheader{
+	color: #039;
+	border-top: 1px solid #6678B1;
+	text-align:left;
+	padding: 5px 5px;
+}
+td.footer{
+	color: #039;
+	border-top: 2px solid #6678B1;
+	padding: 5px 5px;
+}
+.paid {	
+	color: #527838;
+}
+
+.unPaid {	
+	color: #ED1C43;
+}
+</style>
+	<div class="content">	
+		<div style="width:95%;min-width:1024px;margin-left: auto;margin-right:auto;margin-top:100px;">
+			<div id="ADCSI" class="ADCSI" style="margin-top: 0px; margin-bottom: 12px;">
+			<div class="ADCSI_title" id="ADCSI_title">				
+				<span style="width:49%;text-align:left;display:inline-block;"><b><@spring.message code="form.name.paymentConfirmation" /></b></span>
+				<span style="width:49%;text-align:right;display:inline-block;"><a href="logout.admin"><@spring.message code="security.authentication.logout" /></a>&nbsp;(${user.username})</a></span>
+			</div>
+			<#if payments?has_content && payments?size &gt; 0>
+				<#assign hasFailedTransaction = false>
+				<#assign allTransactionsFailed = false>
+				<#list payments as payment>
+					<#if payment.isSucessful()>
+						<#assign allTransactionsFailed = false>
+					<#else>
+						<#assign hasFailedTransaction = true>
+						<#assign allTransactionsFailed = true>
+					</#if>
+				</#list>
+				<div id="printArea">
+				<span style="text-align:center;color:#039"><h3><@spring.message code="security.ecommerce.label.paymentConfirmation" /></h3></span>
+				<#if !hasFailedTransaction && !allTransactionsFailed>
+					<div class="paid" style="text-align:left;margin:20px;"><@spring.message code="security.ecommerce.paymentSuccessRecurring" /></div>
+				<#elseif hasFailedTransaction && !allTransactionsFailed>
+					<div class="unPaid" style="text-align:left;margin:20px;"><@spring.message code="security.ecommerce.partialPaymentSuccess" /></div>
+				<#elseif hasFailedTransaction && allTransactionsFailed>
+					<div class="unPaid" style="text-align:left;margin:20px;"><@spring.message code="security.ecommerce.paymentFailure" /></div>
+				</#if>
+				<table id="subscriptionDetails" width="800px">
+				<tr class="header"><td class="header" colspan="5"><@spring.message code="security.ecommerce.label.transactionDetails" /></td></tr>
+				<th class="header"><@spring.message code="security.ecommerce.label.paymentDate" /></th>	
+				<th class="header"><@spring.message code="security.ecommerce.label.subscription" /></th>
+				<th class="header"><@spring.message code="security.ecommerce.transactionReference" /></th>
+				<th class="header"><@spring.message code="security.ecommerce.label.paymentStatus" /></th>
+				<th class="header"><@spring.message code="security.ecommerce.label.fee" /></th>
+				<#assign totalCharge = 0>
+				<#list payments as payment>
+					<tr>
+						<td class="desc nowrap" width="350px"><#if payment.isSucessful()>${payment.getCreatedDate()?datetime}</#if></td>
+						<td class="desc" width="350px">${payment.accessDescription}</td>
+						<#if payment.isSucessful()>
+						<td class="tranid" width="150px">${payment.getTxRefNum()} </td>
+						<td class="fee" width="300px"><@spring.message code="security.ecommerce.message.approved" /></td>
+						<#assign totalCharge = totalCharge + payment.subFee.getFee()>
+						<#else>
+							<td class="tranid" width="150px">N/A</td>
+							<td class="fee" width="300px"><@spring.message code="security.ecommerce.message.transactionFailed" /> - ${payment.errorDesc}</td>
+						</#if>	
+						<td class="fee" width="100px" style="text-align:right">${payment.subFee.getFee()?string.currency}</td>
+						
+	                </tr>  
+	             </br>            
+	             </#list> 	             
+	              <tr>
+					<td class="footer" colspan="5"></td>				
+				  </tr>	
+				  <tr>
+					<td colspan="5" style="text-align:right"><b><@spring.message code="security.ecommerce.totalAmountCharged" />: ${totalCharge?string.currency}</b></td>
+				  </tr>	   
+				</table>
+				</div>			
+			</#if> 
+			<br /><br />
+			<a id="printRecepit" style="cursor:pointer;"><img src="resources/images/print.png" /><@spring.message code="security.ecommerce.label.printConfirmation" /></a>	
+				<div class="ADCSI_title" id="ADCSI_title">				
+					<div style="height:40px;">
+						<table width="100%">
+							<tr>
+								<td style="text-align:left;">
+									<span>
+										<a href="accountInformation.admin"><@spring.message code="security.ecommerce.label.returnToAccountInfo" />
+											<img style="border:0px;;" src="resources/images/accountInformation.png"/>
+										</a>
+									</span>
+								</td>
+								<td style="text-align:right;">
+									<span>
+										<a href="checkSubscription.admin"><@spring.message code="security.ecommerce.label.continueToSearchPage" />
+											<img style="border:0px;" src="resources/images/continueSearch.png"/>
+										</a>
+									</span>	
+								</td>
+							</tr>
+						</table>						
+					</div>							
+			</div>		
+		</div>
+	</div>	
+	<script type="text/javascript">
+       $(document).ready(function() {
+         $("#printRecepit").click(function() {
+             //printElem({});
+             $('#printArea').focus();
+             printElem({pageTitle:'<@spring.message code="security.ecommerce.label.paymentConfirmation" />' }); 
+         });         
+     });
+     
+	 function printElem(options){
+	     $('#printArea').printElement(options);	
+	 }
+
+    </script>
+</@loginLayout>

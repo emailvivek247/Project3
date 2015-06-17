@@ -1,0 +1,61 @@
+
+  		  <@display.column media="html" indexColumnName="CaseNumber" title="${searchResult.datasetConfiguration.getColumn(\"CaseNumber\").displayName}">
+		   	<a href="search.do?indexName=gci&templateName=default&lq=CaseID:${doc.get("CaseID")}">${searchResult.highlight(doc, "CaseNumber")}</a> 
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseNumber" title="${searchResult.datasetConfiguration.getColumn(\"CaseNumber\").displayName}">
+		   	${doc.get("CaseNumber")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="CaseFilingDateDisplay" title="${searchResult.datasetConfiguration.getColumn(\"CaseFilingDateDisplay\").displayName}">
+		   	${pageStyleUtil.format(doc.get("CaseFilingDateDisplay"), "yyyy-MM-dd HH:mm:ss", "MM/dd/yyyy")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseFilingDateDisplay" title="${searchResult.datasetConfiguration.getColumn(\"CaseFilingDateDisplay\").displayName}">
+		   	${pageStyleUtil.format(doc.get("CaseFilingDateDisplay"), "yyyy-MM-dd HH:mm:ss", "MM/dd/yyyy")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="CaseFilingType" title="${searchResult.datasetConfiguration.getColumn(\"CaseFilingType\").displayName}">
+		   	${searchResult.highlight(doc, "CaseFilingType")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseFilingType" title="${searchResult.datasetConfiguration.getColumn(\"CaseFilingType\").displayName}">
+		   	${doc.get("CaseFilingType")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="CaseCategory" title="${searchResult.datasetConfiguration.getColumn(\"CaseCategory\").displayName}">
+		   	${searchResult.highlight(doc, "CaseCategory")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseCategory" title="${searchResult.datasetConfiguration.getColumn(\"CaseCategory\").displayName}">
+		   	${doc.get("CaseCategory")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="CourtType" title="${searchResult.datasetConfiguration.getColumn(\"CourtType\").displayName}">
+		   	${searchResult.highlight(doc, "CourtType")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CourtType" title="${searchResult.datasetConfiguration.getColumn(\"CourtType\").displayName}">
+		   	${doc.get("CourtType")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="CaseType" title="${searchResult.datasetConfiguration.getColumn(\"CaseType\").displayName}">
+		   	${searchResult.highlight(doc, "CaseType")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseType" title="${searchResult.datasetConfiguration.getColumn(\"CaseType\").displayName}">
+		   	${doc.get("CaseType")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="CaseSubType" title="${searchResult.datasetConfiguration.getColumn(\"CaseSubType\").displayName}">
+		   	${searchResult.highlight(doc, "CaseSubType")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseSubType" title="${searchResult.datasetConfiguration.getColumn(\"CaseSubType\").displayName}">
+		   	${doc.get("CaseSubType")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="Judge" title="${searchResult.datasetConfiguration.getColumn(\"Judge\").displayName}">
+		   	${searchResult.highlight(doc, "Judge")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="Judge" title="${searchResult.datasetConfiguration.getColumn(\"Judge\").displayName}">
+		   	${doc.get("Judge")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="CaseStyle" title="${searchResult.datasetConfiguration.getColumn(\"CaseStyle\").displayName}">
+		   	${searchResult.highlight(doc, "CaseStyle")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseStyle" title="${searchResult.datasetConfiguration.getColumn(\"CaseStyle\").displayName}">
+		   	${doc.get("CaseStyle")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="CaseStatus" title="${searchResult.datasetConfiguration.getColumn(\"CaseStatus\").displayName}">
+		   	${searchResult.highlight(doc, "CaseStatus")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseStatus" title="${searchResult.datasetConfiguration.getColumn(\"CaseStatus\").displayName}">
+		   	${doc.get("CaseStatus")}
+		  </@display.column>

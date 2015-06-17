@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="15694B14227D332D486EA606CFD05A47CEF997C8203B0AE1" adminuser="3FAE4A56FA6FCFCD08E94FC26C76E97B065B406640F7D19C">
+  <index-root-directory><![CDATA[D:\index\colonial\]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[937E6215E595581017109A32423BFDCB5C9FA5CAEFFDEE70F56286A320786ECCB9A264A0F206EDB1280DF6C5D064A754A9B84AB0745E227B712E75D002A5FEDB93E899C9A91120A8]]></db-url>
+      <db-username><![CDATA[7A9D1EE71F29C07C49EC2AC9D4D63B8DC0069D69AC10EEE8]]></db-username>
+      <db-password><![CDATA[7D6411923A647F2D0F6B07E727257DA005D5CE8254A5B1E3]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+   <instance-job-schedule id="0">
+  <schedule-name><![CDATA[RECREATE]]></schedule-name>
+  <job-data-string><![CDATA[opr,Re-create Index|images,Re-create Index|details,Re-create Index|dash_opr_docs,Re-create Index|dash_opr_count,Re-create Index|reference,Re-create Index|oprcert,Re-create Index|documenttypes,Re-create Index|]]></job-data-string>
+   <schedule id="0">
+    <is-enabled>true</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>0 1 ? * 2,3,4,5,6,7</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+    </instance-job-schedule>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

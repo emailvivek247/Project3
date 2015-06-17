@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset name="Case Search" exportedBy="null" createdAt="Wed Aug 06 13:11:42 EDT 2014">
+  <description><![CDATA[Case Search]]></description>
+  <index-dir>lorain</index-dir>
+  <is-prefix-root-index-directory>true</is-prefix-root-index-directory>
+  <use-server-db-connection>true</use-server-db-connection>
+  <number-of-hours-before-deletion>6</number-of-hours-before-deletion>
+  <work-directory>_work</work-directory>
+  <temporary-index-minimal-merge-percentage>1.0</temporary-index-minimal-merge-percentage>
+  <merge-hours enabled="true" begin="0" end="24"/>
+  <fetcher-threads>3</fetcher-threads>
+  <writer-threads>3</writer-threads>
+  <index-max-size>100000.0</index-max-size>
+  <schedules>
+   <schedule id="0">
+    <is-enabled>false</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>1</interval>
+    <cron-setting>0 0 * * ?</cron-setting>
+    <indexing-mode>Re-create Index</indexing-mode>
+   </schedule>
+  </schedules>
+  <language>Any</language>
+  <analyzer-name>com.fdt.sdl.core.analyzer.NumberLowerCaseAnalyzer</analyzer-name>
+  <data-source-type>0</data-source-type>
+  <fetcher-configuration dir="null">
+  </fetcher-configuration>
+  <dataquery name="WorkingQueue" batch-size="128" is-skipping-null-parameters="false">
+    <sql><![CDATA[
+select distinct 
+       b.PARTY_ID AS 'PartyID'
+      ,PS.DISPLAYNAME AS 'DisplayName'
+      ,PS.DISPLAYNAME AS 'PhoneticName'
+      ,(select CASE_STATUS_DESCR from ACM_CASE_STATUS_TYP where CASE_STATUS_CD = PS.CASE_STATUS_CD) AS 'CaseStatusDesc'
+      ,PS.CASE_STATUS_CD AS 'CaseStatusCode'
+      ,PS.CASE_ID AS 'CaseID'
+      ,PS.CASE_NUMBER AS 'CaseNumber'
+      ,CONVERT(VARCHAR(10), PS.DATEOFBIRTH, 112) AS 'DOB'
+      ,CONVERT(VARCHAR(30), PS.DATEOFBIRTH, 101) AS 'DOBDisplay'
+      ,PS.DATEOFBIRTH AS 'DOBFilter'
+      ,PS.PARTY_ROLE_DESC AS 'PartyRole'
+      ,PS.PARTY_ROLE_DESC AS 'PartyRoleFilter'
+      ,PS.CASE_TYP_CD AS 'CaseTypeCode'
+      ,(select CASE_TYP_DESC from ACM_CASE_TYP where CASE_TYP_ID = a.CASE_TYP_ID)AS 'CaseType'
+      ,(select CASE_TYP_DESC from ACM_CASE_TYP where CASE_TYP_ID = a.CASE_TYP_ID)AS 'CaseTypeFilter'
+      ,isnull(w.ISACTIVE,'N')  AS 'ActiveWarrantFlag'
+      ,(select COURT_CD from ACM_COURT_TYP where COURT_TYP_ID = a.COURT_TYP_ID)AS 'CourtCode'
+      ,(select COURT_NAME from ACM_COURT_TYP where COURT_TYP_ID = a.COURT_TYP_ID)AS 'CourtType'
+      ,x.OFFENSE_REF_NUM AS 'StatuteNumber'
+      ,x.CHARGE_DESC AS 'StatuteDescription'
+      ,x.COMPLAINT_NUM AS 'CitationNumber'
+      ,x.CHARGE_SEQ AS 'SeqNum'
+,CONVERT(VARCHAR(10),a.CASE_FILING_DT, 112) AS 'CaseFilingDate'
+,w.WARRANT_TYP_ID
+from 
+ACM_FACTS_CASE a
+inner join ACM_PARTY b
+on a.CASE_ID = b.CASE_ID
+inner join PARTYSEARCH ps
+on ps.PARTY_ID = b.PARTY_ID
+left join ACM_WARRANT w
+on w.PARTY_ID = b.PARTY_ID
+left join (select a.PARTY_ID,d.OFFENSE_REF_NUM,c.CHARGE_DESC,c.CHARGE_SEQ,e.COMPLAINT_NUM from ACM_PARTY a
+inner join ACM_CHARGE_PARTY b
+on a.PARTY_ID = b.PARTY_ID
+inner join ACM_CHARGE c
+on c.CHARGE_ID = b.CHARGE_ID
+inner join ACM_STATUTE d
+on d.STATUTE_ID = c.STATUTE_ID
+left join ACM_CITATION e
+on e.ID = c.CITATION_ID) x
+on x.party_id = b.party_id
+left join 
+(select distinct case_id from acm_warrant a
+inner join acm_party b
+on a.party_id = b.party_id
+where a.warrant_typ_id = 10) z
+on a.case_id = z.case_id
+where z.case_id is null
+and ISNULL(a.SEALED_CASE_FLG, '') <> 'Y'
+AND ISNULL(a.VOID, '') <> 'Y'
+AND ISNULL(PS.VOID, '') <> 'Y'
+AND ISNULL(a.IS_RESTRICTED_FLG, '') <> 'Y'
+AND ISNULL(PS.IS_RESTRICTED_FLG, '') <> 'Y'
+AND ISNULL(a.EXPUNGE_FLG, '') <> 'Y'
+AND PS.CASE_TYP_CD NOT IN ('CRSLD','JRSLD','MSSLD','PB','PBSLD','TRSLD')
+AND ISNULL(a.SEALED_CASE_FLG, '') <> 'Y'
+AND ISNULL(PS.SEALED_FLAG, '') <> 'Y'
+AND ISNULL(b.RSTRCD_PARTY_FLAG, '') <> 'Y'
+AND PS.PARTY_ROLE_TYP_CD NOT IN ('VICT','VICTIM_REP','VICWIT','WIT','W','V')
+AND ISNULL(b.JUVENILE_FLG, '') <> 'Y'
+--AND ISNULL(w.WARRANT_TYP_ID,'') <> '10'
+AND ISNULL(PS.CONFIDENTIAL_FLAG, '') <> 'Y'
+    ]]></sql>
+    <column>
+      <column-name>PartyID</column-name>
+      <display-name><![CDATA[PartyID]]></display-name>
+      <column-index>1</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-sortable>true</is-sortable>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DisplayName</column-name>
+      <display-name><![CDATA[Name]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PhoneticName</column-name>
+      <display-name><![CDATA[Phonetic Name]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <analyzer-name>com.fdt.sdl.core.analyzer.DoubleMetaphoneAnalyzer</analyzer-name>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CaseStatusDesc</column-name>
+      <display-name><![CDATA[Case Status]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CaseStatusCode</column-name>
+      <display-name><![CDATA[CaseStatusCode]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CaseID</column-name>
+      <display-name><![CDATA[Case ID]]></display-name>
+      <column-index>6</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-sortable>true</is-sortable>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CaseNumber</column-name>
+      <display-name><![CDATA[Case Number]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DOB</column-name>
+      <display-name><![CDATA[DOB]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DOBDisplay</column-name>
+      <display-name><![CDATA[DOB Display]]></display-name>
+      <column-index>9</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DOBFilter</column-name>
+      <display-name><![CDATA[DOB]]></display-name>
+      <column-index>10</column-index>
+      <column-type>java.sql.Timestamp</column-type>
+      <index-field-type>KeywordDateHierarchical</index-field-type>
+      <is-sortable>true</is-sortable>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <is-filterable sort-filter-counts-by="1">true</is-filterable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PartyRole</column-name>
+      <display-name><![CDATA[Party Role]]></display-name>
+      <column-index>11</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PartyRoleFilter</column-name>
+      <display-name><![CDATA[Party Role]]></display-name>
+      <column-index>12</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-sortable>true</is-sortable>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <is-filterable>true</is-filterable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CaseTypeCode</column-name>
+      <display-name><![CDATA[Case Type Code]]></display-name>
+      <column-index>13</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CaseType</column-name>
+      <display-name><![CDATA[Case Type]]></display-name>
+      <column-index>14</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CaseTypeFilter</column-name>
+      <display-name><![CDATA[Case Type]]></display-name>
+      <column-index>15</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-sortable>true</is-sortable>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <is-filterable>true</is-filterable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>ActiveWarrantFlag</column-name>
+      <display-name><![CDATA[Active Warrant]]></display-name>
+      <column-index>16</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CourtCode</column-name>
+      <display-name><![CDATA[CourtCode]]></display-name>
+      <column-index>17</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CourtType</column-name>
+      <display-name><![CDATA[Court Type]]></display-name>
+      <column-index>18</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-sortable>true</is-sortable>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <is-filterable>true</is-filterable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>StatuteNumber</column-name>
+      <display-name><![CDATA[Statute Number]]></display-name>
+      <column-index>19</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>StatuteDescription</column-name>
+      <display-name><![CDATA[Statute Description]]></display-name>
+      <column-index>20</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CitationNumber</column-name>
+      <display-name><![CDATA[Citation Number]]></display-name>
+      <column-index>21</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>SeqNum</column-name>
+      <display-name><![CDATA[SeqNum]]></display-name>
+      <column-index>22</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CaseFilingDate</column-name>
+      <display-name><![CDATA[Case Filing Date]]></display-name>
+      <column-index>23</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <analyzer-name>com.fdt.sdl.core.analyzer.DateAnalyzer</analyzer-name>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>WARRANT_TYP_ID</column-name>
+      <display-name><![CDATA[WARRANT_TYP_ID]]></display-name>
+      <column-index>24</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <default-template>warrant</default-template>
+  <tablet-template>warrant</tablet-template>
+  <mobile-template>warrant</mobile-template>
+  <searcher-max-active>8</searcher-max-active>
+  <searcher-when-exhausted>1</searcher-when-exhausted>
+  <searcher-max-wait>10000</searcher-max-wait>
+  <searcher-max-idle>7</searcher-max-idle>
+  <is-in-memory-search>false</is-in-memory-search>
+  <jvm-max-heap-size>1024</jvm-max-heap-size>
+  <document-buffer-size-mb>512</document-buffer-size-mb>
+  <is-wildcard-allowed>true</is-wildcard-allowed>
+  <min-wildcard-prefix-length>1</min-wildcard-prefix-length>
+  <allowed-ip-list>*</allowed-ip-list>
+  <is-empty-query-match-all>false</is-empty-query-match-all>
+  <date-weight-formula>
+    <time-weight time="600" weight="12.0"/>
+    <time-weight time="1800" weight="11.0"/>
+    <time-weight time="3600" weight="10.0"/>
+    <time-weight time="21600" weight="9.0"/>
+    <time-weight time="43200" weight="8.0"/>
+    <time-weight time="86400" weight="7.0"/>
+    <time-weight time="1296000" weight="6.0"/>
+    <time-weight time="2678400" weight="5.0"/>
+    <time-weight time="5356800" weight="4.0"/>
+    <time-weight time="8035200" weight="3.0"/>
+    <time-weight time="16070400" weight="2.0"/>
+    <time-weight time="32140800" weight="1.3"/>
+    <time-weight time="64281600" weight="1.2"/>
+    <time-weight time="96422400" weight="1.1"/>
+    <time-weight time="128563200" weight="1.05"/>
+    <time-weight time="160704000" weight="1.04"/>
+    <time-weight time="192844800" weight="1.03"/>
+    <time-weight time="224985600" weight="1.02"/>
+    <time-weight time="321408000" weight="1.01"/>
+  </date-weight-formula>
+  <spell-checking enabled="true"></spell-checking>
+</dataset>

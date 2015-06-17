@@ -1,0 +1,79 @@
+<head>
+<script language="JavaScript">
+var time = null
+function move() {
+window.location = 'http://nv-es1/randolph/search.do?searchType=1&indexName=randolphsyn'
+}
+</script>
+</head>
+<body onload="timer=setTimeout('move()',0)">
+<#include "/WEB-INF/view/admin/layout/OtherBasic.stl">
+<@indexLayout title="Search Platform" encoding="utf-8">
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/tp.js"></script>
+<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/tp.css" />
+<link rel="shortcut icon" href="${request.getContextPath()}/favicon.ico"/>
+<#assign visibleIndexes = 0>
+<table width="80%" align="center" border="0">         
+            <tr>
+            <td width="2%">&nbsp</td> 
+        <!--    <td align="left"><img src="templates/Images/Seal2.JPG" /></td> -->
+                        <td align="center"><a href = "http://www.amcad.com"><img src="templates/Images/ROAM3.png" border = "0" /></a></td>
+        <!--    <td align="right"><img src="templates/Images/Warren2.JPG" /></td> -->
+            <td width="2%">&nbsp</td> 
+                        </tr>
+            </table>
+<div id="control" style="margin-left:auto; margin-right:auto;width:80%; ">
+<#foreach dc in dcs>
+<#if dc.isValid() && dc.displayOrder &gt;= 0 && dc.getDefaultTemplateName()?has_content>
+    <#assign visibleIndexes = visibleIndexes + 1>    
+    <#assign _controlString = _controlString + "," + "'" + dc.name + "'">
+    <div id="${dc.name}" title="${dc.displayName}" style="height:500px;">
+    <br/>
+    <form method="get" action="search.do">
+        <input type="hidden" name="searchType" value="1">
+        <table align="center" border="0">
+            <tr>
+                <td align="right">
+                <#if dc.name == "histbook">
+                	<a href="http://nv-es1/randolph/search.do?searchType=1&indexName=histbook&q=" style="border-bottom:1px dotted #999;">Historical Book Search</A>
+                <#else>
+                    <input type="hidden" name="indexName" value="${dc.name}">               
+                    <input class="text" type="text" name="q" size="81" maxlength="2048" value="${HTMLEncodedQuery}">
+                    <#if dc.name == "randolph">
+                        <input type="hidden" name="searchable" value="WebName,Instrument,RecDate,PartyRoleType,IndexTypes,Type,Book,Page,LotNum,Unit,SectionNum,BlockNum,Subdivision,Township,Rangenum,Parcel,Other,DesigStatus,GPIN,ProjectNum,Phase,Acreage,Building,LegalDescription,LegacyNumber">                  
+                        <input type="hidden" name="sortBy" id="sortBy" value="SortName,RecDateFiler">
+                        <input type="hidden" name="desc" id="desc" value="N">
+                    </#if>
+                </td>   
+                <td >   
+                    <button type="submit" class="search">Search</button>
+                </td>
+                </#if>  
+            </tr>
+        </table>
+        </br>
+        </br>
+        </br>
+        <table width="auto" align="center" border="0">
+        <tr>
+        <td align="justify">
+        <p>The Randolph County Register of Deeds Office provides this website as a public service.  Information available on the web site is collected, maintained and provided solely for the convenience of the public users.  While every effort is made to assure that this information is accurate, the Register of Deeds does not certify the authenticity of the information contained herein.  The Register of Deeds shall, under no circumstance, be responsible for any error or omission which may occur in these records, nor liable for any actions taken as a result of reliance upon any information contained within this web site from whatever source, or any other consequence from such reliance.  Images may be unavailable while system backups are in progress.</p>
+        </td>
+        </tr>
+        </table>
+    </form>
+    
+    <br/>
+    </div>
+</#if> 
+ </#foreach>
+</div>
+</body>
+<#if visibleIndexes &gt; 0> 
+    <script type="text/javascript">
+    <!--    
+    tpSet('control', 'tabs'${_controlString});
+    // -->
+    </script>
+</#if> 
+</@indexLayout>

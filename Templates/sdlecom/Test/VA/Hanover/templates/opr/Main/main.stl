@@ -1,0 +1,190 @@
+<#-- *Assign variables for Searchable Parameters -->
+<#assign searchable = pageStyleUtil.encodeURL(searchResult.request.getParameter("searchable"))>
+
+
+<#assign t0 = pageStyleUtil.addOrSetQuery(searchResult.queryString, "start", null)>
+<#assign t1 = ("seq%3A%221%2C0%22")>
+<#assign t2 = pageStyleUtil.appendQuery(t1, "q", "seq:\"1,0\"")>
+
+<#assign t3 = ("PartySeq%3A%221%2C0%22")>
+<#assign t4 = pageStyleUtil.appendQuery(t3, "q", "PartySeq:\"1,0\"")>
+
+<#assign t5 = ("PartySeq%3A%221%2C0%22%2Cseq%3A%221%2C0%22%2CRoleFilter%3A%221%2C0%22")>
+<#assign t6 = pageStyleUtil.appendQuery(t5, "q", "PartySeq:\"1,0\",seq:\"1,0\",RoleFilter:\"1,0\"")>
+
+
+
+<#assign t7 = pageStyleUtil.addOrSetQuery(searchResult.queryString, "start", null)>
+<#assign t8 = ("seq%3A%221%2C0%22")>
+<#assign t9 = pageStyleUtil.appendQuery(t8, "q", "seq:\"1,0\"")>
+
+<#assign t10 = ("PartySeq%3A%221%2C0%22")>
+<#assign t11 = pageStyleUtil.appendQuery(t10, "q", "PartySeq:\"1,0\"")>
+
+<#assign t12 = ("PartySeq%3A%221%2C0%22%2Cseq%3A%221%2C0%22%2CRoleFilter%3A%221%2C0%22")>
+<#assign t13 = pageStyleUtil.appendQuery(t12, "q", "PartySeq:\"1,0\",seq:\"1,0\",RoleFilter:\"1,0\"")>
+
+
+
+<#-- *Modified highlighting color -->
+<@com.useHighlightTag '<span style="background-color:#B2C9FA">', '</span>' />
+<#include "layout.stl">
+<@layout title="ROAM" encoding="${searchResult.encoding}">
+
+<#include "/templates/globalNav_Hanover.stl">
+
+<#if request.isUserInRole('HANOVER_IMAGE_ACCESS') || request.isUserInRole('HANOVER_FREE_ACCESS') || request.isUserInRole('HANOVER_ADMIN') || request.isUserInRole('ROAM_ADMIN')>
+      <#include "/templates/globalBriefCase-Hanover.stl">
+      <#include "searchBox.stl">
+ <@com.errorMarkup/>
+
+<table width="100%" margin="0" border="0" cellpadding="0" cellspacing="1">
+ <tr>
+  <td style="width:18%;">
+    <font size="2">Mode: <a href="${request.getContextPath()}/search.do?indexName=opr<#if isPhoneticSearch?has_content>&isPhoneticSearch=${isPhoneticSearch}</#if>&templateName=Main&q=${q}&searchable=${searchable}<#if lq?has_content>&lq=${lq}</#if><#if searchQuery?has_content>&searchQuery=${searchQuery}</#if><#if searchType?has_content>&searchType=${searchType}</#if><#if sortBy?has_content>&sortBy=${sortBy}</#if><#if desc?has_content>&desc=${desc}</#if><#if asc?has_content>&asc=${asc}</#if>">PC</a></font>|<font size="2"><a href="${request.getContextPath()}/search.do?indexName=opr<#if isPhoneticSearch?has_content>&isPhoneticSearch=${isPhoneticSearch}</#if>&templateName=Mobile&q=${q}&searchable=${searchable}<#if lq?has_content>&lq=${lq}</#if><#if searchQuery?has_content>&searchQuery=${searchQuery}</#if><#if searchType?has_content>&searchType=${searchType}</#if><#if sortBy?has_content>&sortBy=${sortBy}</#if><#if desc?has_content>&desc=${desc}</#if><#if asc?has_content>&asc=${asc}</#if>">Mobile</a></font>|<font size="2"><a href="${request.getContextPath()}/search.do?indexName=opr<#if isPhoneticSearch?has_content>&isPhoneticSearch=${isPhoneticSearch}</#if>&templateName=Tablet&q=${q}&searchable=${searchable}<#if lq?has_content>&lq=${lq}</#if><#if searchQuery?has_content>&searchQuery=${searchQuery}</#if><#if searchType?has_content>&searchType=${searchType}</#if><#if sortBy?has_content>&sortBy=${sortBy}</#if><#if desc?has_content>&desc=${desc}</#if><#if asc?has_content>&asc=${asc}</#if>">Tablet</a></font>    
+  </td>
+  </tr>
+  
+  <tr>
+  
+<#if Request.searchForm.searchType = "2">
+
+<div>   
+
+  <td style="width:25%;">
+    <font size="2">Results: 
+    <font size="2">
+    <a id="trigger1" href="${request.getContextPath()}/search.do?indexName=${indexName}&templateName=${templateName}&searchType=${searchType}&searchable=${searchable}&lq=${lq}&searchQuery=${searchQuery}&sortBy=${sortBy}&desc=${desc}"<#if sortBy?has_content>&sortBy=${sortBy}</#if>>All Info</a>
+    </font>
+    |
+    <font size="2">
+    <a id="trigger2" href="?${t9}&indexName=${indexName}&templateName=${templateName}&searchType=${searchType}&searchable=${searchable}&lq=${lq}&searchQuery=${searchQuery}&sortBy=${sortBy}&desc=${desc}"<#if sortBy?has_content>&sortBy=${sortBy}</#if>>Party Info</a>
+    </font>
+    |
+    <font size="2">
+    <a id="trigger3" href="?${t11}&indexName=${indexName}&templateName=${templateName}&searchType=${searchType}&searchable=${searchable}&lq=${lq}&searchQuery=${searchQuery}&sortBy=${sortBy}&desc=${desc}"<#if sortBy?has_content>&sortBy=${sortBy}</#if>>Legal Info</a>
+    </font>
+    |
+    <font size="2">
+    <a id="trigger4" href="?${t13}&indexName=${indexName}&templateName=${templateName}&searchType=${searchType}&searchable=${searchable}&lq=${lq}&searchQuery=${searchQuery}&sortBy=${sortBy}&desc=${desc}"<#if sortBy?has_content>&sortBy=${sortBy}</#if>>Document Info</a>
+    </font>    
+  </td>
+
+
+  <!-- HIDDEN / POP-UP DIV -->
+      <div id="pop-up" style="position:absolute;">
+        <p>
+          We Recommend using <font color="#2E7EE4"><b>All Info</b></font> when you want to see all party and legal information.
+        </p>
+      </div>
+      <div id="pop-up2" style="position:absolute;">
+        <p>
+          We Recommend using <font color="#2E7EE4"><b>Party Info</b></font> when you want to see all party information, but not additional legal information.
+        </p>
+      </div>
+      <div id="pop-up3" style="position:absolute;">
+        <p>
+          We Recommend using <font color="#2E7EE4"><b>Legal Info</b></font> when you want to see all legal information, but not additional party information.
+        </p>
+      </div>
+      <div id="pop-up4" style="position:absolute;">
+        <p>
+          We Recommend using <font color="#2E7EE4"><b>Document Info</b></font> only when searching by Instrument Number, Book or Page. Running searches by these fields and using this filter will allow you to see 1 document per row.
+        </p>
+      </div>
+
+</div>
+
+<#else>
+
+<div>   
+
+  <td style="width:25%;">
+    <font size="2">Results:     
+    <font size="2">
+    <a id="trigger1" href="${request.getContextPath()}/search.do?indexName=${indexName}&templateName=${templateName}&searchType=${searchType}&searchable=${searchable}&q=${searchQuery}&searchQuery=${searchQuery}&sortBy=${sortBy}&desc=${desc}"<#if q?has_content>&q=${q}</#if><#if sortBy?has_content>&sortBy=${sortBy}</#if>>All Info</a>
+    </font>
+    |
+    <font size="2">
+    <a id="trigger2" href="?${t2},${searchQuery}&indexName=${indexName}&templateName=${templateName}&searchType=${searchType}&searchable=${searchable}&searchQuery=${searchQuery}&sortBy=${sortBy}&desc=${desc}"<#if q?has_content>&q=${q}</#if><#if sortBy?has_content>&sortBy=${sortBy}</#if>>Party Info</a>
+    </font>
+    |
+    <font size="2">
+    <a id="trigger3" href="?${t4},${searchQuery}&indexName=${indexName}&templateName=${templateName}&searchType=${searchType}&searchable=${searchable}&searchQuery=${searchQuery}&sortBy=${sortBy}&desc=${desc}"<#if q?has_content>&q=${q}</#if><#if sortBy?has_content>&sortBy=${sortBy}</#if>>Legal Info</a>
+    </font>
+    |
+    <font size="2">
+    <a id="trigger4" href="?${t6},${searchQuery}&indexName=${indexName}&templateName=${templateName}&searchType=${searchType}&searchable=${searchable}&searchQuery=${searchQuery}&sortBy=${sortBy}&desc=${desc}"<#if q?has_content>&q=${q}</#if><#if sortBy?has_content>&sortBy=${sortBy}</#if>>Document Info</a>
+    </font>
+  </td>
+  <!-- HIDDEN / POP-UP DIV -->
+      <div id="pop-up" style="position:absolute;">
+        <p>
+          We Recommend using <font color="#2E7EE4"><b>All Info</b></font> when you want to see all party and legal information.
+        </p>
+      </div>
+      <div id="pop-up2" style="position:absolute;">
+        <p>
+          We Recommend using <font color="#2E7EE4"><b>Party Info</b></font> when you want to see all party information, but not additional legal information.
+        </p>
+      </div>
+      <div id="pop-up3" style="position:absolute;">
+        <p>
+          We Recommend using <font color="#2E7EE4"><b>Legal Info</b></font> when you want to see all legal information, but not additional party information.
+        </p>
+      </div>
+      <div id="pop-up4" style="position:absolute;">
+        <p>
+          We Recommend using <font color="#2E7EE4"><b>Document Info</b></font> only when searching by Instrument Number, Book or Page. Running searches by these fields and using this filter will allow you to see 1 document per row.
+        </p>
+      </div>
+  
+</div>
+
+</#if>
+
+
+  <td rowspan="2" style="width:45%;padding-right:105px;" valign="top"><#include "displayPagination.stl"></td>
+
+
+
+  <td rowspan="2" style="width:18%;">
+      <#-- *Add iframe for oprcert index -->
+      <iframe align="right" height="25" width="300px" frameborder=0 text-align="right" scrolling="no" src='search.do?indexName=oprcert&templateName=se'></iframe>
+  </td>
+  </tr>
+
+</table>
+
+
+
+ <#include "searchResultHeader.stl">
+ <br />
+ <#include "spellingCheck.stl">
+
+ <table class="main"><tr valign="top"><td class="mainLeft">
+  <div id="narrowBy"><#include "narrowBy.stl"></div>
+  <#include "recentSearches.stl">
+  <!--  -->
+ </td><td class="mainRight">
+  <div id="documents"><#include "documents.stl"></div>
+ </td></tr></table>
+
+ <#include "displayPagination.stl">
+
+<#-- *Add table for footer with AMCAD logo -->
+
+ <BR>
+ <BR>
+
+<table width="100%" border="0">
+ <tr>
+  <td width=15%><a href = "http://www.amcad.com"> <img src="templates/opr/Main/resource/AmCad-Small-New-Logo.png"  border = "0"></a></td>
+  <td width="70%" align="center"><font color=#696969>Copyright &copy; 1986 - 2014 American Cadastre LLC (dba AmCad & AmCad Digital Conversions)</font></td>
+  <td width="15%"><#include "resultsPerPage.stl"></td>
+ </tr>
+</table>
+<#else>
+     You are not authorized to view this page.
+</#if>
+</@layout>

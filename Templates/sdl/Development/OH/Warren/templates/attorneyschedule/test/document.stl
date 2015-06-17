@@ -1,0 +1,19 @@
+
+ <tr>
+               <td>${searchResult.highlight(doc, "AppearanceReason")}</td>
+             <td>${searchResult.highlight(doc, "AttorneyName")}</td>
+             <td>${searchResult.highlight(doc, "CaseNumber")}</td>
+             <td>${searchResult.highlight(doc, "CourtRoomDesc")}</td>
+  		     <td>${number.format("###0.##",doc.get("CourtRoomId"))}</td>
+             <td>${searchResult.highlight(doc, "HearingResult")}</td>
+             <td>${searchResult.highlight(doc, "IsRestrictedFlag")}</td>
+             <td>${searchResult.highlight(doc, "JudgeName")}</td>
+  		     <td>${number.format("###0.##",doc.get("PK_KEY"))}</td>
+  		     <td>${number.format("###0.##",doc.get("PersonAliasId"))}</td>
+             <td>${searchResult.highlight(doc, "SealedCaseFlag")}</td>
+             <td>${date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("SessionEndDate"))}</td>	       
+  		     <td>${number.format("###0.##",doc.get("SessionId"))}</td>
+             <td>${date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("SessionStartDate"))}</td>	       
+             <td>${searchResult.highlight(doc, "obj_type")}</td>
+ </tr>
+

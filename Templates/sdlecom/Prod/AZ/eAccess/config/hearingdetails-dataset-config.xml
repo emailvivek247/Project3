@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset name="Hearing Details" exportedBy="null" createdAt="Tue Dec 17 14:31:41 MST 2013">
+  <display-order>-1</display-order>
+  <description><![CDATA[Hearing Details]]></description>
+  <index-dir>C:\tempindex\arizona\hearingdetails</index-dir>
+  <is-prefix-root-index-directory>false</is-prefix-root-index-directory>
+  <use-server-db-connection>true</use-server-db-connection>
+  <number-of-hours-before-deletion>6</number-of-hours-before-deletion>
+  <work-directory>_work</work-directory>
+  <temporary-index-minimal-merge-percentage>1.0</temporary-index-minimal-merge-percentage>
+  <merge-hours enabled="false" begin="1" end="3"/>
+  <fetcher-threads>7</fetcher-threads>
+  <writer-threads>5</writer-threads>
+  <index-max-size>100000.0</index-max-size>
+  <is-optimize-needed>false</is-optimize-needed>
+  <language>Any</language>
+  <analyzer-name>com.fdt.sdl.core.analyzer.NumberLowerCaseAnalyzer</analyzer-name>
+  <data-source-type>0</data-source-type>
+  <fetcher-configuration dir="null">
+  </fetcher-configuration>
+  <dataquery name="WorkingQueue" batch-size="128" is-skipping-null-parameters="false">
+    <sql><![CDATA[
+EXEC proc_Get_eAccessHearing
+       @StartDate   = '2013-11-01 00:00:59.420',
+       @EndDate     = '2013-11-16 00:00:59.420',
+       @DeletedRecords = 0
+    ]]></sql>
+    <column>
+      <column-name>UniqueKeyID</column-name>
+      <display-name><![CDATA[UniqueKeyID]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <primary-key>true</primary-key>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="1000.0">true</is-searchable>
+    </column>
+    <column>
+      <column-name>CountyName</column-name>
+      <display-name><![CDATA[CountyName]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+    </column>
+    <column>
+      <column-name>CourtCode</column-name>
+      <display-name><![CDATA[CourtCode]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+    </column>
+    <column>
+      <column-name>CaseID</column-name>
+      <display-name><![CDATA[Case ID]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+    </column>
+    <column>
+      <column-name>DisplayCaseNumber</column-name>
+      <display-name><![CDATA[DisplayCaseNumber]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>CaseTitle</column-name>
+      <display-name><![CDATA[CaseTitle]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>AssociatedParticipantType</column-name>
+      <display-name><![CDATA[AssociatedParticipantType]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>AssociatedParticipantID</column-name>
+      <display-name><![CDATA[AssociatedParticipantID]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>HearingStartDateTime</column-name>
+      <display-name><![CDATA[Hearing Start Date]]></display-name>
+      <column-index>9</column-index>
+      <column-type>java.sql.Timestamp</column-type>
+      <index-field-type>KeywordDateHierarchical</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <is-filterable sort-filter-counts-by="1">true</is-filterable>
+    </column>
+    <column>
+      <column-name>HearingEndDateTime</column-name>
+      <display-name><![CDATA[Hearing End Date]]></display-name>
+      <column-index>10</column-index>
+      <column-type>java.sql.Timestamp</column-type>
+      <index-field-type>KeywordDateHierarchical</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <is-filterable sort-filter-counts-by="1">true</is-filterable>
+    </column>
+    <column>
+      <column-name>HearingTypeCode</column-name>
+      <display-name><![CDATA[HearingTypeCode]]></display-name>
+      <column-index>11</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+    </column>
+    <column>
+      <column-name>HearingTypeDescription</column-name>
+      <display-name><![CDATA[HearingTypeDescription]]></display-name>
+      <column-index>12</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>HearingSubTypeCode</column-name>
+      <display-name><![CDATA[HearingSubTypeCode]]></display-name>
+      <column-index>13</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+    </column>
+    <column>
+      <column-name>HearingSubTypeDescription</column-name>
+      <display-name><![CDATA[HearingSubTypeDescription]]></display-name>
+      <column-index>14</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>HearingResultTypeCode</column-name>
+      <display-name><![CDATA[Hearing Result Code]]></display-name>
+      <column-index>15</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>HearingResultTypeDescription</column-name>
+      <display-name><![CDATA[Hearing Result]]></display-name>
+      <column-index>16</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>CourtRoomCode</column-name>
+      <display-name><![CDATA[CourtRoomCode]]></display-name>
+      <column-index>17</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>CourtRoomDescription</column-name>
+      <display-name><![CDATA[Court Room]]></display-name>
+      <column-index>18</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>InterpreterNeeded</column-name>
+      <display-name><![CDATA[InterpreterNeeded]]></display-name>
+      <column-index>19</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>ScheduledBeforeJudgeName</column-name>
+      <display-name><![CDATA[Scheduled Before Judge]]></display-name>
+      <column-index>20</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>HeardByJudgeName</column-name>
+      <display-name><![CDATA[Heard By Judicial Officer]]></display-name>
+      <column-index>21</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable>false</is-searchable>
+    </column>
+    <column>
+      <column-name>DefaultTemplate</column-name>
+      <display-name><![CDATA[DefaultTemplate]]></display-name>
+      <column-index>22</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+    </column>
+    <column>
+      <column-name>CCILastLookupDateTime</column-name>
+      <display-name><![CDATA[CCILastLookupDateTime]]></display-name>
+      <column-index>23</column-index>
+      <column-type>java.sql.Timestamp</column-type>
+      <modified-date>true</modified-date>
+      <index-field-type>KeywordDateHierarchical</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <is-filterable sort-filter-counts-by="1">true</is-filterable>
+    </column>
+  </dataquery>
+  <dataquery name="Deletion" is-delete-only="true">
+    <sql><![CDATA[
+EXEC proc_Get_eAccessHearing
+       @StartDate   = NULL,
+       @EndDate     = NULL,
+       @Deletedrecords = 1
+    ]]></sql>
+  </dataquery>
+  <dataquery name="Incremental">
+    <sql><![CDATA[
+EXEC proc_Get_eAccessHearing
+       @StartDate   = ?,
+       @EndDate     = NULL,
+       @DeletedRecords = 0
+    ]]></sql>
+  </dataquery>
+  <default-template>HearingDetails</default-template>
+  <tablet-template>HearingDetails</tablet-template>
+  <mobile-template>HearingDetails</mobile-template>
+  <searcher-max-active>8</searcher-max-active>
+  <searcher-when-exhausted>1</searcher-when-exhausted>
+  <searcher-max-wait>10000</searcher-max-wait>
+  <searcher-max-idle>7</searcher-max-idle>
+  <is-in-memory-search>false</is-in-memory-search>
+  <jvm-max-heap-size>8192</jvm-max-heap-size>
+  <document-buffer-size-mb>4096</document-buffer-size-mb>
+  <allowed-ip-list>*</allowed-ip-list>
+  <is-empty-query-match-all>false</is-empty-query-match-all>
+  <date-weight-formula>
+    <time-weight time="600" weight="12.0"/>
+    <time-weight time="1800" weight="11.0"/>
+    <time-weight time="3600" weight="10.0"/>
+    <time-weight time="21600" weight="9.0"/>
+    <time-weight time="43200" weight="8.0"/>
+    <time-weight time="86400" weight="7.0"/>
+    <time-weight time="1296000" weight="6.0"/>
+    <time-weight time="2678400" weight="5.0"/>
+    <time-weight time="5356800" weight="4.0"/>
+    <time-weight time="8035200" weight="3.0"/>
+    <time-weight time="16070400" weight="2.0"/>
+    <time-weight time="32140800" weight="1.3"/>
+    <time-weight time="64281600" weight="1.2"/>
+    <time-weight time="96422400" weight="1.1"/>
+    <time-weight time="128563200" weight="1.05"/>
+    <time-weight time="160704000" weight="1.04"/>
+    <time-weight time="192844800" weight="1.03"/>
+    <time-weight time="224985600" weight="1.02"/>
+    <time-weight time="321408000" weight="1.01"/>
+  </date-weight-formula>
+  <spell-checking enabled="true"></spell-checking>
+</dataset>

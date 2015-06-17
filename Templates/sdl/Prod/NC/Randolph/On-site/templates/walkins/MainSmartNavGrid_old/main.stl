@@ -1,0 +1,21 @@
+<#-- *Modified highlighting color -->
+<@com.useHighlightTag '<span style="background-color:#B2C9FA">', '</span>' />
+<#include "layout.stl">
+<@layout title="ROAM" encoding="${searchResult.encoding}">
+
+ <@com.errorMarkup/>
+
+ <#include "searchResultHeader.stl">
+
+<br>
+<#include "displayPagination.stl">
+
+ <table class="main"><tr valign="top">
+ <td class="mainRight">
+  <div id="documents"><#include "documents.stl"></div>
+ </td></tr></table>
+ <#include "displayPagination.stl">
+<#-- 
+ <#include "sortBy.stl">
+-->
+</@layout>

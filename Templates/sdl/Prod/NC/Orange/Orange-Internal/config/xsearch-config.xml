@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="0E42FAD37781657069780617BA03D4A1523EF7345B9F7C74" adminuser="0FB34467D530AFC76EA644EE327325DEB017DD6E8B979F99">
+  <index-root-directory><![CDATA[F:\Index\orange]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[A83E96F36407D05A8EC19C57532A0C0B4A794E21FD241809C85BA22CF3A1666E43527FF9D068EB83F0120DD1E4D9FF26897DDB3EB0D8C4B731CF5D647033754844D8C48B8B57FED0A34C5AB5530FD4AAAEC01AE9CBC81118B0A6713C2052D1786D1AA6CAB230D271]]></db-url>
+      <db-username><![CDATA[3D691DB87C5F7877F2EFBFFE052E809902FBD5BB77DF4530]]></db-username>
+      <db-password><![CDATA[18AD6B03718567FF1B2A55605628C5AEE5D793E0F8F2437E]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+   <instance-job-schedule id="0">
+  <schedule-name><![CDATA[INCREMENTALDETIMG]]></schedule-name>
+  <job-data-string><![CDATA[orangedetails,Incremental Indexing with Thorough Deletion Detection|internalimages,Incremental Indexing with Thorough Deletion Detection|]]></job-data-string>
+   <schedule id="0">
+    <is-enabled>true</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>5,15,25,35,45,55 8,9,10,11,12,13,14,15,16 ? * 2,3,4,5,6</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+    </instance-job-schedule>
+   <instance-job-schedule id="0">
+  <schedule-name><![CDATA[SPELLCHECK]]></schedule-name>
+  <job-data-string><![CDATA[walkinlr,Re-create Spelling Dictionary|officeinternal,Re-create Spelling Dictionary|walkinvr,Re-create Spelling Dictionary|]]></job-data-string>
+   <schedule id="0">
+    <is-enabled>true</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>0 0 ? * 2,3,4,5,6</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+    </instance-job-schedule>
+   <instance-job-schedule id="0">
+  <schedule-name><![CDATA[RECREATE]]></schedule-name>
+  <job-data-string><![CDATA[orange,Re-create Index|walkinlr,Re-create Index|officeinternal,Re-create Index|walkinvr,Re-create Index|orangedetails,Re-create Index|]]></job-data-string>
+   <schedule id="0">
+    <is-enabled>true</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>0 0 ? * 7</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+    </instance-job-schedule>
+   <instance-job-schedule id="0">
+  <schedule-name><![CDATA[ONE TIME NIGHT]]></schedule-name>
+  <job-data-string><![CDATA[orange,Re-create Index|]]></job-data-string>
+   <schedule id="0">
+    <is-enabled>false</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>5 0 ? * 6</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+    </instance-job-schedule>
+   <instance-job-schedule id="0">
+  <schedule-name><![CDATA[MERGE]]></schedule-name>
+  <job-data-string><![CDATA[orange,Incremental Indexing|walkinlr,Incremental Indexing|officeinternal,Incremental Indexing|walkinvr,Incremental Indexing|orangedetails,Incremental Indexing|internalimages,Incremental Indexing|]]></job-data-string>
+   <schedule id="0">
+    <is-enabled>true</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>5 17 ? * 2,3,4,5,6</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+    </instance-job-schedule>
+   <instance-job-schedule id="0">
+  <schedule-name><![CDATA[INCREMENTALMAIN]]></schedule-name>
+  <job-data-string><![CDATA[orange,Incremental Indexing with Thorough Deletion Detection|walkinlr,Incremental Indexing with Thorough Deletion Detection|officeinternal,Incremental Indexing with Thorough Deletion Detection|walkinvr,Incremental Indexing with Thorough Deletion Detection|]]></job-data-string>
+   <schedule id="0">
+    <is-enabled>true</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>0,10,20,30,40,50 8,9,10,11,12,13,14,15,16 ? * 2,3,4,5,6</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+    </instance-job-schedule>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

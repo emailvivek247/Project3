@@ -1,0 +1,58 @@
+<#macro layout(title="")>
+<html><head><title>Dashboard</title>
+<meta http-equiv="content-type" content="text/html; charset=${encoding}">
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/sdl.js"></script>
+<script type="text/javascript" src="smartcharts/js/SmartCharts.js"></script>
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/jquery-ui-1.8.19.base.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/jquery-ui-1.8.19.glossy-classic.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/theme-base.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/theme-glossy-classic.css" type="text/css"  />
+<link rel="shortcut icon" href="images/favicon.ico"/>
+
+<#-- ADD GOOGLE ANALYTICS -->
+<#include "/templates/googleAnalytics-Jeff.stl">
+
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/multiselect.js"></script>
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/multipleSelect.css" />
+
+<#if rssUrl?has_content><link rel="alternate" type="application/rss+xml" title="RSS" href="${rssUrl}?fileName=rss/rss20.stl">
+</#if>
+<style type="text/css" media=all>
+<!--
+body{margin:4px 6px 4px 6px;background-color:#fff;font-size:90%}
+.box{width:100%;border:1px solid #d2e4fc;border-collapse:collapse;float:top}
+.box th,.box .header{text-align:left;font-weight:bold;background:#2191C0 url(styles/images/ui-bg_gloss-wave_75_2191c0_500x100.png) repeat-x scroll 50% 50%;border:1px}
+.center{text-align:center;}
+//-->
+</style>
+
+<script type="text/javascript">
+      function openwindow(year, month, doctype)
+      { 
+              if (month.length < 2){
+                    month = "0" + month;
+              }
+              var url = escape("+RecDateFilter:\"" + year + "\"+RecDateFilter:\"" + year + "\"+RecDateFilter:\"" + year + "/" + month + "\"+DocType:\"" + doctype + "\"");
+              url = "${request.getContextPath()}/search.do?searchType=1&indexName=jeffersonopr&templateName=&searchable=Name,Instrument,RecDate,PartyRole,IndexType,DocType,Book,Page,Lot,Block,CityBlock,MapBook,MapPage,MapInstrumentNumber,Subdivision,CityTown,Freeform,Location&q=" + url;
+              window.open(url,null,"height=700,width=900,status=yes,toolbar=no,resizable=yes,menubar=no,location=yes,scrollbars=yes");
+      }
+
+
+      function addToSelect(selectbox, text, value, selected) {
+        var selBox = document.getElementById(selectbox);
+    var optn = document.createElement("OPTION");
+    optn.text = text;
+    optn.value = value;
+        if (selected == "Y"){
+           optn.selected = "selected";
+        }
+            selBox.options.add(optn);
+      }
+</script>
+
+</head>
+<body link="#0000ff" vlink="#0000ff">
+<#nested>
+</body></html>
+</#macro>

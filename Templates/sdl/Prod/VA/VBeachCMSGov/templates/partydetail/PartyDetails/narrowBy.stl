@@ -1,0 +1,106 @@
+<#--
+displayFilterColumnCount:
+  display an entry in a to-be-filtered column. Each entry has a column value and a count value.
+-->
+
+<#macro displayFilterColumnCount(column count)>
+ <#if count.isFiltered ><#return></#if>
+ <#assign t1 = httpUtil.addOrSetQuery(searchResult.queryString, "start", null)>
+ <#assign t2 = httpUtil.appendQuery(t1, "q", count.query)>
+ <#if "price list" == column.filterFacetTypeName>
+  + <a href="?${t2}">$${count.columnValue}~$${count.columnEndValue}(${count.value})</a>
+ <#elseif count.isRangeSearch >
+  + <a href="?${t2}">${count.columnValue}~${count.columnEndValue}(${count.value})</a>
+ <#else>
+  + <a href="?${t2}">${count.columnValue}(${count.value})</a><br />
+ </#if>
+ <#if count.hasSum >
+   Sum:${count.sum},Avg:${count.average}
+ </#if>
+ <br />
+</#macro>
+
+<#--
+display column~value pairs that're already filtered, provdes links to remove existing filter.
+-->
+<#if (searchResult.filterResult.filteredColumns.size() > 0) >
+<div class="box" style="font-size:10pt;">
+  <div class="header">Filter By</div>
+  <div>
+<#foreach filteredColumn in searchResult.filterResult.filteredColumns>
+  <#if !filteredColumn.column.tag?has_content>
+  x &nbsp; <a href="?${filteredColumn.removeSelf(searchResult.request)}">${filteredColumn.column.displayName}: ${filteredColumn.value}</a><br />
+  </#if>
+</#foreach>
+  </div>
+</div>
+<br/>
+</#if>
+
+
+<#include "narrowBy_extra.stl">
+
+
+<#--
+If the column has a parent column and the parent column is already filtered, display the parent column.
+-->
+<#macro displayParentFilteredColumn(c)>
+ <#local parentFilteredColumn = searchResult.filterResult.getFilteredColumn(c.filterParentColumnName)>
+ <#if !parentFilteredColumn?has_content><#return></#if>
+ <a href="?${parentFilteredColumn.removeSelf(searchResult.request)}">${parentFilteredColumn.column.displayName}: ${parentFilteredColumn.value}</a> &gt;
+ <@displayParentFilteredColumn parentFilteredColumn />
+</#macro>
+
+
+<#--
+
+The real deal here. List all column value and count value for all fileterable columns.
+
+Only display the column when has matched documents for the filter and one of the following cases
+1. The column is not already filtered, and doesn't have parentColumn
+2. The column is not already filtered, and has parentColumn, and parent column is filtered
+3. The column has multiple keywords
+4. The column doesn't have tag field set. Usually the tag is used for special displaying purpose from partial scaffold.
+
+You can tweak the logic here. For example, add a "tag" to the column, and control your display logic according to the "tag".
+
+-->
+
+<#foreach filterColumn in searchResult.filterResult.filterColumns>
+ <#assign c = filterColumn.column>
+ <#if (!c.tag?has_content)&&(filterColumn.counts.size()>0) >
+<div class="box narrowBy">
+  <div class="header">Narrow By <@displayParentFilteredColumn c /> ${c.displayName}</div>
+  <div style="font-size:10pt;">
+   <#assign hasMore = false>
+   <#foreach cCount in filterColumn.counts>
+    <#if (cCount_index == 17 )>
+      <a href="#" class="more_link">More ... </a>
+      <div class="more" style="font-size:10pt;">
+      <#assign hasMore = true>
+    </#if>
+    <@displayFilterColumnCount c, cCount/>
+    <#if (cCount_index >= 40 )>
+     <#if (cCount_has_next)> ...</#if>
+     </div><#break>
+    </#if>
+    <#if ( !cCount_has_next && hasMore )>
+     </div>
+    </#if>
+   </#foreach>
+  </div>
+</div>
+<br />
+</#if>
+</#foreach>
+<script type='text/javascript'>
+  $('.narrowBy .more').hide().each(function(){
+    var m = $(this);
+    $('.more_link',m.parent()).click(function(e){
+      e.preventDefault();
+      m.show();
+      $(this).hide();
+      return false;
+    });
+  });
+</script>

@@ -1,0 +1,7 @@
+
+ <tr>
+               <td>${searchResult.highlight(doc, "DISPLAYNAME")}</td>
+             <td>${searchResult.highlight(doc, "ENDDAYTIME")}</td>
+             <td>${searchResult.highlight(doc, "STARTDAYTIME")}</td>
+ </tr>
+

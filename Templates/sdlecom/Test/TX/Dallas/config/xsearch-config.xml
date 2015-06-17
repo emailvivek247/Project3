@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="95A41B27513BB27FDF818675BF675866958C7D925A4D9C60" adminuser="46B2DA7DE2F8BFEABD8289F1B7DAD53888DE3A26D5AF3EAD">
+  <index-root-directory><![CDATA[E:\index\dallas\]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[671F2B649E5580D2803ACF2E92D7A3ABC427FC245BF7E8E074A18E5914A22691EA3A57DD7140DF07BEA57D222875716E399B77844031D97C8A3D3505DE52F8B58EBF218860ADE0DBF8BB82582CC353C67F710EA191474EF7]]></db-url>
+      <db-username><![CDATA[2D75B95EC7096FC3E833A36A0CB98B38]]></db-username>
+      <db-password><![CDATA[CA4FCF37A829E470898ABB1CA1BF10D7]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

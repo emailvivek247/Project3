@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="2B8F772BE4948F1A4F5CCF571FE2E354D6B13A0742B78313" adminuser="4509A773D406819FC2E2221BD84B8F2F864092CB009D7969">
+  <index-root-directory><![CDATA[E:\index\virginislands\]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[80CC7639928FFB88AC97C57F99327E3059AA576F27342E95DCD500FAE84C6E13E47929F93BDC6DE6F16E578CE9EC60479727589D1CE54220ACDA79B4BC6FD3A8275854660B5F16CB35E845CC437F32071A401308F2C80251F982C11F56DCB64D8B805AD25E338006D3CEC3A551AB44A7DD1B0050B31E856A]]></db-url>
+      <db-username><![CDATA[]]></db-username>
+      <db-password><![CDATA[]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+   <instance-job-schedule id="0">
+  <schedule-name><![CDATA[RECREATE]]></schedule-name>
+  <job-data-string><![CDATA[sttcasesearch,Re-create Index|stxcasesearch,Re-create Index|cd,Re-create Index|cdstx,Re-create Index|pd,Re-create Index|pdstx,Re-create Index|sh,Re-create Index|chd,Re-create Index|sd,Re-create Index|sdstx,Re-create Index|dd,Re-create Index|chdstx,Re-create Index|shstx,Re-create Index|ddstx,Re-create Index|]]></job-data-string>
+   <schedule id="0">
+    <is-enabled>true</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>0 9,10,11,12,13,14,15,16,17,18 * * ?</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+    </instance-job-schedule>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

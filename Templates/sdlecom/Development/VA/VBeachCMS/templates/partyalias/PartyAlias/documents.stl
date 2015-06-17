@@ -1,0 +1,86 @@
+<b>Alias Information</b>
+<#if searchResult.docs?has_content>
+	<table id="alias" class="tablesorter">
+		<thead>
+			<tr>
+				<th>${searchResult.datasetConfiguration.getColumn("AliasType").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("AliasDescription").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("AliasFirst").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("AliasMiddle").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("AliasLast").displayName}</th>				
+				<th>${searchResult.datasetConfiguration.getColumn("AliasSuffix").displayName}</th>
+			</tr>
+		</thead>
+		<tbody>
+		<#foreach doc in searchResult.docs>
+		<#assign ResultId =0>
+                    <#assign AliasType = doc.getValues("AliasType")>  
+					<#assign AliasDescription = doc.getValues("AliasDescription")>  
+					<#assign AliasFirst = doc.getValues("AliasFirst")>  
+					<#assign AliasMiddle = doc.getValues("AliasMiddle")>  
+					<#assign AliasLast = doc.getValues("AliasLast")>  
+					<#assign AliasSuffix = doc.getValues("AliasSuffix")>  
+					
+					 <#assign loopCounter = 0>
+		
+		<#foreach PartyID in doc.getValues("PartyID")>
+				<tr>
+					<td>${AliasType [loopCounter]?replace('|', '&nbsp;')}</td>
+					<td>${AliasDescription [loopCounter]?replace('|', '&nbsp;')}</td>
+					<td>${AliasFirst [loopCounter]?replace('|', '&nbsp;')}</td>
+					<td>${AliasMiddle [loopCounter]?replace('|', '&nbsp;')}</td>
+					<td>${AliasLast [loopCounter]?replace('|', '&nbsp;')}</td>
+					<td>${AliasSuffix [loopCounter]?replace('|', '&nbsp;')}</td>				
+					
+					 <#assign loopCounter = loopCounter + 1>
+				</tr>
+		</#foreach>
+		<#assign caseNumberKey = doc.getValues("PartyID")>
+		</#foreach>
+		</tbody>
+	</table>
+<#else>
+	<table id="alias" class="tablesorter">
+		<thead>
+			<tr>
+				<th>${searchResult.datasetConfiguration.getColumn("AliasType").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("AliasDescription").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("AliasFirst").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("AliasMiddle").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("AliasLast").displayName}</th>				
+				<th>${searchResult.datasetConfiguration.getColumn("AliasSuffix").displayName}</th>
+			</tr>
+		</thead>
+		<tbody>
+		<#assign ResultId =0>
+		<#foreach doc in searchResult.docs>
+			<tr>
+				<td>No additional information provided.</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</#foreach>
+		</tbody>
+	</table>
+</#if>
+<script type="text/javascript">
+	$(document).ready(function() {
+		oTable = $('#alias').dataTable({
+			"bJQueryUI": true,
+			"bPaginate": false,
+			"bLengthChange": false,
+			"bFilter": false,
+			"bSort": true,
+			"bInfo": false,
+			"bAutoWidth": false,
+			"aaSorting": []
+		});
+	});
+</script>
+
+
+
+

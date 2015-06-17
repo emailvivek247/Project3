@@ -1,0 +1,17 @@
+
+<#assign display=JspTaglibs["http://displaytag.sf.net"]>
+
+
+<#if searchResult.docs?has_content>
+    <#assign ResultId =0>
+	<@display.table name="searchResult.docs" id="doc" export=true requestURI="/search.do" excludedParams="searchQuery searchType FIRSTNAME FIRSTNAME_select MIDDLENAME MIDDLENAME_select LASTNAME LASTNAME_select SUFFIXNAME SUFFIXNAME_select DLNUMBER DLNUMBER_select DLSTATE DLSTATE_select DOB DOB_select SSN SSN_select ADDRESS ADDRESS_select GENDER GENDER_select PERSON_ALIAS_ID_select ">
+	  <#include "document.stl">
+	</@display.table>
+</#if>
+
+
+<script type="text/javascript">
+$(function() {      
+    $("#doc").tablesorter({widgets: ['zebra']});
+}); 
+</script>

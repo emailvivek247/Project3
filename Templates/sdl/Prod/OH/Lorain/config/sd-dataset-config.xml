@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset name="Service Details" exportedBy="null" createdAt="Wed Oct 09 20:16:08 EDT 2013">
+  <display-order>-1</display-order>
+  <description><![CDATA[Details for Warren Municipal]]></description>
+  <index-dir>sd</index-dir>
+  <is-prefix-root-index-directory>true</is-prefix-root-index-directory>
+  <use-server-db-connection>true</use-server-db-connection>
+  <number-of-hours-before-deletion>6</number-of-hours-before-deletion>
+  <work-directory>_work</work-directory>
+  <temporary-index-minimal-merge-percentage>1.0</temporary-index-minimal-merge-percentage>
+  <merge-hours enabled="true" begin="0" end="24"/>
+  <fetcher-threads>3</fetcher-threads>
+  <writer-threads>3</writer-threads>
+  <index-max-size>60.0</index-max-size>
+  <list-fetch-size>100000</list-fetch-size>
+  <schedules>
+   <schedule id="0">
+    <is-enabled>false</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>1</interval>
+    <cron-setting>0 0 * * ?</cron-setting>
+    <indexing-mode>Re-create Index</indexing-mode>
+   </schedule>
+  </schedules>
+  <language>Any</language>
+  <analyzer-name>com.fdt.sdl.core.analyzer.NumberLowerCaseAnalyzer</analyzer-name>
+  <data-source-type>0</data-source-type>
+  <fetcher-configuration dir="null">
+  </fetcher-configuration>
+  <dataquery name="WorkingQueue" batch-size="128" is-skipping-null-parameters="false">
+    <sql><![CDATA[
+SELECT
+          ISNULL(CONVERT(VARCHAR(10),S.ISSUE_DT, 101), '|') AS 'IssueDate'
+         ,ISNULL(CONVERT(VARCHAR(10),S.SERVED_DT, 101), '|') AS 'ServiceDate'
+           ,CASE WHEN LTRIM(RTRIM(EEN.ADDITIONAL_COMMENTS)) = '' THEN '|' ELSE ISNULL(EEN.ADDITIONAL_COMMENTS, '|') END AS 'Comments'
+         ,CASE WHEN LTRIM(RTRIM(HOW_SERVED_DESC)) = '' THEN '|' ELSE ISNULL(HOW_SERVED_DESC, '|') END AS 'ServiceDesc'
+         ,CASE WHEN ETP.MULTI_PARTIES = 'Y' 
+                   THEN PS.DISPLAYNAME + '  ET AL.' 
+                   ELSE PS.DISPLAYNAME END AS 'PARTY_NAME'
+         ,P.CASE_ID AS 'CaseID'
+         ,FC.CASE_NUMBER AS 'CaseNumber'
+         ,S.EVENT_ENTRY_ID AS 'EventEntryID'
+         ,ET.EVENT_ENTRY_TYP_ID AS 'EventEntryTypeID'
+         ,PS.SEALED_FLAG AS 'SealedFlag'
+         ,P.RSTRCD_PARTY_FLAG AS 'RestrictedPartyFlag'
+         ,CASE WHEN ISNULL(s.executed,'N')='N' 
+                   THEN 'No' 
+                   ELSE 'Yes' END AS 'Executed'
+         ,ee.EVENT_ENTRY_DESC As 'EventDesc'
+         ,CASE WHEN LTRIM(RTRIM(P1.DISPLAYNAME)) = '' THEN '|' ELSE ISNULL(P1.DISPLAYNAME, '|') END AS 'ServiceProvider'    
+         ,CASE WHEN LTRIM(RTRIM(HS.HOW_SERVED_DESC)) = '' THEN '|' ELSE ISNULL(HS.HOW_SERVED_DESC, '|') END AS 'ServiceType'
+         ,CASE WHEN LTRIM(RTRIM(S.COMMENTS)) = '' THEN '|' ELSE ISNULL(S.COMMENTS, '|') END AS 'ReceivedBy'
+         ,HS.HOW_SERVED_ID
+,s.SUMMON_NUM as 'SummonNumber'
+FROM ACM_SUMMON S 
+            LEFT OUTER JOIN ACM_EVENT_ENTRY EE 
+                  ON S.EVENT_ENTRY_ID = EE.EVENT_ENTRY_ID AND EE.VOID = 'N'
+            LEFT OUTER JOIN (SELECT  EVENT_ENTRY_ID,MIN(TETP.PARTY_ID) AS PARTY_ID,
+                              CASE WHEN COUNT(TETP.PARTY_ID) > 1 THEN 'Y' ELSE 'N' END AS MULTI_PARTIES
+                              FROM ACM_EVENT_TO_PARTY TETP 
+                    GROUP BY EVENT_ENTRY_ID) ETP
+                  ON EE.EVENT_ENTRY_ID = ETP.EVENT_ENTRY_ID 
+            LEFT OUTER JOIN ACM_PARTY P               ON ETP.PARTY_ID = P.PARTY_ID
+            LEFT OUTER JOIN ACM_FACTS_CASE FC               ON FC.CASE_ID = P.CASE_ID AND FC.VOID <> 'Y'
+            LEFT OUTER JOIN ACM_PERSON PS             ON P.PERSON_ALIAS_ID = PS.PERSON_ALIAS_ID
+            LEFT OUTER JOIN ACM_EVENT_ENT_TYP ET                  ON EE.EVENT_ENTRY_TYP_ID = ET.EVENT_ENTRY_TYP_ID 
+            LEFT OUTER JOIN ACM_PERSON P1 ON P1.PERSON_ALIAS_ID = S.SERVICE_PROVIDER_PERSON_ALIAS_ID
+        LEFT JOIN ACM_HOW_SERVED HS             ON S.HOW_SERVED_ID = HS.HOW_SERVED_ID
+      LEFT OUTER JOIN ACM_EVENT_ENTRY_NOTES EEN             ON EE.EVENT_ENTRY_ID = EEN.EVENT_ENTRY_ID AND EEN.CURRENT_FLG = 'Y'
+    ]]></sql>
+    <column>
+      <column-name>IssueDate</column-name>
+      <display-name><![CDATA[Issue Date]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>ServiceDate</column-name>
+      <display-name><![CDATA[Service Date]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Comments</column-name>
+      <display-name><![CDATA[Comments]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>ServiceDesc</column-name>
+      <display-name><![CDATA[Service Desc]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PARTY_NAME</column-name>
+      <display-name><![CDATA[Party Name]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CaseID</column-name>
+      <display-name><![CDATA[Case ID]]></display-name>
+      <column-index>6</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="1000.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CaseNumber</column-name>
+      <display-name><![CDATA[Case Number]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>EventEntryID</column-name>
+      <display-name><![CDATA[Event Entry ID]]></display-name>
+      <column-index>8</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>EventEntryTypeID</column-name>
+      <display-name><![CDATA[Event Entry Type ID]]></display-name>
+      <column-index>9</column-index>
+      <column-type precision="18" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>SealedFlag</column-name>
+      <display-name><![CDATA[Sealed Flag]]></display-name>
+      <column-index>10</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>RestrictedPartyFlag</column-name>
+      <display-name><![CDATA[Restricted Party Flag]]></display-name>
+      <column-index>11</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Executed</column-name>
+      <display-name><![CDATA[Executed]]></display-name>
+      <column-index>12</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>EventDesc</column-name>
+      <display-name><![CDATA[Event Desc]]></display-name>
+      <column-index>13</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>ServiceProvider</column-name>
+      <display-name><![CDATA[Service Provider]]></display-name>
+      <column-index>14</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>ServiceType</column-name>
+      <display-name><![CDATA[Service Type]]></display-name>
+      <column-index>15</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>ReceivedBy</column-name>
+      <display-name><![CDATA[Received By]]></display-name>
+      <column-index>16</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>HOW_SERVED_ID</column-name>
+      <display-name><![CDATA[HOW_SERVED_ID]]></display-name>
+      <column-index>17</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>SummonNumber</column-name>
+      <display-name><![CDATA[SummonNumber]]></display-name>
+      <column-index>18</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <primary-key>true</primary-key>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <default-template>service</default-template>
+  <tablet-template>service</tablet-template>
+  <mobile-template>service</mobile-template>
+  <searcher-max-active>8</searcher-max-active>
+  <searcher-when-exhausted>1</searcher-when-exhausted>
+  <searcher-max-wait>10000</searcher-max-wait>
+  <searcher-max-idle>7</searcher-max-idle>
+  <is-in-memory-search>false</is-in-memory-search>
+  <max-open-files>1000</max-open-files>
+  <jvm-max-heap-size>1024</jvm-max-heap-size>
+  <max-field-length>1000000</max-field-length>
+  <document-buffer-size-mb>512</document-buffer-size-mb>
+  <allowed-ip-list>*</allowed-ip-list>
+  <date-weight-formula>
+    <time-weight time="600" weight="12.0"/>
+    <time-weight time="1800" weight="11.0"/>
+    <time-weight time="3600" weight="10.0"/>
+    <time-weight time="21600" weight="9.0"/>
+    <time-weight time="43200" weight="8.0"/>
+    <time-weight time="86400" weight="7.0"/>
+    <time-weight time="1296000" weight="6.0"/>
+    <time-weight time="2678400" weight="5.0"/>
+    <time-weight time="5356800" weight="4.0"/>
+    <time-weight time="8035200" weight="3.0"/>
+    <time-weight time="16070400" weight="2.0"/>
+    <time-weight time="32140800" weight="1.3"/>
+    <time-weight time="64281600" weight="1.2"/>
+    <time-weight time="96422400" weight="1.1"/>
+    <time-weight time="128563200" weight="1.05"/>
+    <time-weight time="160704000" weight="1.04"/>
+    <time-weight time="192844800" weight="1.03"/>
+    <time-weight time="224985600" weight="1.02"/>
+    <time-weight time="321408000" weight="1.01"/>
+  </date-weight-formula>
+  <spell-checking enabled="true"></spell-checking>
+</dataset>

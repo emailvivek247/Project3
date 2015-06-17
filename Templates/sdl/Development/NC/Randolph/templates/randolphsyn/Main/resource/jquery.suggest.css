@@ -1,0 +1,30 @@
+    
+    .ac_results {
+        border: 1px solid WindowFrame;
+        background-color: Window;
+        padding: 0px;
+        list-style: none;
+        position: absolute;
+        display: none;
+        font-weight: normal;
+        font-size: 9.5pt;
+        font-family: sans-serif;
+    }
+  
+    .ac_results li {
+        padding: 2px 5px;
+        white-space: nowrap;
+        color: #101010;
+        text-align: left;
+    }
+
+    .ac_over {
+        cursor: pointer;
+        background-color: #B2C9FA;
+    }
+    
+    .ac_match {
+        text-decoration: underline;
+        color: black;
+    }
+    

@@ -1,0 +1,49 @@
+
+  		  <@display.column media="html" indexColumnName="AppDesc" title="${searchResult.datasetConfiguration.getColumn(\"AppDesc\").displayName}">
+		   	${searchResult.highlight(doc, "AppDesc")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="AppDesc" title="${searchResult.datasetConfiguration.getColumn(\"AppDesc\").displayName}">
+		   	${doc.get("AppDesc")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="CaseID" title="${searchResult.datasetConfiguration.getColumn(\"CaseID\").displayName}">
+		   		${number.format("###0.##",doc.get("CaseID"))}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseID" title="${searchResult.datasetConfiguration.getColumn(\"CaseID\").displayName}">
+		   		${number.format("###0.##",doc.get("CaseID"))}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="CaseNumber" title="${searchResult.datasetConfiguration.getColumn(\"CaseNumber\").displayName}">
+		   	${searchResult.highlight(doc, "CaseNumber")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseNumber" title="${searchResult.datasetConfiguration.getColumn(\"CaseNumber\").displayName}">
+		   	${doc.get("CaseNumber")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="CourtSessionID" title="${searchResult.datasetConfiguration.getColumn(\"CourtSessionID\").displayName}">
+		   		${number.format("###0.##",doc.get("CourtSessionID"))}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CourtSessionID" title="${searchResult.datasetConfiguration.getColumn(\"CourtSessionID\").displayName}">
+		   		${number.format("###0.##",doc.get("CourtSessionID"))}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="HearingDesc" title="${searchResult.datasetConfiguration.getColumn(\"HearingDesc\").displayName}">
+		   	${searchResult.highlight(doc, "HearingDesc")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="HearingDesc" title="${searchResult.datasetConfiguration.getColumn(\"HearingDesc\").displayName}">
+		   	${doc.get("HearingDesc")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="HearingResult" title="${searchResult.datasetConfiguration.getColumn(\"HearingResult\").displayName}">
+		   	${searchResult.highlight(doc, "HearingResult")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="HearingResult" title="${searchResult.datasetConfiguration.getColumn(\"HearingResult\").displayName}">
+		   	${doc.get("HearingResult")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="Judge" title="${searchResult.datasetConfiguration.getColumn(\"Judge\").displayName}">
+		   	${searchResult.highlight(doc, "Judge")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="Judge" title="${searchResult.datasetConfiguration.getColumn(\"Judge\").displayName}">
+		   	${doc.get("Judge")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="SessionDate" title="${searchResult.datasetConfiguration.getColumn(\"SessionDate\").displayName}">
+		   	${searchResult.highlight(doc, "SessionDate")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="SessionDate" title="${searchResult.datasetConfiguration.getColumn(\"SessionDate\").displayName}">
+		   	${doc.get("SessionDate")}
+		  </@display.column>

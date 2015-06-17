@@ -1,0 +1,35 @@
+
+  		  <@display.column media="html" indexColumnName="NAME" title="${searchResult.datasetConfiguration.getColumn(\"NAME\").displayName}">
+		   	${searchResult.highlight(doc, "NAME")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="NAME" title="${searchResult.datasetConfiguration.getColumn(\"NAME\").displayName}">
+		   	${doc.get("NAME")}
+		  </@display.column>
+		      <@display.column media="html" indexColumnName="DOB" title="${searchResult.datasetConfiguration.getColumn(\"DOB\").displayName}">
+		      	<#if doc.get("DOB")?has_content>
+					${pageStyleUtil.format(doc.get("DOB"), "yyyymmdd", "mm/dd/yyyy")}
+				</#if>			   	
+			  </@display.column>
+			  <@display.column media="rtf excel pdf" indexColumnName="DOB" title="${searchResult.datasetConfiguration.getColumn(\"DOB\").displayName}">
+			  	<#if doc.get("DOB")?has_content>
+				   	${pageStyleUtil.format(doc.get("DOB"), "yyyymmdd", "mm/dd/yyyy")}
+				</#if>   	
+			  </@display.column>
+		  <@display.column media="html" indexColumnName="DL" title="${searchResult.datasetConfiguration.getColumn(\"DL\").displayName}">
+		   	${searchResult.highlight(doc, "DL")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DL" title="${searchResult.datasetConfiguration.getColumn(\"DL\").displayName}">
+		   	${doc.get("DL")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="SS" title="${searchResult.datasetConfiguration.getColumn(\"SS\").displayName}">
+		   	${searchResult.highlight(doc, "SS")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="SS" title="${searchResult.datasetConfiguration.getColumn(\"SS\").displayName}">
+		   	${doc.get("SS")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="COMBINE" title="${searchResult.datasetConfiguration.getColumn(\"COMBINE\").displayName}">
+		   	${searchResult.highlight(doc, "COMBINE")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="COMBINE" title="${searchResult.datasetConfiguration.getColumn(\"COMBINE\").displayName}">
+		   	${doc.get("COMBINE")}
+		  </@display.column>

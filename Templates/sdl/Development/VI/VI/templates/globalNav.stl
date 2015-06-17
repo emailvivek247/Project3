@@ -1,0 +1,95 @@
+
+<!-- include Cycle plugin -->
+
+<script type="text/javascript" src="templates/resources/js/jquery.cycle.all.latest.js"></script>
+
+<link rel="stylesheet" href="/virginislands/templates/resources/styles/nav.css" type="text/css"  />
+
+<script type="text/javascript">
+var timeout         = 500;
+var closetimer      = 0;
+var ddmenuitem      = 0;
+function mopen(id)
+{
+    mcancelclosetime();
+    if(ddmenuitem) ddmenuitem.style.visibility = 'hidden';
+    ddmenuitem = document.getElementById(id);
+    ddmenuitem.style.visibility = 'visible';
+}
+function mclose()
+{
+    if(ddmenuitem) ddmenuitem.style.visibility = 'hidden';
+}
+function mclosetime()
+{
+    closetimer = window.setTimeout(mclose, timeout);
+}
+function mcancelclosetime()
+{
+    if(closetimer)
+    {
+        window.clearTimeout(closetimer);
+        closetimer = null;
+    }
+}document.onclick = mclose;
+
+
+$(document).ready(function() {
+    $('.slideshow').cycle({
+		fx: 'fade' // choose your transition type, ex: fade, scrollUp, shuffle, etc...
+	});
+});
+
+</script>
+
+<div id="content_wrapper">
+	<div id="page-wrapper">
+		<div>
+			<div id="sealDiv">&nbsp;</div>
+			<div style="word-wrap: break-word;font-size:30px;color:#fff; float:left;margin:-87px 0 0 125px;font-family:Georgia, serif;font-weight:bold;" margin-right:15px;>
+				<span>Superior Court</span><br/>
+				<span>of the Virgin Islands</span>
+			</div>
+			
+			<div width:850px; position:absolute; >
+			
+			<div style="float:right; margin-top:-65px;  margin-right:05px; padding-right: 0px;">
+			
+			<div id="list">
+				<ul id="nav">
+				    <li><a href="${request.getContextPath()}/search.do?" id="home" class="lettering round-corners-left nav-buttons" style="color:#000;">Home</a></li>
+				    <li><a href="${request.getContextPath()}/search.do?indexName=sttcasesearch,stxcasesearch&templateName=Main&q=" id="caseSearch" class="lettering nav-buttons <#if indexName == "sttcasesearch">activePage</#if>" style="color:#000;">Superior Court Case Search</a></li>				    
+				    <li><a href="http://www.visuperiorcourt.org/index.aspx" id="superiorCourt" class="lettering nav-buttons" style="color:#000;">Superior Court Web Site</a></li>
+				    <li><a href="http://efiling.visuperiorcourt.org/eportal/" id="eFiling" class="lettering  nav-buttons" style="color:#000;">SCVI &#8211; eFiling</a></li>
+				    <li><a href="search.do?indexName=documenttypes&templateName=ROAMHelp&q=&length=1000" id="eFiling" class="lettering round-corners-right   nav-buttons" style="color:#000;><font size="1" style="vertical-align:text-top;">ROAM Help</font></a></li>
+				</ul>
+			</div>
+			</div>
+		</div>
+	</div>
+</div>	
+
+
+<#--OLD NAV. KEEP UNTIL NEW IS APPROVED
+<table width="100%"  border="0" cellpadding="0" cellspacing="0" style="margin:10px 0px 0px 10px;">
+  <tr>
+      <td>
+	<table border=0 cellpadding=0 cellspacing=0 >
+		<tr>
+		    <td style="text-decoration:underline;">
+		       <a class=<#if indexName == "sttcasesearch">"headerLink active"<#else>"headerLink inactive"</#if> href="search.do?indexName=sttcasesearch,stxcasesearch&templateName=Main&q=${searchResult.getURLEncodedClearQuery()}&searchable=DisplayName,CaseNumber,PartyRole,StatuteNumber,StatuteDescription,CaseStatusDesc,CaseFilingDate,DOB<#if searchQuery?has_content>&searchQuery=${searchQuery}</#if><#if sortBy?has_content>&sortBy=${sortBy}</#if><#if desc?has_content>&desc=${desc}</#if><#if asc?has_content>&asc=${asc}</#if>">Superior Court Case Search</a>
+		    </td>
+		</tr>
+	</table>
+     </td>
+  </tr>
+</table>-->
+
+<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "true">
+<div style="width:100%;text-align:right;" >
+</div>
+</#if> 
+	
+
+
+

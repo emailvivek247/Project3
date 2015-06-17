@@ -1,0 +1,12 @@
+ <tr> 
+             <td>${searchResult.highlight(doc, "Book")}</td>
+             <td>${searchResult.highlight(doc, "Page")}</td>
+<#if (pageStyleUtil.isUserInRoleGroup('OFFICIAL_ROLE', request))>  
+             <td style="text-align:center;"><a href="${request.getContextPath()}/search.do?indexName=histbookimages&lq=${pageStyleUtil.encodeURL("ID:" + doc.get("ID"))}" target="image">View Image</a></td>
+<#elseif pageStyleUtil.isUserInRoleGroup('PER_PAGE_ROLE', request) || pageStyleUtil.isUserInRoleGroup('UNOFFICIAL_ROLE', request)>
+             <td style="text-align:center;"><a href="${request.getContextPath()}/search.do?indexName=histbookimages&templateName=imagepreview&lq=${pageStyleUtil.encodeURL("ID:" + doc.get("ID"))}" target="image">View Image</a></td>         
+</#if>
+         <#if pageStyleUtil.isUserInRoleGroup('PER_PAGE_ROLE', request) || pageStyleUtil.isUserInRoleGroup('UNOFFICIAL_ROLE', request)> 
+             <td><input class="cartLink" type="button" title="${doc.get("ID")}" value="Add to Cart"/></td>
+         </#if>
+ </tr>

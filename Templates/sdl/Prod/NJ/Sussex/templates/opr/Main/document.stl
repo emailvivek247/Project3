@@ -1,0 +1,109 @@
+<#-- *Assign variables for Phonetic Search -->
+<#assign searchable = request.getParameter("searchable")>
+<#assign phonetic = "LastNamePhonetic,FirstMiddlePhonetic,NameSort,Instrument,RecDate,DesigStatus,PartyRole,IndexType,DocType,LegalType,Lot,Block,Township">
+<#assign search = "DisplayNameLastName,FirstMiddle,NameSort,Instrument,Instrument,RecDate,DesigStatus,PartyRole,IndexType,DocType,LegalType,Lot,Block,Township">
+
+
+ 
+                  <@display.column media="html" indexColumnName="Instrument" title="${searchResult.datasetConfiguration.getColumn(\"Instrument\").displayName}">
+<#-- *Link Instrument Number to Details page -->
+                <a href="${request.getContextPath()}/search.do?indexName=details&templateName=Details_SN&lq=${pageStyleUtil.encodeURL("Instrument:\"" + doc.get("Instrument") + "\"")}"> ${searchResult.highlight(doc, "Instrument")}</a>             
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="Instrument" title="${searchResult.datasetConfiguration.getColumn(\"Instrument\").displayName}">
+                ${number.format("###0.##",doc.get("Instrument"))}
+          </@display.column>
+		  <@display.column media="html" indexColumnName="RecDateDisplay" title="${searchResult.datasetConfiguration.getColumn(\"RecDateDisplay\").displayName}">
+                     <#if doc.get("RecDateDisplay")?has_content>
+                     ${pageStyleUtil.format(doc.get("RecDateDisplay"), "yyyy-MM-dd hh:mm:ss", "MM/dd/yyyy hh:mm:ss")}         
+                     </#if>
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="RecDateDisplay" title="${searchResult.datasetConfiguration.getColumn(\"RecDateDisplay\").displayName}">        
+                     <#if doc.get("RecDateDisplay")?has_content>
+                     ${pageStyleUtil.format(doc.get("RecDateDisplay"), "yyyy-MM-dd hh:mm:ss", "MM/dd/yyyy hh:mm:ss")}         
+                     </#if>
+          </@display.column>
+<#-- *Check type of search to allow for highlighting and add DesigStatus -->
+
+          <@display.column media="html" indexColumnName="DisplayName" title="${searchResult.datasetConfiguration.getColumn(\"DisplayName\").displayName}">
+            ${searchResult.highlight(doc, "DisplayName")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="DisplayName" title="${searchResult.datasetConfiguration.getColumn(\"DisplayName\").displayName}">
+            ${doc.get("DisplayName")}
+          </@display.column>             
+          <@display.column media="html" indexColumnName="PartyRole" title="${searchResult.datasetConfiguration.getColumn(\"PartyRole\").displayName}">
+            ${searchResult.highlight(doc, "PartyRole")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="PartyRole" title="${searchResult.datasetConfiguration.getColumn(\"PartyRole\").displayName}">
+            ${doc.get("PartyRole")}
+          </@display.column>
+
+
+          <@display.column media="html" indexColumnName="DocTypeDesc" title="${searchResult.datasetConfiguration.getColumn(\"DocTypeDesc\").displayName}">
+            ${searchResult.highlight(doc, "DocTypeDesc")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="DocTypeDesc" title="${searchResult.datasetConfiguration.getColumn(\"DocTypeDesc\").displayName}">
+            ${doc.get("DocTypeDesc")}
+          </@display.column>
+          
+          <@display.column media="html" indexColumnName="OtherName" title="${searchResult.datasetConfiguration.getColumn(\"OtherName\").displayName}">
+            ${searchResult.highlight(doc, "OtherName")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="OtherName" title="${searchResult.datasetConfiguration.getColumn(\"OtherName\").displayName}">
+            ${doc.get("OtherName")}
+          </@display.column>
+
+          <@display.column media="html" indexColumnName="Book" title="${searchResult.datasetConfiguration.getColumn(\"Book\").displayName}">
+            ${searchResult.highlight(doc, "Book")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="Book" title="${searchResult.datasetConfiguration.getColumn(\"Book\").displayName}">
+            ${doc.get("Book")}
+          </@display.column>
+
+          <@display.column media="html" indexColumnName="Page" title="${searchResult.datasetConfiguration.getColumn(\"Page\").displayName}">
+            ${searchResult.highlight(doc, "Page")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="Page" title="${searchResult.datasetConfiguration.getColumn(\"Page\").displayName}">
+            ${doc.get("Page")}
+          </@display.column>
+		  
+		  
+<#-- *Check for multiple reference, add link for document chain (disabled) -->
+          <@display.column media="html" indexColumnName="FirstReference" title="${searchResult.datasetConfiguration.getColumn(\"FirstReference\").displayName}">
+            ${searchResult.highlight(doc, "FirstReference")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="FirstReference" title="${searchResult.datasetConfiguration.getColumn(\"FirstReference\").displayName}">
+            ${doc.get("FirstReference")}
+          </@display.column>
+<#-- *Check for multiple legal -->
+          <@display.column media="html" indexColumnName="LegalDescription" title="${searchResult.datasetConfiguration.getColumn(\"LegalDescription\").displayName}">
+            <#if doc.get("MultipleLegal")="Y">
+                    ${searchResult.highlight(doc, "LegalDescription")} <#-- <font color=red> [+] </font> -->
+                     <#else>
+                    ${searchResult.highlight(doc, "LegalDescription")}
+                     </#if>
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="LegalDescription" title="${searchResult.datasetConfiguration.getColumn(\"LegalDescription\").displayName}">
+            <#if doc.get("MultipleLegal")="Y">
+                    ${doc.get("LegalDescription")} 
+                     <#else>
+                    ${doc.get("LegalDescription")}
+                     </#if>
+          </@display.column>
+
+          <@display.column  media="html" title="Briefcase">
+
+                        <div style="text-align:center">
+                            <a href="javascript:;" onclick="addToCart('indexName?=?${indexName}?=?${dc.displayName}', 'Instrument?=?${doc.get("Instrument")}?con?Instrument?=?${doc.get("Instrument")?replace("'", "\\'")?replace("\"", "\\\"")}?con?${searchResult.datasetConfiguration.getColumn("RecDateDisplay").displayName}?=?${doc.get("RecDateDisplay")?replace("'", "\\'")?replace("\"", "\\\"")?trim}?con?${searchResult.datasetConfiguration.getColumn("DisplayName").displayName}?=?${doc.get("DisplayName")?replace("'", "\\'")?replace("\"", "\\\"")?trim}?con?${searchResult.datasetConfiguration.getColumn("PartyRole").displayName}?=?${doc.get("PartyRole")?replace("'", "\\'")?replace("\"", "\\\"")?trim}?con?${searchResult.datasetConfiguration.getColumn("DocTypeDesc").displayName}?=?${doc.get("DocTypeDesc")?replace("'", "\\'")?replace("\"", "\\\"")?trim}?con?${searchResult.datasetConfiguration.getColumn("OtherName").displayName}?=?${doc.get("OtherName")?replace("'", "\\'")?replace("\"", "\\\"")?trim}?con?${searchResult.datasetConfiguration.getColumn("book").displayName}?=?${doc.get("book")?replace("'", "\\'")?replace("\"", "\\\"")?trim}?con?${searchResult.datasetConfiguration.getColumn("page").displayName}?=?${doc.get("page")?replace("'", "\\'")?replace("\"", "\\\"")?trim}?con?${searchResult.datasetConfiguration.getColumn("LegalDescription").displayName}?=?${doc.get("LegalDescription")?replace("'", "\\'")?replace("\"", "\\\"")?trim}?con?${searchResult.datasetConfiguration.getColumn("Freeform").displayName}?=?${doc.get("Freeform")?replace("'", "\\'")?replace("\"", "\\\"")?trim}', 'Instrument%3A${doc.get("Instrument")}', '25');" >Add to Briefcase</a>
+                        </div>
+      </@display.column>
+	  
+      <@display.column  media="html" title="View Image">
+      
+                        <div style="text-align:center" class="gallery clearfix"><a class="nocolor pphoto" href="${request.getContextPath()}/search.do?indexName=susseximages&lq=${pageStyleUtil.encodeURL("Instrument:" + doc.get("Instrument"))}&page=1&view=FitV&scrollbar=0&navpanes=0&statusbar=0&messages=0?iframe=true&width=50%25&height=95%25" rel="prettyPhoto[iframe]" title="Instrument : <a  class='nocolor' href='${request.getContextPath()}/search.do?indexName=details&templateName=Details_SN&lq=${pageStyleUtil.encodeURL("Instrument:\"" + doc.get("Instrument") + "\"")}'<b>${doc.get("Instrument")}</b></a> </br> Doc Type: ${doc.get("DocType")} </br> Date Recorded: ${pageStyleUtil.format(doc.get("RecDateDisplay"), "yyyy-MM-dd HH:mm:ss", "MM/dd/yyyy HH:mm:ss a")} </br>" ><img border="0" title="Preview" src="<@com.currentUrlPrefix/>/resource/preview.png"></a></div>
+
+      </@display.column>
+      <@display.column  media="html" title="View Full Screen">
+                 
+                        <div style="text-align:center" ><a href="${request.getContextPath()}/search.do?indexName=susseximages&lq=${pageStyleUtil.encodeURL("Instrument:" + doc.get("Instrument"))}" target="_blank"><img border="0" title="Fullscreen Preview" src="<@com.currentUrlPrefix/>/resource/Full-screen-32.png"></a></div>
+
+       </@display.column>

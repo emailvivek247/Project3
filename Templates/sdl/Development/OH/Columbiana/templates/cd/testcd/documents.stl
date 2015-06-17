@@ -1,0 +1,34 @@
+
+<#if searchResult.docs?has_content>
+<table id="searchResult" class="tablesorter">
+ <thead><tr>
+  <th>${searchResult.datasetConfiguration.getColumn("CaseID").displayName}</th><th>${searchResult.datasetConfiguration.getColumn("CaseNumber").displayName}</th><th>${searchResult.datasetConfiguration.getColumn("CaseStatus").displayName}</th><th>${searchResult.datasetConfiguration.getColumn("DATE_TIME_CREATED").displayName}</th><th>${searchResult.datasetConfiguration.getColumn("DATE_TIME_MOD").displayName}</th><th>${searchResult.datasetConfiguration.getColumn("Jurisdiction").displayName}</th>
+  
+  
+ </tr></thead>
+ <tbody>
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+  <#include "document.stl">
+ </#foreach>
+<#else>
+ <#include "noResults.stl"> 
+</#if>
+ </tbody>
+</table>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	oTable = $('#searchResult').dataTable({
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bSort": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		"aaSorting": []
+	});
+} );
+</script>

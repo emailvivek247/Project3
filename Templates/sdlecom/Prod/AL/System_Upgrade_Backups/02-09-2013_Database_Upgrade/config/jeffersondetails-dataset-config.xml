@@ -1,0 +1,970 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset name="Jefferson Details" exportedBy="null" createdAt="Sat Jan 05 13:40:25 CST 2013">
+  <display-order>-1</display-order>
+  <description><![CDATA[Jefferson Details]]></description>
+  <index-dir>jeffersondetails</index-dir>
+  <is-prefix-root-index-directory>true</is-prefix-root-index-directory>
+  <use-server-db-connection>true</use-server-db-connection>
+  <number-of-hours-before-deletion>6</number-of-hours-before-deletion>
+  <work-directory>_work</work-directory>
+  <temporary-index-minimal-merge-percentage>0.0</temporary-index-minimal-merge-percentage>
+  <merge-hours enabled="true" begin="16" end="17"/>
+  <fetcher-threads>5</fetcher-threads>
+  <writer-threads>5</writer-threads>
+  <index-max-size>100000.0</index-max-size>
+  <list-fetch-size>10000</list-fetch-size>
+  <schedules>
+   <schedule id="0">
+    <is-enabled>true</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>0 18 ? * 2,3,4,5,6</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+  </schedules>
+  <language>Any</language>
+  <analyzer-name>com.fdt.sdl.core.analyzer.NumberLowerCaseAnalyzer</analyzer-name>
+  <data-source-type>0</data-source-type>
+  <fetcher-configuration dir="null">
+  </fetcher-configuration>
+  <dataquery name="WorkingQueue" batch-size="128" is-skipping-null-parameters="false">
+    <sql><![CDATA[
+SELECT  SEQ_KEY AS "Instrument" 
+	,CASE WHEN TRIM(DOC_TYPE) = '' THEN '|' ELSE NVL(DOC_TYPE, '|') END AS "DocType"
+	,CASE WHEN TRIM(TO_CHAR(RECDATE1,'MM/DD/YYYY')) = '' THEN '|' ELSE NVL(TO_CHAR(RECDATE1,'MM/DD/YYYY'), '|')  END AS "RecDate1"
+	,CASE WHEN TRIM(TO_CHAR(RECDATE2,'MM/DD/YYYY')) = '' THEN '|' ELSE NVL(TO_CHAR(RECDATE2,'MM/DD/YYYY'), '|')  END AS "RecDate2"
+	,CASE WHEN TRIM(CAST(PAGECOUNT AS VARCHAR2(20))) = '' THEN '|' ELSE NVL(CAST(PAGECOUNT AS VARCHAR2(20)), '|') END AS "PageCount"
+	,CASE WHEN TRIM(TEXT1) = '' THEN '|' ELSE NVL(TEXT1, '|') END AS "Remarks1"
+	,CASE WHEN TRIM(TEXT2) = '' THEN '|' ELSE NVL(TEXT2, '|') END AS "Remarks2"
+	,CASE WHEN TRIM(CAST(AMOUNT1 AS VARCHAR2(20))) = '' THEN '|' ELSE NVL(CAST(AMOUNT1 AS VARCHAR2(20)), '|') END AS "Amount1"
+	,CASE WHEN TRIM(CAST(AMOUNT6 AS VARCHAR2(20))) = '' THEN '|' ELSE NVL(CAST(AMOUNT6 AS VARCHAR2(20)), '|') END AS "Amount6"
+	,CASE WHEN TRIM(CAST(TAXAMOUNT AS VARCHAR2(20))) = '' THEN '|' ELSE NVL(CAST(TAXAMOUNT AS VARCHAR2(20)), '|') END AS "TaxAmount"
+	,CASE WHEN TRIM(BOOK) = '' THEN '|' ELSE NVL(BOOK, '|') END AS "Book"
+	,CASE WHEN TRIM(PAGE) = '' THEN '|' ELSE NVL(PAGE, '|') END AS "Page"
+	,CASE WHEN TRIM(USERID3) = '' THEN '|' ELSE NVL(USERID3, '|') END AS "BookType"
+	,CASE WHEN TRIM(USERID2) = '' THEN '|' ELSE NVL(USERID2, '|') END AS "Legacy"
+	,CASE WHEN TRIM(PARTY1) = '' THEN '|' ELSE NVL(PARTY1, '|') END AS "Party1"
+	,CASE WHEN TRIM(PARTY1_ROLE) = '' THEN '|' ELSE NVL(PARTY1_ROLE, '|') END AS "Party1Role"
+	,CASE WHEN TRIM(PARTY2) = '' THEN '|' ELSE NVL(PARTY2, '|') END AS "Party2"
+	,CASE WHEN TRIM(PARTY2_ROLE) = '' THEN '|' ELSE NVL(PARTY2_ROLE, '|') END AS "Party2Role"
+	,QUEUESTATUS AS "QueueStatus"
+	,IMAGE_STATUS AS "ImageStatus"
+	,TIMESTAMP AS "DATE_TIME_MOD"
+FROM DOCUMENT
+WHERE INDEXTYPE NOT IN ('12')
+        AND DOCTYPE NOT IN ('325')
+        AND FLAG4 = 'N'
+	AND VOID = 'N'
+	AND DELETERECORD = 'N'
+ORDER BY TIMESTAMP DESC
+    ]]></sql>
+    <column>
+      <column-name>Instrument</column-name>
+      <display-name><![CDATA[Instrument #]]></display-name>
+      <column-index>1</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <primary-key>true</primary-key>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DocType</column-name>
+      <display-name><![CDATA[Doc Type]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>RecDate1</column-name>
+      <display-name><![CDATA[Date Recorded]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>RecDate2</column-name>
+      <display-name><![CDATA[Date of Document]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PageCount</column-name>
+      <display-name><![CDATA[Page Count]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Remarks1</column-name>
+      <display-name><![CDATA[Remarks 1]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Remarks2</column-name>
+      <display-name><![CDATA[Remarks 2]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Amount1</column-name>
+      <display-name><![CDATA[Amount 1]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Amount6</column-name>
+      <display-name><![CDATA[Recording Fees]]></display-name>
+      <column-index>9</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>TaxAmount</column-name>
+      <display-name><![CDATA[Tax Amount]]></display-name>
+      <column-index>10</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Book</column-name>
+      <display-name><![CDATA[Book]]></display-name>
+      <column-index>11</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Page</column-name>
+      <display-name><![CDATA[Page]]></display-name>
+      <column-index>12</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>BookType</column-name>
+      <display-name><![CDATA[Book Type]]></display-name>
+      <column-index>13</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Legacy</column-name>
+      <display-name><![CDATA[Legacy]]></display-name>
+      <column-index>14</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Party1</column-name>
+      <display-name><![CDATA[Party1]]></display-name>
+      <column-index>15</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Party1Role</column-name>
+      <display-name><![CDATA[Party1 Role]]></display-name>
+      <column-index>16</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Party2</column-name>
+      <display-name><![CDATA[Party2]]></display-name>
+      <column-index>17</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Party2Role</column-name>
+      <display-name><![CDATA[Party2 Role]]></display-name>
+      <column-index>18</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>QueueStatus</column-name>
+      <display-name><![CDATA[Completed]]></display-name>
+      <column-index>19</column-index>
+      <column-type>java.math.BigDecimal</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>ImageStatus</column-name>
+      <display-name><![CDATA[Image Status]]></display-name>
+      <column-index>20</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DATE_TIME_MOD</column-name>
+      <display-name><![CDATA[DATE_TIME_MOD]]></display-name>
+      <column-index>21</column-index>
+      <column-type>java.sql.Timestamp</column-type>
+      <modified-date>true</modified-date>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <is-filterable sort-filter-counts-by="1">true</is-filterable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Content" is-batch-needed="true" batch-size="300">
+    <sql><![CDATA[
+SELECT 
+	A.SEQ_KEY AS "Instrument"
+       , CASE WHEN TRIM(B.PROPERTY) = '' THEN '|' ELSE NVL(B.PROPERTY, '|') END AS "Property"
+       , CASE WHEN TRIM(A.PROPERTYVALUE) = '' THEN '|' ELSE NVL(A.PROPERTYVALUE, '|') END AS "PropertyValue"
+FROM DOCUMENT_DETAIL A, 
+	 PROPERTIES B
+WHERE a.propertyid=b.propertyid 
+	--AND B.PUBLIC_FLG = 'Y'
+	AND A.SEQ_KEY IN (?)
+    ]]></sql>
+    <parameter>
+      <name>Instrument</name>
+      <index>1</index>
+      <type>java.math.BigDecimal</type>
+      <value>20051114000042600</value>
+    </parameter>
+    <column>
+      <column-name>Instrument</column-name>
+      <display-name><![CDATA[Instrument #]]></display-name>
+      <column-index>1</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Property</column-name>
+      <display-name><![CDATA[Property]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PropertyValue</column-name>
+      <display-name><![CDATA[PropertyValue]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Content" is-batch-needed="true" batch-size="300">
+    <sql><![CDATA[
+SELECT 
+	SEQ_KEY AS "Instrument"
+    ,(SELECT ROLE FROM DOCROLES WHERE ROLEID = E.ROLE) AS "EntityRole"
+    ,CASE WHEN TRIM(LNAME||' '||NVL(FNAME,'')) = '' THEN '|' ELSE NVL(LNAME||' '||NVL(FNAME,'') , '|') END AS "EntityName"
+    ,CASE WHEN TRIM(ROLENAME) = '' THEN '|' ELSE NVL(ROLENAME, '|') END AS "DesigStatus"
+    ,CASE WHEN TRIM(CORP) = '' THEN '|' ELSE NVL(CORP, '|') END AS "Corp"
+    ,CASE WHEN (SEQ) = '' THEN '|' ELSE NVL(to_char(SEQ), '|') END AS "EntitySeq"
+    ,CASE WHEN TRIM(ADDRESS1) = '' THEN '|' ELSE NVL(ADDRESS1, '|') END AS "EntityAddress1"
+    ,CASE WHEN TRIM(ADDRESS2) = '' THEN '|' ELSE NVL(ADDRESS2, '|') END AS "EntityAddress2"
+    ,CASE WHEN TRIM(CITY) = '' THEN '|' ELSE NVL(CITY, '|') END AS "EntityCity"
+    ,CASE WHEN TRIM(STATE) = '' THEN '|' ELSE NVL(STATE, '|') END AS "EntityState"
+    ,CASE WHEN TRIM(ZIP) = '' THEN '|' ELSE NVL(ZIP, '|') END AS "EntityZip"
+FROM ENTITY E
+WHERE SEQ_KEY IN (?)
+    ]]></sql>
+    <parameter>
+      <name>Instrument</name>
+      <index>1</index>
+      <type>java.math.BigDecimal</type>
+      <value>20020128100021006</value>
+    </parameter>
+    <column>
+      <column-name>Instrument</column-name>
+      <display-name><![CDATA[Instrument #]]></display-name>
+      <column-index>1</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>EntityRole</column-name>
+      <display-name><![CDATA[Role]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>EntityName</column-name>
+      <display-name><![CDATA[Name]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DesigStatus</column-name>
+      <display-name><![CDATA[Design Status]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Corp</column-name>
+      <display-name><![CDATA[Corp]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>EntitySeq</column-name>
+      <display-name><![CDATA[Seq]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>EntityAddress1</column-name>
+      <display-name><![CDATA[EntityAddress1]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>EntityAddress2</column-name>
+      <display-name><![CDATA[EntityAddress2]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>EntityCity</column-name>
+      <display-name><![CDATA[EntityCity]]></display-name>
+      <column-index>9</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>EntityState</column-name>
+      <display-name><![CDATA[EntityState]]></display-name>
+      <column-index>10</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>EntityZip</column-name>
+      <display-name><![CDATA[EntityZip]]></display-name>
+      <column-index>11</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Content" is-batch-needed="true" batch-size="300">
+    <sql><![CDATA[
+SELECT 
+	SEQ_KEY AS "Instrument"
+	,CASE WHEN TRIM(LEGAL_TYPE) = '' THEN '|' ELSE NVL(LEGAL_TYPE, '|') END AS "LegalType"
+	,CASE WHEN TRIM(SEQ) = '' THEN '|' ELSE NVL(to_char(SEQ), '|') END AS "LegalSeq"
+	,CASE WHEN TRIM(LEGAL1) = '' THEN '|' ELSE NVL(LEGAL1, '|') END AS "Con"
+	,CASE WHEN TRIM(LEGAL2) = '' THEN '|' ELSE NVL(LEGAL2, '|') END AS "TT"
+	,CASE WHEN TRIM(ACREAGE) = '' THEN '|' ELSE NVL(ACREAGE, '|') END AS "Area"
+	,CASE WHEN TRIM(QUARTER) = '' THEN '|' ELSE NVL(QUARTER, '|') END AS "Quarter"
+	,CASE WHEN TRIM(BLOCKNUM) = '' THEN '|' ELSE NVL(BLOCKNUM, '|') END AS "Block"     
+	,CASE WHEN TRIM(PARCEL) = '' THEN '|' ELSE NVL(PARCEL, '|') END AS "Parcel"
+	,CASE WHEN TRIM(LEGALDESCRIPTION) = '' THEN '|' ELSE NVL(LEGALDESCRIPTION, '|') END AS "PID"
+	,CASE WHEN TRIM(LEGALDESCRIPTION) = '' THEN '|' ELSE NVL(LEGALDESCRIPTION, '|') END AS "LegalDescription"            
+	,CASE WHEN TRIM(PHASE) = '' THEN '|' ELSE NVL(PHASE, '|') END AS "Phase"
+	,CASE WHEN TRIM(SECTIONNUM) = '' THEN '|' ELSE NVL(SECTIONNUM, '|') END AS "Section"
+	,CASE WHEN TRIM(LOTNUM) = '' THEN '|' ELSE NVL(LOTNUM, '|') END AS "LotNum"
+	,CASE WHEN TRIM(LOTLETTER) = '' THEN '|' ELSE NVL(LOTLETTER, '|') END AS "Lot"
+	,CASE WHEN TRIM(MAPBOOK) = '' THEN '|' ELSE NVL(MAPBOOK, '|') END AS "MapBook"
+	,CASE WHEN TRIM(MAPPAGE) = '' THEN '|' ELSE NVL(MAPPAGE, '|') END AS "MapPage"
+	,CASE WHEN TRIM(SUBDIVISION) = '' THEN '|' ELSE NVL(SUBDIVISION, '|') END AS "Subdivision"
+	,CASE WHEN TRIM(LDESC) = '' THEN '|' ELSE NVL(LDESC, '|') END AS "Freeform1Other"
+	,CASE WHEN TRIM(LDESC2) = '' THEN '|' ELSE NVL(LDESC2, '|') END AS "Freeform2"
+	,CASE WHEN TRIM(LDESC3) = '' THEN '|' ELSE NVL(LDESC3, '|') END AS "Freeform3"
+	,CASE WHEN TRIM((st_num || ' ' || st_dir || ' ' ||  st_name || ' ' || st_suf)) = '' THEN '|' ELSE NVL((st_num || ' ' || st_dir || ' ' ||  st_name || ' ' || st_suf), '|') END AS "Address"
+	,CASE WHEN TRIM(UNIT) = '' THEN '|' ELSE NVL(UNIT, '|') END AS "Unit"
+	,CASE WHEN TRIM(CITY) = '' THEN '|' ELSE NVL(CITY, '|') END AS "CityTown"
+	,CASE WHEN TRIM(STATE) = '' THEN '|' ELSE NVL(STATE, '|') END AS "State"
+	,CASE WHEN TRIM(ZIP) = '' THEN '|' ELSE NVL(ZIP, '|') END AS "Zip"
+FROM LEGAL
+WHERE SEQ_KEY IN (?)
+    ]]></sql>
+    <parameter>
+      <name>Instrument</name>
+      <index>1</index>
+      <type>java.math.BigDecimal</type>
+      <value>20060220310003300</value>
+    </parameter>
+    <column>
+      <column-name>Instrument</column-name>
+      <display-name><![CDATA[Instrument #]]></display-name>
+      <column-index>1</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>LegalType</column-name>
+      <display-name><![CDATA[LegalType]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>LegalSeq</column-name>
+      <display-name><![CDATA[LegalSeq]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Con</column-name>
+      <display-name><![CDATA[Con]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>TT</column-name>
+      <display-name><![CDATA[TT]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Area</column-name>
+      <display-name><![CDATA[Area]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Quarter</column-name>
+      <display-name><![CDATA[Quarter]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Block</column-name>
+      <display-name><![CDATA[Block]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Parcel</column-name>
+      <display-name><![CDATA[Parcel]]></display-name>
+      <column-index>9</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PID</column-name>
+      <display-name><![CDATA[PID]]></display-name>
+      <column-index>10</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>LegalDescription</column-name>
+      <display-name><![CDATA[LegalDescription]]></display-name>
+      <column-index>11</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Phase</column-name>
+      <display-name><![CDATA[Phase]]></display-name>
+      <column-index>12</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Section</column-name>
+      <display-name><![CDATA[Section]]></display-name>
+      <column-index>13</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>LotNum</column-name>
+      <display-name><![CDATA[LotNum]]></display-name>
+      <column-index>14</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Lot</column-name>
+      <display-name><![CDATA[Lot]]></display-name>
+      <column-index>15</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>MapBook</column-name>
+      <display-name><![CDATA[MapBook]]></display-name>
+      <column-index>16</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>MapPage</column-name>
+      <display-name><![CDATA[MapPage]]></display-name>
+      <column-index>17</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Subdivision</column-name>
+      <display-name><![CDATA[Subdivision]]></display-name>
+      <column-index>18</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Freeform1Other</column-name>
+      <display-name><![CDATA[Freeform1Other]]></display-name>
+      <column-index>19</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Freeform2</column-name>
+      <display-name><![CDATA[Freeform2]]></display-name>
+      <column-index>20</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Freeform3</column-name>
+      <display-name><![CDATA[Freeform3]]></display-name>
+      <column-index>21</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Address</column-name>
+      <display-name><![CDATA[Address]]></display-name>
+      <column-index>22</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Unit</column-name>
+      <display-name><![CDATA[Unit]]></display-name>
+      <column-index>23</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CityTown</column-name>
+      <display-name><![CDATA[CityTown]]></display-name>
+      <column-index>24</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>State</column-name>
+      <display-name><![CDATA[State]]></display-name>
+      <column-index>25</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Zip</column-name>
+      <display-name><![CDATA[Zip]]></display-name>
+      <column-index>26</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Content" is-batch-needed="true" batch-size="300">
+    <sql><![CDATA[
+SELECT 
+	SEQ_KEY AS "Instrument"
+    ,CASE WHEN TRIM(DOCREFTYPE) = '' THEN '|' ELSE NVL(DOCREFTYPE, '|') END AS "DocRefType"
+    ,CASE WHEN TRIM(SEQ) = '' THEN '|' ELSE NVL(to_char(SEQ), '|') END AS "DocRefSeq"
+    ,CASE WHEN TRIM(INSTNUM) = '' THEN '|' ELSE NVL(INSTNUM, '|') END AS "RefInstrument"
+    ,CASE WHEN TRIM(BOOKTYPE) = '' THEN '|' ELSE NVL(BOOKTYPE, '|') END AS "DocRefBookType"
+    ,CASE WHEN TRIM(BOOK) = '' THEN '|' ELSE NVL(BOOK, '|') END AS "DocRefBook"
+    ,CASE WHEN TRIM(PAGE) = '' THEN '|' ELSE NVL(PAGE, '|') END AS "DocRefPage"
+    ,CASE WHEN TRIM(FILENUM_OLD) = '' THEN '|' ELSE NVL(FILENUM_OLD, '|') END AS "DocRefLegacy"
+FROM DOCREF
+WHERE SEQ_KEY IN (?)
+    ]]></sql>
+    <parameter>
+      <name>Instrument</name>
+      <index>1</index>
+      <type>java.math.BigDecimal</type>
+      <value>20060220000002610</value>
+    </parameter>
+    <column>
+      <column-name>Instrument</column-name>
+      <display-name><![CDATA[Instrument #]]></display-name>
+      <column-index>1</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DocRefType</column-name>
+      <display-name><![CDATA[DocRefType]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DocRefSeq</column-name>
+      <display-name><![CDATA[DocRefSeq]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>RefInstrument</column-name>
+      <display-name><![CDATA[RefInstrument]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DocRefBookType</column-name>
+      <display-name><![CDATA[DocRefBookType]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DocRefBook</column-name>
+      <display-name><![CDATA[DocRefBook]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DocRefPage</column-name>
+      <display-name><![CDATA[DocRefPage]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DocRefLegacy</column-name>
+      <display-name><![CDATA[DocRefLegacy]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Content" is-batch-needed="true" batch-size="300">
+    <sql><![CDATA[
+SELECT 
+	SEQKEY AS "Instrument",
+    SEQ AS "CustomerInfoSeq",
+    CASE WHEN TRIM(NAME) = '' THEN '|' ELSE NVL(NAME, '|') END AS "CustomerInfoName",
+    CASE WHEN TRIM(TO_CHAR(DATERETURNED,'MM/DD/YYYY')) = '' THEN '|' ELSE NVL(TO_CHAR(DATERETURNED,'MM/DD/YYYY'), '|')  END AS "DateReturned",
+    CASE WHEN TRIM(ADDRESSLINE1) = '' THEN '|' ELSE NVL(ADDRESSLINE1, '|') END AS "CustomerInfoAddress1",
+    CASE WHEN TRIM(ADDRESSLINE2) = '' THEN '|' ELSE NVL(ADDRESSLINE2, '|') END AS "CustomerInfoAddress2",
+    CASE WHEN TRIM(CITY) = '' THEN '|' ELSE NVL(CITY, '|') END AS "CustomerInfoCity",
+    CASE WHEN TRIM(STATE) = '' THEN '|' ELSE NVL(STATE, '|') END AS "CustomerInfoState",
+    CASE WHEN TRIM(ZIP) = '' THEN '|' ELSE NVL(ZIP, '|') END AS "CustomerInfoZip"
+FROM CUSTOMERINFO
+WHERE TYPE = 'RETURNEE'
+	AND SEQKEY IN (?)
+    ]]></sql>
+    <parameter>
+      <name>Instrument</name>
+      <index>1</index>
+      <type>java.math.BigDecimal</type>
+      <value>20091202001398140</value>
+    </parameter>
+    <column>
+      <column-name>Instrument</column-name>
+      <display-name><![CDATA[Instrument #]]></display-name>
+      <column-index>1</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CustomerInfoSeq</column-name>
+      <display-name><![CDATA[CustomerInfoSeq]]></display-name>
+      <column-index>2</column-index>
+      <column-type precision="38" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CustomerInfoName</column-name>
+      <display-name><![CDATA[CustomerInfoName]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DateReturned</column-name>
+      <display-name><![CDATA[DateReturned]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CustomerInfoAddress1</column-name>
+      <display-name><![CDATA[CustomerInfoAddress1]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CustomerInfoAddress2</column-name>
+      <display-name><![CDATA[CustomerInfoAddress2]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CustomerInfoCity</column-name>
+      <display-name><![CDATA[CustomerInfoCity]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CustomerInfoState</column-name>
+      <display-name><![CDATA[CustomerInfoState]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CustomerInfoZip</column-name>
+      <display-name><![CDATA[CustomerInfoZip]]></display-name>
+      <column-index>9</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Deletion" is-delete-only="true">
+    <sql><![CDATA[
+{call sp_roam_track_delete_D (?)}
+    ]]></sql>
+  </dataquery>
+  <dataquery name="Incremental">
+    <sql><![CDATA[
+SELECT DISTINCT  
+           SEQ_KEY AS "Instrument" 
+	,CASE WHEN TRIM(DOC_TYPE) = '' THEN '|' ELSE NVL(DOC_TYPE, '|') END AS "DocType"
+	,CASE WHEN TRIM(TO_CHAR(RECDATE1,'MM/DD/YYYY')) = '' THEN '|' ELSE NVL(TO_CHAR(RECDATE1,'MM/DD/YYYY'), '|')  END AS "RecDate1"
+	,CASE WHEN TRIM(TO_CHAR(RECDATE2,'MM/DD/YYYY')) = '' THEN '|' ELSE NVL(TO_CHAR(RECDATE2,'MM/DD/YYYY'), '|')  END AS "RecDate2"
+	,CASE WHEN TRIM(CAST(PAGECOUNT AS VARCHAR2(20))) = '' THEN '|' ELSE NVL(CAST(PAGECOUNT AS VARCHAR2(20)), '|') END AS "PageCount"
+	,CASE WHEN TRIM(TEXT1) = '' THEN '|' ELSE NVL(TEXT1, '|') END AS "Remarks1"
+	,CASE WHEN TRIM(TEXT2) = '' THEN '|' ELSE NVL(TEXT2, '|') END AS "Remarks2"
+	,CASE WHEN TRIM(CAST(AMOUNT1 AS VARCHAR2(20))) = '' THEN '|' ELSE NVL(CAST(AMOUNT1 AS VARCHAR2(20)), '|') END AS "Amount1"
+	,CASE WHEN TRIM(CAST(AMOUNT6 AS VARCHAR2(20))) = '' THEN '|' ELSE NVL(CAST(AMOUNT6 AS VARCHAR2(20)), '|') END AS "Amount6"
+	,CASE WHEN TRIM(CAST(TAXAMOUNT AS VARCHAR2(20))) = '' THEN '|' ELSE NVL(CAST(TAXAMOUNT AS VARCHAR2(20)), '|') END AS "TaxAmount"
+	,CASE WHEN TRIM(BOOK) = '' THEN '|' ELSE NVL(BOOK, '|') END AS "Book"
+	,CASE WHEN TRIM(PAGE) = '' THEN '|' ELSE NVL(PAGE, '|') END AS "Page"
+	,CASE WHEN TRIM(USERID3) = '' THEN '|' ELSE NVL(USERID3, '|') END AS "BookType"
+	,CASE WHEN TRIM(USERID2) = '' THEN '|' ELSE NVL(USERID2, '|') END AS "Legacy"
+	,CASE WHEN TRIM(PARTY1) = '' THEN '|' ELSE NVL(PARTY1, '|') END AS "Party1"
+	,CASE WHEN TRIM(PARTY1_ROLE) = '' THEN '|' ELSE NVL(PARTY1_ROLE, '|') END AS "Party1Role"
+	,CASE WHEN TRIM(PARTY2) = '' THEN '|' ELSE NVL(PARTY2, '|') END AS "Party2"
+	,CASE WHEN TRIM(PARTY2_ROLE) = '' THEN '|' ELSE NVL(PARTY2_ROLE, '|') END AS "Party2Role"
+	,QUEUESTATUS AS "QueueStatus"
+	,IMAGE_STATUS AS "ImageStatus"
+            ,R.DATE_TIME_MOD AS "DATE_TIME_MOD"
+FROM DOCUMENT D 
+INNER JOIN ROAM_TRACK R 
+ON d.seq_key = r.pk_key
+WHERE INDEXTYPE NOT IN ('12')
+AND DOCTYPE NOT IN ('325')
+AND FLAG4 = 'N'
+AND VOID = 'N'
+AND DELETERECORD = 'N'
+AND r.DATE_TIME_MOD > ?
+AND R.TAB_NAME = 'DOCUMENT' AND R.DML_TYP IN ('I', 'U')
+ORDER BY TO_CHAR(R.DATE_TIME_MOD,'YYYY-MM-DD HH:MI:SS')||'.000' DESC
+    ]]></sql>
+  </dataquery>
+  <default-template>default</default-template>
+  <tablet-template>default_tablet</tablet-template>
+  <mobile-template>default_mobile</mobile-template>
+  <searcher-max-active>8</searcher-max-active>
+  <searcher-when-exhausted>1</searcher-when-exhausted>
+  <searcher-max-wait>10000</searcher-max-wait>
+  <searcher-max-idle>7</searcher-max-idle>
+  <is-in-memory-search>false</is-in-memory-search>
+  <jvm-max-heap-size>8192</jvm-max-heap-size>
+  <max-field-length>30000</max-field-length>
+  <document-buffer-size-mb>4048</document-buffer-size-mb>
+  <allowed-ip-list>*</allowed-ip-list>
+  <is-empty-query-match-all>false</is-empty-query-match-all>
+  <date-weight-formula>
+    <time-weight time="600" weight="12.0"/>
+    <time-weight time="1800" weight="11.0"/>
+    <time-weight time="3600" weight="10.0"/>
+    <time-weight time="21600" weight="9.0"/>
+    <time-weight time="43200" weight="8.0"/>
+    <time-weight time="86400" weight="7.0"/>
+    <time-weight time="1296000" weight="6.0"/>
+    <time-weight time="2678400" weight="5.0"/>
+    <time-weight time="5356800" weight="4.0"/>
+    <time-weight time="8035200" weight="3.0"/>
+    <time-weight time="16070400" weight="2.0"/>
+    <time-weight time="32140800" weight="1.3"/>
+    <time-weight time="64281600" weight="1.2"/>
+    <time-weight time="96422400" weight="1.1"/>
+    <time-weight time="128563200" weight="1.05"/>
+    <time-weight time="160704000" weight="1.04"/>
+    <time-weight time="192844800" weight="1.03"/>
+    <time-weight time="224985600" weight="1.02"/>
+    <time-weight time="321408000" weight="1.01"/>
+  </date-weight-formula>
+  <spell-checking enabled="true"></spell-checking>
+</dataset>

@@ -1,0 +1,838 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset name="Party Detail INTERNAL" exportedBy="null" createdAt="Thu Sep 19 10:46:42 EDT 2013">
+  <display-order>-1</display-order>
+  <description><![CDATA[]]></description>
+  <index-dir>partydetail</index-dir>
+  <is-prefix-root-index-directory>true</is-prefix-root-index-directory>
+  <use-server-db-connection>true</use-server-db-connection>
+  <work-directory>_work</work-directory>
+  <temporary-index-minimal-merge-percentage>80.0</temporary-index-minimal-merge-percentage>
+  <merge-hours enabled="true" begin="0" end="24"/>
+  <fetcher-threads>1</fetcher-threads>
+  <writer-threads>1</writer-threads>
+  <index-max-size>100000.0</index-max-size>
+  <schedules>
+   <schedule id="0">
+    <is-enabled>false</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>3,8,13,18,23,28,33,38,43,48,53,58 * * * ?</cron-setting>
+    <indexing-mode>Incremental Indexing with Thorough Deletion Detection</indexing-mode>
+   </schedule>
+  </schedules>
+  <language>Any</language>
+  <analyzer-name>com.fdt.sdl.core.analyzer.NumberLowerCaseAnalyzer</analyzer-name>
+  <data-source-type>0</data-source-type>
+  <fetcher-configuration dir="null">
+  </fetcher-configuration>
+  <data-sources>
+    <data-source>
+      <name>default</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-password>$enc$null</db-password>
+    </data-source>
+  </data-sources>
+  <dataquery name="WorkingQueue" batch-size="128" is-skipping-null-parameters="false">
+    <sql><![CDATA[
+SELECT DISTINCT 
+PERSON_ALIAS_ID AS 'PersonSPN',
+PARTY_ID AS 'PartyID',
+CASE WHEN LTRIM(RTRIM(RSTRCD_PARTY_FLAG)) = '' THEN 'N' ELSE ISNULL(RSTRCD_PARTY_FLAG, 'N') END AS 'PartyConfidential',
+DATE_TIME_MOD
+FROM ACM_PARTY 
+WHERE VOID <> 'Y'  
+ORDER BY DATE_TIME_MOD DESC
+    ]]></sql>
+    <column>
+      <column-name>PersonSPN</column-name>
+      <display-name><![CDATA[PersonSPN]]></display-name>
+      <column-index>1</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+    </column>
+    <column>
+      <column-name>PartyID</column-name>
+      <display-name><![CDATA[PartyID]]></display-name>
+      <column-index>2</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <primary-key>true</primary-key>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+    </column>
+    <column>
+      <column-name>PartyConfidential</column-name>
+      <display-name><![CDATA[PartyConfidential]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>DATE_TIME_MOD</column-name>
+      <display-name><![CDATA[DATE_TIME_MOD]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.sql.Timestamp</column-type>
+      <modified-date>true</modified-date>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+    </column>
+  </dataquery>
+  <dataquery name="Content" is-batch-needed="true" batch-size="500">
+    <sql><![CDATA[
+SELECT DISTINCT PERSON_ALIAS_ID AS 'PersonSPN',
+CASE WHEN LTRIM(RTRIM(FIRST_NAME)) = '' THEN '|' ELSE ISNULL(FIRST_NAME, '|') END AS 'FirstName',
+CASE WHEN LTRIM(RTRIM(MIDDLE_NAME)) = '' THEN '|' ELSE ISNULL(MIDDLE_NAME, '|') END AS 'MiddleName',
+CASE WHEN LTRIM(RTRIM(LAST_NAME)) = '' THEN '|' ELSE ISNULL(LAST_NAME, '|') END AS 'LastName',
+CASE WHEN LTRIM(RTRIM(SUFFIX_NAME)) = '' THEN '|' ELSE ISNULL(SUFFIX_NAME, '|') END AS 'SuffixName',
+CASE WHEN LTRIM(RTRIM(SEALED_FLAG)) = '' THEN 'N' ELSE ISNULL(SEALED_FLAG, 'N') END AS 'PersonSealed'
+FROM ACM_PERSON
+WHERE PERSON_ALIAS_ID IN (?)
+    ]]></sql>
+    <parameter>
+      <name>PersonSPN</name>
+      <index>1</index>
+      <type>java.math.BigDecimal</type>
+      <value>6205</value>
+    </parameter>
+    <column>
+      <column-name>PersonSPN</column-name>
+      <display-name><![CDATA[PersonSPN]]></display-name>
+      <column-index>1</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>FirstName</column-name>
+      <display-name><![CDATA[FirstName]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>MiddleName</column-name>
+      <display-name><![CDATA[MiddleName]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>LastName</column-name>
+      <display-name><![CDATA[LastName]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>SuffixName</column-name>
+      <display-name><![CDATA[SuffixName]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PersonSealed</column-name>
+      <display-name><![CDATA[PersonSealed]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Content" is-batch-needed="true" batch-size="500">
+    <sql><![CDATA[
+SELECT DISTINCT PERSON_ALIAS_ID AS 'PersonSPN',
+HEIGHT AS 'Height',
+WEIGHT AS 'Weight',
+RACE_DESC AS 'Race',
+HAIR_COLOR_DESC AS 'HairColor',
+EYE_COLOR_DESC AS 'EyeColor',
+BRANCH_NAME AS 'MilitaryBranch',
+COMMENT_TEXT AS 'DemographicComment',
+SEX AS 'Sex',
+PROFESSION_TYP_DESC AS 'Profession',
+ETHNICITY_TYP_DESC AS 'Ethnicity',
+LEFT(CONVERT(varchar(10), DOB, 112),5) AS 'DOB',
+RIGHT(SSN, 4) AS 'SSN',
+CURRENT_FLAG AS 'Current'
+FROM ACM_V_ESDEMOGRAPHICSDETAIL
+WHERE PERSON_ALIAS_ID IN (?)
+    ]]></sql>
+    <parameter>
+      <name>PersonSPN</name>
+      <index>1</index>
+      <type>java.math.BigDecimal</type>
+      <value>2880</value>
+    </parameter>
+    <column>
+      <column-name>PersonSPN</column-name>
+      <display-name><![CDATA[PersonSPN]]></display-name>
+      <column-index>1</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Height</column-name>
+      <display-name><![CDATA[Height]]></display-name>
+      <column-index>2</column-index>
+      <column-type precision="5" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Weight</column-name>
+      <display-name><![CDATA[Weight]]></display-name>
+      <column-index>3</column-index>
+      <column-type precision="5" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Race</column-name>
+      <display-name><![CDATA[Race]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>HairColor</column-name>
+      <display-name><![CDATA[Hair Color]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>EyeColor</column-name>
+      <display-name><![CDATA[Eye Color]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>MilitaryBranch</column-name>
+      <display-name><![CDATA[Military Branch]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DemographicComment</column-name>
+      <display-name><![CDATA[Comment]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Sex</column-name>
+      <display-name><![CDATA[Sex]]></display-name>
+      <column-index>9</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Profession</column-name>
+      <display-name><![CDATA[Profession]]></display-name>
+      <column-index>10</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Ethnicity</column-name>
+      <display-name><![CDATA[Ethnicity]]></display-name>
+      <column-index>11</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DOB</column-name>
+      <display-name><![CDATA[DOB]]></display-name>
+      <column-index>12</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>SSN</column-name>
+      <display-name><![CDATA[SSN]]></display-name>
+      <column-index>13</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Current</column-name>
+      <display-name><![CDATA[Current]]></display-name>
+      <column-index>14</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Content" is-batch-needed="true" batch-size="500">
+    <sql><![CDATA[
+SELECT DISTINCT PERSON_ALIAS_ID AS 'PersonSPN',
+ADDRESS_LINE1_TXT AS 'AddressLine1',
+ADDRESS_LINE2_TXT AS 'AddressLine2',
+MAILING_FLAG AS 'Mailing',
+COMMENT_TEXT AS 'AddressComment',
+POSTAL_CD AS 'Zip',
+STATE_NAME AS 'State',
+ADDRESS_TYP_DESC AS 'AddressType',
+CITY_NAME AS 'City',
+POSTAL_CD_EXT AS 'ZipExt',
+COUNTY_NAME AS 'County',
+CURRENT_FLAG AS 'CurrentAddress'
+FROM ACM_V_ESADDRESSDETAIL
+WHERE PERSON_ALIAS_ID IN (?)
+    ]]></sql>
+    <parameter>
+      <name>PersonSPN</name>
+      <index>1</index>
+      <type>java.math.BigDecimal</type>
+      <value>2880</value>
+    </parameter>
+    <column>
+      <column-name>PersonSPN</column-name>
+      <display-name><![CDATA[PersonSPN]]></display-name>
+      <column-index>1</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>AddressLine1</column-name>
+      <display-name><![CDATA[Address Line 1]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>AddressLine2</column-name>
+      <display-name><![CDATA[Address Line 2]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Mailing</column-name>
+      <display-name><![CDATA[Mailing]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>AddressComment</column-name>
+      <display-name><![CDATA[Comment]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Zip</column-name>
+      <display-name><![CDATA[Zip]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>State</column-name>
+      <display-name><![CDATA[State]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>AddressType</column-name>
+      <display-name><![CDATA[Type]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>City</column-name>
+      <display-name><![CDATA[City]]></display-name>
+      <column-index>9</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>ZipExt</column-name>
+      <display-name><![CDATA[Zip Ext]]></display-name>
+      <column-index>10</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>County</column-name>
+      <display-name><![CDATA[County]]></display-name>
+      <column-index>11</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CurrentAddress</column-name>
+      <display-name><![CDATA[Current]]></display-name>
+      <column-index>12</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Content" is-batch-needed="true" batch-size="500">
+    <sql><![CDATA[
+SELECT DISTINCT PERSON_ALIAS_ID AS 'PersonSPN',
+LICENSE_NUM AS 'LicenseNumber',
+STATE_NAME AS 'StateName',
+COUNTRY_NAME AS 'CountryName',
+LICENSE_ENDORSEMENT AS 'LicenseEndorsement',
+LICENSE_CLS_DESC AS 'LicenseClass',
+LICENSE_STS_DESC AS 'LicenseStatus',
+CONVERT(varchar(10), EFFECTIVE_DATE, 101) AS 'IssueDate',
+CONVERT(varchar(10), END_DATE, 101) AS 'ExpirationDate'
+FROM ACM_V_ESDLDETAIL
+WHERE PERSON_ALIAS_ID IN (?)
+    ]]></sql>
+    <parameter>
+      <name>PersonSPN</name>
+      <index>1</index>
+      <type>java.math.BigDecimal</type>
+      <value>2888</value>
+    </parameter>
+    <column>
+      <column-name>PersonSPN</column-name>
+      <display-name><![CDATA[PersonSPN]]></display-name>
+      <column-index>1</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>LicenseNumber</column-name>
+      <display-name><![CDATA[License Number]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>StateName</column-name>
+      <display-name><![CDATA[State]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CountryName</column-name>
+      <display-name><![CDATA[Country]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>LicenseEndorsement</column-name>
+      <display-name><![CDATA[Endorsement]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>LicenseClass</column-name>
+      <display-name><![CDATA[Class]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>LicenseStatus</column-name>
+      <display-name><![CDATA[Status]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>IssueDate</column-name>
+      <display-name><![CDATA[Issue Date]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <analyzer-name>com.fdt.sdl.core.analyzer.DateAnalyzer</analyzer-name>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>ExpirationDate</column-name>
+      <display-name><![CDATA[Expiration Date]]></display-name>
+      <column-index>9</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <analyzer-name>com.fdt.sdl.core.analyzer.DateAnalyzer</analyzer-name>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Content" is-batch-needed="true" batch-size="500">
+    <sql><![CDATA[
+SELECT DISTINCT PERSON_ALIAS_ID AS 'PersonSPN',
+PHONETYPE AS 'PhoneType',
+PREFIX AS 'Prefix',
+PHONENUMBER AS 'PhoneNumber',
+EXTENSION AS 'Extension',
+IS_CURRENT AS 'PhoneCurrent',
+COMMENT AS 'PhoneComment'
+FROM ACM_V_ESPHONEDETAIL
+WHERE PERSON_ALIAS_ID IN (?)
+    ]]></sql>
+    <parameter>
+      <name>PersonSPN</name>
+      <index>1</index>
+      <type>java.math.BigDecimal</type>
+      <value>2888</value>
+    </parameter>
+    <column>
+      <column-name>PersonSPN</column-name>
+      <display-name><![CDATA[PersonSPN]]></display-name>
+      <column-index>1</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PhoneType</column-name>
+      <display-name><![CDATA[Type]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Prefix</column-name>
+      <display-name><![CDATA[Prefix]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PhoneNumber</column-name>
+      <display-name><![CDATA[Phone Number]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Extension</column-name>
+      <display-name><![CDATA[Extension]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PhoneCurrent</column-name>
+      <display-name><![CDATA[Current]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PhoneComment</column-name>
+      <display-name><![CDATA[Comment]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Content" is-batch-needed="true" batch-size="500">
+    <sql><![CDATA[
+SELECT DISTINCT 
+ CASE WHEN LTRIM(RTRIM(FC.CASE_NUMBER)) = '' THEN '|' ELSE ISNULL(FC.CASE_NUMBER, '|') END AS 'CaseNumber'
+,FC.CASE_ID AS 'CaseID'
+,CASE WHEN LTRIM(RTRIM(FC.COURT_CD)) = '' THEN '|' ELSE ISNULL(FC.COURT_CD, '|') END AS 'CourtType'
+,P.PERSON_ALIAS_ID AS 'PersonSPN'
+FROM ACM_FACTS_CASE FC
+INNER JOIN ACM_PARTY P ON P.CASE_ID=FC.CASE_ID 
+WHERE PERSON_ALIAS_ID IN (?)
+    ]]></sql>
+    <parameter>
+      <name>PersonSPN</name>
+      <index>1</index>
+      <type>java.math.BigDecimal</type>
+      <value>2888</value>
+    </parameter>
+    <column>
+      <column-name>CaseNumber</column-name>
+      <display-name><![CDATA[Case Number]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CaseID</column-name>
+      <display-name><![CDATA[CaseID]]></display-name>
+      <column-index>2</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CourtType</column-name>
+      <display-name><![CDATA[CourtType]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PersonSPN</column-name>
+      <display-name><![CDATA[PersonSPN]]></display-name>
+      <column-index>4</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Content" is-batch-needed="true" batch-size="500">
+    <sql><![CDATA[
+SELECT DISTINCT CAST(PERSON_ALIAS_ID AS int) AS 'PersonSPN',
+ALIAS_TYP_DESC AS 'AliasDescription',
+ALIAS_TYPE AS 'AliasType',
+FIRST_NAME AS 'AliasFirst',
+MIDDLE_NAME AS 'AliasMiddle',
+LAST_NAME AS 'AliasLast',
+SUFFIX_NAME AS 'AliasSuffix',
+DATE_TIME_MOD
+FROM ACM_V_ESALIASDETAIL
+WHERE PERSON_ALIAS_ID IN (?)
+    ]]></sql>
+    <parameter>
+      <name>PersonSPN</name>
+      <index>1</index>
+      <type>java.math.BigDecimal</type>
+      <value>1466364083</value>
+    </parameter>
+    <column>
+      <column-name>PersonSPN</column-name>
+      <display-name><![CDATA[PersonSPN]]></display-name>
+      <column-index>1</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>AliasDescription</column-name>
+      <display-name><![CDATA[Alias Description]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>AliasType</column-name>
+      <display-name><![CDATA[Alias Type]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>AliasFirst</column-name>
+      <display-name><![CDATA[First Name]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>AliasMiddle</column-name>
+      <display-name><![CDATA[Middle Name]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>AliasLast</column-name>
+      <display-name><![CDATA[Last Name]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>AliasSuffix</column-name>
+      <display-name><![CDATA[Suffix]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DATE_TIME_MOD</column-name>
+      <display-name><![CDATA[DATE_TIME_MOD]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.sql.Timestamp</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Deletion" is-delete-only="true">
+    <sql><![CDATA[
+SELECT RT.TAB_PK_KEY
+FROM ROAM_TRACK RT
+WHERE 
+RT.DATE_TIME_MOD > DATEADD(mi, -10, GETDATE()) AND 
+RT.TAB_NAME = 'ACM_PARTY' AND
+RT.DML_TYP IN ('D', 'U') 
+UNION ALL
+SELECT PT.PARTY_ID
+FROM ACM_PARTY PT INNER JOIN ROAM_TRACK RT 
+ON PT.CASE_ID = RT.PK_KEY
+WHERE 
+RT.DATE_TIME_MOD > DATEADD(mi, -10, GETDATE()) AND 
+RT.DML_TYP IN ('D', 'U') AND 
+(PT.VOID = 'Y')
+    ]]></sql>
+  </dataquery>
+  <dataquery name="Incremental">
+    <sql><![CDATA[
+SELECT DISTINCT 
+PERSON_ALIAS_ID AS 'PersonSPN',
+PARTY_ID AS 'PartyID',
+CASE WHEN LTRIM(RTRIM(RSTRCD_PARTY_FLAG)) = '' THEN 'N' ELSE ISNULL(RSTRCD_PARTY_FLAG, 'N') END AS 'PartyConfidential',
+RT.DATE_TIME_MOD, RT.ID
+FROM ACM_PARTY PT INNER JOIN ROAM_TRACK RT
+ON PT.party_ID = RT.tab_pk_key
+WHERE VOID <> 'Y'
+AND RT.DML_TYP IN ('I', 'U')
+AND (RT.DATE_TIME_MOD > ? OR RT.DATE_TIME_MOD > DATEADD(mi, -15, GETDATE()))
+AND RT.TAB_NAME = 'ACM_PARTY'
+ORDER BY RT.DATE_TIME_MOD DESC
+    ]]></sql>
+  </dataquery>
+  <default-template>PartyDetails</default-template>
+  <tablet-template>PartyDetails</tablet-template>
+  <mobile-template>PartyDetails</mobile-template>
+  <searcher-max-active>8</searcher-max-active>
+  <searcher-when-exhausted>1</searcher-when-exhausted>
+  <searcher-max-wait>10000</searcher-max-wait>
+  <searcher-max-idle>7</searcher-max-idle>
+  <is-in-memory-search>false</is-in-memory-search>
+  <jvm-max-heap-size>1024</jvm-max-heap-size>
+  <document-buffer-size-mb>512</document-buffer-size-mb>
+  <allowed-ip-list>localhost</allowed-ip-list>
+  <is-empty-query-match-all>false</is-empty-query-match-all>
+  <date-weight-formula>
+    <time-weight time="600" weight="12.0"/>
+    <time-weight time="1800" weight="11.0"/>
+    <time-weight time="3600" weight="10.0"/>
+    <time-weight time="21600" weight="9.0"/>
+    <time-weight time="43200" weight="8.0"/>
+    <time-weight time="86400" weight="7.0"/>
+    <time-weight time="1296000" weight="6.0"/>
+    <time-weight time="2678400" weight="5.0"/>
+    <time-weight time="5356800" weight="4.0"/>
+    <time-weight time="8035200" weight="3.0"/>
+    <time-weight time="16070400" weight="2.0"/>
+    <time-weight time="32140800" weight="1.3"/>
+    <time-weight time="64281600" weight="1.2"/>
+    <time-weight time="96422400" weight="1.1"/>
+    <time-weight time="128563200" weight="1.05"/>
+    <time-weight time="160704000" weight="1.04"/>
+    <time-weight time="192844800" weight="1.03"/>
+    <time-weight time="224985600" weight="1.02"/>
+    <time-weight time="321408000" weight="1.01"/>
+  </date-weight-formula>
+  <spell-checking enabled="true"></spell-checking>
+</dataset>

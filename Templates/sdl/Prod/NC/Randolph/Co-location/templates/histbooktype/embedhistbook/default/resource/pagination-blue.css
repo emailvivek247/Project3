@@ -1,0 +1,30 @@
+@charset "utf-8";
+/* PAGINATION-BLUE CSS Document */        
+.paginationHolder a {
+	background-color: white;
+	border: solid 1px #333333;
+	color: #333333;
+}
+.paginationHolder a:visited {
+    color: #333333;
+}
+.paginationHolder a, .paginationHolder span {
+    background:#fff /*url(glossy-blue-button.gif)*/);
+}
+span.text {
+    background: none;
+}
+.paginationHolder .current {
+    background:#243090;
+    color: #fff;
+    border: solid 1px #000066;
+}
+.paginationHolder .current.prev, .paginationHolder .current.next{
+    color:#333333;
+    border-color:#333333;
+    background:#fff /*url(glossy-blue-button.gif)*/);
+}
+a.goPaginate {
+	background:#ed0e67 url(roam_blue_gradient_1x100.png) repeat-x 50% 50%;
+	color:#ffffff;
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="31FE3E433145BF6B14AA05DAF5A9C33891CCDC04CFCD5FF3" adminuser="E2B388911E5A2DADBA9EA16C9D01A137EAB70AF35EBBF6DC">
+  <index-root-directory><![CDATA[E:\index\hanover\]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[E3E0E7D3429116B33DE43683E4E5A80985716B1AAAEA6E7BA1C8F174106B85F27E647C7211EA1EC9DE54077DB8F111414B591AEA6B461897B2CC5AC91559103003FE81815EC530D51EE688ACEFB9F5B81C76512FB6F6CC5D]]></db-url>
+      <db-username><![CDATA[D57C9A608686F88A2101C0B8E3F2A73224947615CD6BD0F9]]></db-username>
+      <db-password><![CDATA[F8E304CCB8792A242189EDE81200D0B70D498247C850D153]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

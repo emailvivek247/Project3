@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="2B8F772BE4948F1A4F5CCF571FE2E354D6B13A0742B78313" adminuser="4509A773D406819FC2E2221BD84B8F2F864092CB009D7969">
+  <index-root-directory><![CDATA[E:\index\warren\]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[401BF55EA84D8C39C8373874CF18C35F2738158E9F7BA1BD5BCF39A40957ABDEEA07594410E6C4C5FDD0CE34B1DADD30142ACF65A9FCABE9361434373E24148F]]></db-url>
+      <db-username><![CDATA[9DB09C1C9D6C707A6F3B2239A0DC87B3]]></db-username>
+      <db-password><![CDATA[E43C66642F7A6F03DB375DD02EB7595A]]></db-password>
+      <dbcp-validation-query><![CDATA[
+select 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

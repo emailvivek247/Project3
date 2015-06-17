@@ -1,0 +1,110 @@
+<b>Hearing Information</b>
+<#if searchResult.docs?has_content>
+<table id="hearings" class="tablesorter">
+ <thead>
+	<tr>
+		<th>${searchResult.datasetConfiguration.getColumn("CourtRoomDesc").displayName}</th>
+		<th>${searchResult.datasetConfiguration.getColumn("SessionStartDateTime").displayName}</th>
+		<th>${searchResult.datasetConfiguration.getColumn("SessionEndDateTime").displayName}</th>
+		<th>${searchResult.datasetConfiguration.getColumn("SchedulingJudgeName").displayName}</th>
+		<th>${searchResult.datasetConfiguration.getColumn("HeardByJudgeName").displayName}</th>
+		<th>${searchResult.datasetConfiguration.getColumn("HearingResultTypeCode").displayName}</th>
+	</tr>
+ </thead>
+ <tbody>
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+  
+	 <#assign SessionStartDateTime = doc.getValues("SessionStartDateTime")>
+	 <#assign SessionEndDateTime = doc.getValues("SessionEndDateTime")>
+	
+	<tr>
+		
+		
+		<td>${searchResult.highlight(doc, "CourtRoomDesc")}</td>
+		<td>${pageStyleUtil.format(date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("SessionStartDateTime")), "yyyy/MM/dd HH:mm:ss z", "MM/dd/yyyy")}</td>
+		<td>${pageStyleUtil.format(date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("SessionEndDateTime")), "yyyy/MM/dd HH:mm:ss z", "MM/dd/yyyy")}</td>
+		<td>${searchResult.highlight(doc, "SchedulingJudgeName")}</td>
+		<td>${searchResult.highlight(doc, "HeardByJudgeName")}</td>
+		<td>${searchResult.highlight(doc, "HearingResultTypeCode")}</td>
+	</tr>
+  </#foreach>
+ </tbody>
+</table>
+<#elseif searchResult.xstreamdocs?has_content>
+<table id="hearings" class="tablesorter">
+ <thead>
+	<tr>
+		<th>${searchResult.datasetConfiguration.getColumn("CourtRoomDesc").displayName}</th>
+		<th>${searchResult.datasetConfiguration.getColumn("SessionStartDateTime").displayName}</th>
+		<th>${searchResult.datasetConfiguration.getColumn("SessionEndDateTime").displayName}</th>
+		<th>${searchResult.datasetConfiguration.getColumn("SchedulingJudgeName").displayName}</th>
+		<th>${searchResult.datasetConfiguration.getColumn("HeardByJudgeName").displayName}</th>
+		<th>${searchResult.datasetConfiguration.getColumn("HearingResultTypeCode").displayName}</th>
+	</tr>
+ </thead>
+ <tbody>
+<#assign ResultId =0>
+ <#foreach doc in searchResult.xstreamdocs>
+  
+	 <#assign SessionStartDateTime = doc.getValues("SessionStartDateTime")>
+	 <#assign SessionEndDateTime = doc.getValues("SessionEndDateTime")>
+	
+	<tr>
+		
+		
+		<td>${searchResult.highlight(doc, "CourtRoomDesc")}</td>
+		<td>${pageStyleUtil.format(date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("SessionStartDateTime")), "yyyy/MM/dd HH:mm:ss z", "MM/dd/yyyy")}</td>
+		<td>${pageStyleUtil.format(date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("SessionEndDateTime")), "yyyy/MM/dd HH:mm:ss z", "MM/dd/yyyy")}</td>
+		<td>${searchResult.highlight(doc, "SchedulingJudgeName")}</td>
+		<td>${searchResult.highlight(doc, "HeardByJudgeName")}</td>
+		<td>${searchResult.highlight(doc, "HearingResultTypeCode")}</td>
+	</tr>
+  </#foreach>
+ </tbody>
+</table>
+
+<#else>
+ <table id="hearings" class="tablesorter">
+ <thead>
+	<tr>
+		<th>${searchResult.datasetConfiguration.getColumn("CourtRoomDesc").displayName}</th>
+		<th>${searchResult.datasetConfiguration.getColumn("SessionStartDateTime").displayName}</th>
+		<th>${searchResult.datasetConfiguration.getColumn("SessionEndDateTime").displayName}</th>
+		<th>${searchResult.datasetConfiguration.getColumn("SchedulingJudgeName").displayName}</th>
+		<th>${searchResult.datasetConfiguration.getColumn("HeardByJudgeName").displayName}</th>
+		<th>${searchResult.datasetConfiguration.getColumn("HearingResultTypeCode").displayName}</th>
+	</tr>
+ </thead>
+ <tbody>
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+  
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+ </tbody>
+</table> 
+</#foreach>
+</#if>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	oTable = $('#hearings').dataTable({
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bSort": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		"aaSorting": []
+	});
+} );
+</script>

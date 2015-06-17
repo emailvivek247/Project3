@@ -1,0 +1,148 @@
+<#macro layout(title="", encoding="utf-8")>
+<html><head><title>ROAM Search</title>
+<meta http-equiv="content-type" content="text/html; charset=${encoding}">
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/export.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/prompt.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/jquery-ui-1.8.19.base.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/jquery-ui-1.8.19.glossy-classic.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/theme-base.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/theme-glossy-classic.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/demo_table_jui.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/collapsiblePanel.css" type="text/css" media="projection, screen" />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/imageViewer.css" type="text/css" media="projection, screen" />
+<link rel="stylesheet" href="templates/resources/basket.css" type="text/css" media="projection, screen" />
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/prompt.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/sdl-min.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/filterControl.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery-ui-1.8.19.custom.min.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.collapsible.min.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.cookie.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.prettyPhoto.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery-ui-1.8.22.custom.min.js"></script>
+<link rel="shortcut icon" href="favicon.ico"/>
+
+<#-- ADD GOOGLE ANALYTICS -->
+<#include "/templates/googleAnalytics-NC.stl">
+<#assign validIParray = ["10.1.0.130","10.1.1.78","10.1.1.198","10.1.0.235","10.1.1.174","10.1.1.184","10.1.1.191","10.1.0.116","10.1.1.3","10.1.1.49","10.1.1.230","10.1.1.219"
+		  ,"10.1.1.204","10.1.1.232","10.1.1.62","10.1.1.236","10.1.1.216","10.1.0.110","10.1.2.119","10.1.1.59","10.1.0.109","10.1.1.197","10.1.1.137","10.1.0.204"
+		  ,"10.1.1.156","10.1.0.242","10.1.0.179","10.1.0.214","10.1.2.113","10.1.1.177","10.1.1.231","10.1.0.229","10.2.0.153","172.16.67.134","172.16.67.89","172.16.67.80"
+		  ,"172.16.67.101","172.16.67.35","172.16.67.95","172.16.67.121"]>
+<#--START VALID IP-->
+<#if pageStyleUtil.isValidRequest(request, validIParray)>
+		 
+<script type="text/javascript">
+function initialize() {
+
+<#assign q = pageStyleUtil.encodeURL(searchResult.request.getParameter("q")) lq = pageStyleUtil.encodeURL(searchResult.request.getParameter("lq"))
+     start = searchResult.request.getParameter("start") searchable = pageStyleUtil.encodeURL(searchResult.request.getParameter("searchable"))
+     searchType = searchResult.request.getParameter("searchType") isPhoneticSearch = request.getParameter("isPhoneticSearch") 
+     searchQuery = pageStyleUtil.encodeURL(searchResult.request.getParameter("searchQuery")) sortBy = pageStyleUtil.encodeURL(searchResult.request.getParameter("sortBy")) 
+     desc = pageStyleUtil.encodeURL(searchResult.request.getParameter("desc")) asc = pageStyleUtil.encodeURL(searchResult.request.getParameter("asc"))>
+
+<#if !searchType?has_content>
+    searchType = 1  
+</#if>
+   setCookie('searchstring', '<#if searchQuery?has_content>searchQuery=${searchQuery}</#if><#if searchType?has_content>&searchType=${searchType}</#if><#if q?has_content>&q=${q}</#if><#if lq?has_content>&lq=${lq}</#if><#if start?has_content>&start=${start}</#if><#if searchable?has_content>&searchable=${searchable}</#if><#if isPhoneticSearch?has_content>&isPhoneticSearch=${isPhoneticSearch}</#if><#if sortBy?has_content>&sortBy=${sortBy}</#if><#if desc?has_content>&desc=${desc}</#if><#if asc?has_content>&asc=${asc}</#if>');
+}
+
+
+$(document).ready(function(){
+$(".gallery a[rel^='prettyPhoto']").prettyPhoto({theme:'light_rounded',animationSpeed:'fast',slideshow:false,autoplay_slideshow: false,overlay_gallery: false,keyboard_shortcuts: true,opacity:0.3});
+   //$('a.pphoto').click(function() {
+     //  event.preventDefault(); 
+       //alert($(this).attr('href'));
+       //$.fn.prettyPhoto();
+       //$.prettyPhoto.open($(this).attr('href'),$(this).attr('title'),'');
+   //});
+});
+
+$(function() {
+        var moveLeft = -10;
+        var moveDown = -105;
+        
+        $('a#trigger1').hover(function(e) {
+          $('div#pop-up').show();
+          //.css('top', e.pageY + moveDown)
+          //.css('left', e.pageX + moveLeft)
+          //.appendTo('body');
+        }, function() {
+          $('div#pop-up').hide();
+        });
+        
+        $('a#trigger1').mousemove(function(e) {
+          $("div#pop-up").css('top', e.pageY + moveDown).css('left', e.pageX + moveLeft);
+        });
+        
+      });
+    
+      $(function() {
+        var moveLeft = -10;
+        var moveDown = -125;
+        
+        $('a#trigger2').hover(function(e) {
+          $('div#pop-up2').show();
+          //.css('top', e.pageY + moveDown)
+          //.css('left', e.pageX + moveLeft)
+          //.appendTo('body');
+        }, function() {
+          $('div#pop-up2').hide();
+        });
+        
+        $('a#trigger2').mousemove(function(e) {
+          $("div#pop-up2").css('top', e.pageY + moveDown).css('left', e.pageX + moveLeft);
+        });
+        
+      });
+    
+      $(function() {
+        var moveLeft = -10;
+        var moveDown = -125;
+        
+        $('a#trigger3').hover(function(e) {
+          $('div#pop-up3').show();
+          //.css('top', e.pageY + moveDown)
+          //.css('left', e.pageX + moveLeft)
+          //.appendTo('body');
+        }, function() {
+          $('div#pop-up3').hide();
+        });
+        
+        $('a#trigger3').mousemove(function(e) {
+          $("div#pop-up3").css('top', e.pageY + moveDown).css('left', e.pageX + moveLeft);
+        });
+        
+      });
+ 
+      $(function() {
+        var moveLeft = -10;
+        var moveDown = -155;
+        
+        $('a#trigger4').hover(function(e) {
+          $('div#pop-up4').show();
+          //.css('top', e.pageY + moveDown)
+          //.css('left', e.pageX + moveLeft)
+          //.appendTo('body');
+        }, function() {
+          $('div#pop-up4').hide();
+        });
+        
+        $('a#trigger4').mousemove(function(e) {
+          $("div#pop-up4").css('top', e.pageY + moveDown).css('left', e.pageX + moveLeft);
+        });
+        
+      });
+</script>
+</head>
+<body onKeyPress="trapKeyBoardEvents(event)" onLoad="initialize()">
+<#--<#if pageStyleUtil.isValidRequest(request, "system", "validipVR")>-->
+<#compress><#nested></#compress>
+<#--<#else>Unauthorized Access!</#if>-->
+
+</body></html>
+<#else>
+You do not have permission to view this page.
+</#if><#--END VALID IP -->
+</#macro>
+

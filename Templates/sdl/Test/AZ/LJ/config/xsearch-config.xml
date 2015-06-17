@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="BF3AFFCF6DB2AE82848195615B38575BF7C8451A154777CF" adminuser="A64870440FDBE557CF61E9E59F8B2EE109CF160BAF352507">
+  <search-log-size-in-MB>10</search-log-size-in-MB>
+  <index-root-directory><![CDATA[E:\index\personmatch\]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[BC7D8E2066C5C899625F8C6F713B25C3CB3C451BF56F962DAA83DAEEDE9613A5E3D9ADA51C3593888EBA4BD50612D34E2F871DD8B1FDFA0E5F3B973215A90BF3E0DA906065E74CB0F14DB2505F1B6CE6C513880DEF62ECA5E3AE836C0E6F6EE4132CCFBE38ADF0FADEEBACE59AD5DDBF]]></db-url>
+      <db-username><![CDATA[]]></db-username>
+      <db-password><![CDATA[]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+   <instance-job-schedule id="0">
+  <schedule-name><![CDATA[RECREATE]]></schedule-name>
+  <job-data-string><![CDATA[pm_ok_40_test,Re-create Index|]]></job-data-string>
+   <schedule id="0">
+    <is-enabled>false</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>0 0 ? * 2,3,4,5,6,7</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+    </instance-job-schedule>
+   <instance-job-schedule id="0">
+  <schedule-name><![CDATA[DAILYJOBS]]></schedule-name>
+  <job-data-string><![CDATA[personmatch3_11,Incremental Indexing|dds3_11,Incremental Indexing|protectperson3_11,Re-create Index|]]></job-data-string>
+   <schedule id="0">
+    <is-enabled>false</is-enabled>
+    <is-interval>true</is-interval>
+    <interval>5</interval>
+    <cron-setting>30 1 * * ?</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+    </instance-job-schedule>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

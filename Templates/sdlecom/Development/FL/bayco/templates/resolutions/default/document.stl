@@ -1,0 +1,47 @@
+
+  		  <@display.column media="html" indexColumnName="RESOLUTION_NUM" title="${searchResult.datasetConfiguration.getColumn(\"RESOLUTION_NUM\").displayName}">
+		   	${searchResult.highlight(doc, "RESOLUTION_NUM")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="RESOLUTION_NUM" title="${searchResult.datasetConfiguration.getColumn(\"RESOLUTION_NUM\").displayName}">
+		   	${doc.get("RESOLUTION_NUM")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="DATE" title="${searchResult.datasetConfiguration.getColumn(\"DATE\").displayName}">
+		   	${searchResult.highlight(doc, "DATE")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DATE" title="${searchResult.datasetConfiguration.getColumn(\"DATE\").displayName}">
+		   	${doc.get("DATE")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="DESC" title="${searchResult.datasetConfiguration.getColumn(\"DESC\").displayName}">
+		   	${searchResult.highlight(doc, "DESC")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DESC" title="${searchResult.datasetConfiguration.getColumn(\"DESC\").displayName}">
+		   	${doc.get("DESC")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="DOC_DATE" title="${searchResult.datasetConfiguration.getColumn(\"DOC_DATE\").displayName}">
+		   	${searchResult.highlight(doc, "DOC_DATE")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DOC_DATE" title="${searchResult.datasetConfiguration.getColumn(\"DOC_DATE\").displayName}">
+		   	${doc.get("DOC_DATE")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="DOC_HANDLE" title="${searchResult.datasetConfiguration.getColumn(\"DOC_HANDLE\").displayName}">
+		   	${searchResult.highlight(doc, "DOC_HANDLE")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DOC_HANDLE" title="${searchResult.datasetConfiguration.getColumn(\"DOC_HANDLE\").displayName}">
+		   	${doc.get("DOC_HANDLE")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="PAGE_NUMBER" title="${searchResult.datasetConfiguration.getColumn(\"PAGE_NUMBER\").displayName}">
+		   	${searchResult.highlight(doc, "PAGE_NUMBER")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="PAGE_NUMBER" title="${searchResult.datasetConfiguration.getColumn(\"PAGE_NUMBER\").displayName}">
+		   	${doc.get("PAGE_NUMBER")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="TEXT" title="${searchResult.datasetConfiguration.getColumn(\"TEXT\").displayName}">
+		   	${searchResult.highlight(doc, "TEXT")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="TEXT" title="${searchResult.datasetConfiguration.getColumn(\"TEXT\").displayName}">
+		   	${doc.get("TEXT")}
+		  </@display.column>
+		  <@display.column  media="html" title="View Image">
+		  <div style="text-align:center" class="gallery clearfix">
+			<a class="nocolor pphoto" href="${request.getContextPath()}/search.do?indexName=resolutionimages&lq=${pageStyleUtil.encodeURL("PKHandle:" + doc.get("PKHandle"))}#page=${doc.get("PAGE_NUMBER")}&view=FitV&scrollbar=0&navpanes=0&statusbar=0&messages=0?iframe=true&width=50%25&height=95%25" rel="prettyPhoto[iframe]" ><img border="0" title="Preview" src="<@com.currentUrlPrefix/>/resource/preview.png"></a></div>
+		  </@display.column>

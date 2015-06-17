@@ -1,0 +1,43 @@
+<h2 style="color:black;">Referenced By</h2>
+<table id="refby" class="tablesorter">
+           <thead>
+                <tr>
+          <th>${searchResult.datasetConfiguration.getColumn("Instrument").displayName}</th>
+          <th>Referenced by #</th>
+          <th>${searchResult.datasetConfiguration.getColumn("DocRefType").displayName}</th>
+          <th>${searchResult.datasetConfiguration.getColumn("DocRefBookType2").displayName}</th>
+          <th>${searchResult.datasetConfiguration.getColumn("DocRefBook2").displayName}</th>
+          <th>${searchResult.datasetConfiguration.getColumn("DocRefPage2").displayName}</th>
+          <#-- <th>${searchResult.datasetConfiguration.getColumn("DocRefLegacy2").displayName}</th> -->
+        </tr>
+            </thead>
+         <tbody>
+
+<#if searchResult.docs?has_content>
+<#foreach doc in searchResult.docs>
+         <#assign Instrument = doc.getValues("Instrument") RefInstrument2 = doc.getValues("RefInstrument2") DocRefType = doc.getValues("DocRefType") DocRefBookType2 = doc.getValues("DocRefBookType2") DocRefBook2 = doc.getValues("DocRefBook2") DocRefPage2 = doc.getValues("DocRefPage2")
+                  DocRefLegacy2 = doc.getValues("DocRefLegacy2") loopCounter = 0>
+                  
+         <#foreach Instrument in doc.getValues("Instrument")>
+               <tr>
+          <td>${Instrument}</td> 
+          <td><a href="${request.getContextPath()}/search.do?indexName=clarkdetails&templateName=Details_SN&lq=${pageStyleUtil.encodeURL("Instrument:\"")}${RefInstrument2[loopCounter]}${pageStyleUtil.encodeURL("\"")}&OI=${OI}&IS=${IS}&IC=${IC}">${RefInstrument2[loopCounter]?replace('|', '&nbsp;')}</a></td>
+          <td>${DocRefBookType2[loopCounter]?replace('|', '&nbsp;')}</td>
+          <td>${DocRefType[loopCounter]?replace('|', '&nbsp;')}</td>
+          <td>${DocRefBook2[loopCounter]?replace('|', '&nbsp;')}</td> 
+          <td>${DocRefPage2[loopCounter]?replace('|', '&nbsp;')}</td>
+        <#--  <td>${DocRefLegacy2[loopCounter]?replace('|', '&nbsp;')}</td> -->
+          <#assign loopCounter = loopCounter + 1>
+               </tr>
+         </#foreach>
+ </#foreach>
+</#if>
+
+</tbody>
+      </table>
+<script type="text/javascript">
+$(function() { 
+ $("#refby").tablesorter({sortList: [[0,0]]});
+ $("#refby").tablesorter({widgets: ['zebra']});
+}); 
+</script>

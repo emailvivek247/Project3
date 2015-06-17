@@ -1,0 +1,52 @@
+  		  <@display.column media="html" indexColumnName="Instrument" title="${searchResult.datasetConfiguration.getColumn(\"Instrument\").displayName}">
+		   	${searchResult.highlight(doc, "Instrument")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="Instrument" title="${searchResult.datasetConfiguration.getColumn(\"Instrument\").displayName}">
+		   	${doc.get("Instrument")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="RecDateDisplay" title="${searchResult.datasetConfiguration.getColumn(\"RecDateDisplay\").displayName}">
+			${pageStyleUtil.format(doc.get("RecDateDisplay"), "yyyy-MM-dd hh:mm:ss", "MM/dd/yyyy hh:mm:ss a")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="RecDateDisplay" title="${searchResult.datasetConfiguration.getColumn(\"RecDateDisplay\").displayName}">
+			${pageStyleUtil.format(doc.get("RecDateDisplay"), "yyyy-MM-dd hh:mm:ss", "MM/dd/yyyy hh:mm:ss a")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="DocType" title="${searchResult.datasetConfiguration.getColumn(\"DocType\").displayName}">
+			${searchResult.highlight(doc, "DocType")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DocType" title="${searchResult.datasetConfiguration.getColumn(\"DocType\").displayName}">
+			${doc.get("DocType")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="Page" title="${searchResult.datasetConfiguration.getColumn(\"Page\").displayName}">
+		   	${searchResult.highlight(doc, "Page")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="Page" title="${searchResult.datasetConfiguration.getColumn(\"Page\").displayName}">
+		   	${doc.get("Page")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="Remarks" title="${searchResult.datasetConfiguration.getColumn(\"Remarks\").displayName}">
+			${searchResult.highlight(doc, "Remarks")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="Remarks" title="${searchResult.datasetConfiguration.getColumn(\"Remarks\").displayName}">
+			${doc.get("Remarks")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="FullText" title="${searchResult.datasetConfiguration.getColumn(\"FullText\").displayName}">
+		   	${searchResult.highlight(doc, "FullText")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="FullText" title="${searchResult.datasetConfiguration.getColumn(\"FullText\").displayName}">
+		   	${doc.get("FullText")}
+		  </@display.column>
+	      <#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (pageStyleUtil.isUserInRoleGroup('OFFICIAL_ROLE', request))>
+		 <@display.column  media="html" title="View Image">
+		 <div style="text-align:center" class="gallery clearfix">
+			<a class="nocolor pphoto" href="${request.getContextPath()}/search.do?indexName=smithimages&lq=${pageStyleUtil.encodeURL("Instrument:" + doc.get("Instrument"))}#page=${doc.get("Page")}&view=FitV&scrollbar=0&navpanes=0&statusbar=0&messages=0?iframe=true&width=50%25&height=95%25" rel="prettyPhoto[iframe]" title="Instrument :<b>${doc.get("Instrument")}</b></br> Doc Type: ${doc.get("DocType")} </br> Date Recorded: ${pageStyleUtil.format(doc.get("RECDATEDISPLAY"), "yyyy-MM-dd hh:mm:ss", "MM/dd/yyyy hh:mm:ss a")} </br>" ><img border="0" title="Preview" src="<@com.currentUrlPrefix/>/resource/preview.png"></a></div>
+		 </@display.column>
+		 <@display.column  media="html" title="Briefcase">
+			<a href="javascript:;" onclick="addToCart('indexName?=?${indexName}?=?${dc.displayName}', 'pk_key?=?${doc.get("Instrument")}?con?Instrument?=?${doc.get("Instrument")?replace("'", "\\'")?replace("\"", "\\\"")}?con?${searchResult.datasetConfiguration.getColumn("DocType").displayName}?=?${doc.get("DocType")?replace("'", "\\'")?replace("\"", "\\\"")?trim}', 'Instrument%3A${doc.get("Instrument")}', '25');" >Add</a>
+		</@display.column>
+	      <#elseif (pageStyleUtil.isUserInRoleGroup('PER_PAGE_ROLE', request)) || (pageStyleUtil.isUserInRoleGroup('UNOFFICIAL_ROLE', request))>
+		<@display.column  media="html" title="Preview Image">
+		    <div style="text-align:center" class="gallery clearfix"><a class="nocolor pphoto" href="${request.getContextPath()}/search.do?indexName=smithimages&templateName=imagepreview&lq=${pageStyleUtil.encodeURL("Instrument:" + doc.get("Instrument"))}#page=${doc.get("Page")}&view=FitV&scrollbar=0&navpanes=0&statusbar=0&messages=0?iframe=true&width=50%25&height=95%25" rel="prettyPhoto[iframe]" title="Instrument : <b>${doc.get("Instrument")}</b></br> Doc Type: ${doc.get("DocType")} </br> Date Recorded: ${pageStyleUtil.format(doc.get("RECDATEDISPLAY"), "yyyy-MM-dd hh:mm:ss", "MM/dd/yyyy hh:mm:ss a")} </br>" ><img border="0" title="Preview" src="<@com.currentUrlPrefix/>/resource/preview.png"></a></div>
+		</@display.column> 
+		 <@display.column  media="html" title="Add to Cart">
+		    <input class="cartLink" type="button" title="${doc.get("Instrument")}" value="Add to Cart"/>
+		 </@display.column>
+             </#if>

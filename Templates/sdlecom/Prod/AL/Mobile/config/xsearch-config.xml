@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="2B8F772BE4948F1A4F5CCF571FE2E354D6B13A0742B78313" adminuser="4509A773D406819FC2E2221BD84B8F2F864092CB009D7969">
+  <index-root-directory><![CDATA[C:\index\mobileailis\]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[B35C61F34BFBF38C882E45DF0E12E9E336D27D3607DAA222724E36D836F61B4075F90CD27FBEA608AFEB654E086CC08CF9AF18792C57AD6D]]></db-url>
+      <db-username><![CDATA[CCD7912480F6372AB75FF21A8B00F6E2]]></db-username>
+      <db-password><![CDATA[4F3E701E6952710DF3BB451B36321137]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+   <instance-job-schedule id="0">
+  <schedule-name><![CDATA[RECREATE]]></schedule-name>
+  <job-data-string><![CDATA[opr,Re-create Index|ml,Re-create Index|details,Re-create Index|mobimages,Re-create Index|]]></job-data-string>
+   <schedule id="0">
+    <is-enabled>true</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>0 0 ? * 7</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+    </instance-job-schedule>
+   <instance-job-schedule id="0">
+  <schedule-name><![CDATA[INCREMENTAL]]></schedule-name>
+  <job-data-string><![CDATA[opr,Incremental Indexing with Thorough Deletion Detection|ml,Incremental Indexing with Thorough Deletion Detection|details,Incremental Indexing with Thorough Deletion Detection|mobimages,Incremental Indexing with Thorough Deletion Detection|]]></job-data-string>
+   <schedule id="0">
+    <is-enabled>true</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>0,10,20,30,40,50 7,8,9,10,11,12,13,14,15,17 ? * 2,3,4,5,6</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+    </instance-job-schedule>
+   <instance-job-schedule id="0">
+  <schedule-name><![CDATA[MERGE]]></schedule-name>
+  <job-data-string><![CDATA[opr,Incremental Indexing|ml,Incremental Indexing|details,Incremental Indexing|mobimages,Incremental Indexing|]]></job-data-string>
+   <schedule id="0">
+    <is-enabled>true</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>5 16 ? * 2,3,4,5,6</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+    </instance-job-schedule>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

@@ -1,0 +1,5 @@
+<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (request.isUserInRole('ROAM_ADMIN') || request.isUserInRole('MOBILECMS_FREE_ACCESS') || request.isUserInRole('MOBILECMS_ATTORNEY_ACCESS') || request.isUserInRole('MOBILECMS_EMPLOYEE_ACCESS') || request.isUserInRole('MOBILECMS_ADMIN'))>
+
+<#include "documents.stl">
+
+</#if>

@@ -1,0 +1,38 @@
+
+<#assign num_pages = (searchResult.total/searchResult.length)?int>
+
+<#if num_pages*searchResult.length < searchResult.total>
+ <#assign num_pages = num_pages + 1>
+</#if>
+<#assign current_page_index = (searchResult.start/searchResult.length)?int + 1>
+
+<#assign startItemIndex = (current_page_index-1)*searchResult.length + 1>
+<#assign endItemIndex = current_page_index*searchResult.length>
+<#if (endItemIndex>searchResult.total)>
+ <#assign endItemIndex = searchResult.total>
+</#if>
+ <TotalResults>${total}</TotalResults>
+ <TotalPages>${num_pages}</TotalPages>
+ <CurrentPage>${current_page_index}</CurrentPage>
+ <PageLength>${length}</PageLength>
+ <StartItemIndex>${startItemIndex}</StartItemIndex>
+ <EndItemIndex>${endItemIndex}</EndItemIndex>
+ <RequestProcessingTime>${searchTime}</RequestProcessingTime>
+ <QueryString><![CDATA[${q}]]></QueryString>
+<Items>
+ 
+  <#if searchResult.docs?has_content>
+  <#foreach doc in searchResult.docs>
+  <Item>
+
+   <BOOK><![CDATA[${searchResult.highlight(doc, "BOOK")}]]></BOOK>
+   <BOOKPAGE><![CDATA[${searchResult.highlight(doc, "BOOKPAGE")}]]></BOOKPAGE>
+   <DOCTYPE><![CDATA[${number.format("###0.##",doc.get("DOCTYPE"))}
+   ]]></DOCTYPE>
+   <DESIGSTATUS><![CDATA[${searchResult.highlight(doc, "DESIGSTATUS")}]]></DESIGSTATUS>
+   <DOCTYPEDESC><![CDATA[${searchResult.highlight(doc, "DOCTYPEDESC")}]]></DOCTYPEDESC>
+
+  </Item>
+  </#foreach>
+  </#if>
+</Items>

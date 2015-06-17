@@ -1,0 +1,63 @@
+<b>Register of Actions</b>
+<#if searchResult.docs?has_content>
+<table id="roa" class="tablesorter">
+ <thead><tr>
+  <th>${searchResult.datasetConfiguration.getColumn("FilingDate").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("Party").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("Description").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("Comments").displayName}</th>
+ </tr></thead>
+ <tbody>
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+   <tr>
+	<td>${pageStyleUtil.format(date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("FilingDate")), "yyyy/MM/dd HH:mm:ss z", "MM/dd/yyyy HH:mm:ss a")}</td>
+	<td>${searchResult.highlight(doc, "Party")}</td>
+	<td>${searchResult.highlight(doc, "Description")}</td>
+	<td>${searchResult.highlight(doc, "Comments")}</td>
+</tr>
+
+ </#foreach>
+  </tbody>
+</table>
+<#else>
+	 <table id="roa" class="tablesorter">
+	  <thead><tr>
+	   <th>${searchResult.datasetConfiguration.getColumn("FilingDate").displayName}</th>
+	   <th>${searchResult.datasetConfiguration.getColumn("Party").displayName}</th>
+	   <th>${searchResult.datasetConfiguration.getColumn("Description").displayName}</th>
+	   <th>${searchResult.datasetConfiguration.getColumn("Comments").displayName}</th>
+	  </tr></thead>
+	  <tbody>
+	 <#assign ResultId =0>
+	  <#foreach doc in searchResult.docs>
+	    <tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	  </tr>
+
+	  </#foreach>
+	   </tbody>
+	</table>
+</#if>
+
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	oTable = $('#roa').dataTable({
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bSort": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		"aaSorting": [[ 0, "desc" ]]
+	});
+} );
+</script>

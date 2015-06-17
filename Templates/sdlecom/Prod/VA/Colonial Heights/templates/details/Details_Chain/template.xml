@@ -1,0 +1,5 @@
+<template>
+  <longname>Colonial Heights Details Template with Document Chain</longname>
+  <description>Client Side Sortable Template with Document Chain used for Colonial Heights Details - NOT USED HERE</description>
+  <defaultLength>25</defaultLength>
+</template>

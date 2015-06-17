@@ -1,0 +1,425 @@
+<#include "/admin/lib/include.stl" />
+<@loginLayout encoding="utf-8">
+<#assign form  =JspTaglibs["http://www.springframework.org/tags/form"]>
+<#assign spring=JspTaglibs["http://www.springframework.org/tags"]>
+<link rel="stylesheet" href="resources/styles/validationEngine.jquery.css" type="text/css" />
+<link rel="stylesheet" href="resources/styles/login.css" />
+<link rel="stylesheet" href="resources/styles/jquery-ui-1.8.11.base.css" />
+<link rel="stylesheet" href="resources/styles/jquery-ui-custom-ext.css" />
+<script type="text/javascript" src="resources/javascripts/jquery.min.js"/></script>
+<script type="text/javascript" src="resources/javascripts/jquery-ui.min.js"/></script>
+<script type="text/javascript" src="resources/javascripts/jquery.validationEngine-en.js"></script>
+<script type="text/javascript" src="resources/javascripts/jquery.validationEngine.js"></script>
+
+<!--ARL HEADER-->
+	<meta name="msapplication-TileColor" content="#015CB9">
+	<meta name="msapplication-TileImage" content="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-144x144.png">
+	<link rel="shortcut icon" href="https://d1rn8z435cu2eh.cloudfront.net/favicon.ico" sizes="16x16 32x32 64x64" type="image/x-icon">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-152x152.png" sizes="152x152">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-144x144.png" sizes="144x144">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-120x120.png" sizes="120x120">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-114x114.png" sizes="114x114">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-72x72.png" sizes="72x72">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-57x57.png" sizes="57x57">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon.png">
+	<link rel='stylesheet' id='open-sans-pt-sans-css'  href='resources/styles/OpenSans.css' type='text/css' media='all' />
+	
+	<script type="text/javascript">
+	var _gas = _gas || [];
+	_gas.push(['_setAccount', 'UA-23381988-1']); // All ACG
+	_gas.push(['_trackPageview']);
+	_gas.push(['_gasTrackOutboundLinks']);
+	_gas.push(['_gasTrackMailto']);
+	_gas.push(['_gasTrackDownloads', {
+	  category: 'Download',
+	  extensions: ['']
+	}]);
+	_gas.push(['_gasTrackYoutube', {
+	  percentages: [1, 20, 40, 60, 80],
+	  category: 'YouTube Video'
+	}]);
+	_gas.push(['_gasTrackVimeo', {
+	  category: 'Vimeo Video'
+	}]);
+	_gas.push(['_gasTrackAudio']);
+	_gas.push(['_gasTrackVideo']);
+	(function () {
+	  var ga = document.createElement('script');
+	  ga.type = 'text/javascript';
+	  ga.async = true;
+	  ga.src = 'resources/javascripts/gas.min.js';
+	  var s = document.getElementsByTagName('script')[0];
+	  s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+<!--END ARL HEADER-->
+
+<style>
+div.ADCSI {
+	width: 1000px;
+}
+span.ADCSI_leftcol {
+	width: 165px;
+	text-align:right;
+	display: inline-block;
+}
+div.ADCSI_row {
+	margin-right: 20px;
+}
+table#cardDetails{
+	width:100%;
+	text-align:center;
+	vertical-align:bottom;
+}
+table#cardDetails tr {
+	width:100%;
+	text-align:center;
+}
+td.subscriptionDetails {
+	width:50%;
+	text-align:center;
+}
+td.paymentDetails {
+	width:50%;
+	text-align:center;
+	height:200px;
+}
+#pay {
+	background: #55a003 url(resources/styles/images/greenGrad.png) 50% 50% repeat-x;
+	color: white;
+}
+#pay:hover {
+	background: #55a003 url(resources/styles/images/greenGrad.png) 50% 50% repeat-x;
+	color: white;
+}
+ul { list-style-type: square; }
+div.paymentTypeSelector {
+	vertical-align:top;
+	padding:10px 0 0 0;
+}
+td.paymentDetails {
+vertical-align:top;
+}
+#btnPayNow {
+	background: #55a003 url(resources/styles/images/greenGrad.png) 50% 50% repeat-x;
+	color: #ffffff;
+}
+#btnPayNow:hover {
+	background: #55a003 url(resources/styles/images/greenGrad.png) 50% 50% repeat-x;
+	color: #F0E6E8;
+}
+table#subscriptionDetails {
+	border-collapse: collapse;
+	margin: 10px;
+}
+
+table#subscriptionDetails td {
+	padding: 5px 5px;
+}
+
+table#subscriptionDetails tr.paid {
+	color: #527838;
+}
+
+table#subscriptionDetails tr.unPaid {
+	color: #ED1C43;
+}
+
+th.header{
+	color: #039;
+	border-bottom: 2px solid #6678B1;
+	padding: 5px 5px;
+}
+th.subheader{
+	color: #039;
+	border-top: 1px solid #6678B1;
+	text-align:left;
+	padding: 5px 5px;
+}
+td.footer{
+	color: #039;
+	border-top: 2px solid #6678B1;
+	padding: 5px 5px;
+}
+.unPaid {
+	color: #ED1C43;
+}
+.paid {
+	color: #527838;
+}
+</style>
+ 	<@form.form id="ccinfo-form" action="payNow.admin" modelAttribute="creditCardForm" method="post" autocomplete="on">
+	<div class="content">
+		<div style="width: 1000px; height:200px; margin-left: auto;margin-right:auto;margin-top:100px;">
+			<div id="ADCSI" class="ADCSI" style="margin-top: 0px; margin-bottom: 12px;">
+			<div class="ADCSI_title" id="ADCSI_title">
+				<span style="width:49%;text-align:left;display:inline-block;"><i class="fa fa-credit-card blue" style="font-size:18px;"></i>&nbsp;Payment Information </span>
+				<span style="width:49%;text-align:right;display:inline-block;">
+					<a href="accountInformation.admin"><i class="fa fa-info-circle blue" style="font-size:18px;"></i>&nbsp;Account Information</a> |
+					<a href="logout.admin">Logout</a>&nbsp;(${user.username})</a>
+				</span>
+			</div>
+			<table id="cardDetails">
+				<tr>
+					<td class="paymentDetails">
+						<#if user.getCreditCard()?has_content>
+							<div class="paymentTypeSelector" style="text-align:left">
+							<#if user.isCardAvailable() && user.isCreditCardActive()>
+							    <@form.radiobutton path="useExistingAccount" value="E" checked="checked" /> <@spring.message code="security.ecommerce.label.useExistingAccount"/> ${creditCardForm.getMaskedCard()}. <br />
+							    <#if request.getServletContext().getInitParameter("isDBService") == "true">
+									<@form.radiobutton path="useExistingAccount" value="U"/> <@spring.message code="security.ecommerce.label.updateAccount"/> <br />
+								<#else>
+									<br />
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OR
+									<br />
+									<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="extLink" href="viewAccountInformation.admin?return_url=${request.getRequestURL()}"><@spring.message code="security.ecommerce.label.updatePaymentInformation" /></a>
+								</#if>
+							<#elseif user.isCardAvailable() && !user.isCreditCardActive()>
+								<#if request.getServletContext().getInitParameter("isDBService") == "true">
+									<@form.radiobutton  path="useExistingAccount" value="E"/> <@spring.message code="security.ecommerce.label.useExistingAccount"/> ${creditCardForm.getMaskedCard()}. <br />
+									<label> <@spring.message code="security.ecommerce.label.inactiveCreditCard" /> </label>	<br />
+									<@form.radiobutton  path="useExistingAccount" value="U" checked="checked"/> <@spring.message code="security.ecommerce.label.updateAccount" />
+								<#else>
+									<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="viewAccountInformation.admin?return_url=${request.getRequestURL()}" class="unPaid"><@spring.message code="security.ecommerce.label.cardExpiredUpdateRequired" /></a>
+								</#if>
+							<#elseif !user.isCardAvailable()>
+								<#if request.getServletContext().getInitParameter("isDBService") == "true">
+									<@form.radiobutton  path="useExistingAccount" value="N" style="display:none" checked="checked"/> <@spring.message code="security.ecommerce.label.useNewCard" />
+								<#else>
+									<p><b><@spring.message code="security.ecommerce.label.cardRequired" /></b></p>
+									<p><b><a href="viewAccountInformation.admin?return_url=${request.getRequestURL()}"><@spring.message code="security.ecommerce.label.addCardToAccount" /></a></b></p>
+								</#if>
+							</#if>
+							</div>
+						</#if>
+						<#if request.getServletContext().getInitParameter("isDBService") == "true">
+						<div id="ccinfo">
+							<h4><@spring.message code="security.ecommerce.accountHeader" /></h4>
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.ecommerce.accountName" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="accountName" class="validate[required,minSize[1],maxSize[50]] ADCSI_Input" spellcheck="false" tabindex="8" maxlength="50" autocomplete="on" />
+									<@form.errors path="accountName" cssClass="sverror hidden" />
+								</span>
+							</span>
+							</div>
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.ecommerce.accountNumber" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="number" class="validate[required,custom[creditCardVMAD],minSize[15],maxSize[16]] ADCSI_Input" spellcheck="false" tabindex="10" maxlength="16" autocomplete="off" />
+								    <@form.errors path="number" cssClass="sverror hidden"/>
+								</span>
+							</span>
+							</div>
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.ecommerce.accountExpirationMonth" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="expMonthS" style="width:45px" class="validate[required,custom[ccMonth],minSize[2],maxSize[2]] ADCSI_Input" spellcheck="false" tabindex="11" maxlength="2" autocomplete="off" />
+									<@form.errors path="expMonthS" cssClass="sverror hidden" />
+									&nbsp;&nbsp;<font style="font-weight: bold;"><@spring.message code="security.ecommerce.accountExpirationYear" /></font>
+									<@form.input path="expYear" style="width:60px" class="validate[required,custom[ccYear],minSize[4],maxSize[4]] ADCSI_Input" spellcheck="false" tabindex="12" maxlength="4" autocomplete="off" />
+									<@form.errors path="expYear" cssClass="sverror hidden" />
+								</span>
+							</span>
+							</div>
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.ecommerce.accountSecurityCode" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="cvv" style="width:60px" class="validate[required,custom[numeric],minSize[1],maxSize[4]] ADCSI_Input" spellcheck="false" tabindex="13" maxlength="4" autocomplete="off" />&nbsp;&nbsp;<a href="publicsecuritycodehelp.admin" target="_blank"><@spring.message code="security.ecommerce.label.securityCodeHelp" /></a>
+									<@form.errors path="cvv" cssClass="sverror hidden" />
+								</span>
+							</span>
+							</div>
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span style="display:inline;"><img title="Visa" src="resources/images/visa.png" /></span><span style="display:inline;"><img title="Master Card" src="resources/images/master.png" /></span><span style="display:inline;"><img title="American Express" src="resources/images/amex.png" /></span><span style="display:inline;"><img title="Discover" src="resources/images/discover.png" /></span>
+							</span>
+							</div>
+							<br />
+							BILLING ADDRESS
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.authentication.addressLine1" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="addressLine1" class="validate[required,minSize[1],maxSize[250]] ADCSI_Input" spellcheck="false" tabindex="15" maxlength="250" autocomplete="on" />
+									<@form.errors path="addressLine1" cssClass="sverror hidden" />
+								</span>
+							</span>
+							</div>
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.authentication.addressLine2" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input class="ADCSI_Input" path="addressLine2" spellcheck="false" tabindex="16" maxlength="250" autocomplete="on" />
+									<@form.errors path="addressLine2" cssClass="sverror hidden" />
+								</span>
+							</span>
+							</div>
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.authentication.city" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="city" class="validate[required,minSize[1],maxSize[50]] ADCSI_Input" spellcheck="false" tabindex="17" maxlength="50" autocomplete="on" />
+									<@form.errors path="city" cssClass="sverror hidden" />
+								</span>
+							</span>
+							</div>
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.authentication.state" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="state" class="validate[required,minSize[1],maxSize[2]] ADCSI_Input" spellcheck="false" tabindex="18" maxlength="2" style="width:45px" autocomplete="on" />
+									<@form.errors path="state" cssClass="sverror hidden" />
+								</span>
+							</span>
+							</div>
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.authentication.zip" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="zip" style="width:75px" class="validate[required,custom[onlyNumberSp],minSize[5],maxSize[5]] ADCSI_Input" spellcheck="false" tabindex="19" maxlength="5" autocomplete="on" />
+									<@form.errors path="zip" cssClass="sverror hidden" />
+								</span>
+							</span>
+							</div>
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.ecommerce.phoneNumber" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									<@form.input path="phoneNumber" style="width:150px" class="validate[required,custom[phone],custom[numeric],minSize[10],maxSize[10]] ADCSI_Input" spellcheck="false" tabindex="20" maxlength="10" autocomplete="on" />
+									<@form.errors path="phoneNumber" cssClass="sverror hidden" />
+								</span>
+							</span>
+							</div>
+						</div>
+						</#if>
+					</td>
+					<td class="subscriptionDetails" valign="top">
+						<h4><@spring.message code="security.ecommerce.balance" /></h4>
+						<#assign totalDue = 0>
+						<table width="95%" id="subscriptionDetails">
+						<th class="header"><@spring.message code="security.ecommerce.label.subscription" /></th>
+						<th class="header">Authorization Status</th>
+						<th class="header"><@spring.message code="security.ecommerce.label.fee" /></th>
+							<#list sites as site>
+								<#assign validSite = false>
+								<#assign accessList = site.getAccess()>
+								<#list accessList as access>
+									<#if access.isAuthorized()>
+										<#assign validSite = true>
+									</#if>
+								</#list>
+								<tr>
+									<#if validSite><th class="subheader" colspan="3">${site.name}</th></#if>
+								</tr>
+
+								<#list  accessList as access>
+									<#assign userAccessList = access.getUserAccessList()>
+									<#assign isFirmUserSubscription = false>
+									<#list  userAccessList as userAccess>
+										<#if !userAccess.isFirmAccessAdmin() && userAccess.getFirmAdminUserAccessId()?has_content>
+											<#assign isFirmUserSubscription = true>
+										</#if>
+									</#list>
+									<#if !access.isFirmLevelAccess() || (access.isFirmLevelAccess() && !isFirmUserSubscription) >
+										<#if access.isAuthorized()>
+											<#assign totalDue = totalDue + access.getSubscriptionFee().getFee()>
+										</#if>
+										<#if access.isAuthorized()>
+											<tr class="paid">
+											<td>${access.description}</td>
+											<td>Authorized</td>
+											<td>${access.getSubscriptionFee().getFee()?string.currency}</td>
+										</#if>
+										</tr>
+									</#if>
+								</#list>
+			                </#list>
+			                <tr>
+								<td class="footer" colspan="2"><@spring.message code="security.ecommerce.totalBalance" /></td>
+								<td class="footer">${totalDue?string.currency}</td>
+						 	</tr>
+						 	</table>
+			        <#if totalDue &gt; 0>
+			        <div style="text-align: center;padding-top: 30px;padding-bottom: 10px;">
+				    <span style="display:none;"></span>
+				    	<img id="processing" src="resources/images/processing.gif" style="display:none" /><br />
+				    	<#if request.getServletContext().getInitParameter("isDBService") == "true">
+				    		<input type="submit" name="btnPayNow" id="btnPayNow" tabindex="21" value='<@spring.message code="security.ecommerce.payNow"/>' />
+				    	<#else>
+				    		<#if user.isCardAvailable() && user.isCreditCardActive()>
+				    			<input type="submit" name="btnPayNow" id="btnPayNow" tabindex="21" value='<@spring.message code="security.ecommerce.payNow"/>' />
+				    		</#if>
+				    	</#if>
+               		</div>
+               		</#if>
+               		<img src="https://www.paypal.com/en_US/i/icon/verification_seal.gif" border="0" alt="Official PayPal Seal">
+               		<div style="text-align: left;padding-top: 30px;padding-bottom: 10px;padding-right:20px">
+               			<span class="unPaid">
+               				<i class="fa fa-exclamation-triangle red" style="font-size:18px;"></i>&nbsp;<b><@spring.message code="security.ecommerce.label.importantInformation" /></b><br /><br />
+               				* <@spring.message code="security.ecommerce.alert.acceptOnlyAuthorizedPayments" /><br /><br />
+               				* <@spring.message code="security.ecommerce.alert.paymentProcessing" />
+               			</span>
+               		</div>
+			        </td>
+                </tr>
+			</table>
+		</div>
+	</div>
+	</@form.form>
+
+<script type="text/javascript">
+		$(document).ready(function(){
+		 	$("img#processing").hide();
+			$("#btnPayNow").button({
+	            icons: {
+	                primary: "ui-icon-cart"
+	            }
+	        });
+	        $("#ccinfo-form").validationEngine();
+	        $("#ccinfo-form").validationEngine('hide');
+	        jQuery('.sverror').each(function() {
+			    var currentElement = '#' + $(this).attr('id').split('.')[0];
+		        $(currentElement).validationEngine('showPrompt', $(this).html(), 'fail', 'topRight', true);
+			});
+			<#if request.getServletContext().getInitParameter("isDBService") == "true">
+			<#if user.isCardAvailable() && user.isCreditCardActive()>
+				$("#ccinfo").hide();
+			</#if>
+			$("input[name='useExistingAccount']").change(function() {
+			    if($(this).val() == "E")  {
+			    	$("#ccinfo").hide();
+			    } else {
+			    	$("#ccinfo").show();
+			    }
+			});
+			</#if>
+		});
+
+
+	 	$("#ccinfo-form").submit(function(e) {
+	 		if ($(".formError").length > 0 || $(".formErrorContent").length > 0) {
+	    		$("img#processing").hide();
+	    		return false;
+	    	} else {
+	    		 $("#ccinfo-form").bind("jqv.form.result", function(event, errorFound) {
+				 	  if(errorFound) {
+				 	  	$("img#processing").hide();
+				 	  	$("#btnPayNow").show();
+				 	  	return false;
+				 	  }
+				 	  else {
+				 	  	$("img#processing").show();
+				 	  	$("#btnPayNow").hide();
+				 	  	return true;
+				 	  }
+				 });
+	    	}
+	    });
+</script>
+</@loginLayout>

@@ -1,0 +1,67 @@
+
+  		  <@display.column media="html" indexColumnName="ActiveAttorneyList" title="${searchResult.datasetConfiguration.getColumn(\"ActiveAttorneyList\").displayName}">
+		   	${searchResult.highlight(doc, "ActiveAttorneyList")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="ActiveAttorneyList" title="${searchResult.datasetConfiguration.getColumn(\"ActiveAttorneyList\").displayName}">
+		   	${doc.get("ActiveAttorneyList")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="AttorneyBarNumber" title="${searchResult.datasetConfiguration.getColumn(\"AttorneyBarNumber\").displayName}">
+		   	${searchResult.highlight(doc, "AttorneyBarNumber")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="AttorneyBarNumber" title="${searchResult.datasetConfiguration.getColumn(\"AttorneyBarNumber\").displayName}">
+		   	${doc.get("AttorneyBarNumber")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="CCILastLookupDateTime" title="${searchResult.datasetConfiguration.getColumn(\"CCILastLookupDateTime\").displayName}">
+		   		${date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("CCILastLookupDateTime"))}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CCILastLookupDateTime" title="${searchResult.datasetConfiguration.getColumn(\"CCILastLookupDateTime\").displayName}">
+		   		${date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("CCILastLookupDateTime"))}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="CaseID" title="${searchResult.datasetConfiguration.getColumn(\"CaseID\").displayName}">
+		   	${searchResult.highlight(doc, "CaseID")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseID" title="${searchResult.datasetConfiguration.getColumn(\"CaseID\").displayName}">
+		   	${doc.get("CaseID")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="CaseNumberDisplay" title="${searchResult.datasetConfiguration.getColumn(\"CaseNumberDisplay\").displayName}">
+		   	${searchResult.highlight(doc, "CaseNumberDisplay")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseNumberDisplay" title="${searchResult.datasetConfiguration.getColumn(\"CaseNumberDisplay\").displayName}">
+		   	${doc.get("CaseNumberDisplay")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="CourtCode" title="${searchResult.datasetConfiguration.getColumn(\"CourtCode\").displayName}">
+		   	${searchResult.highlight(doc, "CourtCode")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CourtCode" title="${searchResult.datasetConfiguration.getColumn(\"CourtCode\").displayName}">
+		   	${doc.get("CourtCode")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="DocumentID" title="${searchResult.datasetConfiguration.getColumn(\"DocumentID\").displayName}">
+		   	${searchResult.highlight(doc, "DocumentID")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DocumentID" title="${searchResult.datasetConfiguration.getColumn(\"DocumentID\").displayName}">
+		   	${doc.get("DocumentID")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="EventDate" title="${searchResult.datasetConfiguration.getColumn(\"EventDate\").displayName}">
+		   		${date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("EventDate"))}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="EventDate" title="${searchResult.datasetConfiguration.getColumn(\"EventDate\").displayName}">
+		   		${date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("EventDate"))}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="RoamDefaultTemplate" title="${searchResult.datasetConfiguration.getColumn(\"RoamDefaultTemplate\").displayName}">
+		   	${searchResult.highlight(doc, "RoamDefaultTemplate")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="RoamDefaultTemplate" title="${searchResult.datasetConfiguration.getColumn(\"RoamDefaultTemplate\").displayName}">
+		   	${doc.get("RoamDefaultTemplate")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="SourceSystemEventCode" title="${searchResult.datasetConfiguration.getColumn(\"SourceSystemEventCode\").displayName}">
+		   	${searchResult.highlight(doc, "SourceSystemEventCode")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="SourceSystemEventCode" title="${searchResult.datasetConfiguration.getColumn(\"SourceSystemEventCode\").displayName}">
+		   	${doc.get("SourceSystemEventCode")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="SourceSystemEventDescription" title="${searchResult.datasetConfiguration.getColumn(\"SourceSystemEventDescription\").displayName}">
+		   	${searchResult.highlight(doc, "SourceSystemEventDescription")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="SourceSystemEventDescription" title="${searchResult.datasetConfiguration.getColumn(\"SourceSystemEventDescription\").displayName}">
+		   	${doc.get("SourceSystemEventDescription")}
+		  </@display.column>

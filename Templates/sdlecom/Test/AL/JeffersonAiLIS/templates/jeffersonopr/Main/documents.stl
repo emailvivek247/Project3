@@ -1,0 +1,104 @@
+<#assign display=JspTaglibs["http://displaytag.sf.net"]>
+
+<#assign searchCriteria = "Search Criteria " + Request.searchForm.searchQuery >
+<#if filtersApplied?has_content>
+    <#assign searchCriteria = searchCriteria + " Filters Applied: " +filtersApplied>
+</#if>
+
+<#if searchResult.docs?has_content>
+    <#assign ResultId =0>
+    <@display.table name="searchResult.docs" id="doc" export=true requestURI="/search.do" excludedParams="searchType Instrument Instrument_select RECDATEDISPLAY RECDATEDISPLAY_select Name Name_select PartyRole PartyRole_select DocType DocType_select Book Book_select Page Page_select OtherName OtherName_select LegalDescription LegalDescription_select FirstReference FirstReference_select ">
+      <#include "document.stl">
+          <@display.setProperty name="export.title" value="${searchCriteria}" />  
+    </@display.table>
+<#else>
+ <#include "noResults.stl"> 
+</#if>
+
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+    oTable = $('#doc').dataTable({
+        "bJQueryUI": true,
+        "bPaginate": false,
+        "bLengthChange": false,
+        "bFilter": false,
+        "bSort": true,
+        "bInfo": false,
+        "bAutoWidth": false,
+        "aaSorting": []
+    });
+
+      $(".cartLink").click(function() {
+        var dataString = 'indexName=publicimages&lq=Instrument:' + $(this).attr("title");
+        $.ajax({
+          type: "POST",
+          url: "${request.getContextPath()}/search.do",
+          data: dataString,      
+          success: function(data) {
+            $.each(data, function(i,item){                  
+                 if (item.code == "EXISTS") {
+                    var txt = item.description + "You can view your purchase using the below link, <br/> <a target='_blank' href='viewPayAsUGoPaymentDetails.admin?webTxId=" + item.moduleName + "'>View Purchase</a>";     
+                    $.prompt(txt);
+                 } else if (item.code == "SUCCESS") {
+                    if (item.count == 0) {
+                        $("span#shoppingCartItems").text('  Shopping cart is Empty');
+                        $.prompt(item.description);
+                    } else {
+                        $("span#shoppingCartItems").text('  ' + item.count + ' Item(s) in the Shopping Cart');
+                        $.prompt(item.description);
+                    }
+                 } else {
+                    $.prompt(item.description); 
+                 }
+              });     
+          }
+        });
+    return false;
+    });
+} );
+</script>
+<!-- HIDDEN / POP-UP DIV -->
+      <div id="pop-up5" style="position:absolute;">
+        <p>
+          <font color="#2E7EE4"><b>Clicking</b></font> on the Columns below will only sort the current page.
+        </p>
+      </div>
+
+    <script type="text/javascript">
+      $(function() {
+        var moveLeft = -200;
+        var moveDown = -125;
+        
+        $('thead').hover(function(e) {
+          $('div#pop-up5').show();
+          //.css('top', e.pageY + moveDown)
+          //.css('left', e.pageX + moveLeft)
+          //.appendTo('body');
+        }, function() {
+          $('div#pop-up5').hide();
+        });
+        
+        $('table#doc').mousemove(function(e) {
+          $("div#pop-up5").css('top', e.pageY + moveDown).css('left', e.pageX + moveLeft);
+        });
+        
+      });
+    </script>
+   <style type="text/css">
+      /* HOVER STYLES */
+        div#pop-up5 {
+        display: none;
+        position: absolute;
+        width: 200px;
+        padding: 10px;
+        background: #fff;
+        color: #000000;
+        border: 3px solid #7EB544;
+        font-size: 80%;
+        z-index: 1;
+        float: right;
+        text-align:justify;
+      }
+  </style>

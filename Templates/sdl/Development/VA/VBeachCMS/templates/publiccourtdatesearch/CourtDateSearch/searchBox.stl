@@ -1,0 +1,282 @@
+
+<script type="text/javascript">
+
+	function unique(arrayName) {
+        var newArray=new Array();
+        label:for(var i=0; i<arrayName.length;i++ )
+        {  
+            for(var j=0; j<newArray.length;j++ ) {
+                if(newArray[j].name == arrayName[i].name) 
+                 continue label;
+            }
+            setCookie('CourtDateSearch' + arrayName[i].name, jQuery.trim(arrayName[i].value), 0);
+            if (arrayName[i].type == 'text' && jQuery.trim(arrayName[i].value).length != 0) {
+            	newArray[newArray.length] = arrayName[i];
+            }
+        }
+			setCookie('CourtDateSearchfrmSessionDate', document.getElementById('frmSessionDate').value, 0);
+			setCookie('CourtDateSearchtoSessionDate', document.getElementById('toSessionDate').value, 0);
+        return newArray;
+    }	
+	
+	function postAdvancedSearch() {
+		try {
+                        if (!doDateCheck('frmSessionDate','toSessionDate'))return;
+                        $('#CourtType').val($('#CourtTypeSelect').val());
+                        document.getElementById("q").value = '';
+			setCookie('CaseSearch' + 'CourtTypeSelect', $('#CourtTypeSelect').attr("selectedIndex"), 0);
+			var inputElemenets =  $('input[type="text"]');
+			var elem = unique(inputElemenets);
+			var searchString = '';
+			var searchQuery = '';
+			var andOrClause ='';
+			var doubleQuotes = '"';
+			var counter = 0;
+			var textcounter = 0;
+			var searchValue = '';
+			var searchValueQuery = '';
+			for(var i = 0; i < elem.length; i++) {
+				if (document.getElementById(elem[i].name + '_select') != null) {
+					counter++;	
+				}					
+			}
+			for(var i = 0; i < elem.length; i++) {
+				if (document.getElementById(elem[i].name + '_select') != null) {
+					setCookie('CourtDateSearch' + elem[i].name + '_select', document.getElementById(elem[i].name + '_select').selectedIndex, 0);
+					textcounter++
+					if (textcounter == counter) {
+						andOrClause = '';
+					} else {
+						andOrClause = ' ' + document.getElementById(elem[i].name + '_select').value + '  ';
+					}
+					if (elem[i].name == 'SessionDate') {
+						searchValue = getDateQuery(elem[i].name);
+						searchValueQuery = getDateSearchQuery(elem[i].name);
+					} else {
+						searchValue = elem[i].name + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes;
+						searchValueQuery = elem[i].name + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes;
+					}
+					searchString = searchString + searchValue + andOrClause;
+					searchQuery = searchQuery  + searchValueQuery + andOrClause;
+				}
+			}
+            document.getElementById("lq").value = searchString;
+            document.getElementById("searchQuery").value = searchQuery;
+			document.search_${searchResult.indexName}.method = "get";
+			document.search_${searchResult.indexName}.action = "search.do";
+			document.search_${searchResult.indexName}.searchType.value = "2";			
+			document.search_${searchResult.indexName}.submit();
+		} catch (err) {
+			alert(err.message);
+		}
+  	} 	
+	function postBasicSearch() {
+		try {	
+			setCookie('CourtDateSearch' + document.getElementById("q").name, document.getElementById("q").value, 0);
+			document.getElementById("lq").value = '';
+			document.search_${searchResult.indexName}.method = "get";
+			document.getElementById('searchQuery').value = document.getElementById('q').value
+			document.search_${searchResult.indexName}.action = "search.do";
+			document.search_${searchResult.indexName}.searchType.value = "1";
+			document.search_${searchResult.indexName}.submit();
+		} catch (err) {
+			alert(err.message);
+		}
+  	} 
+
+</script>
+<table align="right" border = "0"><tr><td align = "right"><font size = "4"><a href="${request.getContextPath()}/templates/help.html">Helpful Tips!</a></font></td></tr></table><br><br>
+<table width="80%" align = "center" border = "0">
+<tr>
+<td align="left"><img src = '${request.getContextPath()}/templates/clerk.png' alt = "Tina E. Sinnen"/></td>
+<td align="center"> <img src = '${request.getContextPath()}/templates/publiccourtdatesearch/CourtDateSearch/piheader.png' alt = "ROAM"/></td>
+<td align="right"><img src = '${request.getContextPath()}/templates/seal.png' alt = "Virginia Beach Circuit Court"/></td>
+</tr>
+</table>
+</br>
+<center>
+<#include "/templates/globalNav.stl">
+</center><br>
+
+<form name="search_${searchResult.indexName}" id="search_${searchResult.indexName}">
+	<input type="hidden" name="indexName" value="${searchResult.indexName}">
+	<input type="hidden" name="templateName" value="${searchResult.templateName}">
+	<input type="hidden" name="searchQuery" id="searchQuery">
+	<input type="hidden" name="lq" id="lq">
+	<input type="hidden" name="searchType" id="searchType" value="${Request.searchForm.searchType}">
+
+        <label style="display:none;" for="totalResults">${total?if_exists}</label>
+	
+	
+		<#if Request.searchForm.searchType = "1">
+			<div id="basicSearch">
+		<#else>
+			<div id="basicSearch" style="display:none">
+		</#if>
+			
+<table border="0" align="center" width="100%" cellspacing="0" cellpadding="0">
+<tr>
+<td rowspan="2" width="33%" align="center"></TD>
+<td width="1%" align="center"></TD>
+<td rowspan="2" width="33%" align="left">
+&nbsp;<a onClick="toggleDiv('advancedSearch');return false" href="#"><font size="1">Advanced Search</font></a>
+<br>
+</td>
+</tr>
+				<tr >
+						<td align="right">
+							<input type="text" class="text" name="q" id="q" size="40" maxlength="2048" value="${searchResult.userInput?html}">
+						</td>
+				</tr>
+		</table>
+		<table  border="0" align = "center">
+				<tr>
+						<td align="left">	
+							<button type="button" class="search" onclick="javascript:postBasicSearch()">Search</button>
+						</td>
+
+						</td>
+				</tr>		
+			</table>
+			
+		</div>
+				
+		<#if Request.searchForm.searchType = "2">
+			<div id="advancedSearch">
+		<#else>
+			<div id="advancedSearch" style="display:none">
+		</#if>
+	
+		<table align="center" border="0" cellspacing="1" cellpadding="1">
+                               <tr>                                
+				                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("SessionDate").displayName}&nbsp;:&nbsp;</font></b></td>
+				                    <td align="center"><b><font class="label">From&nbsp;:&nbsp;</font></b>
+				                        <input type="text" id="frmSessionDate" name="SessionDate" title="${searchResult.datasetConfiguration.getColumn("SessionDate").displayName}" size="10" maxlength="10" >
+				                        <script language="javascript">
+										$(function() {
+											    var dates = $( "#frmSessionDate, #toSessionDate" ).datepicker({                 
+												changeYear: true, 
+												changeMonth: true,
+												defaultDate: "",
+												changeMonth: true,
+												numberOfMonths: 1,
+												onSelect: function( selectedDate ) {
+												    var option = this.id == "frmSessionDate" ? "minDate" : "maxDate",
+													instance = $( this ).data( "datepicker" );
+													date = $.datepicker.parseDate(
+													    instance.settings.dateFormat ||
+													    $.datepicker._defaults.dateFormat,
+													    selectedDate, instance.settings );
+												    dates.not( this ).datepicker( "option", option, date );
+												},
+												onClose: function(dateText, inst) {
+												$(this).datepicker('option', 'dateFormat', 'mm/dd/yy');                
+												}
+											    });
+											});
+				                        if (getCookie('CourtDateSearchfrmSessionDate') != null) {
+				                            document.getElementById("frmSessionDate").value = getCookie('CourtDateSearchfrmSessionDate');
+				
+				
+				
+				
+				
+				
+				                        }
+				                        </script>
+				                    </td>    
+				                    <td align="center"><b><font class="label">To&nbsp;:&nbsp;</font></b>
+				                        <input type="text" id="toSessionDate" name="SessionDate" title="${searchResult.datasetConfiguration.getColumn("SessionDate").displayName}" size="10" maxlength="10">
+				
+				
+				
+				                        <script language="javascript">                                               
+				                        if (getCookie('CourtDateSearchtoSessionDate') != null) {
+				                            document.getElementById("toSessionDate").value = getCookie('CourtDateSearchtoSessionDate');
+				                        }
+				                        </script>
+				                    </td>    
+				                    <td align="left">
+				                        <select name="SessionDate_select" id="SessionDate_select" >
+				                        <option value="AND" >AND</option>
+				                        <option value="OR" >OR</option>
+				                        </select>
+				                        <script language="javascript">                                          
+				                        if (getCookie('CourtDateSearchSessionDate_select') != null) {
+				                            document.getElementById("SessionDate_select").options[getCookie('CourtDateSearchSessionDate_select')].selected = true;
+				                        }
+				                        </script>                                           
+				                    </td>
+                                </tr>
+                                
+                                
+				   	 			<tr>
+				   	 				<td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("CaseNumber").displayName}&nbsp;:&nbsp;</font></b></td>
+										<td  colspan="2">
+											<input type="text" id="CaseNumber"  name="CaseNumber" size="70" maxlength="2048">
+											<script language="javascript">											
+												if (getCookie('CourtDateSearchCaseNumber') != null) {
+													$('#CaseNumber').val(getCookie('CourtDateSearchCaseNumber'));
+												}
+											</script>
+										</td>											
+					   	 				<td  align="left">
+					   	 					<select name="CaseNumber_select" id="CaseNumber_select" >
+					   	 						<option value="AND" >AND</option>
+					   	 						<option value="OR" >OR</option>
+					   	 					</select>
+											<script language="javascript">											
+												if (getCookie('CourtDateSearchCaseNumber_select') != null) {
+													document.getElementById('CaseNumber_select').options[getCookie('CourtDateSearchCaseNumber_select')].selected = true;
+												}
+											</script>											
+				   	 					</td>
+
+<td><font size = "2"><A HREF = "/vbeach/templates/help.html#FORMAT">Format?</A></font></td>
+
+				   	 			</tr>
+				   	 			<tr>
+				   	 				<td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("CourtType").displayName}&nbsp;:&nbsp;</font></b></td>
+										<td colspan="2">
+											<input type="text" id="CourtType"  name="CourtType" size="70" maxlength="2048" style="display:none"> 
+	                                                                                <select name="CourtTypeSelect" id="CourtTypeSelect">
+	                                                                                        <option value="" selected="selected"></option>
+					   	 						<option value="CRIMINAL" >CRIMINAL</option>
+					   	 						<option value="CIVIL" >CIVIL</option>
+					   	 						
+					   	 					</select>
+											<script language="javascript">											
+												if (getCookie('CaseSearchCourtTypeSelect') != null) {
+													document.getElementById('CourtTypeSelect').options[getCookie('CaseSearchCourtTypeSelect')].selected = true;
+												}
+											</script>													</td>											
+					   	 				<td align="left">
+					   	 					<select style="display:none" name="CourtType_select" id="CourtType_select" >
+					   	 						<option value="AND" >AND</option>
+					   	 						<option value="OR" >OR</option>
+					   	 					</select>
+											<script language="javascript">											
+												if (getCookie('CourtDateSearchCourtType_select') != null) {
+													document.getElementById('CourtType_select').options[getCookie('CourtDateSearchCourtType_select')].selected = true;
+												}
+											</script>											
+				   	 					</td>
+				   	 			</tr>
+<table align="center" border="0" width="65%" cellspacing="1" cellpadding="1">
+	<tr valign="top">					   	 				
+		<td width="55%">&nbsp;</td>								
+			<td align="center" style="padding-right:10px;">
+				<button type="button" class="searchAdv" onclick="javascript:postAdvancedSearch()">Search</button>
+			</td>
+			<td width="50%" align="left" style="padding-right:250px;">
+				<a onClick="toggleDiv('basicSearch');return false" href="#"><font size="1">Basic Search</font></a>
+				<br />
+				<font size="1" style="vertical-align:text-top;"><input type="button" onClick="clearFormElements()" value="Clear Search Fields" style="background:transparent; border-width:0; color:#2E7EE4; cursor:pointer; padding-left:0px; font-size:85%;"></font>			
+			</td>
+	</tr>
+			</table>
+		
+		
+		</div>
+</form>
+<#include "searchBox_extra.stl">

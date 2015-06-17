@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="2B8F772BE4948F1A4F5CCF571FE2E354D6B13A0742B78313" adminuser="4509A773D406819FC2E2221BD84B8F2F864092CB009D7969">
+  <index-root-directory><![CDATA[E:\index\rockwall\]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[43B96D8282111C0BB6CFCDFF883ED6282498A869734D8087E1C27D257F2818C9A7DFAA4602C30378A2C27B04BECBBCA0F8DD8120215CC843DA2EE33EBA65177E83B34366B24B69759A7E0DDD8C0F90506A626F306FED504D]]></db-url>
+      <db-username><![CDATA[6024EE82D2FE711E4AD3B10C7EEB41FB5286511A65902FA6]]></db-username>
+      <db-password><![CDATA[7643468AD35E2B57EAC797F7B879B6FC7BC7B8AD6786AA85]]></db-password>
+      <dbcp-validation-query><![CDATA[
+select 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

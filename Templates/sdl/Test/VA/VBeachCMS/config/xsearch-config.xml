@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="jdsAFGS7YSu/Vxt3nDkD0g==" adminuser="admin1234">
+  <search-log-size-in-MB>10</search-log-size-in-MB>
+  <index-root-directory><![CDATA[E:\index\vbeachcms\]]></index-root-directory>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

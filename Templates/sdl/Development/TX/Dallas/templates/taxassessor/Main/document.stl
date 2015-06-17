@@ -1,0 +1,66 @@
+<#-- *Assign variables for Phonetic Search -->
+<#assign searchable = request.getParameter("searchable")>
+<#assign phonetic = "PHONETICNAME,ACCOUNT_NUM,OWNER_ADDRESS,DISPLAY_ADDRESS,OWNER_CITY">
+
+	
+                  <@display.column media="html" indexColumnName="ACCOUNT_NUM" title="${searchResult.datasetConfiguration.getColumn(\"ACCOUNT_NUM\").displayName}">
+		   	 <a href="${request.getContextPath()}/search.do?indexName=taxdetails&templateName=Details_SN&lq=${pageStyleUtil.encodeURL("MAINACCOUNT_NUM:\"" + doc.get("ACCOUNT_NUM") + "\"")}">${searchResult.highlight(doc, "ACCOUNT_NUM")}</a>
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="ACCOUNT_NUM" title="${searchResult.datasetConfiguration.getColumn(\"ACCOUNT_NUM\").displayName}">
+		   	${doc.get("ACCOUNT_NUM")}
+		  </@display.column>
+
+<#-- *Check type of search to allow for highlighting -->
+             <#if searchable == phonetic>
+		  <@display.column media="html" indexColumnName="OWNER_NAME1" title="${searchResult.datasetConfiguration.getColumn(\"OWNER_NAME1\").displayName}">
+		   	${searchResult.highlight(doc, "PHONETICNAME")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="OWNER_NAME1" title="${searchResult.datasetConfiguration.getColumn(\"OWNER_NAME1\").displayName}">
+		   	${doc.get("PHONETICNAME")}
+		  </@display.column>
+             <#else> 
+		  <@display.column media="html" indexColumnName="OWNER_NAME1" title="${searchResult.datasetConfiguration.getColumn(\"OWNER_NAME1\").displayName}">
+		   	${searchResult.highlight(doc, "OWNER_NAME1")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="OWNER_NAME1" title="${searchResult.datasetConfiguration.getColumn(\"OWNER_NAME1\").displayName}">
+		   	${doc.get("OWNER_NAME1")}
+		  </@display.column>
+             </#if>
+
+		  <@display.column media="html" indexColumnName="DISPLAY_ADDRESS" title="${searchResult.datasetConfiguration.getColumn(\"DISPLAY_ADDRESS\").displayName}">
+		   	${searchResult.highlight(doc, "DISPLAY_ADDRESS")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DISPLAY_ADDRESS" title="${searchResult.datasetConfiguration.getColumn(\"DISPLAY_ADDRESS\").displayName}">
+		   	${doc.get("DISPLAY_ADDRESS")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="OWNER_CITY" title="${searchResult.datasetConfiguration.getColumn(\"OWNER_CITY\").displayName}">
+		   	${searchResult.highlight(doc, "OWNER_CITY")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="OWNER_CITY" title="${searchResult.datasetConfiguration.getColumn(\"OWNER_CITY\").displayName}">
+		   	${doc.get("OWNER_CITY")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="OWNER_STATE" title="${searchResult.datasetConfiguration.getColumn(\"OWNER_STATE\").displayName}">
+		   	${searchResult.highlight(doc, "OWNER_STATE")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="OWNER_STATE" title="${searchResult.datasetConfiguration.getColumn(\"OWNER_STATE\").displayName}">
+		   	${doc.get("OWNER_STATE")}
+		  </@display.column>
+		<#--  <@display.column media="html" indexColumnName="OWNER_ZIPCODE" title="${searchResult.datasetConfiguration.getColumn(\"OWNER_ZIPCODE\").displayName}">
+		   	${searchResult.highlight(doc, "OWNER_ZIPCODE")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="OWNER_ZIPCODE" title="${searchResult.datasetConfiguration.getColumn(\"OWNER_ZIPCODE\").displayName}">
+		   	${doc.get("OWNER_ZIPCODE")}
+		  </@display.column> -->
+		  <@display.column media="html" indexColumnName="TOT_VAL" title="${searchResult.datasetConfiguration.getColumn(\"TOT_VAL\").displayName}">
+		   		$${number.format("#,##0.00",doc.get("TOT_VAL"))}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="TOT_VAL" title="${searchResult.datasetConfiguration.getColumn(\"TOT_VAL\").displayName}">
+		   		$${number.format("#,##0.00",doc.get("TOT_VAL"))}
+		  </@display.column>
+
+<#-- *For Map -->
+        <@display.column title="Locate on Map">
+            <input type="button" class="groovybutton" OnClick="navigate(${ResultId}, false)" value="View on map">
+            <input type="button" class="groovybutton" OnClick="navigate(${ResultId}, true)" value="Show Property">
+        </@display.column>
+        <#assign ResultId = ResultId  + 1>

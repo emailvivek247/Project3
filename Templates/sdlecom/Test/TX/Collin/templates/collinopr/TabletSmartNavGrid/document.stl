@@ -1,0 +1,15 @@
+<tr>
+    <td>
+      <a target="_parent" onClick='rowSelected(this)' href="search.do?indexName=collindetails&templateName=default_tablet&lq=${pageStyleUtil.encodeURL("Instrument:" + doc.get("Instrument"))}">${doc.get("Instrument")}</a>
+   </td>    
+   <td>
+    <#if isPhoneticSearch == "1">
+      ${searchResult.highlight(doc, "PhoneticName")}      
+        <#else>
+          ${searchResult.highlight(doc, "Name")}
+      </#if>  
+   </td>
+   <td>${searchResult.highlight(doc, "DocTypeDesc")}</td>
+   <td>${searchResult.highlight(doc, "PartyRole")}</td>
+   <td>${searchResult.highlight(doc, "LegalDescription")}</td>
+ </tr>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset name="Dallas Historical" exportedBy="null" createdAt="Tue Oct 09 20:29:40 CDT 2012">
+  <display-order>-1</display-order>
+  <description><![CDATA[]]></description>
+  <index-dir>dallashistindex</index-dir>
+  <is-prefix-root-index-directory>true</is-prefix-root-index-directory>
+  <use-server-db-connection>true</use-server-db-connection>
+  <work-directory>_work</work-directory>
+  <temporary-index-minimal-merge-percentage>1.0</temporary-index-minimal-merge-percentage>
+  <merge-hours enabled="false" begin="1" end="3"/>
+  <fetcher-threads>7</fetcher-threads>
+  <writer-threads>3</writer-threads>
+  <index-max-size>100000.0</index-max-size>
+  <schedules>
+   <schedule id="0">
+    <is-enabled>false</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>0 0 ? * 1</cron-setting>
+    <indexing-mode>Re-create Index</indexing-mode>
+   </schedule>
+  </schedules>
+  <language>Any</language>
+  <analyzer-name>com.fdt.sdl.core.analyzer.NumberLowerCaseAnalyzer</analyzer-name>
+  <data-source-type>0</data-source-type>
+  <fetcher-configuration dir="null">
+  </fetcher-configuration>
+  <dataquery name="WorkingQueue" batch-size="128" is-skipping-null-parameters="false">
+    <sql><![CDATA[
+SELECT DISTINCT
+        BOOKTYPE as 'Booktype'
+        ,BOOKTYPE AS 'BooktypeFilter'
+        ,BOOKNAME as 'BookName'
+        ,BOOKNAME as 'BookNameFilter'
+        ,INDEXNAME as 'IndexName'
+        ,INDEXNAME as 'IndexNameFilter'
+        ,ID
+        ,PAGE as 'Page'
+        ,IMAGE as 'Image'
+        ,'\\' + SERVER + '\' + PATH + '\' + BOOKTYPE + '\' + BOOKNAME + '\' + INDEXNAME + '\' + IMAGE  AS 'imagePath' 
+FROM IMAGE_LOC_HIST
+    ]]></sql>
+    <column>
+      <column-name>Booktype</column-name>
+      <display-name><![CDATA[Booktype]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>BooktypeFilter</column-name>
+      <display-name><![CDATA[Book Type]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <is-filterable>true</is-filterable>
+    </column>
+    <column>
+      <column-name>BookName</column-name>
+      <display-name><![CDATA[BookName]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>BookNameFilter</column-name>
+      <display-name><![CDATA[Book Name]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <is-filterable>true</is-filterable>
+    </column>
+    <column>
+      <column-name>IndexName</column-name>
+      <display-name><![CDATA[IndexName]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>IndexNameFilter</column-name>
+      <display-name><![CDATA[Index Name]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <is-filterable>true</is-filterable>
+    </column>
+    <column>
+      <column-name>ID</column-name>
+      <display-name><![CDATA[ID]]></display-name>
+      <column-index>7</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+    </column>
+    <column>
+      <column-name>Page</column-name>
+      <display-name><![CDATA[Page]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+    </column>
+    <column>
+      <column-name>Image</column-name>
+      <display-name><![CDATA[Image]]></display-name>
+      <column-index>9</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>imagePath</column-name>
+      <display-name><![CDATA[imagePath]]></display-name>
+      <column-index>10</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <default-template>default</default-template>
+  <tablet-template>default</tablet-template>
+  <mobile-template>default</mobile-template>
+  <searcher-max-active>8</searcher-max-active>
+  <searcher-when-exhausted>1</searcher-when-exhausted>
+  <searcher-max-wait>10000</searcher-max-wait>
+  <searcher-max-idle>7</searcher-max-idle>
+  <is-in-memory-search>false</is-in-memory-search>
+  <allowed-ip-list>*</allowed-ip-list>
+  <is-empty-query-match-all>false</is-empty-query-match-all>
+  <date-weight-formula>
+    <time-weight time="600" weight="12.0"/>
+    <time-weight time="1800" weight="11.0"/>
+    <time-weight time="3600" weight="10.0"/>
+    <time-weight time="21600" weight="9.0"/>
+    <time-weight time="43200" weight="8.0"/>
+    <time-weight time="86400" weight="7.0"/>
+    <time-weight time="1296000" weight="6.0"/>
+    <time-weight time="2678400" weight="5.0"/>
+    <time-weight time="5356800" weight="4.0"/>
+    <time-weight time="8035200" weight="3.0"/>
+    <time-weight time="16070400" weight="2.0"/>
+    <time-weight time="32140800" weight="1.3"/>
+    <time-weight time="64281600" weight="1.2"/>
+    <time-weight time="96422400" weight="1.1"/>
+    <time-weight time="128563200" weight="1.05"/>
+    <time-weight time="160704000" weight="1.04"/>
+    <time-weight time="192844800" weight="1.03"/>
+    <time-weight time="224985600" weight="1.02"/>
+    <time-weight time="321408000" weight="1.01"/>
+  </date-weight-formula>
+  <spell-checking enabled="true"></spell-checking>
+</dataset>

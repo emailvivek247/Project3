@@ -1,0 +1,34 @@
+<#assign num_pages = (searchResult.total/searchResult.length)?int>
+<#if num_pages*searchResult.length < searchResult.total>
+ <#assign num_pages = num_pages + 1>
+</#if>
+<#assign current_page_index = (searchResult.start/searchResult.length)?int + 1>
+
+ <center>
+  <#if (num_pages>1)>
+    Result Page:
+
+    <#--determin pagination rage-->
+    <#assign start_page = current_page_index-5>
+    <#if start_page <= 0><#assign start_page = 1></#if>
+    <#assign end_page = start_page + 9>
+    <#if (end_page>num_pages)><#assign end_page = num_pages></#if>
+
+    <#--Render Previous-->
+    <#if (current_page_index>=2)>
+      <font size=+1><a class="paginationNext" href="?${noStartQueryString}&start=${length*(current_page_index - 2)}">Previous</a></font>
+    </#if>
+    <#foreach page_index in start_page..end_page>
+      <#if page_index == current_page_index>
+        <i>${page_index}</i>
+      <#else>
+        <a class="paginationNormal" href="?${noStartQueryString}&start=${length*(page_index-1)}">${page_index}</a>
+      </#if>
+    </#foreach>
+
+    <#--Render Next -->
+    <#if current_page_index < num_pages>
+      <font size=+1><a class="paginationNext" href="?${noStartQueryString}&start=${length*current_page_index}">Next</a></font>
+    </#if>
+  </#if>
+ </center>

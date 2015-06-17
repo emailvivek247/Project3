@@ -1,0 +1,45 @@
+<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (request.isUserInRole('ROAM_ADMIN') || request.isUserInRole('MOBILECMS_FREE_ACCESS') || request.isUserInRole('MOBILECMS_ATTORNEY_ACCESS') || request.isUserInRole('MOBILECMS_EMPLOYEE_ACCESS') || request.isUserInRole('MOBILECMS_ADMIN'))>
+
+	${request.getRequestDispatcher("/search.do?searchType=1&indexName=casesearch").forward(request, response)}
+
+<#else>
+
+	<#include "/WEB-INF/view/admin/layout/OtherBasic.stl">
+	<@indexLayout title="Search Platform" encoding="utf-8">
+	<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/tp.js"></script>
+	<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/tp.css" />
+	<link rel="shortcut icon" href="${request.getContextPath()}/favicon.ico"/>
+	<#assign visibleIndexes = 0>
+	<div id="control" style="margin-left:auto; margin-right:auto;width:80%; ">
+	<#foreach dc in dcs>
+	<#if dc.isValid() && dc.displayOrder &gt;= 0 && dc.getDefaultTemplateName()?has_content>
+	<#assign visibleIndexes = visibleIndexes + 1>    
+	<#assign _controlString = _controlString + "," + "'" + dc.name + "'">
+	<div id="${dc.name}" title="${dc.displayName}" style="height:500px;">
+	<br/>
+	<form method="get" action="search.do">
+	<input type="hidden" name="searchType" value="1">
+	<table align="center" border="0">
+		<tr>
+			<td align="right">
+				You do not have permission to access the Mobile County Probate ROAM Search Site. Please register in order to start searching!
+			</td>
+		</tr>
+	</table>
+	</form>
+
+	<br/>
+	</div>
+	</#if> 
+	</#foreach>
+	</div>
+	<#if visibleIndexes &gt; 0> 
+	<script type="text/javascript">
+	<!--	
+	tpSet('control', 'tabs'${_controlString});
+	// -->
+	</script>
+	</#if> 
+	</@indexLayout>
+
+</#if>

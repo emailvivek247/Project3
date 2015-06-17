@@ -1,0 +1,55 @@
+
+  		  <@display.column media="html" indexColumnName="BACKFILENUM" title="${searchResult.datasetConfiguration.getColumn(\"BACKFILENUM\").displayName}">
+		   	${searchResult.highlight(doc, "BACKFILENUM")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="BACKFILENUM" title="${searchResult.datasetConfiguration.getColumn(\"BACKFILENUM\").displayName}">
+		   	${doc.get("BACKFILENUM")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="BACKFILENUMEXACT" title="${searchResult.datasetConfiguration.getColumn(\"BACKFILENUMEXACT\").displayName}">
+		   	${searchResult.highlight(doc, "BACKFILENUMEXACT")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="BACKFILENUMEXACT" title="${searchResult.datasetConfiguration.getColumn(\"BACKFILENUMEXACT\").displayName}">
+		   	${doc.get("BACKFILENUMEXACT")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="BOOK" title="${searchResult.datasetConfiguration.getColumn(\"BOOK\").displayName}">
+		   	${searchResult.highlight(doc, "BOOK")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="BOOK" title="${searchResult.datasetConfiguration.getColumn(\"BOOK\").displayName}">
+		   	${doc.get("BOOK")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="BOOKEXACT" title="${searchResult.datasetConfiguration.getColumn(\"BOOKEXACT\").displayName}">
+		   	${searchResult.highlight(doc, "BOOKEXACT")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="BOOKEXACT" title="${searchResult.datasetConfiguration.getColumn(\"BOOKEXACT\").displayName}">
+		   	${doc.get("BOOKEXACT")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="PAGE" title="${searchResult.datasetConfiguration.getColumn(\"PAGE\").displayName}">
+		   	${searchResult.highlight(doc, "PAGE")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="PAGE" title="${searchResult.datasetConfiguration.getColumn(\"PAGE\").displayName}">
+		   	${doc.get("PAGE")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="PAGEEXACT" title="${searchResult.datasetConfiguration.getColumn(\"PAGEEXACT\").displayName}">
+		   	${searchResult.highlight(doc, "PAGEEXACT")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="PAGEEXACT" title="${searchResult.datasetConfiguration.getColumn(\"PAGEEXACT\").displayName}">
+		   	${doc.get("PAGEEXACT")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="INSTRUMENT" title="${searchResult.datasetConfiguration.getColumn(\"INSTRUMENT\").displayName}">
+		   	${searchResult.highlight(doc, "INSTRUMENT")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="INSTRUMENT" title="${searchResult.datasetConfiguration.getColumn(\"INSTRUMENT\").displayName}">
+		   	${doc.get("INSTRUMENT")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="LIKENAME" title="${searchResult.datasetConfiguration.getColumn(\"LIKENAME\").displayName}">
+		   	${searchResult.highlight(doc, "LIKENAME")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="LIKENAME" title="${searchResult.datasetConfiguration.getColumn(\"LIKENAME\").displayName}">
+		   	${doc.get("LIKENAME")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="NAME" title="${searchResult.datasetConfiguration.getColumn(\"NAME\").displayName}">
+		   	${searchResult.highlight(doc, "NAME")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="NAME" title="${searchResult.datasetConfiguration.getColumn(\"NAME\").displayName}">
+		   	${doc.get("NAME")}
+		  </@display.column>

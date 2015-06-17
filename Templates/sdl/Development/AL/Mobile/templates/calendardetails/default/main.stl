@@ -1,0 +1,18 @@
+<!--  -->
+<@com.useHighlightTag '<span class="highlight">', '</span>' />
+<#include "layout.stl">
+<@layout title="Judicial Calendar Daily Case List" encoding="${searchResult.encoding}">
+
+<#include "/templates/globalNav.stl">
+
+ <@com.errorMarkup/>
+ 
+ 
+ <br/><br/><br/>
+ <a href="javascript:" onclick="history.go(-1)" style="font-size:15px;font-weight:normal;"><< Back to previous page</a>
+ <table class="main"><tr valign="top"><td class="mainRight">
+  <div id="documents"><#include "documents.stl"></div>
+ </td></tr></table>
+ 
+ 
+</@layout>

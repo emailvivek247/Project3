@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset name="Judgment Search" exportedBy="null" createdAt="Fri Jan 11 18:24:34 EST 2013">
+  <description><![CDATA[Judgment Search]]></description>
+  <index-dir>legacyjudgement</index-dir>
+  <is-prefix-root-index-directory>true</is-prefix-root-index-directory>
+  <use-server-db-connection>false</use-server-db-connection>
+  <number-of-hours-before-deletion>6</number-of-hours-before-deletion>
+  <work-directory>_work</work-directory>
+  <temporary-index-minimal-merge-percentage>1.0</temporary-index-minimal-merge-percentage>
+  <merge-hours enabled="false" begin="1" end="3"/>
+  <fetcher-threads>7</fetcher-threads>
+  <writer-threads>3</writer-threads>
+  <index-max-size>100000.0</index-max-size>
+  <language>Any</language>
+  <analyzer-name>com.fdt.sdl.core.analyzer.NumberLowerCaseAnalyzer</analyzer-name>
+  <data-source-type>0</data-source-type>
+  <fetcher-configuration dir="null">
+  </fetcher-configuration>
+  <data-sources>
+    <data-source>
+      <name>default</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[2360AC228FD1133A8EB7F146C7F1189476ACF919CBFFBA1A412562E4C7F36D8E3365482602B39172386F9AADAE8B509AB1F0589435BDD4F5D1412D1C4CC72AC144E854D12798FFF5909456F85CDC5409EEEDEFE47946ED15F3F13816972887CE]]></db-url>
+      <db-username><![CDATA[BF0BE69483CAB5E41DCA4F34713505EA]]></db-username>
+      <db-password><![CDATA[73391AFF74BEB38A18A21123075F7934]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  </data-sources>
+  <dataquery name="WorkingQueue" batch-size="128" is-skipping-null-parameters="false">
+    <sql><![CDATA[
+{call JUDGMENT_INDEX_DELCO_SRC}
+    ]]></sql>
+    <column>
+      <column-name>CASE_SHORT_TITLE</column-name>
+      <display-name><![CDATA[Case Title]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CASE_NUMBER</column-name>
+      <display-name><![CDATA[Case Number]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <analyzer-name>com.fdt.sdl.core.analyzer.AlphaNumericAnalyzer</analyzer-name>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CASE_FILING_DT</column-name>
+      <display-name><![CDATA[Case Filing Date]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.sql.Timestamp</column-type>
+      <index-field-type>KeywordDateHierarchical</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+    </column>
+    <column>
+      <column-name>COURT_NAME</column-name>
+      <display-name><![CDATA[Court Name]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CASE_TYP_DESC</column-name>
+      <display-name><![CDATA[Case Type]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>EVENT_ENT_TYP_DESC</column-name>
+      <display-name><![CDATA[Event Type]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <is-filterable sum-column-names="">true</is-filterable>
+    </column>
+    <column>
+      <column-name>JUDGEMENT_FOR</column-name>
+      <display-name><![CDATA[Plaintiff]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>JUDGEMENT_AGAINST</column-name>
+      <display-name><![CDATA[Defendant]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>ACCOUNT_FOLIO_NUMBER</column-name>
+      <display-name><![CDATA[Account Number]]></display-name>
+      <column-index>9</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>JUDGMENT_AMOUNT</column-name>
+      <display-name><![CDATA[Judgement Amount]]></display-name>
+      <column-index>10</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>JUDGMENT_SATISFIED_BY</column-name>
+      <display-name><![CDATA[Judgment Satisfied By]]></display-name>
+      <column-index>11</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DISPOSITION_DATE</column-name>
+      <display-name><![CDATA[Disposition Date]]></display-name>
+      <column-index>12</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>BOOK</column-name>
+      <display-name><![CDATA[Book]]></display-name>
+      <column-index>13</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PAGE</column-name>
+      <display-name><![CDATA[Page]]></display-name>
+      <column-index>14</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <default-template>all</default-template>
+  <tablet-template>all</tablet-template>
+  <mobile-template>all</mobile-template>
+  <searcher-max-active>8</searcher-max-active>
+  <searcher-when-exhausted>1</searcher-when-exhausted>
+  <searcher-max-wait>10000</searcher-max-wait>
+  <searcher-max-idle>7</searcher-max-idle>
+  <is-in-memory-search>false</is-in-memory-search>
+  <allowed-ip-list>*</allowed-ip-list>
+  <is-empty-query-match-all>false</is-empty-query-match-all>
+  <date-weight-formula>
+    <time-weight time="600" weight="12.0"/>
+    <time-weight time="1800" weight="11.0"/>
+    <time-weight time="3600" weight="10.0"/>
+    <time-weight time="21600" weight="9.0"/>
+    <time-weight time="43200" weight="8.0"/>
+    <time-weight time="86400" weight="7.0"/>
+    <time-weight time="1296000" weight="6.0"/>
+    <time-weight time="2678400" weight="5.0"/>
+    <time-weight time="5356800" weight="4.0"/>
+    <time-weight time="8035200" weight="3.0"/>
+    <time-weight time="16070400" weight="2.0"/>
+    <time-weight time="32140800" weight="1.3"/>
+    <time-weight time="64281600" weight="1.2"/>
+    <time-weight time="96422400" weight="1.1"/>
+    <time-weight time="128563200" weight="1.05"/>
+    <time-weight time="160704000" weight="1.04"/>
+    <time-weight time="192844800" weight="1.03"/>
+    <time-weight time="224985600" weight="1.02"/>
+    <time-weight time="321408000" weight="1.01"/>
+  </date-weight-formula>
+  <spell-checking enabled="true"></spell-checking>
+</dataset>

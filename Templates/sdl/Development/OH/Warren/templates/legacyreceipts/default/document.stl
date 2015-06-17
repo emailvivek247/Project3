@@ -1,0 +1,37 @@
+
+  		  <@display.column media="html" indexColumnName="CaseNumber" title="${searchResult.datasetConfiguration.getColumn(\"CaseNumber\").displayName}">
+		   	${searchResult.highlight(doc, "CaseNumber")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseNumber" title="${searchResult.datasetConfiguration.getColumn(\"CaseNumber\").displayName}">
+		   	${doc.get("CaseNumber")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="PaymentAmount" title="${searchResult.datasetConfiguration.getColumn(\"PaymentAmount\").displayName}">
+		   		${pageStyleUtil.formatCurrency(doc.get("PaymentAmount"))}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="PaymentAmount" title="${searchResult.datasetConfiguration.getColumn(\"PaymentAmount\").displayName}">
+		   		${pageStyleUtil.formatCurrency(doc.get("PaymentAmount"))}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="ReceiptDateDisplay" title="${searchResult.datasetConfiguration.getColumn(\"ReceiptDateDisplay\").displayName}">
+		   	${searchResult.highlight(doc, "ReceiptDateDisplay")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="ReceiptDateDisplay" title="${searchResult.datasetConfiguration.getColumn(\"ReceiptDateDisplay\").displayName}">
+		   	${doc.get("ReceiptDateDisplay")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="ReceiptNumber" title="${searchResult.datasetConfiguration.getColumn(\"ReceiptNumber\").displayName}">
+		   		${number.format("###0.##",doc.get("ReceiptNumber"))}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="ReceiptNumber" title="${searchResult.datasetConfiguration.getColumn(\"ReceiptNumber\").displayName}">
+		   		${number.format("###0.##",doc.get("ReceiptNumber"))}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="ReceiptedBy" title="${searchResult.datasetConfiguration.getColumn(\"ReceiptedBy\").displayName}">
+		   	${searchResult.highlight(doc, "ReceiptedBy")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="ReceiptedBy" title="${searchResult.datasetConfiguration.getColumn(\"ReceiptedBy\").displayName}">
+		   	${doc.get("ReceiptedBy")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="ReceivedFrom" title="${searchResult.datasetConfiguration.getColumn(\"ReceivedFrom\").displayName}">
+		   	${searchResult.highlight(doc, "ReceivedFrom")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="ReceivedFrom" title="${searchResult.datasetConfiguration.getColumn(\"ReceivedFrom\").displayName}">
+		   	${doc.get("ReceivedFrom")}
+		  </@display.column>

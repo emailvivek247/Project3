@@ -1,0 +1,111 @@
+<#assign num_pages = (searchResult.total/searchResult.length)?int>
+
+<#if num_pages*searchResult.length < searchResult.total>
+ <#assign num_pages = num_pages + 1>
+</#if>
+<#assign current_page_index = (searchResult.start/searchResult.length)?int + 1>
+
+<#assign startItemIndex = (current_page_index-1)*searchResult.length + 1>
+<#assign endItemIndex = current_page_index*searchResult.length>
+<#if (endItemIndex>searchResult.total)>
+ <#assign endItemIndex = searchResult.total>
+</#if>
+  <TotalResults>${total}</TotalResults>
+  <TotalPages>${num_pages}</TotalPages>
+  <CurrentPage>${current_page_index}</CurrentPage>
+  <PageLength>${length}</PageLength>
+  <StartItemIndex>${startItemIndex}</StartItemIndex>
+  <EndItemIndex>${endItemIndex}</EndItemIndex>
+  <RequestProcessingTime>${searchTime}</RequestProcessingTime>
+  <QueryString><![CDATA[${q}]]></QueryString>
+<Items>
+  <#if searchResult.docs?has_content>
+  <#foreach doc in searchResult.docs>
+ <Item>
+   <ACREAGE><![CDATA[${doc.get("ACREAGE")}]]></ACREAGE>
+   <ACTIVE><![CDATA[${doc.get("ACTIVE")}]]></ACTIVE>
+   <ADD><![CDATA[${doc.get("ADD")}]]></ADD>
+   <BACKFILENUM><![CDATA[${doc.get("BACKFILENUM")}]]></BACKFILENUM>
+   <BLOCKNUM><![CDATA[${doc.get("BLOCKNUM")}]]></BLOCKNUM>
+   <BOOK><![CDATA[${doc.get("BOOK")}]]></BOOK>
+   <BOOKPAGE><![CDATA[${doc.get("BOOKPAGE")}]]></BOOKPAGE>
+   <BOOKSHORT><![CDATA[${doc.get("BOOKSHORT")}]]></BOOKSHORT>
+   <BUILDING><![CDATA[${doc.get("BUILDING")}]]></BUILDING>
+   <BYQUARTER><![CDATA[${doc.get("BYQUARTER")}]]></BYQUARTER>
+   <CITY><![CDATA[${doc.get("CITY")}]]></CITY>
+   <CONDOUNIT><![CDATA[${doc.get("CONDOUNIT")}]]></CONDOUNIT>
+   <CONSIDERATION><![CDATA[${number.format("###0.##",doc.get("CONSIDERATION"))}
+   ]]></CONSIDERATION>
+   <DATEREC><![CDATA[${doc.get("DATEREC")}]]></DATEREC>
+   <DATERECDISPLAY><![CDATA[${pageStyleUtil.format(doc.get("DATERECDISPLAY"), "yyyy-MM-dd hh:mm:ss", "MM/dd/yyyy hh:mm:ss" )}]]></DATERECDISPLAY>
+   <DATEVENT><![CDATA[${doc.get("DATEVENT")}]]></DATEVENT>
+   <DATEVENTDISPLAY><![CDATA[${pageStyleUtil.format(doc.get("DATEVENTDISPLAY"), "yyyy-MM-dd hh:mm:ss", "MM/dd/yyyy hh:mm:ss" )}]]></DATEVENTDISPLAY>
+   <DESIGSTATUS><![CDATA[${doc.get("DESIGSTATUS")}]]></DESIGSTATUS>
+   <DOCTYPE><![CDATA[${number.format("###0.##",doc.get("DOCTYPE"))}
+   ]]></DOCTYPE>
+   <DOCTYPEDESC><![CDATA[${doc.get("DOCTYPEDESC")}]]></DOCTYPEDESC>
+   <GPIN><![CDATA[${doc.get("GPIN")}]]></GPIN>
+   <INDEXTYPE><![CDATA[${number.format("###0.##",doc.get("INDEXTYPE"))}
+   ]]></INDEXTYPE>
+   <INSTRUMENT><![CDATA[${number.format("###0.##",doc.get("INSTRUMENT"))}
+   ]]></INSTRUMENT>
+   <LDESC><![CDATA[${doc.get("LDESC")}]]></LDESC>
+   <LDESC2><![CDATA[${doc.get("LDESC2")}]]></LDESC2>
+   <LDESC3><![CDATA[${doc.get("LDESC3")}]]></LDESC3>
+   <LEGAL1><![CDATA[${doc.get("LEGAL1")}]]></LEGAL1>
+   <LEGAL2><![CDATA[${doc.get("LEGAL2")}]]></LEGAL2>
+   <LEGALDESCRIPTION><![CDATA[${doc.get("LEGALDESCRIPTION")}]]></LEGALDESCRIPTION>
+   <LIKENAME><![CDATA[${doc.get("LIKENAME")}]]></LIKENAME>
+   <LOTLETTER><![CDATA[${doc.get("LOTLETTER")}]]></LOTLETTER>
+   <LOTNUM><![CDATA[${doc.get("LOTNUM")}]]></LOTNUM>
+   <MAPBOOK><![CDATA[${doc.get("MAPBOOK")}]]></MAPBOOK>
+   <MAPPAGE><![CDATA[${doc.get("MAPPAGE")}]]></MAPPAGE>
+   <MARGINALS><![CDATA[${doc.get("MARGINALS")}]]></MARGINALS>
+   <NAME><![CDATA[${doc.get("NAME")}]]></NAME>
+   <OFFLINEIMAGE><![CDATA[${doc.get("OFFLINEIMAGE")}]]></OFFLINEIMAGE>
+   <OTHERDESIGSTATUS><![CDATA[${doc.get("OTHERDESIGSTATUS")}]]></OTHERDESIGSTATUS>
+   <OTHERNAME><![CDATA[${doc.get("OTHERNAME")}]]></OTHERNAME>
+   <OTHERROLE><![CDATA[${doc.get("OTHERROLE")}]]></OTHERROLE>
+   <OTHERROLENAME><![CDATA[${doc.get("OTHERROLENAME")}]]></OTHERROLENAME>
+   <PAGE><![CDATA[${doc.get("PAGE")}]]></PAGE>
+   <PARCEL><![CDATA[${doc.get("PARCEL")}]]></PARCEL>
+   <PARTYROLE><![CDATA[${doc.get("PARTYROLE")}]]></PARTYROLE>
+   <PHASE><![CDATA[${doc.get("PHASE")}]]></PHASE>
+   <PHONETICNAME><![CDATA[${doc.get("PHONETICNAME")}]]></PHONETICNAME>
+   <QUARTER><![CDATA[${doc.get("QUARTER")}]]></QUARTER>
+   <RANGENUM><![CDATA[${doc.get("RANGENUM")}]]></RANGENUM>
+   <REMARKS><![CDATA[${doc.get("REMARKS")}]]></REMARKS>
+   <ROLE><![CDATA[${number.format("###0.##",doc.get("ROLE"))}
+   ]]></ROLE>
+   <SECTIONNUM><![CDATA[${doc.get("SECTIONNUM")}]]></SECTIONNUM>
+   <SEQ><![CDATA[${number.format("###0.##",doc.get("SEQ"))}
+   ]]></SEQ>
+   <STATE><![CDATA[${doc.get("STATE")}]]></STATE>
+   <STATUS><![CDATA[${doc.get("STATUS")}]]></STATUS>
+   <SUBDIVISION><![CDATA[${doc.get("SUBDIVISION")}]]></SUBDIVISION>
+   <TAXMAP><![CDATA[${doc.get("TAXMAP")}]]></TAXMAP>
+   <TOWNSHIP><![CDATA[${doc.get("TOWNSHIP")}]]></TOWNSHIP>
+   <TYPE><![CDATA[${doc.get("TYPE")}]]></TYPE>
+   <UNIT><![CDATA[${doc.get("UNIT")}]]></UNIT>
+   <VER><![CDATA[${doc.get("VER")}]]></VER>
+   <ZIP><![CDATA[${doc.get("ZIP")}]]></ZIP>
+   <LEGAL3><![CDATA[${doc.get("LEGAL3")}]]></LEGAL3>
+   <LEGAL_TYPE><![CDATA[${doc.get("LEGAL_TYPE")}]]></LEGAL_TYPE>
+   <MULTIPLE_LEGAL><![CDATA[${doc.get("MULTIPLE_LEGAL")}]]></MULTIPLE_LEGAL>
+   <MULTIPLE_PARTY1><![CDATA[${doc.get("MULTIPLE_PARTY1")}]]></MULTIPLE_PARTY1>
+   <MULTIPLE_PARTY2><![CDATA[${doc.get("MULTIPLE_PARTY2")}]]></MULTIPLE_PARTY2>
+   <MULTIPLE_REFERENCE><![CDATA[${doc.get("MULTIPLE_REFERENCE")}]]></MULTIPLE_REFERENCE>
+   <MULTIPLE_RETURNEE><![CDATA[${doc.get("MULTIPLE_RETURNEE")}]]></MULTIPLE_RETURNEE>
+   <ST_DIR><![CDATA[${doc.get("ST_DIR")}]]></ST_DIR>
+   <ST_LOCUS><![CDATA[${doc.get("ST_LOCUS")}]]></ST_LOCUS>
+   <ST_NAME><![CDATA[${doc.get("ST_NAME")}]]></ST_NAME>
+   <ST_NUM><![CDATA[${doc.get("ST_NUM")}]]></ST_NUM>
+   <ST_SUF><![CDATA[${doc.get("ST_SUF")}]]></ST_SUF>
+   <ST_TYPE><![CDATA[${doc.get("ST_TYPE")}]]></ST_TYPE>
+   <ST_ZIP><![CDATA[${doc.get("ST_ZIP")}]]></ST_ZIP>
+   <CORP><![CDATA[${doc.get("CORP")}]]></CORP>
+
+  </Item>
+  </#foreach>
+  </#if>
+</Items>

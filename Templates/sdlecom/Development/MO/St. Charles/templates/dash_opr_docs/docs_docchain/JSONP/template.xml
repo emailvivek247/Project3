@@ -1,0 +1,9 @@
+<template>
+  <longname>Cross-Domain JSONP</longname>
+  <description>
+  JSONP or &quot;JSON with padding&quot; is a JSON extension wherein a prefix is specified as an input argument of the call itself. 
+  This padding prefix is typically the name of a callback function, but may also be a variable assignment, an if statement, 
+  or any other Javascript statement prefix. It is now used by many Web 2.0 applications such as Dojo Toolkit Applications, 
+  Google Toolkit Applications and Web Services. 
+  </description>
+</template>

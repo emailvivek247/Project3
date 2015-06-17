@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset name="Party_details" exportedBy="null" createdAt="Mon Feb 17 08:05:20 EST 2014">
+  <display-order>-9</display-order>
+  <description><![CDATA[New Party Details]]></description>
+  <index-dir>party_details</index-dir>
+  <is-prefix-root-index-directory>true</is-prefix-root-index-directory>
+  <use-server-db-connection>false</use-server-db-connection>
+  <number-of-hours-before-deletion>6</number-of-hours-before-deletion>
+  <work-directory>_work</work-directory>
+  <temporary-index-minimal-merge-percentage>1.0</temporary-index-minimal-merge-percentage>
+  <merge-hours enabled="false" begin="1" end="3"/>
+  <fetcher-threads>7</fetcher-threads>
+  <writer-threads>3</writer-threads>
+  <index-max-size>100000.0</index-max-size>
+  <language>Any</language>
+  <analyzer-name>com.fdt.sdl.core.analyzer.NumberLowerCaseAnalyzer</analyzer-name>
+  <data-source-type>0</data-source-type>
+  <fetcher-configuration dir="null">
+  </fetcher-configuration>
+  <data-sources>
+    <data-source>
+      <name>default</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[E4037EF9A0079453FEE2354BE7BF8EB360342AEBED1E5522FF30BCF25B671B10E9944F3D2BF2FDF6C999C11F6BD0A0C40251B909FD9552E9152ABC3FA7EF01395415F8E1CF0E12C1DFE31B7393FAC54F9BA32336DBA6A9F1]]></db-url>
+      <db-username><![CDATA[EDBDFEBA4CC055ACE8A83F51FBF699DA2C764228B551A34F]]></db-username>
+      <db-password><![CDATA[4BB79BEBA07BDC2F85C90F392CFE3B4C045BCDEA12385652]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  </data-sources>
+  <dataquery name="WorkingQueue" batch-size="128" is-skipping-null-parameters="false">
+    <sql><![CDATA[
+SELECT DISTINCT 
+A.PERSON_ALIAS_ID AS 'PersonSPN',
+A.PARTY_ID AS 'PartyID',
+CASE WHEN LTRIM(RTRIM(A.RSTRCD_PARTY_FLAG)) = '' THEN 'N' ELSE ISNULL(A.RSTRCD_PARTY_FLAG, 'N') END AS 'PartyConfidential',
+A.DATE_TIME_MOD,
+B.PERSON_ALIAS_ID AS 'PersonSPN',
+CASE WHEN LTRIM(RTRIM(B.FIRST_NAME)) = '' THEN '|' ELSE ISNULL(B.FIRST_NAME, '|') END AS 'FirstName',
+CASE WHEN LTRIM(RTRIM(B.MIDDLE_NAME)) = '' THEN '|' ELSE ISNULL(B.MIDDLE_NAME, '|') END AS 'MiddleName',
+CASE WHEN LTRIM(RTRIM(B.LAST_NAME)) = '' THEN '|' ELSE ISNULL(B.LAST_NAME, '|') END AS 'LastName',
+CASE WHEN LTRIM(RTRIM(B.SUFFIX_NAME)) = '' THEN '|' ELSE ISNULL(B.SUFFIX_NAME, '|') END AS 'SuffixName',
+CASE WHEN LTRIM(RTRIM(B.SEALED_FLAG)) = '' THEN 'N' ELSE ISNULL(B.SEALED_FLAG, 'N') END AS 'PersonSealed'
+FROM ACM_PARTY A
+INNER JOIN ACM_PERSON B
+ON A.PERSON_ALIAS_ID = B.PERSON_ALIAS_ID
+WHERE VOID <> 'Y'  
+ORDER BY DATE_TIME_MOD DESC
+    ]]></sql>
+    <column>
+      <column-name>PersonSPN</column-name>
+      <display-name><![CDATA[PersonSPN]]></display-name>
+      <column-index>1</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+    </column>
+    <column>
+      <column-name>PartyID</column-name>
+      <display-name><![CDATA[Party ID]]></display-name>
+      <column-index>2</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+    </column>
+    <column>
+      <column-name>PartyConfidential</column-name>
+      <display-name><![CDATA[Party Confidential]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>DATE_TIME_MOD</column-name>
+      <display-name><![CDATA[DATE_TIME_MOD]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.sql.Timestamp</column-type>
+      <index-field-type>KeywordDateHierarchical</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+    </column>
+    <column>
+      <column-name>PersonSPN</column-name>
+      <display-name><![CDATA[PersonSPN]]></display-name>
+      <column-index>5</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+    </column>
+    <column>
+      <column-name>FirstName</column-name>
+      <display-name><![CDATA[FirstName]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>MiddleName</column-name>
+      <display-name><![CDATA[MiddleName]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>LastName</column-name>
+      <display-name><![CDATA[LastName]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>SuffixName</column-name>
+      <display-name><![CDATA[SuffixName]]></display-name>
+      <column-index>9</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>PersonSealed</column-name>
+      <display-name><![CDATA[PersonSealed]]></display-name>
+      <column-index>10</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+  </dataquery>
+  <default-template>Part_Details</default-template>
+  <tablet-template>Part_Details</tablet-template>
+  <mobile-template>Part_Details</mobile-template>
+  <searcher-max-active>8</searcher-max-active>
+  <searcher-when-exhausted>1</searcher-when-exhausted>
+  <searcher-max-wait>10000</searcher-max-wait>
+  <searcher-max-idle>7</searcher-max-idle>
+  <is-in-memory-search>false</is-in-memory-search>
+  <allowed-ip-list>*</allowed-ip-list>
+  <is-empty-query-match-all>false</is-empty-query-match-all>
+  <date-weight-formula>
+    <time-weight time="600" weight="12.0"/>
+    <time-weight time="1800" weight="11.0"/>
+    <time-weight time="3600" weight="10.0"/>
+    <time-weight time="21600" weight="9.0"/>
+    <time-weight time="43200" weight="8.0"/>
+    <time-weight time="86400" weight="7.0"/>
+    <time-weight time="1296000" weight="6.0"/>
+    <time-weight time="2678400" weight="5.0"/>
+    <time-weight time="5356800" weight="4.0"/>
+    <time-weight time="8035200" weight="3.0"/>
+    <time-weight time="16070400" weight="2.0"/>
+    <time-weight time="32140800" weight="1.3"/>
+    <time-weight time="64281600" weight="1.2"/>
+    <time-weight time="96422400" weight="1.1"/>
+    <time-weight time="128563200" weight="1.05"/>
+    <time-weight time="160704000" weight="1.04"/>
+    <time-weight time="192844800" weight="1.03"/>
+    <time-weight time="224985600" weight="1.02"/>
+    <time-weight time="321408000" weight="1.01"/>
+  </date-weight-formula>
+  <spell-checking enabled="true"></spell-checking>
+</dataset>

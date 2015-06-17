@@ -1,0 +1,22 @@
+<#macro layout(title="", encoding="utf-8")>
+<html><head><title>Case Details</title>
+<meta http-equiv="content-type" content="text/html; charset=${encoding}">
+<link rel="stylesheet" href="templates/publicdetail/CivilDetail/resource/blue.css" type="text/css" media="print, projection, screen" />
+<script type="text/javascript" src="templates/publicdetail/CivilDetail/resource/jquery.js"></script>
+<script type="text/javascript" src="templates/publicdetail/CivilDetail/resource/jquery.tablesorter.js"></script>
+<script type="text/javascript" src="templates/publicdetail/CivilDetail/resource/jquery.metadata.js"></script>
+<link rel="shortcut icon" href="favicon.ico"/>
+<style type="text/css" media=all>
+<!--
+body{margin:4px 6px 4px 6px;background-color:#fff}
+body,th,td,div,.p,a{font-family:verdana,sans-serif;font-size:90%}
+.box{width:100%;border:1px solid #d2e4fc;border-collapse:collapse;float:top}
+.box th,.box .header{text-align:left;font-weight:bold;background:#2191C0 url(templates/publicdetail/CivilDetail/resource/ui-bg_gloss-wave_75_2191c0_500x100.png) repeat-x scroll 50% 50%;color:#FFFFFF;border:1px}
+.center{text-align:center;}
+//-->
+</style>
+</head>
+<body link="#0000ff" vlink="#0000ff">
+<#nested>
+</body></html>
+</#macro>

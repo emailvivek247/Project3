@@ -1,0 +1,139 @@
+<#-- *Assign variables for Phonetic Search -->
+<#assign searchable = request.getParameter("searchable")>
+<#assign phonetic = "WebPhoneticName,ExactName,NameSort,Instrument,RecDate,PartyRole,IndexType,DocTypeDesc,DocType,Book,Page,Lot,Unit,SectionNum,Subdivision,Township,Other,DesigStatus,GPIN,ProjectNum,RdNum,Desc2,Desc3,Phase,Acreage,Building,LegacyNumber">
+<#assign search = "WebName,ExactName,NameSort,Instrument,RecDate,PartyRole,IndexType,DocTypeDesc,DocType,Book,Page,Lot,Unit,SectionNum,Subdivision,Township,Other,DesigStatus,GPIN,ProjectNum,RdNum,Desc2,Desc3,Phase,Acreage,Building,LegacyNumber">
+
+
+ 
+                  <@display.column media="html" indexColumnName="Instrument" title="${searchResult.datasetConfiguration.getColumn(\"Instrument\").displayName}">
+<#-- *Link Instrument Number to Details page -->
+                  <a href="${request.getContextPath()}/search.do?indexName=details&templateName=Details_SN&lq=${pageStyleUtil.encodeURL("Instrument:\"" + doc.get("Instrument") + "\"")}"> ${searchResult.highlight(doc, "Instrument")}</a> 
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="Instrument" title="${searchResult.datasetConfiguration.getColumn(\"Instrument\").displayName}">
+                ${number.format("###0.##",doc.get("Instrument"))}
+          </@display.column>
+          <@display.column media="html" indexColumnName="RecDateDisplay" title="${searchResult.datasetConfiguration.getColumn(\"RecDateDisplay\").displayName}">
+          <#-- *Format Recorded Date -->           
+                     <#if doc.get("RecDateDisplay")?has_content>
+                     ${pageStyleUtil.format(doc.get("RecDateDisplay"), "yyyy-MM-dd HH:mm:ss", "MM/dd/yyyy HH:mm:ss a")}         
+                     </#if>
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="RecDateDisplay" title="${searchResult.datasetConfiguration.getColumn(\"RecDateDisplay\").displayName}">
+          <#-- *Format Recorded Date -->              
+                     <#if doc.get("RecDateDisplay")?has_content>
+                     ${pageStyleUtil.format(doc.get("RecDateDisplay"), "yyyy-MM-dd HH:mm:ss", "MM/dd/yyyy HH:mm:ss a")}         
+                     </#if>
+          </@display.column>
+          <@display.column media="html" indexColumnName="EventDateDisplay" title="${searchResult.datasetConfiguration.getColumn(\"EventDateDisplay\").displayName}">
+	<#-- *Format Event Date -->           
+	       <#if doc.get("EventDateDisplay")?has_content>
+	       ${pageStyleUtil.format(doc.get("EventDateDisplay"), "yyyy-MM-dd HH:mm:ss", "MM/dd/yyyy HH:mm:ss a")}         
+	       </#if>
+	</@display.column>
+	<@display.column media="rtf excel pdf" indexColumnName="EventDateDisplay" title="${searchResult.datasetConfiguration.getColumn(\"EventDateDisplay\").displayName}">
+	<#-- *Format Event Date -->              
+	       <#if doc.get("EventDateDisplay")?has_content>
+	       ${pageStyleUtil.format(doc.get("EventDateDisplay"), "yyyy-MM-dd HH:mm:ss", "MM/dd/yyyy HH:mm:ss a")}         
+	       </#if>
+          </@display.column>
+
+<#-- *Check type of search to allow for highlighting and add DESIGSTATUS -->
+            
+                <#if isPhoneticSearch == "1">
+          <@display.column media="html" indexColumnName="WebPhoneticName" title="${searchResult.datasetConfiguration.getColumn(\"WebPhoneticName\").displayName}">
+             ${searchResult.highlight(doc, "WebPhoneticName")} 
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="WebPhoneticName" title="${searchResult.datasetConfiguration.getColumn(\"WebPhoneticName\").displayName}">
+            ${doc.get("WebPhoneticName")}
+          </@display.column>
+            <#else> 
+          <@display.column media="html" indexColumnName="WebName" title="${searchResult.datasetConfiguration.getColumn(\"WebName\").displayName}">
+            ${searchResult.highlight(doc, "WebName")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="WebName" title="${searchResult.datasetConfiguration.getColumn(\"WebName\").displayName}">
+            ${doc.get("WebName")}
+          </@display.column>
+                </#if>
+          <@display.column media="html" indexColumnName="PartyRole" title="${searchResult.datasetConfiguration.getColumn(\"PartyRole\").displayName}">
+            ${searchResult.highlight(doc, "PartyRole")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="PartyRole" title="${searchResult.datasetConfiguration.getColumn(\"PartyRole\").displayName}">
+            ${doc.get("PartyRole")}
+          </@display.column>
+          <@display.column media="html" indexColumnName="DocTypeDesc" title="${searchResult.datasetConfiguration.getColumn(\"DocTypeDesc\").displayName}">
+            ${searchResult.highlight(doc, "DocTypeDesc")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="DocTypeDesc" title="${searchResult.datasetConfiguration.getColumn(\"DocTypeDesc\").displayName}">
+            ${doc.get("DocTypeDesc")}
+          </@display.column>
+          <@display.column media="html" indexColumnName="Book" title="${searchResult.datasetConfiguration.getColumn(\"Book\").displayName}">
+            ${searchResult.highlight(doc, "Book")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="Book" title="${searchResult.datasetConfiguration.getColumn(\"Book\").displayName}">
+            ${doc.get("Book")}
+          </@display.column>
+          <@display.column media="html" indexColumnName="Page" title="${searchResult.datasetConfiguration.getColumn(\"Page\").displayName}">
+            ${searchResult.highlight(doc, "Page")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="Page" title="${searchResult.datasetConfiguration.getColumn(\"Page\").displayName}">
+            ${doc.get("Page")}
+          </@display.column>
+          <@display.column media="html" indexColumnName="OtherName" title="${searchResult.datasetConfiguration.getColumn(\"OtherName\").displayName}">
+            ${searchResult.highlight(doc, "OtherName")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="OtherName" title="${searchResult.datasetConfiguration.getColumn(\"OtherName\").displayName}">
+            ${doc.get("OtherName")}
+          </@display.column>
+
+<#-- *Check for multiple legal -->
+          <@display.column media="html" indexColumnName="LegalDescription" title="${searchResult.datasetConfiguration.getColumn(\"LegalDescription\").displayName}">
+            <#if doc.get("MultipleLegal")="Y">
+                    ${searchResult.highlight(doc, "LegalDescription")} <font color=red> [+] </font>
+                     <#else>
+                    ${searchResult.highlight(doc, "LegalDescription")}
+                     </#if>
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="LegalDescription" title="${searchResult.datasetConfiguration.getColumn(\"LegalDescription\").displayName}">
+            <#if doc.get("MultipleLegal")="Y">
+                    ${doc.get("LegalDescription")} 
+                     <#else>
+                    ${doc.get("LegalDescription")}
+                     </#if>
+          </@display.column>
+<#-- *Check for multiple reference, add link for document chain (disabled) -->
+          <@display.column media="html" indexColumnName="FirstReference" title="${searchResult.datasetConfiguration.getColumn(\"FirstReference\").displayName}">
+             <#if doc.get("MultipleReference")="Y">
+                ${searchResult.highlight(doc, "FirstReference")} <font color=red> [+] </font>
+                      <#else>
+                ${searchResult.highlight(doc, "FirstReference")} 
+                      </#if>  
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="FirstReference" title="${searchResult.datasetConfiguration.getColumn(\"FirstReference\").displayName}">
+            <#if doc.get("MultipleReference")="Y">
+                   ${doc.get("FirstReference")}
+                    <#else>
+                   ${doc.get("FirstReference")}
+                    </#if>
+          </@display.column>
+          <@display.column media="html" indexColumnName="LegacyNumber" title="${searchResult.datasetConfiguration.getColumn(\"LegacyNumber\").displayName}">
+	              ${searchResult.highlight(doc, "LegacyNumber")}
+	            </@display.column>
+	            <@display.column media="rtf excel pdf" indexColumnName="LegacyNumber" title="${searchResult.datasetConfiguration.getColumn(\"LegacyNumber\").displayName}">
+	              ${doc.get("LegacyNumber")}
+          </@display.column>
+          
+<#if request.isUserInRole('VABEACH_IMAGE_ACCESS') || request.isUserInRole('VABEACH_ADMIN') || request.isUserInRole('ROAM_ADMIN')>
+          <@display.column  media="html" title="Briefcase">
+                        <a href="javascript:;" onclick="addToCart('indexName?=?${indexName}?=?${dc.displayName}', 'Instrument?=?${doc.get("Instrument")}?con?Instrument?=?${doc.get("Instrument")?replace("'", "\\'")?replace("\"", "\\\"")}?con?${searchResult.datasetConfiguration.getColumn("DocType").displayName}?=?${doc.get("DocType")?replace("'", "\\'")?replace("\"", "\\\"")?trim}', 'Instrument%3A${doc.get("Instrument")}', '25');" >Add</a>
+      </@display.column>
+      <@display.column  media="html" title="View Image">
+                    <div style="text-align:center" class="gallery clearfix"><a class="nocolor pphoto" href="${request.getContextPath()}/search.do?indexName=images&lq=${pageStyleUtil.encodeURL("Instrument:" + doc.get("Instrument"))}&page=1&view=FitV&scrollbar=0&navpanes=0&statusbar=0&messages=0?iframe=true&width=50%25&height=95%25" rel="prettyPhoto[iframe]" title="Instrument : <a  class='nocolor' href='${request.getContextPath()}/search.do?indexName=details&templateName=Details_SN&lq=${pageStyleUtil.encodeURL("Instrument:\"" + doc.get("Instrument") + "\"")}'<b>${doc.get("Instrument")}</b></a> </br> Doc Type: ${doc.get("DocType")} </br> Date Recorded: ${pageStyleUtil.format(doc.get("RecDateDisplay"), "yyyy-MM-dd hh:mm:ss", "MM/dd/yyyy hh:mm:ss a")} </br>" ><img border="0" title="Preview" src="<@com.currentUrlPrefix/>/resource/preview.png"></a></div>
+       </@display.column>
+</#if>      
+      
+      
+      
+      
+      
+      
+      

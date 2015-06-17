@@ -1,0 +1,30 @@
+
+  		  <@display.column media="html" indexColumnName="SessionWeekDay" title="${searchResult.datasetConfiguration.getColumn(\"SessionWeekDay\").displayName}">
+		   	${searchResult.highlight(doc, "SessionWeekDay")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="SessionWeekDay" title="${searchResult.datasetConfiguration.getColumn(\"SessionWeekDay\").displayName}">
+		   	${doc.get("SessionWeekDay")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="SessionDateDisplay" title="${searchResult.datasetConfiguration.getColumn(\"SessionDateDisplay\").displayName}">
+		   		
+		   		${pageStyleUtil.format(doc.get("SessionDateDisplay"), "yyyy-MM-dd", "MM/dd/yyyy")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="SessionDateDisplay" title="${searchResult.datasetConfiguration.getColumn(\"SessionDateDisplay\").displayName}">
+		   		
+		   		${pageStyleUtil.format(doc.get("SessionDateDisplay"), "yyyy-MM-dd", "MM/dd/yyyy")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="CourtRoom1" title="${searchResult.datasetConfiguration.getColumn(\"CourtRoom1\").displayName}">
+		   		<a href="search.do?indexName=calendardetails&templateName=default&lq=SessionDateSearch:${doc.get("SessionDateSearch")}+AND++CourtRoomID:1">${number.format("###0.##",doc.get("CourtRoom1"))}</a> 
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CourtRoom1" title="${searchResult.datasetConfiguration.getColumn(\"CourtRoom1\").displayName}">
+		   		${number.format("###0.##",doc.get("CourtRoom1"))}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="CourtRoom2" title="${searchResult.datasetConfiguration.getColumn(\"CourtRoom2\").displayName}">
+		   		<a href="search.do?indexName=calendardetails&templateName=default&lq=SessionDateSearch:${doc.get("SessionDateSearch")}+AND++CourtRoomID:2">${number.format("###0.##",doc.get("CourtRoom2"))}</a> 
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CourtRoom2" title="${searchResult.datasetConfiguration.getColumn(\"CourtRoom2\").displayName}">
+		   		${number.format("###0.##",doc.get("CourtRoom2"))}
+		  </@display.column>
+
+
+

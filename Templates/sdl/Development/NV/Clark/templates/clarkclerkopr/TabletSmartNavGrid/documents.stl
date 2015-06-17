@@ -1,0 +1,58 @@
+<#-- *Modify columns -->
+<table id="searchResult" class="tablesorter">
+ <thead><tr>
+  <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("Instrument").displayName}</th>
+  <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("RECDATEDISPLAY").displayName}</th>
+  <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("Name").displayName}</th>
+  <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("PartyRole").displayName}</th>
+  <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("OtherName").displayName}</th>
+  <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("OtherRole").displayName}</th>
+  <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("DocTypeDesc").displayName}</th>
+ </tr></thead>
+ <tbody>
+<#if searchResult.docs?has_content>
+ <#foreach doc in searchResult.docs>
+  <tr>
+    <td>
+      <a target="_parent" onClick='rowSelected(this)' href="search.do?indexName=clarkdetails&templateName=default_tablet&lq=${pageStyleUtil.encodeURL("Instrument:" + doc.get("Instrument"))}">${doc.get("Instrument")}</a>
+   </td>   
+<td>
+       <#if doc.get("RECDATEDISPLAY")?has_content>
+                     ${pageStyleUtil.format(doc.get("RECDATEDISPLAY"), "yyyy-MM-dd hh:mm:ss", "MM/dd/yyyy hh:mm:ss a")}         
+                     </#if>  
+   </td>    
+   <td>
+	<#if isPhoneticSearch == "1">
+	  ${searchResult.highlight(doc, "PhoneticName")}      
+        <#else>
+      	  ${searchResult.highlight(doc, "Name")}
+      </#if>  
+   </td>
+   <td>${searchResult.highlight(doc, "PartyRole")}</td>
+   <td>${searchResult.highlight(doc, "OtherName")}</td>
+   <td>${searchResult.highlight(doc, "OtherRole")}</td>
+   <td>${searchResult.highlight(doc, "DocTypeDesc")}</td>
+ </tr>
+ </#foreach>
+</#if>
+ </tbody>
+</table>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+    oTable = $('#searchResult').dataTable({
+        "bJQueryUI": true,
+        "bPaginate": false,
+        "bLengthChange": false,
+        "bFilter": false,
+        "bSort": true,
+        "bInfo": false,
+        "bAutoWidth": false,
+        "aaSorting": []
+    });
+    
+
+} );
+</script>

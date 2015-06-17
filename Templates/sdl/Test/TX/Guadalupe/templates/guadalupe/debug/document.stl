@@ -1,0 +1,60 @@
+                  <@display.column media="html" indexColumnName="BACKFILENUM" title="${searchResult.datasetConfiguration.getColumn(\"BACKFILENUM\").displayName}">
+		   		${number.format("###0.##",doc.get("BACKFILENUM"))}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="BACKFILENUM" title="${searchResult.datasetConfiguration.getColumn(\"BACKFILENUM\").displayName}">
+		   		${number.format("###0.##",doc.get("BACKFILENUM"))}
+		  </@display.column>  		  
+                  <@display.column media="html" indexColumnName="DOCTYPE" title="${searchResult.datasetConfiguration.getColumn(\"DOCTYPE\").displayName}">
+		   		${number.format("###0.##",doc.get("DOCTYPE"))}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DOCTYPE" title="${searchResult.datasetConfiguration.getColumn(\"DOCTYPE\").displayName}">
+		   		${number.format("###0.##",doc.get("DOCTYPE"))}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="DOCTYPEDESC" title="${searchResult.datasetConfiguration.getColumn(\"DOCTYPEDESC\").displayName}">
+		   	${searchResult.highlight(doc, "DOCTYPEDESC")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DOCTYPEDESC" title="${searchResult.datasetConfiguration.getColumn(\"DOCTYPEDESC\").displayName}">
+		   	${doc.get("DOCTYPEDESC")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="INDEXTYPE" title="${searchResult.datasetConfiguration.getColumn(\"INDEXTYPE\").displayName}">
+		   		${number.format("###0.##",doc.get("INDEXTYPE"))}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="INDEXTYPE" title="${searchResult.datasetConfiguration.getColumn(\"INDEXTYPE\").displayName}">
+		   		${number.format("###0.##",doc.get("INDEXTYPE"))}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="INSTRUMENT" title="${searchResult.datasetConfiguration.getColumn(\"INSTRUMENT\").displayName}">
+		   	${searchResult.highlight(doc, "INSTRUMENT")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="INSTRUMENT" title="${searchResult.datasetConfiguration.getColumn(\"INSTRUMENT\").displayName}">
+		   	${doc.get("INSTRUMENT")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="IndexCode" title="${searchResult.datasetConfiguration.getColumn(\"IndexCode\").displayName}">
+		   		${number.format("###0.##",doc.get("IndexCode"))}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="IndexCode" title="${searchResult.datasetConfiguration.getColumn(\"IndexCode\").displayName}">
+		   		${number.format("###0.##",doc.get("IndexCode"))}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="NAME" title="${searchResult.datasetConfiguration.getColumn(\"NAME\").displayName}">
+		   	${searchResult.highlight(doc, "NAME")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="NAME" title="${searchResult.datasetConfiguration.getColumn(\"NAME\").displayName}">
+		   	${doc.get("NAME")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="BOOK" title="${searchResult.datasetConfiguration.getColumn(\"BOOK\").displayName}">
+		   	${searchResult.highlight(doc, "BOOK")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="BOOK" title="${searchResult.datasetConfiguration.getColumn(\"BOOK\").displayName}">
+		   	${doc.get("BOOK")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="PAGE" title="${searchResult.datasetConfiguration.getColumn(\"PAGE\").displayName}">
+		   	${searchResult.highlight(doc, "PAGE")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="PAGE" title="${searchResult.datasetConfiguration.getColumn(\"PAGE\").displayName}">
+		   	${doc.get("PAGE")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="LIKENAME" title="${searchResult.datasetConfiguration.getColumn(\"LIKENAME\").displayName}">
+		   	${searchResult.highlight(doc, "LIKENAME")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="LIKENAME" title="${searchResult.datasetConfiguration.getColumn(\"LIKENAME\").displayName}">
+		   	${doc.get("LIKENAME")}
+		  </@display.column>

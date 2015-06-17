@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="2B8F772BE4948F1A4F5CCF571FE2E354D6B13A0742B78313" adminuser="4509A773D406819FC2E2221BD84B8F2F864092CB009D7969">
+  <index-root-directory><![CDATA[C:\index\arizona-old\]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[0E0044B8DA73CB6BFCF3EEA6057602EAAF45D86532BA132E8EF898D90561AB0E304948E62BC66399E54E98976D3A4F1A2790C2FB576B97E426EAD9155811FB56C3597CD7C60E2E691DCB2A19B80B191FB41C2AA4CCEB48A6C6C403A83A4A5282]]></db-url>
+      <db-username><![CDATA[9EFFA04340309201A034210F62CC95FEB0A70A149DA58D6F]]></db-username>
+      <db-password><![CDATA[790282524A99CA476041AF4DAAB2110FABC9F27B6CDB2068]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

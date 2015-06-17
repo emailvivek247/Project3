@@ -1,0 +1,115 @@
+<#-- *Assign variables for Phonetic Search -->
+<#assign searchable = request.getParameter("searchable")>
+<#assign phonetic = "LastNamePhonetic,FirstMiddlePhonetic,Instrument,RecDate,DesigStatus,PartyRole,IndexType,DocType,Freeform,Collateral, BigCollateral,LegacyNumber">
+<#assign search = "DisplayName,LastName,FirstMiddle,Instrument,RecDate,DesigStatus,PartyRole,IndexType,DocType,Freeform,Collateral, BigCollateral,LegacyNumber">
+
+
+ 
+                  <@display.column media="html" indexColumnName="Instrument" title="${searchResult.datasetConfiguration.getColumn(\"Instrument\").displayName}">
+<#-- *Link Instrument Number to Details page -->
+                <a href="${request.getContextPath()}/search.do?indexName=okdetails&templateName=UCCDetails_SN&lq=${pageStyleUtil.encodeURL("Instrument:\"" + doc.get("Instrument") + "\"")}"> ${searchResult.highlight(doc, "Instrument")}</a>             
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="Instrument" title="${searchResult.datasetConfiguration.getColumn(\"Instrument\").displayName}">
+                ${number.format("###0.##",doc.get("Instrument"))}
+          </@display.column>
+
+          
+          <@display.column media="html" indexColumnName="RecDateDisplay" title="${searchResult.datasetConfiguration.getColumn(\"RecDateDisplay\").displayName}">
+                     <#if doc.get("RecDateDisplay")?has_content>
+                     ${pageStyleUtil.format(doc.get("RecDateDisplay"), "yyyy-MM-dd hh:mm:ss", "MM/dd/yyyy hh:mm:ss a")}         
+                     </#if>
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="RecDateDisplay" title="${searchResult.datasetConfiguration.getColumn(\"RecDateDisplay\").displayName}">
+                     <#if doc.get("RecDateDisplay")?has_content>
+                     ${pageStyleUtil.format(doc.get("RecDateDisplay"), "yyyy-MM-dd hh:mm:ss", "MM/dd/yyyy hh:mm:ss a")}         
+                     </#if>
+          </@display.column>
+          
+
+          <@display.column media="html" indexColumnName="DisplayName" title="${searchResult.datasetConfiguration.getColumn(\"DisplayName\").displayName}">
+            ${searchResult.highlight(doc, "DisplayName")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="DisplayName" title="${searchResult.datasetConfiguration.getColumn(\"DisplayName\").displayName}">
+            ${doc.get("DisplayName")}
+          </@display.column>             
+          <@display.column media="html" indexColumnName="PartyRole" title="${searchResult.datasetConfiguration.getColumn(\"PartyRole\").displayName}">
+            ${searchResult.highlight(doc, "PartyRole")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="PartyRole" title="${searchResult.datasetConfiguration.getColumn(\"PartyRole\").displayName}">
+            ${doc.get("PartyRole")}
+          </@display.column>
+
+
+          <@display.column media="html" indexColumnName="DocTypeDesc" title="${searchResult.datasetConfiguration.getColumn(\"DocTypeDesc\").displayName}">
+            ${searchResult.highlight(doc, "DocTypeDesc")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="DocTypeDesc" title="${searchResult.datasetConfiguration.getColumn(\"DocTypeDesc\").displayName}">
+            ${doc.get("DocTypeDesc")}
+          </@display.column>
+          
+          <@display.column media="html" indexColumnName="OtherName" title="${searchResult.datasetConfiguration.getColumn(\"OtherName\").displayName}">
+            ${searchResult.highlight(doc, "OtherName")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="OtherName" title="${searchResult.datasetConfiguration.getColumn(\"OtherName\").displayName}">
+            ${doc.get("OtherName")}
+          </@display.column>
+          <@display.column media="html" indexColumnName="Collateral" title="${searchResult.datasetConfiguration.getColumn(\"Collateral\").displayName}">
+            ${searchResult.highlight(doc, "Collateral")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="Collateral" title="${searchResult.datasetConfiguration.getColumn(\"Collateral\").displayName}">
+            ${doc.get("Collateral")}
+          </@display.column>
+          <@display.column media="html" indexColumnName="BigCollateral" title="${searchResult.datasetConfiguration.getColumn(\"BigCollateral\").displayName}">
+            ${searchResult.highlight(doc, "BigCollateral")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="BigCollateral" title="${searchResult.datasetConfiguration.getColumn(\"BigCollateral\").displayName}">
+            ${doc.get("BigCollateral")}
+          </@display.column>
+
+<#-- *Check for multiple reference, add link for document chain (disabled) -->
+          <@display.column media="html" indexColumnName="FirstReference" title="${searchResult.datasetConfiguration.getColumn(\"FirstReference\").displayName}">
+            ${searchResult.highlight(doc, "FirstReference")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="FirstReference" title="${searchResult.datasetConfiguration.getColumn(\"FirstReference\").displayName}">
+            ${doc.get("FirstReference")}
+          </@display.column>
+
+<#-- *Assign variables to pass to get image -->
+     
+<#assign RecDatePartsReplace = RecDate?replace('/', ' ')>
+<#assign RecDateParts = RecDatePartsReplace?word_list>
+      
+<#list RecDateParts as RecDatePart>
+<#if RecDatePart_index = 1>
+<#assign DAY = RecDatePart>
+</#if>
+<#if RecDatePart_index = 2>
+<#assign YEAR = RecDatePart>
+</#if>
+<#if RecDatePart_index = 0>
+ <#if RecDatePart?length = 1>
+    <#assign MONTH = "0" + RecDatePart>
+ <#else>
+    <#assign MONTH = RecDatePart>
+ </#if>
+</#if>
+</#list> 
+          <@display.column  media="html" title="Briefcase">
+
+                        <div style="text-align:center">
+                            <#--<a href="javascript:;" onclick="addToCart('indexName?=?${indexName}?=?${dc.displayName}', 'Instrument?=?${doc.get("Instrument")}?con?Instrument?=?${doc.get("Instrument")?replace("'", "\\'")?replace("\"", "\\\"")}?con?${searchResult.datasetConfiguration.getColumn("DocType").displayName}?=?${doc.get("DocType")?replace("'", "\\'")?replace("\"", "\\\"")?trim}', 'Instrument%3A${doc.get("Instrument")}', '25');" >Add</a>-->
+                            <a href="javascript:;" onclick="addToCart('indexName?=?${indexName}?=?${dc.displayName}', 'Instrument?=?${doc.get("Instrument")}?con?Instrument?=?${doc.get("Instrument")?replace("'", "\\'")?replace("\"", "\\\"")}?con?${searchResult.datasetConfiguration.getColumn("RecDateDisplay").displayName}?=?${doc.get("RecDateDisplay")?replace("'", "\\'")?replace("\"", "\\\"")?trim}?con?${searchResult.datasetConfiguration.getColumn("DisplayName").displayName}?=?${doc.get("DisplayName")?replace("'", "\\'")?replace("\"", "\\\"")?trim}?con?${searchResult.datasetConfiguration.getColumn("PartyRole").displayName}?=?${doc.get("PartyRole")?replace("'", "\\'")?replace("\"", "\\\"")?trim}?con?${searchResult.datasetConfiguration.getColumn("DocTypeDesc").displayName}?=?${doc.get("DocTypeDesc")?replace("'", "\\'")?replace("\"", "\\\"")?trim}?con?${searchResult.datasetConfiguration.getColumn("OtherName").displayName}?=?${doc.get("OtherName")?replace("'", "\\'")?replace("\"", "\\\"")?trim}', 'Instrument%3A${doc.get("Instrument")}', '25');" >Add to Briefcase</a>
+
+                        </div>
+      </@display.column>
+      <@display.column  media="html" title="View Image">
+      
+                        <div style="text-align:center" class="gallery clearfix"><a class="nocolor pphoto" href="${request.getContextPath()}/search.do?indexName=okimages&lq=${pageStyleUtil.encodeURL("Instrument:" + doc.get("Instrument"))}&page=1&view=FitV&scrollbar=0&navpanes=0&statusbar=0&messages=0?iframe=true&width=50%25&height=95%25" rel="prettyPhoto[iframe]" title="Instrument : <a  class='nocolor' href='${request.getContextPath()}/search.do?indexName=okdetails&templateName=UCCDetails_SN&lq=${pageStyleUtil.encodeURL("Instrument:\"" + doc.get("Instrument") + "\"")}'<b>${doc.get("Instrument")}</b></a> </br> Doc Type: ${doc.get("DocType")} </br> Date Recorded: ${pageStyleUtil.format(doc.get("RecDateDisplay"), "yyyy-MM-dd HH:mm:ss", "MM/dd/yyyy HH:mm:ss a")} </br>" ><img border="0" title="Preview" src="<@com.currentUrlPrefix/>/resource/preview.png"></a></div>
+
+       </@display.column>
+      <@display.column media="html" indexColumnName="LegacyNumber" title="${searchResult.datasetConfiguration.getColumn(\"LegacyNumber\").displayName}">
+            ${searchResult.highlight(doc, "LegacyNumber")}
+      </@display.column>
+      <@display.column media="rtf excel pdf" indexColumnName="LegacyNumber" title="${searchResult.datasetConfiguration.getColumn(\"LegacyNumber\").displayName}">
+            ${doc.get("LegacyNumber")}
+      </@display.column>

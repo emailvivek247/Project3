@@ -1,0 +1,21 @@
+<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (pageStyleUtil.isUserInRoleGroup('ALL_ROLE', request))>
+<#function getDocument URL, indexName, query>
+	<#assign sc = new("net.javacoding.xsearch.api.SearchConnection")>
+	<#assign searchQuery = new("net.javacoding.xsearch.api.SearchQuery")>
+	${sc.setIndex(indexName)}
+	${sc.setURL(URL)}
+	${searchQuery.setAdvancedQuery(query)}
+	<#assign sr = sc.search(searchQuery)>
+	<#return sr.getDocList()>
+</#function>
+
+<#assign uri = "http://localhost/ailis/" + request.getContextPath()>
+<#assign booktypes= getDocument(uri, "HistBookType", "")>
+<select name="HistBookType" id="HistBookType">
+     <#if booktypes?has_content>
+         <#foreach doc in booktypes>
+              <option value="${doc.getString("HistBookType")}">${doc.getString("HistBookType")}</option>  
+         </#foreach>
+     </#if>
+</select>
+</#if>

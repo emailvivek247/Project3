@@ -1,0 +1,24 @@
+<!--  -->
+<@com.useHighlightTag '<span class="highlight">', '</span>' />
+<#include "layout.stl">
+<@layout title="Civil Docket" encoding="${searchResult.encoding}">
+
+
+
+ <@com.errorMarkup/>
+ 
+
+
+
+ 
+ <br>
+ <table class="main">
+ 	<tr valign="top">
+ 		<td class="mainRight">
+  			<div id="documents"><#include "documents.stl"></div>
+ 		</td>
+ 	</tr>
+ </table>
+ 
+ 
+</@layout>

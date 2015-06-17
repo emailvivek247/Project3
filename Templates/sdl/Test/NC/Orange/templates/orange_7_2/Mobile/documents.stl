@@ -1,0 +1,36 @@
+<#if (searchResult.docs?has_content && searchResult.docs.size() > 0) >
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+     <p class="result">
+     <br/><b>INSTRUMENT</b>:
+                  <a href="${request.getContextPath()}/search.do?indexName=orangedetails&templateName=default&lq=${pageStyleUtil.encodeURL("Instrument:\"" + doc.get("INSTRUMENT") + "\"")}"> ${searchResult.highlight(doc, "INSTRUMENT")}</a> 
+          <br/><b>Recorded Date</b>:
+                     <#if doc.get("DATERECDISPLAY")?has_content>
+	                 ${pageStyleUtil.format(doc.get("DATERECDISPLAY"), "yyyy-MM-dd HH:mm:ss", "MM/dd/yyyy HH:mm:ss a")} 	   	
+    	             </#if>
+     <br/><b>Name</b>:
+ <#if isPhoneticSearch == "1">
+ 	   <br/><b>${searchResult.datasetConfiguration.getColumn("WebPhoneticName").displayName}</b>:${searchResult.highlight(doc, "WebPhoneticName")}      
+       <#else>
+            <br/><b>${searchResult.datasetConfiguration.getColumn("WebName").displayName}</b>:${searchResult.highlight(doc, "WebName")}
+       </#if>  
+      <br/><b>${searchResult.datasetConfiguration.getColumn("DESIGSTATUS").displayName}</b>:${searchResult.highlight(doc, "DESIGSTATUS")}
+      <br/><b>${searchResult.datasetConfiguration.getColumn("PartyRoleType").displayName}</b>:${searchResult.highlight(doc, "PartyRoleType")}
+      <br/><b>${searchResult.datasetConfiguration.getColumn("DOCTYPE").displayName}</b>:${searchResult.highlight(doc, "DOCTYPE")}
+      <br/><b>${searchResult.datasetConfiguration.getColumn("BOOK").displayName}</b>:${searchResult.highlight(doc, "BOOK")}
+      <br/><b>${searchResult.datasetConfiguration.getColumn("PAGE").displayName}</b>:${searchResult.highlight(doc, "PAGE")}
+      <br/><b>${searchResult.datasetConfiguration.getColumn("OTHERNAME").displayName}</b>:${searchResult.highlight(doc, "OTHERNAME")}
+      <br/><b>${searchResult.datasetConfiguration.getColumn("LEGALDESCRIPTION").displayName}</b>:${searchResult.highlight(doc, "LEGALDESCRIPTION")}
+      <br/><b>${searchResult.datasetConfiguration.getColumn("MARGINALS").displayName}</b>:${searchResult.highlight(doc, "MARGINALS")}
+
+
+<!--<b>Add to Briefcase</b>:-->
+</br>	  
+<a href="javascript:;" onclick="addToCart('indexName?=?${indexName}?=?${dc.displayName}', 'pk_key?=?${doc.get("PKKEY")}?con?Instrument?=?${doc.get("INSTRUMENT")?replace("'", "\\'")?replace("\"", "\\\"")}?con?${searchResult.datasetConfiguration.getColumn("DOCTYPE").displayName}?=?${doc.get("DOCTYPE")?replace("'", "\\'")?replace("\"", "\\\"")?trim}', 'Instrument%3A${doc.get("INSTRUMENT")}', '25');" >Add to Briefcase</a>
+<br/><a class="nocolor" href="search.do?indexName=orangeimages&lq=${pageStyleUtil.encodeURL("Instrument:" + doc.get("INSTRUMENT"))}" target="_blank">View Image</a>
+<br/>&nbsp;
+ </#foreach>
+
+<#else>
+ <#include "noResults.stl"> 
+</#if>

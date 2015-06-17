@@ -1,0 +1,21 @@
+<!--  -->
+<@com.useHighlightTag '<span class="highlight">', '</span>' />
+<#include "layout.stl">
+<@layout title="Judicial Calendar Daily Case List" encoding="${searchResult.encoding}">
+
+<#include "/templates/globalNav.stl">
+
+<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (request.isUserInRole('ROAM_ADMIN') || request.isUserInRole('MOBILECMS_FREE_ACCESS') || request.isUserInRole('MOBILECMS_ATTORNEY_ACCESS') || request.isUserInRole('MOBILECMS_EMPLOYEE_ACCESS') || request.isUserInRole('MOBILECMS_ADMIN'))>
+ <@com.errorMarkup/>
+ 
+ 
+ <br/><br/><br/>
+ <a href="javascript:" onclick="history.go(-1)" style="font-size:15px;font-weight:normal;"><< Back to previous page</a>
+ <table class="main"><tr valign="top"><td class="mainRight">
+  <div id="documents"><#include "documents.stl"></div>
+ </td></tr></table>
+ 
+<#else>
+You are not authorized to view this content.
+</#if>
+</@layout>

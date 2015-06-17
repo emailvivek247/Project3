@@ -1,0 +1,7 @@
+
+  		  <@display.column media="html" indexColumnName="SessionDate" title="${searchResult.datasetConfiguration.getColumn(\"SessionDate\").displayName}">
+		   	${searchResult.highlight(doc, "SessionDate")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="SessionDate" title="${searchResult.datasetConfiguration.getColumn(\"SessionDate\").displayName}">
+		   	${doc.get("SessionDate")}
+		  </@display.column>

@@ -1,0 +1,5 @@
+<template>
+  <longname>Guadalupe Details Template with Document Chain</longname>
+  <description>Client Side Sortable Template with Document Chain used for Guadalupe Details - NOT USED HERE</description>
+  <defaultLength>25</defaultLength>
+</template>

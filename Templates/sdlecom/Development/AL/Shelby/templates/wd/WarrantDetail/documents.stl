@@ -1,0 +1,47 @@
+<b>Warrant Information</b>
+<table id="warrant" class="tablesorter {sortlist: [[0,0]]}">
+           <thead>
+                <tr>
+<#--Column names which are hardcoded are for display purposes (i.e. they require a space between words in the column name-->
+		  <th>Issued Date<#--${searchResult.datasetConfiguration.getColumn("IssuedDate").displayName}--></th>
+		  <th>Warrant Name<#--${searchResult.datasetConfiguration.getColumn("WarrantName").displayName}--></th>
+		  <th>${searchResult.datasetConfiguration.getColumn("RoleType").displayName}</th>
+		  <th>Warrant Type<#--${searchResult.datasetConfiguration.getColumn("WarrantType").displayName}--></th>
+		  <th>Served Date<#--${searchResult.datasetConfiguration.getColumn("ServedDate").displayName}--></th>
+		  <th>Warrant Served<#--${searchResult.datasetConfiguration.getColumn("WarrantServedFlag").displayName}--></th>
+		</tr>
+            </thead>
+         <tbody>
+
+<#if searchResult.docs?has_content>
+<#foreach doc in searchResult.docs>
+         <#assign WarrantName = doc.getValues("WarrantName") WarrantType = doc.getValues("WarrantType") IssuedDate = doc.getValues("IssuedDate") RoleType = doc.getValues("RoleType")
+                  ServedDate = doc.getValues("ServedDate") WarrantServedFlag = doc.getValues("WarrantServedFlag") loopCounter = 0>
+
+         <#foreach IssuedDate in doc.getValues("IssuedDate")>
+               <tr>
+		  <td>${IssuedDate}</td> 
+		  <td>${WarrantName[loopCounter]?replace('|', '&nbsp;')}</td>
+		  <td>${RoleType[loopCounter]?replace('|', '&nbsp;')}</td>
+		  <td>${WarrantType[loopCounter]?replace('|', '&nbsp;')}</td>
+		  <td>${ServedDate[loopCounter]?replace('|', '&nbsp;')}</td>
+		  <td>${WarrantServedFlag[loopCounter]?replace('|', '&nbsp;')}</td>
+		  <#assign loopCounter = loopCounter + 1>
+               </tr>
+         </#foreach>
+ </#foreach>
+<#else>
+            <tr>
+                <td colspan="11"><b><i>No Warrant Information Available.</b></i></td>               
+            </tr>
+</#if>
+
+</tbody>
+      </table>
+<script type="text/javascript">
+$(function() { 
+ $("#warrant").tablesorter({sortList: [[0,0]]});
+ $("#warrant").tablesorter({widgets: ['zebra']});
+}); 
+</script>
+

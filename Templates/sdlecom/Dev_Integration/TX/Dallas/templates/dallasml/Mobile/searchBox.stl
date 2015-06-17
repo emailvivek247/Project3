@@ -1,0 +1,468 @@
+<script type="text/javascript">
+
+// *Set values for searchable fields
+var searchfields = "Name,LicenseNum,Instrument,RECDATE1DISPLAY,RECDATE1SEARCH,RECDATE2,PartyRole,DocType,Location";
+var phoneticfields = "PhoneticName,LicenseNum,Instrument,RECDATE1DISPLAY,RECDATE1SEARCH,RECDATE2,PartyRole,DocType,Location";
+
+    function unique(arrayName) {
+        var newArray=new Array();
+        label:for(var i=0; i<arrayName.length;i++ )
+        {  
+            for(var j=0; j<newArray.length;j++ ) {
+                if(newArray[j].name == arrayName[i].name) 
+                 continue label;
+            }
+            setCookie('Mobile' + arrayName[i].name, jQuery.trim(arrayName[i].value), 0);
+            if (arrayName[i].type == 'text' && jQuery.trim(arrayName[i].value).length != 0) {
+                newArray[newArray.length] = arrayName[i];
+            }
+        }
+            setCookie('MainfrmRECDATE2', document.getElementById('frmRECDATE2').value, 0);
+            setCookie('MaintoRECDATE2',  document.getElementById('toRECDATE2').value, 0);
+            setCookie('MainfrmRECDATE1SEARCH', document.getElementById('frmRECDATE1SEARCH').value, 0);
+            setCookie('MaintoRECDATE1SEARCH',  document.getElementById('toRECDATE1SEARCH').value, 0);
+        return newArray;
+    }   
+    function postAdvancedSearch() {
+        try {
+            if (!doDateCheck('frmRECDATE2','toRECDATE2'))return;
+            if (!doDateCheck('frmRECDATE1SEARCH','toRECDATE1SEARCH'))return;
+            document.getElementById("q").value = '';
+            var inputElemenets =  $('input[type="text"]');
+            var elem = unique(inputElemenets);
+            var searchString = '';
+            var searchQuery = '';
+            var andOrClause ='';
+            var doubleQuotes = '"';
+            var counter = 0;
+            var textcounter = 0;
+            var searchValue = '';
+            var searchValueQuery = '';
+            for(var i = 0; i < elem.length; i++) {
+                if (document.getElementById(elem[i].name + '_select') != null) {
+                    counter++;  
+                }                   
+            }
+            for(var i = 0; i < elem.length; i++) {
+                if (document.getElementById(elem[i].name + '_select') != null) {
+                    setCookie('Mobile' + elem[i].name + '_select', document.getElementById(elem[i].name + '_select').selectedIndex, 0);
+                    textcounter++
+                    if (textcounter == counter) {
+                        andOrClause = '';
+                    } else {
+                        andOrClause = ' ' + document.getElementById(elem[i].name + '_select').value + '  ';
+                    }
+                    if (elem[i].name == 'RECDATE2' || elem[i].name == 'RECDATE1SEARCH') {
+                        searchValue = getDateQuery(elem[i].name);
+                        searchValueQuery = getDateSearchQuery(elem[i].name);
+                    } else {
+                        searchValue = elem[i].name + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes + '~5';
+                        searchValue = '#' + searchValue + '#';
+                        searchValueQuery = elem[i].name + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes;
+                    }
+                    searchString = searchString + searchValue + andOrClause;
+                    searchQuery = searchQuery  + searchValueQuery + andOrClause;
+                }
+            }
+            document.getElementById("lq").value = searchString;
+            document.getElementById("searchQuery").value = searchQuery;
+            document.search_${searchResult.indexName}.method = "get";
+            document.search_${searchResult.indexName}.action = "search.do";
+            document.search_${searchResult.indexName}.searchType.value = "2";           
+            document.getElementById("searchable").value = searchfields;	
+            document.search_${searchResult.indexName}.submit();
+        } catch (err) {
+            alert(err.message);
+        }
+    }   
+    function postBasicSearch() {
+        try {   
+            setCookie('Mobile' + document.getElementById("q").name, document.getElementById("q").value, 0);
+            document.getElementById("lq").value = '';
+            document.search_${searchResult.indexName}.method = "get";
+            document.getElementById('searchQuery').value = document.getElementById('q').value
+            document.search_${searchResult.indexName}.action = "search.do";
+            document.search_${searchResult.indexName}.searchType.value = "1";
+		    // *Set cookie for algorithm and assign searchable values
+            document.getElementById("searchable").value = searchfields;	
+            document.search_${searchResult.indexName}.submit();
+        } catch (err) {
+            alert(err.message);
+        }
+    }
+
+// *Add function for basic Phonetic Search 
+function postBasicPhoneticSearch() {
+		try {	
+			document.getElementById("lq").value = '';
+			document.search_${searchResult.indexName}.method = "get";
+			document.getElementById('searchQuery').value = document.getElementById('q').value
+			document.search_${searchResult.indexName}.action = "search.do";
+			document.search_${searchResult.indexName}.searchType.value = "1";
+                        document.getElementById("searchable").value = phoneticfields;
+                        document.getElementById("isPhoneticSearch").value = "1";
+			document.search_${searchResult.indexName}.submit();
+		} catch (err) {
+			alert(err.message);
+		}
+  	} 
+
+// *Add function for advanced Phonetic Search 
+	function postAdvancedPhoneticSearch() {
+  	    try {
+		if (!doDateCheck('frmRECDATE2','toRECDATE2'))return;
+                if (!doDateCheck('frmRECDATE1SEARCH','toRECDATE1SEARCH'))return;
+		document.getElementById("q").value = '';
+		var inputElemenets =  $('input[type="text"]');
+		var elem = unique(inputElemenets);
+		var searchString = '';
+		var searchQuery = '';
+		var andOrClause ='';
+		var doubleQuotes = '"';
+		var counter = 0;
+		var textcounter = 0;
+		var searchValue = '';
+		var searchValueQuery = '';
+
+
+		for(var i = 0; i < elem.length; i++) {
+			if (document.getElementById(elem[i].name + '_select') != null) {
+				counter++;	
+			}					
+		}
+
+		for(var i = 0; i < elem.length; i++) {
+			if (document.getElementById(elem[i].name + '_select') != null) {
+				textcounter++
+				if (textcounter == counter) {
+					andOrClause = '';
+				} else {
+					andOrClause = ' ' + document.getElementById(elem[i].name + '_select').value + '  ';
+				}
+				if (elem[i].name == 'RECDATE2' || elem[i].name == 'RECDATE1SEARCH') {
+					searchValue = getDateQuery(elem[i].name);
+					searchValueQuery = getDateSearchQuery(elem[i].name);
+				} else {
+					searchValue = elem[i].name + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes + '~5';
+					searchValue = '#' + searchValue + '#';
+					searchValueQuery = elem[i].name + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes;
+				} 
+
+                                if (elem[i].name == 'Name') {
+                                        searchValue = 'PhoneticName' + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes + '~5';
+					searchValue = '#' + searchValue + '#';
+					searchValueQuery = 'PhoneticName' + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes;
+
+				} else {
+                                        searchValue = elem[i].name + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes + '~5';
+					searchValue = '#' + searchValue + '#';
+					searchValueQuery = elem[i].name + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes;
+
+				} 
+
+
+                                                        
+
+				searchString = searchString + searchValue + andOrClause;
+				searchQuery = searchQuery  + searchValueQuery + andOrClause;
+			}
+		}
+		document.getElementById("lq").value = searchString;
+		document.getElementById("searchQuery").value = searchQuery;
+		document.search_${searchResult.indexName}.method = "get";
+		document.search_${searchResult.indexName}.action = "search.do";
+		document.search_${searchResult.indexName}.searchType.value = "2";
+		document.getElementById("searchable").value = phoneticfields;
+		document.getElementById("isPhoneticSearch").value = "1";				
+		document.search_${searchResult.indexName}.submit();
+		} catch (err) {
+			alert(err.message);
+		}
+  	} 
+
+//* Add to clear search results
+
+function clearSearchResults()  
+            {	
+	        document.getElementById("q").value = ""; 
+            }
+
+</script>
+<form name="search_${searchResult.indexName}" id="search_${searchResult.indexName}">
+    <input type="hidden" name="indexName" value="${searchResult.indexName}">
+    <input type="hidden" name="templateName" value="${searchResult.templateName}">
+    <input type="hidden" name="searchQuery" id="searchQuery">
+    <input type="hidden" name="lq" id="lq">
+    <input type="hidden" name="searchType" id="searchType" value="${Request.searchForm.searchType}">
+
+<#-- *Add searchable parameter -->
+    <input type="hidden" name="searchable" id="searchable">
+    <input type="hidden" name="isPhoneticSearch" id="isPhoneticSearch">
+    
+        <#if Request.searchForm.searchType = "1">
+            <div id="basicSearch">
+        <#else>
+            <div id="basicSearch" style="display:none">
+        </#if>
+
+<#-- *Add table for ROAM image -->
+			<table  align="center" border="0">         
+                              <tr>
+                                            <td align="center">
+                                            <a href ="http://www.amcad.com/solutions-and-services/records-management/roam"><img src="templates/dallasml/Main/resource/ROAM.png" border="0"/></a>
+                                            </td>
+                              </tr>
+                       </table>	
+
+<#-- *Add table for links next to search button -->
+           
+<table border="0" align="center" width="100%" cellspacing="0" cellpadding="0">
+<tr>
+<td rowspan="2" width="33%" align="center"></TD>
+<td width="1%" align="center"></TD>
+<td rowspan="2" width="33%" align="left">&nbsp<a onClick="toggleDiv('advancedSearch');return false" href="#"><font size="1">Advanced Search</font></a>
+<br>&nbsp<a href="${request.getContextPath()}/search.do?indexName=documenttypes&templateName=ROAMHelp&q=&length=300#PHONETIC"><font size="1">What is Phonetic Search?</font></a></TD>
+</tr>
+
+
+
+                <tr >
+                        <td align="right">
+                            <input type="text" class="text" name="q" id="q" size="41" maxlength="2048" value="${searchResult.userInput?html}">
+                                <#if Request.searchForm.searchType = "1">
+                                    <script language="javascript">  
+                                          document.getElementById('q').focus();
+                                    </script>
+                                </#if>
+                        </td>
+
+<#-- Add spacers before button -->
+</TR>
+</TABLE>
+
+<center><img src="templates/dallasml/Main/resource/spacer.png"></center>
+<center><img src="templates/dallasml/Main/resource/spacer.png"></center>
+
+
+<table align = "center">
+<tr>
+
+
+                        <td align="left">   
+                            <button type="button" class="search" onclick="javascript:postBasicSearch()">Search</button>
+                        </td>
+                        <td align="left"> 
+<#-- *Add Phonetic Search button -->
+                            <button type="button" class="search" onclick="javascript:postBasicPhoneticSearch()">Phonetic Search</button>  
+                        </td>
+                </tr>       
+            </table>
+            
+        </div>
+
+
+
+            <#if Request.searchForm.searchType = "2">
+                <div id="advancedSearch">
+            <#else>
+                <div id="advancedSearch" style="display:none">
+            </#if>
+<#-- *Increase table width from 40% to 50% and td width from 15% to 30% -->
+        <table align="center" border="0" width="50%" cellspacing="1" cellpadding="1">
+                                <tr>
+                                    <td width="30%" align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("Instrument").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td width="20%" colspan="2">
+                                            <input type="text" id="Instrument"  name="Instrument" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('MainInstrument') != null) {
+                                                    document.getElementById("Instrument").value = getCookie('MainInstrument');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td width="5%" align="left">
+                                            <select name="Instrument_select" id="Instrument_select" >
+                                                <option value="AND" >AND</option>
+                                                <option value="OR" >OR</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('MainInstrument_select') != null) {
+                                                    document.getElementById("Instrument_select").options[getCookie('MainInstrument_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+                                <tr>
+                                    <td width="15%" align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("LicenseNum").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td width="20%" colspan="2">
+                                            <input type="text" id="LicenseNum"  name="LicenseNum" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('MainLicenseNum') != null) {
+                                                    document.getElementById("LicenseNum").value = getCookie('MainLicenseNum');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td width="5%" align="left">
+                                            <select name="LicenseNum_select" id="LicenseNum_select" >
+                                                <option value="AND" >AND</option>
+                                                <option value="OR" >OR</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('MainLicenseNum_select') != null) {
+                                                    document.getElementById("LicenseNum_select").options[getCookie('MainLicenseNum_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+                                <tr>
+                                    <td width="15%" align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("RECDATE1SEARCH").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td width="10%"><b><font class="label">From&nbsp;:&nbsp;</font></b>
+                                            <input type="text" class="RecDateInput" id="frmRECDATE1SEARCH" name="RECDATE1SEARCH" OnKeyPress="return disableKeyPress(event)" title="${searchResult.datasetConfiguration.getColumn("RECDATE1SEARCH").displayName}" size="10" maxlength="10" onBlur="javascript:f_tcalParseDate('frmRECDATE1SEARCH')">
+                                            <script language="javascript">
+                                                $(function() {
+                                                    var dates = $( "#frmRECDATE1SEARCH, #toRECDATE1SEARCH" ).datepicker({
+                                                        changeYear: true, 
+                                                        changeMonth: true,
+                                                        defaultDate: "+1w",
+                                                        changeMonth: true,
+                                                        numberOfMonths: 1,
+                                                        onSelect: function( selectedDate ) {
+                                                            var option = this.id == "frmRECDATE1SEARCH" ? "minDate" : "maxDate",
+                                                                instance = $( this ).data( "datepicker" );
+                                                                date = $.datepicker.parseDate(
+                                                                    instance.settings.dateFormat ||
+                                                                    $.datepicker._defaults.dateFormat,
+                                                                    selectedDate, instance.settings );
+
+                                                            dates.not( this ).datepicker( "option", option, date );
+                                                        }
+                                                    });
+                                                });
+                                                if (getCookie('MainfrmRECDATE1SEARCH') != null) {
+                                                    document.getElementById("frmRECDATE1SEARCH").value = getCookie('MainfrmRECDATE1SEARCH');
+                                                }
+                                            </script>
+                                        </td>    
+                                        <td width="10%"><b><font class="label">To&nbsp;:&nbsp;</font></b>
+                                            <input type="text" class="RecDateInput" id="toRECDATE1SEARCH" name="RECDATE1SEARCH" OnKeyPress="return disableKeyPress(event)" title="${searchResult.datasetConfiguration.getColumn("RECDATE1SEARCH").displayName}" size="10" maxlength="10" onBlur="javascript:f_tcalParseDate('toRECDATE1SEARCH')">
+                                            <script language="javascript">
+                                                if (getCookie('MaintoRECDATE1SEARCH') != null) {
+                                                    document.getElementById("toRECDATE1SEARCH").value = getCookie('MaintoRECDATE1SEARCH');
+                                                }
+                                            </script>
+                                        </td>    
+                                        <td width="5%" align="left">
+                                            <select name="RECDATE1SEARCH_select" id="RECDATE1SEARCH_select" >
+                                                <option value="AND" >AND</option>
+                                                <option value="OR" >OR</option>
+                                                <option value="NOT" >NOT</option>                                              
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('MainRECDATE1SEARCH_select') != null) {
+                                                    document.getElementById("RECDATE1SEARCH_select").options[getCookie('MainRECDATE1SEARCH_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+                                <tr>
+                                    <td width="15%" align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("RECDATE2").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td width="10%"><b><font class="label">From&nbsp;:&nbsp;</font></b>
+                                            <input type="text" class="RecDateInput" id="frmRECDATE2" name="RECDATE2" OnKeyPress="return disableKeyPress(event)" title="${searchResult.datasetConfiguration.getColumn("RECDATE2").displayName}" size="10" maxlength="10" onBlur="javascript:f_tcalParseDate('frmRECDATE2')">
+                                            <script language="javascript">
+                                                $(function() {
+                                                    var dates = $( "#frmRECDATE2, #toRECDATE2" ).datepicker({
+                                                        changeYear: true, 
+                                                        changeMonth: true,
+                                                        defaultDate: "+1w",
+                                                        changeMonth: true,
+                                                        numberOfMonths: 1,
+                                                        onSelect: function( selectedDate ) {
+                                                            var option = this.id == "frmRECDATE2" ? "minDate" : "maxDate",
+                                                                instance = $( this ).data( "datepicker" );
+                                                                date = $.datepicker.parseDate(
+                                                                    instance.settings.dateFormat ||
+                                                                    $.datepicker._defaults.dateFormat,
+                                                                    selectedDate, instance.settings );
+                                                            dates.not( this ).datepicker( "option", option, date );
+                                                        }
+                                                    });
+                                                });
+                                                if (getCookie('MainfrmRECDATE2') != null) {
+                                                    document.getElementById("frmRECDATE2").value = getCookie('MainfrmRECDATE2');
+                                                }
+                                            </script>
+                                        </td>    
+                                        <td width="10%"><b><font class="label">To&nbsp;:&nbsp;</font></b>
+                                            <input type="text" class="RecDateInput" id="toRECDATE2" name="RECDATE2" OnKeyPress="return disableKeyPress(event)" title="${searchResult.datasetConfiguration.getColumn("RECDATE2").displayName}" size="10" maxlength="10" onBlur="javascript:f_tcalParseDate('toRECDATE2')">
+                                            <script language="javascript">
+                                                if (getCookie('MaintoRECDATE2') != null) {
+                                                    document.getElementById("toRECDATE2").value = getCookie('MaintoRECDATE2');
+                                                }
+                                            </script>
+                                        </td>    
+                                        <td width="5%" align="left">
+                                            <select name="RECDATE2_select" id="RECDATE2_select" >
+                                                <option value="AND" >AND</option>
+                                                <option value="OR" >OR</option>
+                                                <option value="NOT" >NOT</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('MainRECDATE2_select') != null) {
+                                                    document.getElementById("RECDATE2_select").options[getCookie('MainRECDATE2_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+                                <tr>
+                                    <td width="15%" align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("Name").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td width="20%" colspan="2">
+                                            <input type="text" id="Name"  name="Name" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('MainName') != null) {
+                                                    document.getElementById("Name").value = getCookie('MainName');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td width="5%" align="left">
+                                            <select style="display:none" name="Name_select" id="Name_select" >
+                                                <option value="AND" >AND</option>
+                                                <option value="OR" >OR</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('MainName_select') != null) {
+                                                    document.getElementById("Name_select").options[getCookie('MainName_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+<#-- *Modify links in Advanced Search -->
+                       </table>
+
+<table align="center" border="0" width="40%" cellspacing="1" cellpadding="1">
+						<tr valign="top">   
+<td width="50%">&nbsp;</td>
+							<td align="left"><button type="button" class="search" onclick="javascript:postAdvancedSearch()">Search</button><br></td>
+							<td align="left"><button type="button" class="search" onclick="javascript:postAdvancedPhoneticSearch()">Phonetic Search</button></td>
+                                                        <td width="15%" align="center"><input type="button" onClick="clearFormElements()" value="Clear Search Fields" style="font-family:Arial,Helvetica,sans-serif; background:transparent; border-width:0; color:#2E7EE4; text-decoration:underline; cursor:pointer; font-size:60%;"><br>
+                                                        <a onClick="toggleDiv('basicSearch');return false" href="#"><font size="1">Basic Search</font></a>
+                                                        </td>
+                                                       
+						
+						</tr>            </table>
+        
+        </div>
+
+<#-- *Add clear search results button 
+<table width="100%"  border="0" cellpadding="0" cellspacing="0">
+  <tr>
+  <td>
+<table border=0 cellpadding=0 cellspacing=0 ><tr>
+<td>&nbsp;</td></tr>
+</table></td><td><table align="right" border="0" cellpadding="0" cellspacing="0" >
+      <tr><td align = "right"><a onClick="clearSearchResults();postBasicSearch();" href="#"><font size ="2">Clear Search Results</font></a></td>
+ </table></td>
+  </tr>
+</table>
+-->
+
+</form>
+<#include "searchBox_extra.stl">

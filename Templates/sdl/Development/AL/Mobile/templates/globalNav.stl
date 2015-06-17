@@ -1,0 +1,112 @@
+<!-- include Cycle plugin -->
+<script type="text/javascript" src="templates/resources/js/jquery.cycle.all.latest.js"></script>
+
+<link rel="stylesheet" href="/mobile/templates/resources/styles/nav.css" type="text/css"  />
+
+<script type="text/javascript">
+var timeout         = 500;
+var closetimer      = 0;
+var ddmenuitem      = 0;
+function mopen(id)
+{
+    mcancelclosetime();
+    if(ddmenuitem) ddmenuitem.style.visibility = 'hidden';
+    ddmenuitem = document.getElementById(id);
+    ddmenuitem.style.visibility = 'visible';
+}
+function mclose()
+{
+    if(ddmenuitem) ddmenuitem.style.visibility = 'hidden';
+}
+function mclosetime()
+{
+    closetimer = window.setTimeout(mclose, timeout);
+}
+function mcancelclosetime()
+{
+    if(closetimer)
+    {
+        window.clearTimeout(closetimer);
+        closetimer = null;
+    }
+}document.onclick = mclose;
+</script>
+
+<#assign indexCount = 0>
+<#foreach dc in dcs>
+	  <#if dc.isValid() && (dc.displayOrder>=0) && dc.getDefaultTemplateName()?has_content>
+	  	<#assign indexCount = indexCount + 1>
+	  </#if>	
+</#foreach>
+
+
+<div id="content_wrapper">
+	<div id="page-wrapper">
+		<div id="navDiv">		
+			<table style="border-spacing:0px;border:0;" cellpadding="0" cellspacing="0">
+			  <tr>
+				<td width="10%">&nbsp;</td>
+				<td class="nav-tabs">
+					<a href="${request.getContextPath()}/search.do?" style="color:black;text-decoration:none;">Home</a>
+				</td> 
+				<td width="5%">&nbsp;</td>
+				<td class="nav-tabs">
+					<a href="${request.getContextPath()}/search.do?indexName=casesearch" style="color:black;text-decoration:none;">Case and Party Search</a>
+				</td>
+				<td width="5%">&nbsp;</td>
+				<td class="nav-tabs">
+					<a href="${request.getContextPath()}/search.do?indexName=willsearch" style="color:black;text-decoration:none;">Probate Wills Search</a>
+				</td>
+				<td width="5%">&nbsp;</td>
+				<td class="nav-tabs">
+					<a href="${request.getContextPath()}/search.do?indexName=attorneysearch" style="color:black;text-decoration:none;">Attorney Search</a>
+				</td>
+				<td width="5%">&nbsp;</td>
+				<td class="nav-tabs">
+					<a href="${request.getContextPath()}/search.do?indexName=docketsheet" style="color:black;text-decoration:none;">Docket Sheet Report</a>
+				</td>
+				<td width="5%">&nbsp;</td>
+				<td class="nav-tabs">
+					<a href="${request.getContextPath()}/search.do?indexName=calendar" style="color:black;text-decoration:none;">Judicial Calendar</a>
+				</td>
+			   </tr>
+			</table>	
+		</div>	
+</div>	
+</div>	
+
+
+<#--
+<table  border=0 cellpadding=0 cellspacing=0 width="100%">
+	<tr>
+		<td style="width:100%" >
+			<div style="float:left;">
+			  <#if indexCount &gt; 0>
+			 	<ul class="headerList">
+				<#foreach dc in dcs>			 
+				  <#if dc.isValid() && (dc.displayOrder>=0) && dc.getDefaultTemplateName()?has_content>
+				    <li >
+				      <a href="search.do?indexName=${dc.name}&q=${searchResult.getURLEncodedClearQuery()}" style="text-decoration:underline;">${dc.displayName}</a>
+				    </li>
+				  </#if>  
+				</#foreach>
+				</ul>
+			   </#if>
+			</div>
+			<div style="float:right;">
+				<#include "/web-inf/view/admin/layout/loginMenu.stl">
+			</div>
+		</td>		
+	</tr>
+	<tr>
+		<img src="templates/resources/images/mobile-banner.jpg" align="center"/>
+	</tr>	
+</table>-->
+<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "true">
+<div style="width:100%;text-align:right;" >
+</div>
+</#if> 
+	
+
+
+

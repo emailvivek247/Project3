@@ -1,0 +1,90 @@
+		  <@display.column media="html" indexColumnName="CaseNumber" title="${searchResult.datasetConfiguration.getColumn(\"CaseNumber\").displayName}">
+			<a href="${request.getContextPath()}/search.do?indexName=cd&templateName=WarrantDetail&lq=${pageStyleUtil.encodeURL("CaseID:\"" + doc.get("CaseID") + "\"")}">${searchResult.highlight(doc, "CaseNumber")}</a>
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseNumber" title="${searchResult.datasetConfiguration.getColumn(\"CaseNumber\").displayName}">
+			${doc.get("CaseNumber")}
+		  </@display.column>
+
+<#if isPhoneticSearch == "1">
+		  <@display.column media="html" indexColumnName="PhoneticName" title="${searchResult.datasetConfiguration.getColumn(\"PhoneticName\").displayName}">
+			${searchResult.highlight(doc, "PhoneticName")} 
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="PhoneticName" title="${searchResult.datasetConfiguration.getColumn(\"PhoneticName\").displayName}">
+			${doc.get("PhoneticName")}
+		  </@display.column>
+      <#else> 
+		    <@display.column media="html" indexColumnName="DisplayName" title="${searchResult.datasetConfiguration.getColumn(\"DisplayName\").displayName}">
+			${searchResult.highlight(doc, "DisplayName")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="Name" title="${searchResult.datasetConfiguration.getColumn(\"DisplayName\").displayName}">
+			${doc.get("DisplayName")}
+		  </@display.column>
+</#if>
+<#--
+		  <@display.column media="html" indexColumnName="DOB" title="${searchResult.datasetConfiguration.getColumn(\"DOB\").displayName}">
+			<#if doc.get("DOB")?has_content>
+			   ${pageStyleUtil.format(doc.get("DOB"), "yyyymmdd", "mm/dd/yyyy")}
+			</#if>			   	
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DOB" title="${searchResult.datasetConfiguration.getColumn(\"DOB\").displayName}">
+			<#if doc.get("DOB")?has_content>
+			   ${pageStyleUtil.format(doc.get("DOB"), "yyyymmdd", "mm/dd/yyyy")}
+			</#if>   	
+		  </@display.column>
+-->
+		  <@display.column media="html" indexColumnName="LicenseNumber" title="${searchResult.datasetConfiguration.getColumn(\"LicenseNumber\").displayName}">
+		   	${searchResult.highlight(doc, "LicenseNumber")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="LicenseNumber" title="${searchResult.datasetConfiguration.getColumn(\"LicenseNumber\").displayName}">
+		   	${doc.get("LicenseNumber")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="PartyRole" title="${searchResult.datasetConfiguration.getColumn(\"PartyRole\").displayName}">
+		   	${searchResult.highlight(doc, "PartyRole")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="PartyRole" title="${searchResult.datasetConfiguration.getColumn(\"PartyRole\").displayName}">
+		   	${doc.get("PartyRole")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="StatuteNumber" title="${searchResult.datasetConfiguration.getColumn(\"StatuteNumber\").displayName}">
+			${searchResult.highlight(doc, "StatuteNumber")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="StatuteNumber" title="${searchResult.datasetConfiguration.getColumn(\"StatuteNumber\").displayName}">
+			${doc.get("StatuteNumber")}
+		  </@display.column>
+		   <@display.column media="html" indexColumnName="StatuteDescription" title="${searchResult.datasetConfiguration.getColumn(\"StatuteDescription\").displayName}">
+			${searchResult.highlight(doc, "StatuteDescription")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="StatuteDescription" title="${searchResult.datasetConfiguration.getColumn(\"StatuteDescription\").displayName}">
+			${doc.get("StatuteDescription")}
+		  </@display.column>
+		 <#-- <@display.column media="html" indexColumnName="ActiveWarrantFlag" title="${searchResult.datasetConfiguration.getColumn(\"ActiveWarrantFlag\").displayName}">
+			${searchResult.highlight(doc, "ActiveWarrantFlag")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="ActiveWarrantFlag" title="${searchResult.datasetConfiguration.getColumn(\"ActiveWarrantFlag\").displayName}">
+			${doc.get("ActiveWarrantFlag")}
+		  </@display.column>-->
+
+                  <@display.column media="html" indexColumnName="CaseStatusDesc" title="${searchResult.datasetConfiguration.getColumn(\"CaseStatusDesc\").displayName}">
+			${searchResult.highlight(doc, "CaseStatusDesc")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseStatusDesc" title="${searchResult.datasetConfiguration.getColumn(\"CaseStatusDesc\").displayName}">
+			${doc.get("CaseStatusDesc")}
+		  </@display.column>
+		  
+		  <#--<@display.column media="html" indexColumnName="CaseFilingDate" title="${searchResult.datasetConfiguration.getColumn(\"CaseFilingDate\").displayName}">
+			${searchResult.highlight(doc, "CaseFilingDate")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseFilingDate" title="${searchResult.datasetConfiguration.getColumn(\"CaseFilingDate\").displayName}">
+			${doc.get("CaseFilingDate")}
+		  </@display.column>-->
+		  
+		   <@display.column media="html" indexColumnName="CaseFilingDate" title="${searchResult.datasetConfiguration.getColumn(\"CaseFilingDate\").displayName}">
+			<#if doc.get("CaseFilingDate")?has_content>
+			   ${pageStyleUtil.format(doc.get("CaseFilingDate"), "yyyymmdd", "mm/dd/yyyy")}
+			</#if>			   	
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseFilingDate" title="${searchResult.datasetConfiguration.getColumn(\"CaseFilingDate\").displayName}">
+			<#if doc.get("CaseFilingDate")?has_content>
+			   ${pageStyleUtil.format(doc.get("CaseFilingDate"), "yyyymmdd", "mm/dd/yyyy")}
+			</#if>   	
+		  </@display.column>
+		 

@@ -1,0 +1,7 @@
+
+<#if !searchResult.docs?has_content || searchResult.docs.size() <= 0>
+	<h4 class="noResults">
+		Tittle1
+
+	</h4>
+</#if>

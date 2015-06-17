@@ -1,0 +1,47 @@
+<b>Docket Information</b>
+<#if searchResult.docs?has_content>
+        <table id="docket" class="tablesorter">
+		   <thead>
+		       <tr>
+			  <th>${searchResult.datasetConfiguration.getColumn("DateStamped").displayName}</th>
+			  <th>${searchResult.datasetConfiguration.getColumn("Description").displayName}</th>
+                          <th>${searchResult.datasetConfiguration.getColumn("Comments").displayName}</th>
+                          <th>View Image</th>
+			</tr>
+		   </thead>
+		<tbody>	
+
+<#foreach doc in searchResult.docs>
+        <#assign DocketDate = doc.getValues("DateStamped") Description = doc.getValues("Description") Comments = doc.getValues("Comments") EventTypeID = doc.getValues("EventTypeID")
+             loopCounter = 0>
+               <#foreach DateStamped in doc.getValues("DateStamped")>
+		      <tr>
+			  	<td>${DateStamped}</td>
+			  	<td>${Description[loopCounter]}</td>
+                                <td>${Comments[loopCounter]}</td>
+                              <#list EventTypeID as EventTypeIDs> 
+                               <#if EventTypeIDs = "201578" || EventTypeIDs = "201750" || EventTypeIDs = "201601" || EventTypeIDs = "201577" || EventTypeIDs = "202225">
+                                <td align="center"><a class="nocolor pphoto" href="${request.getContextPath()}/search.do?indexName=images&lq=${pageStyleUtil.encodeURL("EventEntryID:" + doc.get("EventEntryID"))}&page=1&view=FitV&scrollbar=0&navpanes=0&statusbar=0&messages=0?iframe=true&width=50%25&height=95%25" rel="prettyPhoto[iframe]"><img border="0" title="Preview" src="<@com.currentUrlPrefix/>/resource/preview.png"></a></td>
+                               <#else> 
+                                <td></td>
+                               </#if>
+                              </#list>
+			       <#assign loopCounter = loopCounter + 1>
+		      </tr>
+		</#foreach>
+           </#foreach>
+<#else>
+            <tr>
+                <td colspan="11"><b><i>No Docket Information Available.</i></b></td>               
+            </tr>
+</#if>
+</tbody>
+   </table>
+
+<script type="text/javascript">
+$(function() { 
+    $("#docket").tablesorter( {sortList: [[0,0]]} );
+    $("#docket").tablesorter({widgets: ['zebra']}); 
+}); 
+</script>
+

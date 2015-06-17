@@ -1,0 +1,37 @@
+<Filters>
+ <ExistingFilters>
+ <#if (searchResult.filterResult.filteredColumns.size() > 0) >
+ <#foreach filteredColumn in searchResult.filterResult.filteredColumns>
+  <#assign c = filteredColumn.column>
+  <column name="${c.name}" displayName="${c.displayName}">
+   <Value><![CDATA[${filteredColumn.value}]]></Value>
+   <Link><![CDATA[?${filteredColumn.removeSelf(searchResult.request)}]]></Link>
+  </column>
+ </#foreach>
+ </#if>
+ </ExistingFilters>
+ <FilterChoices>
+ <#foreach filterColumn in searchResult.filterResult.filterColumns>
+  <#assign c = filterColumn.column>
+  <#if (filterColumn.counts.size()>0) >
+  <Filter>
+   <Name>${c.displayName}</Name>
+   <Entries>
+    <#foreach cCount in filterColumn.counts>
+     <#assign t1 = pageStyleUtil.appendQuery(searchResult.queryString, "q", c.query)>
+     <#assign t2 = pageStyleUtil.addOrSetQuery(t1, "start", null)>
+     <Entry count="${cCount.value}">
+      <Value><![CDATA[${cCount.columnValueString}]]></Value>
+      <Link><![CDATA[?${t2}]]></Link>
+      <#if cCount.hasSum >
+      <Sum>${cCount.sum}</Sum>
+      <Average>${cCount.sum}</Average>
+      </#if>
+     </Entry>
+    </#foreach>
+   </Entries>
+  </Filter>
+  </#if>
+ </#foreach>
+ </FilterChoices>
+</Filters>

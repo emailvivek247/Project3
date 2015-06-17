@@ -1,0 +1,35 @@
+<#if (searchResult.docs?has_content && searchResult.docs.size() > 0) >
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+     <p class="result" style="border-bottom:1px solid #efefef;">
+      <br/><b>${searchResult.datasetConfiguration.getColumn("RPCNum").displayName}</b>:${searchResult.highlight(doc, "RPCNum")}
+      <br/><b>${searchResult.datasetConfiguration.getColumn("Address").displayName}</b>:${searchResult.highlight(doc, "Address")}
+      <br/><b>${searchResult.datasetConfiguration.getColumn("LegalDesc").displayName}</b>:${searchResult.highlight(doc, "LegalDesc")}
+      <br/><b>${searchResult.datasetConfiguration.getColumn("Status").displayName}</b>:${searchResult.highlight(doc, "Status")}
+<#if request.isUserInRole('ARLINGTON_IMAGE_ACCESS') || request.isUserInRole('ARLINGTONGOV_FREE_ACCESS') || request.isUserInRole('ROAM_ADMIN')>
+<br/><a class="nocolor" href="search.do?indexName=prcimages&lq=${pageStyleUtil.encodeURL("PKKEY:" + doc.get("PKKEY"))}" target="_blank">View Image</a>
+</#if>
+<br/>&nbsp;
+ </#foreach>
+
+
+<#else>
+ <#include "noResults.stl"> 
+</#if>
+
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	oTable = $('#doc').dataTable({
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bSort": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		"aaSorting": []
+	});
+} );
+</script>

@@ -1,0 +1,43 @@
+<b>Parties</b>
+<table id="parties" class="tablesorter">
+	 <thead>
+	     <tr>
+	       <th class="header">${searchResult.datasetConfiguration.getColumn("DisplayName").displayName}</th>
+	       <th class="header">Party Role<#--${searchResult.datasetConfiguration.getColumn("PartyRole").displayName}--></th>
+               <th class="header">${searchResult.datasetConfiguration.getColumn("Address").displayName}</th>
+               <th class="header">${searchResult.datasetConfiguration.getColumn("AmountOwed").displayName}</th>
+	     </tr>
+         </thead>
+       <tbody>
+<#if searchResult.docs?has_content>
+     <#foreach doc in searchResult.docs>
+        <#assign PartyRole = doc.getValues("PartyRole")  DisplayName = doc.getValues("DisplayName") Address = doc.getValues("Address") AmountOwed = doc.getValues("AmountOwed") loopCounter = 0>
+	<#foreach PartyRole in doc.getValues("PartyRole")>
+	     <tr>
+               
+               <td>${DisplayName[loopCounter]?replace('|', '&nbsp;')}</td>
+               <td>${PartyRole}</td>
+      <#if PartyRole = "DEFENDANT">
+               <td>${Address[loopCounter]?replace('|', '&nbsp;')}</td>
+      <#else>
+               <td></td>
+               
+      </#if>
+               <td>${AmountOwed[loopCounter]?replace('|', '&nbsp;')}</td>
+               <#assign loopCounter = loopCounter + 1>
+	    </tr>
+       </#foreach>
+    </#foreach>
+<#else>
+            <tr>
+                <td colspan="11"><b><i>No Party Information Available.</i></b></td>               
+            </tr>
+</#if>
+</tbody>
+</table>
+
+<script type="text/javascript">
+$(function() {      
+    $("#parties").tablesorter({widgets: ['zebra']});
+  }); 
+</script>

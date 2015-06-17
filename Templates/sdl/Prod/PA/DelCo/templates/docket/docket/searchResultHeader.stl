@@ -1,0 +1,24 @@
+<#assign num_pages = (searchResult.total/searchResult.length)?int>
+
+<#if num_pages*searchResult.length < searchResult.total>
+ <#assign num_pages = num_pages + 1>
+</#if>
+<#assign current_page_index = (searchResult.start/searchResult.length)?int + 1>
+
+<#assign startItemIndex = (current_page_index-1)*searchResult.length + 1>
+<#assign endItemIndex = current_page_index*searchResult.length>
+<#if (endItemIndex>searchResult.total)>
+ <#assign endItemIndex = searchResult.total>
+</#if>
+<table class="resultHeader" style="margin-top:5px;">
+  <tr>
+    <td class="resultHeadercolleft">
+      <b>${searchResult.datasetConfiguration.displayName?if_exists}</b>
+      <#if searchResult.datasetConfiguration.isSecure> Welcome ${request.principal.name?if_exists}!</#if>
+    </td>
+    <td class="resultHeadercolright">
+      <b>Results</b>
+      <b>${startItemIndex?if_exists}</b> - <b>${endItemIndex?if_exists}</b> of <b>${total?if_exists}</b> for <b>${Request.searchForm.searchQuery}</b>.
+      (<b>${searchTime?if_exists}</b> seconds)</td>
+  </tr>
+</table>

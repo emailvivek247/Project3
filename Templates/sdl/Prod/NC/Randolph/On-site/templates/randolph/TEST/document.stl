@@ -1,0 +1,53 @@
+
+  		      <@display.column media="html" indexColumnName="DATEREC" title="${searchResult.datasetConfiguration.getColumn(\"DATEREC\").displayName}">
+		      	<#if doc.get("DATEREC")?has_content>
+					${pageStyleUtil.format(doc.get("DATEREC"), "yyyymmdd", "mm/dd/yyyy")}
+				</#if>			   	
+			  </@display.column>
+			  <@display.column media="rtf excel pdf" indexColumnName="DATEREC" title="${searchResult.datasetConfiguration.getColumn(\"DATEREC\").displayName}">
+			  	<#if doc.get("DATEREC")?has_content>
+				   	${pageStyleUtil.format(doc.get("DATEREC"), "yyyymmdd", "mm/dd/yyyy")}
+				</#if>   	
+			  </@display.column>
+		  <@display.column media="html" indexColumnName="DOCTYPE" title="${searchResult.datasetConfiguration.getColumn(\"DOCTYPE\").displayName}">
+		   	${searchResult.highlight(doc, "DOCTYPE")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DOCTYPE" title="${searchResult.datasetConfiguration.getColumn(\"DOCTYPE\").displayName}">
+		   	${doc.get("DOCTYPE")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="DOCTYPEDESC" title="${searchResult.datasetConfiguration.getColumn(\"DOCTYPEDESC\").displayName}">
+		   	${searchResult.highlight(doc, "DOCTYPEDESC")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DOCTYPEDESC" title="${searchResult.datasetConfiguration.getColumn(\"DOCTYPEDESC\").displayName}">
+		   	${doc.get("DOCTYPEDESC")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="INSTRUMENT" title="${searchResult.datasetConfiguration.getColumn(\"INSTRUMENT\").displayName}">
+		   	${searchResult.highlight(doc, "INSTRUMENT")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="INSTRUMENT" title="${searchResult.datasetConfiguration.getColumn(\"INSTRUMENT\").displayName}">
+		   	${doc.get("INSTRUMENT")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="LIKENAME" title="${searchResult.datasetConfiguration.getColumn(\"LIKENAME\").displayName}">
+		   	${searchResult.highlight(doc, "LIKENAME")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="LIKENAME" title="${searchResult.datasetConfiguration.getColumn(\"LIKENAME\").displayName}">
+		   	${doc.get("LIKENAME")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="NAMEDISPLAY" title="${searchResult.datasetConfiguration.getColumn(\"NAMEDISPLAY\").displayName}">
+		   	${searchResult.highlight(doc, "NAMEDISPLAY")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="NAMEDISPLAY" title="${searchResult.datasetConfiguration.getColumn(\"NAMEDISPLAY\").displayName}">
+		   	${doc.get("NAMEDISPLAY")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="ROAMPKKEY" title="${searchResult.datasetConfiguration.getColumn(\"ROAMPKKEY\").displayName}">
+		   	${searchResult.highlight(doc, "ROAMPKKEY")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="ROAMPKKEY" title="${searchResult.datasetConfiguration.getColumn(\"ROAMPKKEY\").displayName}">
+		   	${doc.get("ROAMPKKEY")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="DATERECDISPLAY" title="${searchResult.datasetConfiguration.getColumn(\"DATERECDISPLAY\").displayName}">
+		   	${searchResult.highlight(doc, "DATERECDISPLAY")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DATERECDISPLAY" title="${searchResult.datasetConfiguration.getColumn(\"DATERECDISPLAY\").displayName}">
+		   	${doc.get("DATERECDISPLAY")}
+		  </@display.column>

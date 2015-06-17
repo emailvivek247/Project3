@@ -1,0 +1,6 @@
+
+ <tr>
+              <td>${searchResult.highlight(doc, "TYPE")}</td>
+            <td>${searchResult.highlight(doc, "BOOK")}</td>
+            <td>${searchResult.highlight(doc, "PAGE")}</td>
+ </tr>

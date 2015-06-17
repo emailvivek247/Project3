@@ -1,0 +1,192 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Fairfax County Circuit Court, DMZ Cover Sheet Application v2.2</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        
+		<meta content="C#" name="CODE_LANGUAGE">
+		<meta content="JavaScript" name="vs_defaultClientScript">
+        <meta http-equiv="cache-control" content="max-age=0" />
+        <meta http-equiv="cache-control" content="no-cache" />
+        <meta http-equiv="expires" content="0" />
+        <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+        <meta http-equiv="pragma" content="no-cache" />
+		<style type="text/css">
+            .TitleCell { FONT-SIZE: 13px }
+	        .TitleHeader { FONT-WEIGHT: bold; FONT-SIZE: 16px }
+	        .DataCell { FONT-SIZE: 13px }
+	        .DataHeader { FONT-WEIGHT: bold; FONT-SIZE: 13px }
+
+            @media all {
+	.page-break	{page-break-before: always; }
+}
+
+@media print {
+    /*_:-ms-fullscreen, :root .page-break { page-break-before: always; }*/
+	.page-break	{ page-break-before: always; }
+}
+		</style>
+
+
+		<script type="text/javascript" language="JavaScript">
+		    function printBars() {
+		        //     window.print();
+		        //     nextPage();
+		    }
+
+		    function PrintCoverSheet() {
+		        if (!document.images[0].complete)
+		            alert("Please wait until the entire barcode has been loaded before printing.");
+		        else {
+		            prtbutton.style.display = "none";
+		            window.print();
+		            prtbutton.style.display = "block";
+		        }
+		    }
+		</script>
+	 
+	</head>
+	<body>
+        		<div id="page_template" style="width:90%"> 
+                     <table cellspacing="0" cellpadding="0" border="0" width="90%">
+          
+			<tr>
+				<td><div><H2 align="center">Fairfax County Circuit Court<br>
+			DMZ Cover Sheet Application v2.2</H2><hr></div>  </td>
+			</tr>
+		</table>	
+	<div  style="width:90%"> 
+        <table cellSpacing="0" cellPadding="0" border="0"  width="90%">
+          
+			<tr>
+				<td><span id="lblprintbarcode"></br><img src='barcodeImages/18419135205_20150205_170534_0.jpg' width='386' height='113'/><br></span></td>
+			</tr>
+		</table>
+
+         <div id="newsletterContent">
+     
+        <span id="lblMessage"></span>
+              <br />
+		
+             <br/>
+        	<table cellSpacing="0" cellPadding="0" width="125%" border="2">
+			<tr>
+				<td class="DataHeader">Consideration</td>
+				<td class="DataCell" width="20%" colspan="2"><span id="lblConsideration">123</span>&nbsp;</td>
+				<td class="DataHeader">Consideration/Actual Value %</td>
+				<td class="DataCell" colSpan="2"><span id="lblConsiderationPercentage">100</span>&nbsp;</td>
+			</tr>
+			<tr>				
+                <td class="DataHeader">Actual/Assessed</td>
+				<td class="DataCell" ><span id="lblActualAssessed">0</span>&nbsp;</td>
+                <td class="DataHeader">Tax Exemption</td>
+				<td class="DataCell" ><span id="lblTaxExemption"> </span>&nbsp;</td>
+				<td class="DataHeader">Amount Not Taxed</td>
+				<td class="DataCell" ><span id="lblAmountNotTaxed">12</span>&nbsp;</td>
+               
+			</tr>
+                <tr>
+ <td class="DataHeader">Code Section</td>
+				<td class="DataCell" colspan="5" ><span id="lblCodeSection"></span>&nbsp;</td>
+
+                </tr>
+			<tr>
+				<td class="DataHeader">DEM Number</td>
+				<td class="DataCell" colspan="2"><span id="lblDEMNumber"></span>&nbsp;</td>
+				<td class="DataHeader">Tax Map Number</td>
+				<td class="DataCell" colSpan="2"><span id="lblTaxMapNumber"></span>&nbsp;</td>
+			</tr>
+			<tr>
+				<td class="DataHeader">Original Book</td>
+				<td class="DataCell" colspan="2"><span id="lblOriginalBook"></span>&nbsp;</td>
+				<td class="DataHeader">Original Page</td>
+				<td class="DataCell" colSpan="2"><span id="lblOriginalPage"></span>&nbsp;</td>
+			</tr>
+			<tr>
+				<td class="DataHeader">Title Company</td>
+				<td class="DataCell" colSpan="3"><span id="lblTitleCompany"></span>&nbsp;</td>
+				<td class="DataHeader">Title Case</td>
+				<td class="DataCell" width="15%"><span id="lblTitleCase">1234</span>&nbsp;</td>
+			</tr>
+			<tr>
+				<td class="DataHeader">Property Descr.</td>
+				<td class="DataCell" colSpan="3"><span id="lblPropertyDescription"></span>&nbsp;</td>
+                <td class="DataHeader">Mutilple Lots?</td>
+				<td class="DataCell"><span id="lblMultipleLots"> NO</span>&nbsp;</td>
+			</tr>
+            <tr>
+				<td class="DataHeader">Return To Party Name:</td>
+				<td class="DataCell" colspan="2"><span id="lblReturnPartyName">LAST</span>&nbsp;</td>
+                 <td class="DataHeader">Address:</td>
+				<td class="DataCell" colspan="2"><span id="lblReturnPartyAddress">123 LAST ST</span>&nbsp;</td>
+			</tr>
+			<tr>
+				<td class="DataHeader">Certified</td>
+				<td class="DataCell"><span id="lblCertifiedFlag">NO</span>&nbsp;</td>
+				<td class="DataHeader">Copies</td>
+				<td class="DataCell"><span id="lblCopies">0</span>&nbsp;</td>
+				<td class="DataHeader">Page Range</td>
+				<td class="DataCell"><span id="lblPageRange"></span>&nbsp;</td>
+			</tr>
+            	
+		</table>
+             <br/>
+             <table cellSpacing="0" cellPadding="0" width="90%" border="0">
+            <tr align="left">
+                <td><span class="TitleHeader">Instruments</span></td>
+            </tr>
+			<tr>
+				<td style="padding-left:80px;" class="TitleCell"><span id="lblInstrument">DEED</span></td>
+			</tr>
+		</table>
+
+       <table cellSpacing="0" cellPadding="0" width="120%"  border="0">
+			<tr>
+				<td class="TitleCell"><span id="lblfirstpage"></br><div ><span class='TitleHeader'>Grantor(s)</span></br><div style='padding-left:80px;'>LAST_I_T</div></span></td>
+			</tr>
+		</table>
+		<br>
+		
+		<table cellSpacing="0" cellPadding="0" width="120%"  border="0">
+			<tr>
+				<td class="TitleCell"><span id="lblGrantor"></span></td>
+			</tr>
+		</table>
+		<br>
+		
+		<table cellSpacing="0" cellPadding="0" width="120%"  border="0">
+			<tr>
+				<td class="TitleCell"><span id="lblGrantee"><div ><span class='TitleHeader'>Grantee(s)</span></br> <div style='padding-left:80px;'>NONE_F_N</div></div></span></td>
+			</tr>
+		</table>
+		<br>
+
+
+	</div>
+        <div style="width: 120%"> 
+                <table cellSpacing="0" cellPadding="0" border="0" width="120%">
+			<tr>
+				<td><span id="lblBarCode"></span></td>
+			</tr>
+                    <tr>
+                        <td><hr /><form name="Form1" method="post" action="CoverRequest.aspx?SvrXfer=y" id="Form1">
+<div>
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUJODIzODUyMzk4D2QWLgIBDw8WAh4EVGV4dAVePC9icj48aW1nIHNyYz0nYmFyY29kZUltYWdlcy8xODQxOTEzNTIwNV8yMDE1MDIwNV8xNzA1MzRfMC5qcGcnIHdpZHRoPSczODYnIGhlaWdodD0nMTEzJy8+PGJyPmRkAgUPDxYCHwAFAzEyM2RkAgcPDxYCHwAFAzEwMGRkAgkPDxYCHwAFATBkZAILDw8WAh8ABQEgZGQCDQ8PFgIfAAUCMTJkZAIPDw8WAh8AZWRkAhEPDxYCHwBlZGQCFQ8PFgIfAGVkZAIXDw8WAh8AZWRkAhkPDxYCHwBlZGQCGw8PFgIfAAUEMTIzNGRkAh0PDxYCHwBlZGQCHw8PFgIfAAUDIE5PZGQCIQ8PFgIfAAUETEFTVGRkAiMPDxYCHwAFCzEyMyBMQVNUIFNUZGQCJQ8PFgIfAAUCTk9kZAInDw8WAh8ABQEwZGQCKQ8PFgIfAGVkZAIrDw8WAh8ABQRERUVEZGQCLQ8PFgIfAAVpPC9icj48ZGl2ID48c3BhbiBjbGFzcz0nVGl0bGVIZWFkZXInPkdyYW50b3Iocyk8L3NwYW4+PC9icj48ZGl2IHN0eWxlPSdwYWRkaW5nLWxlZnQ6ODBweDsnPkxBU1RfSV9UPC9kaXY+ZGQCLw8PFgIfAGVkZAIxDw8WAh8ABWs8ZGl2ID48c3BhbiBjbGFzcz0nVGl0bGVIZWFkZXInPkdyYW50ZWUocyk8L3NwYW4+PC9icj4gPGRpdiBzdHlsZT0ncGFkZGluZy1sZWZ0OjgwcHg7Jz5OT05FX0ZfTjwvZGl2PjwvZGl2PmRkZA==" />
+</div>
+
+			
+			<div id="prtbutton" align="center" style="padding-right:100px"><INPUT style="FONT-WEIGHT: bold; FONT-FAMILY: Courier"  onclick="PrintCoverSheet()" type="button"
+					value="Print Cover Sheet">
+			</div>
+		</form></td>
+
+                    </tr>
+		</table></div>
+  
+</div> 
+
+		</div>
+	</body>
+</html>

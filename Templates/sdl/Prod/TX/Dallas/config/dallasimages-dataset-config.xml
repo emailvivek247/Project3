@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset name="Dallas Images" exportedBy="null" createdAt="Sun Aug 19 12:44:05 CDT 2012">
+  <display-order>-1</display-order>
+  <description><![CDATA[Dallas Images]]></description>
+  <index-dir>images</index-dir>
+  <is-prefix-root-index-directory>true</is-prefix-root-index-directory>
+  <use-server-db-connection>true</use-server-db-connection>
+  <work-directory>_work</work-directory>
+  <temporary-index-minimal-merge-percentage>1.0</temporary-index-minimal-merge-percentage>
+  <merge-hours enabled="false" begin="1" end="3"/>
+  <fetcher-threads>7</fetcher-threads>
+  <writer-threads>3</writer-threads>
+  <index-max-size>100000.0</index-max-size>
+  <list-fetch-size>10000</list-fetch-size>
+  <schedules>
+   <schedule id="0">
+    <is-enabled>true</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>0,10,20,30,40,50 7,8,9,10,11,13,14,15,18,19,20,21 ? * 2,3,4,5,6</cron-setting>
+    <indexing-mode>Incremental Indexing with Thorough Deletion Detection</indexing-mode>
+   </schedule>
+   <schedule id="1">
+    <is-enabled>true</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>5 16 ? * 1,2,3,4,5,6</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+   <schedule id="2">
+    <is-enabled>true</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>0 0 ? * 6</cron-setting>
+    <indexing-mode>Re-create Index</indexing-mode>
+   </schedule>
+  </schedules>
+  <language>Any</language>
+  <analyzer-name>com.fdt.sdl.core.analyzer.NumberLowerCaseAnalyzer</analyzer-name>
+  <data-source-type>0</data-source-type>
+  <fetcher-configuration dir="null">
+  </fetcher-configuration>
+  <data-sources>
+    <data-source>
+      <name>default</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-password>$enc$null</db-password>
+    </data-source>
+  </data-sources>
+  <dataquery name="WorkingQueue" batch-size="128" is-skipping-null-parameters="false">
+    <sql><![CDATA[
+SELECT 
+	 A.SEQ_KEY AS 'Instrument'
+	,LTRIM(RTRIM(C.SERVER)) AS 'Server'
+	,LTRIM(RTRIM(C.PATH))   AS 'Path'
+	,C.YEAR   AS 'Year'
+	,CASE
+		WHEN LEN(C.MONTH)=1 THEN '0'+ CAST(C.MONTH AS VARCHAR) 
+			ELSE CAST(C.MONTH AS VARCHAR)
+    END AS 'Month'
+	,SUBSTRING(B.IMAGE_PATH, 0, 3) AS 'Day'
+	,SUBSTRING(B.IMAGE_PATH, 4, 100) AS 'ImageName'
+	,b.date_time_mod
+FROM (DOCUMENT A INNER JOIN DOCUMENT_IMAGE B 
+	  ON A.SEQ_KEY=B.SEQ_KEY)
+      LEFT JOIN IMAGE_LOC C ON DATEPART(YEAR,A.RECDATE1)= C.YEAR AND DATEPART(MONTH,A.RECDATE1)=C.MONTH
+    ]]></sql>
+    <column>
+      <column-name>Instrument</column-name>
+      <column-index>1</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <primary-key>true</primary-key>
+      <index-field-type>Keyword</index-field-type>
+    </column>
+    <column>
+      <column-name>Server</column-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>Path</column-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>Year</column-name>
+      <column-index>4</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+    </column>
+    <column>
+      <column-name>Month</column-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>Day</column-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>ImageName</column-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>date_time_mod</column-name>
+      <column-index>8</column-index>
+      <column-type>java.sql.Timestamp</column-type>
+      <modified-date>true</modified-date>
+      <index-field-type>KeywordDateHierarchical</index-field-type>
+    </column>
+  </dataquery>
+  <dataquery name="Incremental">
+    <sql><![CDATA[
+SELECT 
+	 A.SEQ_KEY AS 'Instrument'
+	,LTRIM(RTRIM(C.SERVER)) AS 'Server'
+	,LTRIM(RTRIM(C.PATH))   AS 'Path'
+	,C.YEAR   AS 'Year'
+	,CASE
+		WHEN LEN(C.MONTH)=1 THEN '0'+ CAST(C.MONTH AS VARCHAR) 
+			ELSE CAST(C.MONTH AS VARCHAR)
+    END AS 'Month'
+	,SUBSTRING(B.IMAGE_PATH, 0, 3) AS 'Day'
+	,SUBSTRING(B.IMAGE_PATH, 4, 100) AS 'ImageName'
+	,b.date_time_mod
+FROM (DOCUMENT A INNER JOIN DOCUMENT_IMAGE B 
+	  ON A.SEQ_KEY=B.SEQ_KEY)
+      LEFT JOIN IMAGE_LOC C ON DATEPART(YEAR,A.RECDATE1)= C.YEAR AND DATEPART(MONTH,A.RECDATE1)=C.MONTH
+Where
+	b.date_time_mod > DATEADD(HH, -1, GETDATE())
+    ]]></sql>
+  </dataquery>
+  <default-template>Image</default-template>
+  <tablet-template>Image</tablet-template>
+  <mobile-template>Image</mobile-template>
+  <searcher-max-active>8</searcher-max-active>
+  <searcher-when-exhausted>1</searcher-when-exhausted>
+  <searcher-max-wait>10000</searcher-max-wait>
+  <searcher-max-idle>7</searcher-max-idle>
+  <is-in-memory-search>false</is-in-memory-search>
+  <jvm-max-heap-size>8192</jvm-max-heap-size>
+  <max-field-length>30000</max-field-length>
+  <document-buffer-size-mb>4048</document-buffer-size-mb>
+  <allowed-ip-list>*</allowed-ip-list>
+  <date-weight-formula>
+    <time-weight time="600" weight="12.0"/>
+    <time-weight time="1800" weight="11.0"/>
+    <time-weight time="3600" weight="10.0"/>
+    <time-weight time="21600" weight="9.0"/>
+    <time-weight time="43200" weight="8.0"/>
+    <time-weight time="86400" weight="7.0"/>
+    <time-weight time="1296000" weight="6.0"/>
+    <time-weight time="2678400" weight="5.0"/>
+    <time-weight time="5356800" weight="4.0"/>
+    <time-weight time="8035200" weight="3.0"/>
+    <time-weight time="16070400" weight="2.0"/>
+    <time-weight time="32140800" weight="1.3"/>
+    <time-weight time="64281600" weight="1.2"/>
+    <time-weight time="96422400" weight="1.1"/>
+    <time-weight time="128563200" weight="1.05"/>
+    <time-weight time="160704000" weight="1.04"/>
+    <time-weight time="192844800" weight="1.03"/>
+    <time-weight time="224985600" weight="1.02"/>
+    <time-weight time="321408000" weight="1.01"/>
+  </date-weight-formula>
+  <spell-checking enabled="true"></spell-checking>
+</dataset>

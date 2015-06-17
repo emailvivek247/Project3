@@ -1,0 +1,20 @@
+<#-- *Modify columns -->
+<#assign urlEncoder = new("net.javacoding.xsearch.utility.EscapeChars")>
+ <tr>
+    <td>
+      <a target="_parent" onClick='rowSelected(this)' href="${request.getContextPath()}/search.do?indexName=taxdetails&templateName=Details_SN&lq=${urlEncoder.forURL("MAINACCOUNT_NUM:\"" + doc.get("ACCOUNT_NUM") + "\"")}">${number.format("###0.##",doc.get("ACCOUNT_NUM"))}</a>
+   </td>    
+   <td>
+      ${doc.get("OWNER_NAME1")}
+   </td>
+   <td>
+      ${doc.get("DISPLAY_ADDRESS")}
+   </td>
+   <td>
+      ${doc.get("OWNER_CITY")}
+   </td>
+   <td>
+      $${number.format("#,##0.00",doc.get("TOT_VAL"))}
+   </td>
+  
+ </tr>

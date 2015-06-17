@@ -1,0 +1,5 @@
+<template>
+  <longname>MiniGridTemplate</longname>
+  <description>Client Side Sortable Template used in Appraisal Details</description>
+  <defaultLength>15</defaultLength>
+</template>

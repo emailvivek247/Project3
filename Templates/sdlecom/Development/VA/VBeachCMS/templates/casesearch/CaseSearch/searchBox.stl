@@ -1,0 +1,512 @@
+<#--Link jquery files for textbox/dropdown combo box-->
+
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery-ui-1.8.22.custom.min.js"></script>
+
+
+<script type="text/javascript">
+
+// *Set values for searchable fields
+var searchfields = "CaseNumber,CaseStatus,LastName,FirstName,MiddleName,SuffixName,CourtType,CaseFilingDate,Party,Party,SSN";
+	function unique(arrayName) {
+        var newArray=new Array();
+        label:for(var i=0; i<arrayName.length;i++ )
+        {  
+            for(var j=0; j<newArray.length;j++ ) {
+                if(newArray[j].name == arrayName[i].name) 
+                 continue label;
+            }
+            setCookie('CaseSearch' + arrayName[i].name, jQuery.trim(arrayName[i].value), 0);
+            if ((arrayName[i].type == 'text' || arrayName[i].type == 'select-one') && jQuery.trim(arrayName[i].value).length != 0) {
+            	newArray[newArray.length] = arrayName[i];
+            }
+        }
+			setCookie('CaseSearchfrmCaseFilingDate', document.getElementById('frmCaseFilingDate').value, 0);
+			setCookie('CaseSearchtoCaseFilingDate', document.getElementById('toCaseFilingDate').value, 0);
+        return newArray;
+    }	
+	
+	function postAdvancedSearch() {
+		try {
+  		       if (!doDateCheck('frmCaseFilingDate','toCaseFilingDate'))return;
+         		document.getElementById("q").value = '';
+                        $('#CourtType').val($('#CourtTypeSelect').val());
+				setCookie('CaseSearch' + 'CourtTypeSelect', $('#CourtTypeSelect').attr("selectedIndex"), 0);
+                        $('#CaseStatus').val($('#CaseStatusSelect').val());
+				setCookie('CaseSearch' + 'CaseStatusSelect', $('#CaseStatusSelect').attr("selectedIndex"), 0);
+                        $('#SuffixName').val($('#SuffixNameSelect').val());
+				setCookie('CaseSearch' + 'SuffixNameSelect', $('#SuffixNameSelect').attr("selectedIndex"), 0);
+			$('#q').val('');
+			var inputElemenets =  $('input[type="text"]');        		
+			var elem = unique(inputElemenets);
+			var searchString = '';
+			var searchQuery = '';
+			var andOrClause ='';
+			var doubleQuotes = '"';
+			var counter = 0;
+			var textcounter = 0;
+			var searchValue = '';
+			var searchValueQuery = '';
+			for(var i = 0; i < elem.length; i++) {
+                if (document.getElementById(elem[i].name + '_select') != null) {
+					counter++;	
+				}					
+			}
+			for(var i = 0; i < elem.length; i++) {
+                if (document.getElementById(elem[i].name + '_select') != null) {
+					setCookie('CaseSearch' + elem[i].name + '_select', document.getElementById(elem[i].name + '_select').selectedIndex, 0);
+					textcounter++
+					if (textcounter == counter) {
+						andOrClause = '';
+					} else {
+						andOrClause = ' ' + document.getElementById(elem[i].name + '_select').value + '  ';
+					}
+					if (elem[i].name == 'CaseFilingDate') {
+						searchValue = getDateQuery(elem[i].name);
+						searchValueQuery = getDateSearchQuery(elem[i].name);
+					} else {
+	                    searchValue = elem[i].name + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes + '~5';
+	                    searchValue = '#' + searchValue + '#';
+	                    searchValueQuery = elem[i].name + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes;
+					}
+					searchString = searchString + searchValue + andOrClause;
+					searchQuery = searchQuery  + searchValueQuery + andOrClause;
+				}
+			}
+            		document.getElementById("lq").value = searchString;
+            		document.getElementById("searchQuery").value = searchQuery;
+			document.search_${searchResult.indexName}.method = "get";
+			document.search_${searchResult.indexName}.action = "search.do";
+			document.search_${searchResult.indexName}.searchType.value = "1";			
+			document.getElementById("searchable").value = searchfields; 
+		    if (document.getElementById('advancedSortOrder').value.indexOf("|") != -1) {
+			document.getElementById("sortBy").value = document.getElementById('advancedSortOrder').value.split('|')[0]; 
+			document.getElementById("desc").value = document.getElementById('advancedSortOrder').value.split('|')[1]; 
+		    } else {
+			document.getElementById("sortBy").value = document.getElementById('advancedSortOrder').value; 
+		    }
+		    setCookie('adso', document.getElementById('advancedSortOrder').value, 0);
+				document.search_${searchResult.indexName}.submit();
+			} catch (err) {
+				alert(err.message);
+			}
+		} 	
+    
+
+
+
+      
+
+  	
+  	
+
+//* Add to clear search results
+
+function clearSearchResults()  
+            {   
+            document.getElementById("q").value = ""; 
+            }
+
+
+</script>
+<table align="right" border = "0"><tr><td align = "right"><font size = "4"><a href="${request.getContextPath()}/templates/help.html">Helpful Tips!</a></font></td></tr></table><br><br>
+<center> <img src = '${request.getContextPath()}/templates/casesearch/CaseSearch/piheader.png' alt = "Virginia Beach Circuit Court"/>
+</br></br>
+<#include "/templates/globalNav.stl"></center>
+<br>
+	<form name="search_${searchResult.indexName}" id="search_${searchResult.indexName}">
+	<input type="hidden" name="indexName" value="${searchResult.indexName}">
+	<input type="hidden" name="templateName" value="${searchResult.templateName}">
+	<input type="hidden" name="searchQuery" id="searchQuery">
+	<input type="hidden" name="lq" id="lq">
+	<input type="hidden" name="searchType" id="searchType" value="${Request.searchForm.searchType}">
+    	<input type="hidden" name="sortBy" id="sortBy" value="">
+    	<input type="hidden" name="desc" id="desc" value="">
+
+<#-- *Add searchable parameter -->
+    <input type="hidden" name="searchable" id="searchable">
+
+
+	
+		<#if Request.searchForm.searchType = "2">
+			<div id="basicSearch" style="display:none">
+		<#else>
+			<div id="basicSearch" style="display:none">
+		</#if>
+			
+<table border="0" align="center" width="100%" cellspacing="0" cellpadding="0">
+<tr>
+<td rowspan="2" width="33%" align="center"></TD>
+<td width="1%" align="center"></TD>
+<td rowspan="2" width="33%" align="left">
+&nbsp;<a onClick="toggleDiv('advancedSearch');return false" href="#"><font size="1">Advanced Search</font></a>
+<br>
+</td>
+</tr>
+				<tr >
+						<td align="right">
+							<input type="text" class="text" name="q" id="q" size="41" maxlength="2048" value="${searchResult.userInput?html}">
+             <#if Request.searchForm.searchType = "1">
+             <script language="javascript">  
+                 document.getElementById('q').focus();
+             </script>
+             </#if>
+						</td>
+				</tr>
+
+</td>
+<tr><td><center><img src="templates/casesearch/CaseSearch/resource/spacer.png"></center></td></tr>
+<tr><td><center><img src="templates/casesearch/CaseSearch/resource/spacer.png"></center></td></tr>
+<tr><td><center><img src="templates/casesearch/CaseSearch/resource/spacer.png"></center></td></tr>
+
+
+<tr>
+<td align="center"></td>
+  <td width="15%" align="center"><b><font class="label">Sort By&nbsp;:&nbsp;</font></b>
+
+  <select name="basicSortOrder" id="basicSortOrder" class="sortBy">
+      <option value="SortCaseFilingDate|Y">Filing Date : New to Old</option>
+      <option value="SortCaseFilingDate|N">Filing Date : Old to New</option>
+      <option value="CaseNumberSort|N">Case Number : Descending</option>
+      <option value="CaseNumberSort|Y">Case Number : Ascending</option>
+      <option value="Party|N">Party Name : A to Z</option>
+      <option value="Party|Y">Party Name : Z to A</option>
+     
+  </select>
+    <script language="javascript">                                          
+        if (getCookie('bso') != null) {
+            $('#basicSortOrder').val(getCookie('bso').toString());
+        }  
+    </script>
+<td align="left"></td> 
+
+  </td>
+</tr>
+       
+		</table>
+<center><img src="templates/casesearch/CaseSearch/resource/spacer.png"></center>
+<center><img src="templates/casesearch/CaseSearch/resource/spacer.png"></center>
+<center><img src="templates/casesearch/CaseSearch/resource/spacer.png"></center>
+
+		<table  border="0" align = "center">
+				<tr>
+						<td align="left">	
+							<button type="button" class="search" onclick="javascript:postBasicSearch()">Search</button>
+						</td>
+
+						</td>
+				</tr>		
+			</table>
+			
+		</div>
+				
+		<#if Request.searchForm.searchType = "1">
+			<div id="advancedSearch">
+		<#else>
+			<div id="advancedSearch" style="display:none">
+		</#if>
+	
+		<table align="center" border="0" width="38%" cellspacing="1" cellpadding="0">
+				<tr >
+					<td align="left"><b><font class="label">${searchResult.datasetConfiguration.getColumn("CaseNumber").displayName}&nbsp;:&nbsp;</font></b></td>
+						<td  colspan="2">
+							<input type="text" id="CaseNumber"  name="CaseNumber" size="70" maxlength="2048">
+							<script language="javascript">											
+								if (getCookie('CaseSearchCaseNumber') != null) {
+									document.getElementById("CaseNumber").value = getCookie('CaseSearchCaseNumber');
+								}
+							</script>
+						</td>											
+						<td  align="left">
+							<select name="CaseNumber_select" id="CaseNumber_select" >
+								<option value="AND" >AND</option>
+								<option value="OR" >OR</option>
+							</select>
+							<script language="javascript">											
+								if (getCookie('CaseSearchCaseNumber_select') != null) {
+									document.getElementById("CaseNumber_select").options[getCookie('CaseSearchCaseNumber_select')].selected = true;
+								}
+							</script>											
+						</td>
+				</tr>
+				<tr>
+					<td width="15%" align="left"><b><font class="label">${searchResult.datasetConfiguration.getColumn("CaseStatus").displayName}&nbsp;:&nbsp;</font></b></td>
+						<td width="10%" colspan="2">
+							<input type="text" id="CaseStatus"  name="CaseStatus" size="70" maxlength="2048" style="display:none">
+							 <select name="CaseStatusSelect" id="CaseStatusSelect">
+								<option value="" ></option>
+								<option value="OPEN" >OPEN</option>
+								<option value="CONCLUDED" >CONCLUDED</option>
+							</select>	
+																														</select>
+							<script language="javascript">											
+								if (getCookie('CaseSearchCaseStatusSelect') != null) {
+									document.getElementById("CaseStatusSelect").options[getCookie('CaseSearchCaseStatusSelect')].selected = true;
+								}
+							</script>
+						</td>		
+
+						<td width="5%" align="left">
+							<select name="CaseStatus_select" id="CaseStatus_select" >
+								<option value="AND" >AND</option>
+								<option value="OR" >OR</option>
+							</select>
+							<script language="javascript">											
+								if (getCookie('CaseSearchCaseStatus_select') != null) {
+									document.getElementById("CaseStatus_select").options[getCookie('CaseSearchCaseStatus_select')].selected = true;
+								}
+							</script>											
+						</td>
+				</tr>
+
+				<tr>
+					<td width="15%" align="left"><b><font class="label">${searchResult.datasetConfiguration.getColumn("CourtType").displayName}&nbsp;:&nbsp;</font></b></td>
+						<td width="10%" colspan="2">
+						    <input type="text" id="CourtType"  name="CourtType" size="70" maxlength="2048" style="display:none" > 
+							 <select name="CourtTypeSelect" id="CourtTypeSelect">
+								<option value="" selected="selected">ALL</option>
+								<option value="CRIMINAL" >CRIMINAL</option>
+								<option value="CIVIL" >CIVIL</option>
+							</select>
+							<script language="javascript">											
+								if (getCookie('CaseSearchCourtTypeSelect') != null) {
+									document.getElementById("CourtTypeSelect").value = getCookie('CaseSearchCourtTypeSelect');
+								}
+							</script>
+						</td>											
+						<td width="5%" align="left">
+							<select name="CourtType_select" id="CourtType_select" >
+								<option value="AND" >AND</option>
+								<option value="OR" >OR</option>
+							</select>
+							<script language="javascript">											
+								if (getCookie('CaseSearchCourtType_select') != null) {
+									document.getElementById("CourtType_select").options[getCookie('CaseSearchCourtType_select')].selected = true;
+								}
+							</script>											
+						</td>
+				</tr>
+
+				<tr><td width="15%" align="left"></td>
+				</tr>
+                               <tr>                                
+				                    <td align="left"><b><font class="label">${searchResult.datasetConfiguration.getColumn("CaseFilingDate").displayName}&nbsp;:&nbsp;</font></b></td>
+				                    <td align="left"><b><font class="label">&nbsp;&nbsp;From&nbsp;:&nbsp;</font></b>
+				                        <input type="text" id="frmCaseFilingDate" name="CaseFilingDate" title="${searchResult.datasetConfiguration.getColumn("CaseFilingDate").displayName}" size="10" maxlength="10" >
+				                        <script language="javascript">
+										$(function() {
+											    var dates = $( "#frmCaseFilingDate, #toCaseFilingDate" ).datepicker({                 
+												changeYear: true, 
+												changeMonth: true,
+												defaultDate: "",
+												changeMonth: true,
+												numberOfMonths: 1,
+												onSelect: function( selectedDate ) {
+												    var option = this.id == "frmCaseFilingDate" ? "minDate" : "maxDate",
+													instance = $( this ).data( "datepicker" );
+													date = $.datepicker.parseDate(
+													    instance.settings.dateFormat ||
+													    $.datepicker._defaults.dateFormat,
+													    selectedDate, instance.settings );
+												    dates.not( this ).datepicker( "option", option, date );
+												},
+												onClose: function(dateText, inst) {
+												$(this).datepicker('option', 'dateFormat', 'mm/dd/yy');                
+												}
+											    });
+											});
+				                        if (getCookie('CaseSearchfrmCaseFilingDate') != null) {
+				                            document.getElementById("frmCaseFilingDate").value = getCookie('CaseSearchfrmCaseFilingDate');
+				
+				
+				
+				
+				
+				
+				                        }
+				                        </script>
+				                   <b><font class="label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To&nbsp;:&nbsp;</font></b>
+				                        <input type="text" id="toCaseFilingDate" name="CaseFilingDate" title="${searchResult.datasetConfiguration.getColumn("CaseFilingDate").displayName}" size="10" maxlength="10">
+				
+				
+				
+				                        <script language="javascript">                                               
+				                        if (getCookie('CaseSearchtoCaseFilingDate') != null) {
+				                            document.getElementById("toCaseFilingDate").value = getCookie('CaseSearchtoCaseFilingDate');
+				                        }
+				                        </script>
+				                    </td>    
+				                    <td align="left">
+				                        <select style="display:none;" name="CaseFilingDate_select" id="CaseFilingDate_select" >
+				                        <option value="AND" >AND</option>
+				                        <option value="OR" >OR</option>
+				                        </select>
+				                        <script language="javascript">                                          
+				                        if (getCookie('CaseSearchCaseFilingDate_select') != null) {
+				                            document.getElementById("CaseFilingDate_select").options[getCookie('CaseSearchCaseFilingDate_select')].selected = true;
+				                        }
+				                        </script>                                           
+				                    </td>
+                                </tr>
+                                <tr>
+					<td width="15%" align="left"><b><font class="label">${searchResult.datasetConfiguration.getColumn("LastName").displayName}&nbsp;:&nbsp;</font></b></td>
+						<td width="10%" colspan="2">
+							<input type="text" id="LastName"  name="LastName" size="70" maxlength="2048">
+							<script language="javascript">											
+								if (getCookie('CaseSearchLastName') != null) {
+									document.getElementById("LastName").value = getCookie('CaseSearchLastName');
+								}
+							</script>
+						</td>											
+						<td width="5%" align="left">
+							<select name="LastName_select" id="LastName_select" >
+								<option value="AND" >AND</option>
+								<option value="OR" >OR</option>
+							</select>
+							<script language="javascript">											
+								if (getCookie('CaseSearchLastName_select') != null) {
+									document.getElementById("LastName_select").options[getCookie('CaseSearchLastName_select')].selected = true;
+								}
+							</script>											
+						</td>
+				</tr>
+
+				<tr>
+					<td width="15%" align="left"><b><font class="label">${searchResult.datasetConfiguration.getColumn("FirstName").displayName}&nbsp;:&nbsp;</font></b></td>
+						<td width="10%" colspan="2">
+							<input type="text" id="FirstName"  name="FirstName" size="70" maxlength="2048">
+							<script language="javascript">											
+								if (getCookie('CaseSearchFirstName') != null) {
+									document.getElementById("FirstName").value = getCookie('CaseSearchFirstName');
+								}
+							</script>
+						</td>											
+						<td width="5%" align="left">
+							<select name="FirstName_select" id="FirstName_select" >
+								<option value="AND" >AND</option>
+								<option value="OR" >OR</option>
+							</select>
+							<script language="javascript">											
+								if (getCookie('CaseSearchFirstName_select') != null) {
+									document.getElementById("FirstName_select").options[getCookie('CaseSearchFirstName_select')].selected = true;
+								}
+							</script>											
+						</td>
+				</tr>
+				<tr>
+					<td width="15%" align="left"><b><font class="label">${searchResult.datasetConfiguration.getColumn("MiddleName").displayName}&nbsp;:&nbsp;</font></b></td>
+						<td width="10%" colspan="2">
+							<input type="text" id="MiddleName"  name="MiddleName" size="70" maxlength="2048">
+							<script language="javascript">											
+								if (getCookie('CaseSearchMiddleName') != null) {
+									document.getElementById("MiddleName").value = getCookie('CaseSearchMiddleName');
+								}
+							</script>
+						</td>											
+						<td width="5%" align="left">
+							<select name="MiddleName_select" id="MiddleName_select" >
+								<option value="AND" >AND</option>
+								<option value="OR" >OR</option>
+							</select>
+							<script language="javascript">											
+								if (getCookie('CaseSearchMiddleName_select') != null) {
+									document.getElementById("MiddleName_select").options[getCookie('CaseSearchMiddleName_select')].selected = true;
+								}
+							</script>											
+						</td>
+				</tr>
+				<tr>
+					<td width="15%" align="left"><b><font class="label">${searchResult.datasetConfiguration.getColumn("SuffixName").displayName}&nbsp;:&nbsp;</font></b></td>
+						<td width="10%" colspan="2">
+							<input type="text" id="SuffixName"  name="SuffixName" size="70" maxlength="2048" style="display:none">
+							 <select name="SuffixNameSelect" id="SuffixNameSelect">
+		    						<option value="" ></option>
+								<option value="DR" >DR</option>
+								<option value="ESQ" >ESQ</option>
+								<option value="HON" >HON</option>
+								<option value="II" >II</option>
+								<option value="III" >III</option>
+								<option value="IV" >IV</option>
+								<option value="JR" >JR</option>
+								<option value="LTS" >LTS</option>
+								<option value="MD" >MD</option>
+								<option value="MR" >MR</option>
+								<option value="POP" >POP</option>
+								<option value="SR" >SR</option>
+								<option value="TRUS" >TRUS</option>
+
+							</select>
+						   	<script language="javascript">											
+							    if (getCookie('CaseSearchSuffixNameSelect') != null) {
+							        document.getElementById("SuffixNameSelect").options[getCookie('CaseSearchSuffixNameSelect')].selected = true;
+								}											
+						    	</script>
+						</td>											
+						<td width="5%" align="left">
+							<select name="SuffixName_select" id="SuffixName_select" style="display:none;">
+								<option value="AND" >AND</option>
+								<option value="OR" >OR</option>
+							</select>
+							<script language="javascript">											
+								if (getCookie('CaseSearchSuffixName_select') != null) {
+									document.getElementById("SuffixName_select").options[getCookie('CaseSearchSuffixName_select')].selected = true;
+								}
+							</script>											
+						</td>
+				  </tr>
+				  
+<table align="center" border="0" width="40%" cellspacing="1" cellpadding="1">
+<tr><td><center><img src="templates/casesearch/CaseSearch/resource/spacer.png"></center></td></tr>
+<tr><td><center><img src="templates/casesearch/CaseSearch/resource/spacer.png"></center></td></tr>
+<tr><td><center><img src="templates/casesearch/CaseSearch/resource/spacer.png"></center></td></tr>
+
+<tr>
+  <td width="22%" align="right"><b><font class="label">Sort By&nbsp;:&nbsp;</font></b></td>
+  <td width="20%" colspan="1">
+      <select name="advancedSortOrder" id="advancedSortOrder" class="sortBy">
+      <option value="SortCaseFilingDate|Y">Filing Date : New to Old</option>
+      <option value="SortCaseFilingDate|N">Filing Date : Old to New</option>
+      <option value="CaseNumberSort|N">Case Number : Descending</option>
+      <option value="CaseNumberSort|Y">Case Number : Ascending</option>
+      <option value="Party|N">Party Name : A to Z</option>
+      <option value="Party|Y">Party Name : Z to A</option>
+      
+      </select>
+    <script language="javascript">                                          
+        if (getCookie('adso') != null) {
+            $('#advancedSortOrder').val(getCookie('adso').toString());
+        }  
+    </script>  
+   </td>
+</tr>
+</table>                                
+
+
+
+
+<#-- *Modify links in Advanced Search -->
+
+<center><img src="templates/casesearch/CaseSearch/resource/spacer.png"></center>
+<center><img src="templates/casesearch/CaseSearch/resource/spacer.png"></center>
+<center><img src="templates/casesearch/CaseSearch/resource/spacer.png"></center>				   	 			
+
+
+
+
+
+<table align="center" border="0" width="65%" cellspacing="1" cellpadding="1">
+	<tr valign="top">					   	 				
+		<td width="55%">&nbsp;</td>								
+			<td align="center" style="padding-right:10px;">
+				<button type="button" class="searchAdv" onclick="javascript:postAdvancedSearch()">Search</button>
+			</td>
+			<td width="50%" align="left" style="padding:12px 250px 0 0;">
+				<#--<a onClick="toggleDiv('basicSearch');return false" href="#"><font size="1">Basic Search</font></a>-->
+				<font size="1" style="vertical-align:text-top;"><input type="button" onClick="clearFormElements()" value="Clear Search Fields" style="background:transparent; border-width:0; color:#2E7EE4; cursor:pointer; padding-left:0px; font-size:85%;"></font>			
+			</td>
+	</tr>
+</table>
+
+		
+		</div>
+</form>
+<#include "searchBox_extra.stl">

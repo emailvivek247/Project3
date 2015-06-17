@@ -1,0 +1,17 @@
+
+ <tr>
+            <td>${searchResult.highlight(doc, "CASE_NUMBER")}</td>
+            <td>${searchResult.highlight(doc, "COURT_NAME")}</td>
+            <td>${searchResult.highlight(doc, "CASE_TYP_DESC")}</td>
+            <td>${searchResult.highlight(doc, "CASE_SHORT_TITLE")}</td>
+            <td>${searchResult.highlight(doc, "CASE_FILING_DT")}</td>
+            <td>${searchResult.highlight(doc, "BOOK")}</td>
+            <td>${searchResult.highlight(doc, "PAGE")}</td>
+            <td>${searchResult.highlight(doc, "JUDGEMENT_AGAINST")}</td>
+            <td>${searchResult.highlight(doc, "JUDGEMENT_FOR")}</td>
+            <td>${searchResult.highlight(doc, "EVENT_ENT_TYP_DESC")}</td>
+            <td>${searchResult.highlight(doc, "DISPOSITION_DATE")}</td>
+            <td>${pageStyleUtil.formatCurrency(doc.get("JUDGMENT_AMOUNT"))}</td>
+            <td>${searchResult.highlight(doc, "JUDGMENT_SATISFIED_BY")}</td>
+            <td>${searchResult.highlight(doc, "ACCOUNT_FOLIO_NUMBER")}</td>
+ </tr>

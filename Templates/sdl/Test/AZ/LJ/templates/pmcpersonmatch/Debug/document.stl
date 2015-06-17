@@ -1,0 +1,7 @@
+
+ <tr>
+    		     <td>${number.format("###0.##",doc.get("PERSON_ALIAS_ID"))}</td>
+             <td>${date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("DATE_TIME_CREATED"))}</td>	       
+             <td>${date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("DATE_TIME_MOD"))}</td>	       
+ </tr>
+

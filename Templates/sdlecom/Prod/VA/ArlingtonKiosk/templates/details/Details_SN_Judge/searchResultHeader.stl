@@ -1,0 +1,7 @@
+<table class="resultHeader">
+  <tr>
+    <td class="resultHeadercolleft">
+      <b>${searchResult.datasetConfiguration.displayName?if_exists}</b>
+    </td>  
+  </tr>
+</table>

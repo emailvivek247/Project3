@@ -1,0 +1,13 @@
+
+  		  <@display.column media="html" indexColumnName="CaseType" title="${searchResult.datasetConfiguration.getColumn(\"CaseType\").displayName}">
+		   	${searchResult.highlight(doc, "CaseType")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseType" title="${searchResult.datasetConfiguration.getColumn(\"CaseType\").displayName}">
+		   	${doc.get("CaseType")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="CaseStatusDesc" title="${searchResult.datasetConfiguration.getColumn(\"CaseStatusDesc\").displayName}">
+		   	${searchResult.highlight(doc, "CaseStatusDesc")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseStatusDesc" title="${searchResult.datasetConfiguration.getColumn(\"CaseStatusDesc\").displayName}">
+		   	${doc.get("CaseStatusDesc")}
+		  </@display.column>

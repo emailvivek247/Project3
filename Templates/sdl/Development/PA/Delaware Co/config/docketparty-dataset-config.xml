@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset name="Civil Case Docket Party Info" exportedBy="null" createdAt="Thu Apr 03 09:19:48 EDT 2014">
+  <display-order>-10</display-order>
+  <description><![CDATA[Civil Case Docket Party info]]></description>
+  <index-dir>docketparty</index-dir>
+  <is-prefix-root-index-directory>true</is-prefix-root-index-directory>
+  <use-server-db-connection>false</use-server-db-connection>
+  <number-of-hours-before-deletion>6</number-of-hours-before-deletion>
+  <work-directory>_work</work-directory>
+  <temporary-index-minimal-merge-percentage>1.0</temporary-index-minimal-merge-percentage>
+  <merge-hours enabled="false" begin="1" end="3"/>
+  <fetcher-threads>7</fetcher-threads>
+  <writer-threads>3</writer-threads>
+  <index-max-size>100000.0</index-max-size>
+  <language>Any</language>
+  <analyzer-name>com.fdt.sdl.core.analyzer.NumberLowerCaseAnalyzer</analyzer-name>
+  <data-source-type>0</data-source-type>
+  <fetcher-configuration dir="null">
+  </fetcher-configuration>
+  <data-sources>
+    <data-source>
+      <name>default</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[37B87A1B9D8FC4187AF50C1BA233C1B74F8EA9110A66ADC22AB30565EE8371792BAB5FAC265454EB692E347B95FAF44E83599CE2B748D4B3A0487DB1F48156DCD6266BEC369C425F72BCE26B5185F77350FEB12F250F9545F0C143D6739E32067109928FC44D904D]]></db-url>
+      <db-username><![CDATA[C5760E074C293FAEEAED87B8DEC7CE5B8DB73B8678F492B5]]></db-username>
+      <db-password><![CDATA[320B987184760337210E0B09EDF78980DD63D090FCA5F8EA]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  </data-sources>
+  <dataquery name="WorkingQueue" batch-size="128" is-skipping-null-parameters="false">
+    <sql><![CDATA[
+SELECT	DISTINCT
+        C.CASE_ID AS 'CaseID'
+       ,C.CASE_NUMBER
+       ,P.PARTY_ID 'PartyID'
+       ,PR.DISPLAYNAME 'PartyName'
+       ,P.PARTY_ROLE_TYP_ID 'PartyRoleID'
+       ,T.PARTY_ROLE_DESC 'PartyRole'
+       ,P.PERSON_ALIAS_ID 'PersonAiliasID'
+       ,CASE WHEN ATTORNEYS.LIST IS NULL OR ATTORNEYS.LIST = '' THEN CASE WHEN P.PRO_SE_FLAG = 'Y' THEN 'PRO SE' ELSE NULL END ELSE LEFT(ATTORNEYS.LIST, LEN(ATTORNEYS.LIST)-1) END AS 'AttorneyName'
+	   ,c.CASE_FILING_DT AS 'CaseFilingDate'
+	   ,LTRIM(RTRIM(LTRIM(RTRIM(ISNULL(PA.ADDRESS_LINE1_TXT, ' '))) + ' ' 
+    + LTRIM(RTRIM(ISNULL(PA.ADDRESS_LINE2_TXT, ''))) + ' '
+    + LTRIM(RTRIM(ISNULL(PA.CITY_NAME, ''))) + ' ' 
+    + LTRIM(RTRIM(ISNULL(PA.STATE_NAME, ''))) + ' ' 
+    + LTRIM(RTRIM(ISNULL(PA.POSTAL_CD, ''))))) AS 'Address'
+FROM	ACM_FACTS_CASE C 
+        INNER JOIN ACM_PARTY P ON P.CASE_ID = C.CASE_ID AND ISNULL(C.VOID,'N') = 'N' AND ISNULL(P.VOID,'N') = 'N' and P.PARTY_ROLE_TYP_ID not in (select PARTY_ROLE_TYP_ID from ACM_PARTY_ROLE_TYP where ROLE_FOR_ATT = 'Y')
+        LEFT OUTER JOIN ACM_PARTY_ROLE_TYP T ON P.PARTY_ROLE_TYP_ID = T.PARTY_ROLE_TYP_ID 
+        LEFT OUTER JOIN ACM_PERSON PR ON P.PERSON_ALIAS_ID = PR.PERSON_ALIAS_ID
+        LEFT OUTER JOIN ACM_PARTY_STATUS_TYP ST ON P.PARTY_STATUS_TYP_ID = ST.PARTY_STATUS_TYP_ID
+        CROSS APPLY (SELECT P2.DISPLAYNAME + ' - ' AS [text()] FROM ACM_ATTORNEY_PARTY AP 
+		LEFT OUTER JOIN ACM_ATTORNEY AT ON AP.ATT_PERSON_ALIAS_ID = AT.PERSON_ALIAS_ID
+		LEFT OUTER JOIN ACM_PARTY PAR2 ON  AP.ATTORNEY_PARTY_ID = PAR2.PARTY_ID and PAR2.VOID <> 'Y' and PAR2.CASE_ID = C.CASE_ID and PAR2.PARTY_ROLE_TYP_ID IN (select PARTY_ROLE_TYP_ID from ACM_PARTY_ROLE_TYP where ROLE_FOR_ATT = 'Y')
+		LEFT OUTER JOIN ACM_PERSON P2 ON PAR2.PERSON_ALIAS_ID = P2.PERSON_ALIAS_ID
+		LEFT OUTER JOIN ACM_PARTY_ROLE_TYP T2 ON PAR2.PARTY_ROLE_TYP_ID = T2.PARTY_ROLE_TYP_ID AND T2.ROLE_FOR_ATT = 'Y'
+		WHERE P.PARTY_ID = AP.PARTY_ID  AND AP.ISPRIMARY = 'Y' AND AP.INACTIVE_FLG = 'N' AND SUBSTRING(CONVERT(CHAR,AP.EFFECTIVE_DATE ,121),1,11) < GETDATE() AND SUBSTRING(CONVERT(CHAR,DATEADD(DAY,1,AP.END_DATE),121),1,11) > GETDATE()
+	FOR XML PATH ('')) ATTORNEYS (LIST)
+	    LEFT JOIN SW_ACM_V_ADDRESS PA ON PA.PERSON_ALIAS_ID = P.PERSON_ALIAS_ID
+WHERE ISNULL(JUVENILE_FLG,'') <> 'Y'
+AND ISNULL(SEALED_FLAG,'') <> 'Y'
+AND ISNULL(RSTRCD_PARTY_FLAG,'') <> 'Y'
+AND ISNULL(SEALED_PARTY_FLG,'') <> 'Y'
+AND ISNULL(PARTY_ROLE_TYP_CD,'') NOT IN ('6','12','14','16','18','19','36','39','40','41','42','67','SEC')
+AND C.CASE_NUMBER <> '2012-005040'
+    ]]></sql>
+    <column>
+      <column-name>CaseID</column-name>
+      <display-name><![CDATA[CaseID]]></display-name>
+      <column-index>1</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CASE_NUMBER</column-name>
+      <display-name><![CDATA[Case Number]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PartyID</column-name>
+      <display-name><![CDATA[PartyID]]></display-name>
+      <column-index>3</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PartyName</column-name>
+      <display-name><![CDATA[Party Name]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PartyRoleID</column-name>
+      <display-name><![CDATA[PartyRoleID]]></display-name>
+      <column-index>5</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PartyRole</column-name>
+      <display-name><![CDATA[Party Role]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PersonAiliasID</column-name>
+      <display-name><![CDATA[PersonAiliasID]]></display-name>
+      <column-index>7</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>AttorneyName</column-name>
+      <display-name><![CDATA[Attorney]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CaseFilingDate</column-name>
+      <display-name><![CDATA[Case Filing Date]]></display-name>
+      <column-index>9</column-index>
+      <column-type>java.sql.Timestamp</column-type>
+      <index-field-type>KeywordDateHierarchical</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Address</column-name>
+      <display-name><![CDATA[Address]]></display-name>
+      <column-index>10</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <default-template>party</default-template>
+  <tablet-template>party</tablet-template>
+  <mobile-template>party</mobile-template>
+  <searcher-max-active>8</searcher-max-active>
+  <searcher-when-exhausted>1</searcher-when-exhausted>
+  <searcher-max-wait>10000</searcher-max-wait>
+  <searcher-max-idle>7</searcher-max-idle>
+  <is-in-memory-search>false</is-in-memory-search>
+  <allowed-ip-list>*</allowed-ip-list>
+  <date-weight-formula>
+    <time-weight time="600" weight="12.0"/>
+    <time-weight time="1800" weight="11.0"/>
+    <time-weight time="3600" weight="10.0"/>
+    <time-weight time="21600" weight="9.0"/>
+    <time-weight time="43200" weight="8.0"/>
+    <time-weight time="86400" weight="7.0"/>
+    <time-weight time="1296000" weight="6.0"/>
+    <time-weight time="2678400" weight="5.0"/>
+    <time-weight time="5356800" weight="4.0"/>
+    <time-weight time="8035200" weight="3.0"/>
+    <time-weight time="16070400" weight="2.0"/>
+    <time-weight time="32140800" weight="1.3"/>
+    <time-weight time="64281600" weight="1.2"/>
+    <time-weight time="96422400" weight="1.1"/>
+    <time-weight time="128563200" weight="1.05"/>
+    <time-weight time="160704000" weight="1.04"/>
+    <time-weight time="192844800" weight="1.03"/>
+    <time-weight time="224985600" weight="1.02"/>
+    <time-weight time="321408000" weight="1.01"/>
+  </date-weight-formula>
+  <spell-checking enabled="true"></spell-checking>
+</dataset>

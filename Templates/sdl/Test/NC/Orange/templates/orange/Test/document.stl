@@ -1,0 +1,25 @@
+
+  		  <@display.column media="html" indexColumnName="CombinedName" title="${searchResult.datasetConfiguration.getColumn(\"CombinedName\").displayName}">
+		   	${searchResult.highlight(doc, "CombinedName")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CombinedName" title="${searchResult.datasetConfiguration.getColumn(\"CombinedName\").displayName}">
+		   	${doc.get("CombinedName")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="SynName" title="${searchResult.datasetConfiguration.getColumn(\"SynName\").displayName}">
+		   	${searchResult.highlight(doc, "SynName")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="SynName" title="${searchResult.datasetConfiguration.getColumn(\"SynName\").displayName}">
+		   	${doc.get("SynName")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="WebName" title="${searchResult.datasetConfiguration.getColumn(\"WebName\").displayName}">
+		   	${searchResult.highlight(doc, "WebName")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="WebName" title="${searchResult.datasetConfiguration.getColumn(\"WebName\").displayName}">
+		   	${doc.get("WebName")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="INSTRUMENT" title="${searchResult.datasetConfiguration.getColumn(\"INSTRUMENT\").displayName}">
+		   	${searchResult.highlight(doc, "INSTRUMENT")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="INSTRUMENT" title="${searchResult.datasetConfiguration.getColumn(\"INSTRUMENT\").displayName}">
+		   	${doc.get("INSTRUMENT")}
+		  </@display.column>

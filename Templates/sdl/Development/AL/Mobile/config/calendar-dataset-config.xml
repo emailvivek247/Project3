@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset name="calendar" exportedBy="null" createdAt="Fri Jul 26 16:01:38 EDT 2013">
+  <description><![CDATA[calendar]]></description>
+  <index-dir>calendar</index-dir>
+  <is-prefix-root-index-directory>true</is-prefix-root-index-directory>
+  <use-server-db-connection>true</use-server-db-connection>
+  <number-of-hours-before-deletion>6</number-of-hours-before-deletion>
+  <work-directory>_work</work-directory>
+  <temporary-index-minimal-merge-percentage>1.0</temporary-index-minimal-merge-percentage>
+  <merge-hours enabled="false" begin="1" end="3"/>
+  <fetcher-threads>7</fetcher-threads>
+  <writer-threads>3</writer-threads>
+  <index-max-size>100000.0</index-max-size>
+  <schedules>
+   <schedule id="0">
+    <is-enabled>true</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>0 0 ? * 2,3,4,5,6</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+  </schedules>
+  <language>Any</language>
+  <analyzer-name>com.fdt.sdl.core.analyzer.NumberLowerCaseAnalyzer</analyzer-name>
+  <data-source-type>0</data-source-type>
+  <fetcher-configuration dir="null">
+  </fetcher-configuration>
+  <dataquery name="WorkingQueue" batch-size="128" is-skipping-null-parameters="false">
+    <sql><![CDATA[
+SELECT DISTINCT
+    COALESCE(X.DT1,Y.DT2) SessionDate,
+    ISNULL(X.COUNT1,0) CourtRoom1, 
+    ISNULL(Y.COUNT2,0) CourtRoom2,
+    DATENAME(DW,COALESCE(X.DT1,Y.DT2)) AS 'SessionWeekDay'
+   ,CONVERT(VARCHAR(30), COALESCE(X.DT1,Y.DT2), 120) AS 'SessionDateDisplay'
+   ,CONVERT(VARCHAR(10), COALESCE(X.DT1,Y.DT2), 112) AS 'SessionDateSearch' 
+   
+FROM 
+(
+SELECT cast(SESSION_START_DT as DATE) DT1,COUNT(DISTINCT CASE_NUMBER) Count1
+FROM MCPC_ACC_V_ATTENDANCE_SEARCH 
+where court_room_id = 1
+group by cast(SESSION_START_DT as DATE)
+)X 
+FULL OUTER JOIN 
+(
+SELECT DISTINCT cast(SESSION_START_DT as DATE) DT2,COUNT(DISTINCT CASE_NUMBER)  Count2
+FROM MCPC_ACC_V_ATTENDANCE_SEARCH 
+where court_room_id = 2
+group by cast(SESSION_START_DT as DATE)
+)Y ON Y.DT2 = X.DT1 
+WHERE (COALESCE(X.DT1,Y.DT2) >= (GETDATE() - 30) and COALESCE(X.DT1,Y.DT2) <= GETDATE()) 
+or (COALESCE(X.DT1,Y.DT2) >= GETDATE() and (COALESCE(X.DT1,Y.DT2) <= (GETDATE() + 150)))
+order by COALESCE(X.DT1,Y.DT2) asc
+    ]]></sql>
+    <column>
+      <column-name>SessionDate</column-name>
+      <display-name><![CDATA[Session Date]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.sql.Timestamp</column-type>
+      <index-field-type>KeywordDateHierarchical</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <is-filterable sort-filter-counts-by="1">true</is-filterable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CourtRoom1</column-name>
+      <display-name><![CDATA[Court Room 1]]></display-name>
+      <column-index>2</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CourtRoom2</column-name>
+      <display-name><![CDATA[Court Room 2]]></display-name>
+      <column-index>3</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>SessionWeekDay</column-name>
+      <display-name><![CDATA[Session Day]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>SessionDateDisplay</column-name>
+      <display-name><![CDATA[Session Date]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>SessionDateSearch</column-name>
+      <display-name><![CDATA[SessionDateSearch]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <analyzer-name>com.fdt.sdl.core.analyzer.DateAnalyzer</analyzer-name>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <default-template>calendar</default-template>
+  <tablet-template>calendar</tablet-template>
+  <mobile-template>calendar</mobile-template>
+  <searcher-max-active>8</searcher-max-active>
+  <searcher-when-exhausted>1</searcher-when-exhausted>
+  <searcher-max-wait>10000</searcher-max-wait>
+  <searcher-max-idle>7</searcher-max-idle>
+  <is-in-memory-search>false</is-in-memory-search>
+  <allowed-ip-list>*</allowed-ip-list>
+  <date-weight-formula>
+    <time-weight time="600" weight="12.0"/>
+    <time-weight time="1800" weight="11.0"/>
+    <time-weight time="3600" weight="10.0"/>
+    <time-weight time="21600" weight="9.0"/>
+    <time-weight time="43200" weight="8.0"/>
+    <time-weight time="86400" weight="7.0"/>
+    <time-weight time="1296000" weight="6.0"/>
+    <time-weight time="2678400" weight="5.0"/>
+    <time-weight time="5356800" weight="4.0"/>
+    <time-weight time="8035200" weight="3.0"/>
+    <time-weight time="16070400" weight="2.0"/>
+    <time-weight time="32140800" weight="1.3"/>
+    <time-weight time="64281600" weight="1.2"/>
+    <time-weight time="96422400" weight="1.1"/>
+    <time-weight time="128563200" weight="1.05"/>
+    <time-weight time="160704000" weight="1.04"/>
+    <time-weight time="192844800" weight="1.03"/>
+    <time-weight time="224985600" weight="1.02"/>
+    <time-weight time="321408000" weight="1.01"/>
+  </date-weight-formula>
+  <spell-checking enabled="true"></spell-checking>
+</dataset>

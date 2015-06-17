@@ -1,0 +1,5 @@
+<template>
+  <longname>Dallas Clerk OPR Details Template</longname>
+  <description>Client Side Sortable Template with Smart Navigation used for Dallas Details for tablet devices</description>
+  <defaultLength>30</defaultLength>
+</template>

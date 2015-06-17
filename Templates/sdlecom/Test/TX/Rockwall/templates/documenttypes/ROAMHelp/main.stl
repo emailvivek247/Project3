@@ -1,0 +1,22 @@
+<@com.useHighlightTag '<span style="background-color:#00ff00">', '</span>' />
+<#include "layout.stl">
+<@layout title="ROAM Help" encoding="${searchResult.encoding}">
+
+<#include "/templates/globalNavHELP.stl">
+
+<#assign display=JspTaglibs["http://displaytag.sf.net"]>
+
+ <@com.errorMarkup/>
+
+<br>
+
+
+
+  <div id="documents"> <#include "documents.stl"> </div>
+
+<BR><BR>
+<!-- Add parameter for phone number -->
+<CENTER><B>If further assistance is needed please contact our office at 214-653-7099</B></CENTER>
+
+ 
+</@layout>

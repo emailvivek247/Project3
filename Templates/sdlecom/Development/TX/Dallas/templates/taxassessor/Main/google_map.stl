@@ -1,0 +1,301 @@
+<script type="text/javascript" src="http://maps.google.com/maps?file=api&v=3&key=ABQIAAAA5CJdYX9w9JujuzSpFVmUERQLx0ED8HvfDnW2J1LkqUtrlXRgVhSwlf1OTSw4POoB01NiPKT2JnykWA&sensor=true"></script>
+<script src="http://gmaps-utility-library.googlecode.com/svn/trunk/mapiconmaker/1.1/src/mapiconmaker.js"></script>
+<script src="http://gmaps-utility-library.googlecode.com/svn/trunk/markermanager/release/src/markermanager.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/LegendControl.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/markerManager.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/extstreetviewcontrol.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jshashtable.js"></script>
+<style type="text/css">
+        input.groovybutton
+        {
+           font-size:11px;
+           font-family:Arial,sans-serif;
+           text-align:left;
+           color:#444444;
+           width:90px;
+           margin:5px;
+           background-color:#DDDDDD;
+           filter:progid:DXImageTransform.Microsoft.Gradient(GradientType=1,StartColorStr='#ffDDDDDD',EndColorStr='#ffFFFFFF');
+           border-style:none;   
+        }
+        #popup {
+            background:#EFEFEF;
+            border:1px solid #999999;
+            margin:0px;
+            padding:7px;            
+            text-align:left;
+        }
+        .bubble1{
+            text-align:left; 
+            background:#EFEFEF;
+            border:1px solid #999;
+            padding:7px;
+            margin:0px;
+            width:300px;
+            height:200px;
+            font-family:arial,sans-serif
+            font-size:12px;
+         } 
+         .bubble2{
+            text-align:left; 
+            background:#EFEFEF;
+            border:1px solid #999;
+            padding:7px;
+            margin:0px;
+            width:350px;
+            height:350px;
+            font-family:arial,sans-serif
+            font-size:12px;
+         } 
+         .header{
+            font-family:arial,sans-serif;
+            font-size:12px;            
+         }
+         .footer{
+            font-family:arial,sans-serif;
+            text-align:right;
+            font-size:10px;           
+         }         
+</style>
+<div align="center" id="map_canvas" style="width: 100%; height: 400px;">
+</div>
+<script type="text/javascript">
+    var gmap = new GMap2(document.getElementById("map_canvas"));
+    var icon0 = new GIcon();
+    var icon1 = new GIcon();
+    var icon2 = new GIcon();
+    var icon3 = new GIcon();
+    var icon4 = new GIcon();
+    var icon5 = new GIcon();
+    gmap.setCenter(new GLatLng(30.279, -97.700), 17);
+    var svc = new GStreetviewClient()
+    var mgr = new MarkerManager(gmap);
+    var bounds = new GLatLngBounds();
+    var typesHash = new Hashtable();
+    typesHash.clear();
+    var colors = {};
+    var legendValues = [];
+    var markerGroups = {};
+    var TYPE_CAT1 = 'CATEGORY1';
+    var TYPE_CAT2 = 'CATEGORY2';
+    var TYPE_CAT3 = 'CATEGORY3';
+    var TYPE_CAT4 = 'CATEGORY4';
+    var TYPE_CAT5 = 'CATEGORY5';
+    var PIN_WIDTH = 20;
+    var PIN_HEIGHT = 34;
+    var ZOOM_MIN = 0;
+    var ZOOM_MED = 8;
+    var ZOOM_MAX = 17;
+    var PIN_CATEGORY1_BIG = "";
+    var PIN_CATEGORY2_BIG = "";
+    var PIN_CATEGORY3_BIG = "";
+    var PIN_CATEGORY4_BIG = "";
+    var PIN_CATEGORY5_BIG = "";
+    var PIN_CATEGORY1_SMALL = "";
+    var PIN_CATEGORY2_SMALL = "";
+    var PIN_CATEGORY3_SMALL = "";
+    var PIN_CATEGORY4_SMALL = "";
+    var PIN_CATEGORY5_SMALL = "";
+    var ZOOM_MIN = 0;
+    var ZOOM_MED = 8;
+    var ZOOM_MAX = 17;
+    gmap.clearOverlays();
+    mgr.clearMarkers();
+    gmap.enableContinuousZoom();
+    gmap.enableDoubleClickZoom();
+    legendValues.length = 0; 
+    gmap.addControl(new GLargeMapControl3D());
+    gmap.addControl(new GMapTypeControl());
+    gmap.addMapType(G_PHYSICAL_MAP);
+    gmap.addMapType(G_SATELLITE_3D_MAP);
+    gmap.getPane(G_MAP_FLOAT_SHADOW_PANE).style.display = "none";
+    //------------------ For categories ------------------------
+    PIN_CATEGORY1_BIG = "images/mapicons/red-dot.png";
+    PIN_CATEGORY2_BIG = "images/mapicons/red-dot.png";
+    PIN_CATEGORY3_BIG = "images/mapicons/red-dot.png";
+    PIN_CATEGORY4_BIG = "images/mapicons/red-dot.png";
+    PIN_CATEGORY5_BIG = "images/mapicons/red-dot.png";
+    PIN_CATEGORY1_SMALL = "images/mapicons/small_red-dot.png";
+    PIN_CATEGORY2_SMALL = "images/mapicons/small_red-dot.png";
+    PIN_CATEGORY3_SMALL = "images/mapicons/small_red-dot.png";
+    PIN_CATEGORY4_SMALL = "images/mapicons/small_red-dot.png";
+    PIN_CATEGORY5_SMALL = "images/mapicons/small_red-dot.png";      
+    colors[TYPE_CAT1] = '#cc44ff';
+    colors[TYPE_CAT2] = '#ff8b16';
+    colors[TYPE_CAT3] = '#44aa00';
+    colors[TYPE_CAT4] = '#C31734';
+    colors[TYPE_CAT5] = '#192A9C';
+        var item;
+        for (item in legendValues) {
+            if ('function' !== typeof legendValues[item]) {
+                markerGroups[legendValues[item].type] = [];
+            }
+        }
+        //------------------ For categories ------------------------
+        icon0.iconAnchor = new GPoint(9, 34);
+        icon0.infoWindowAnchor = new GPoint(9, 2);
+        icon1.iconAnchor = new GPoint(9, 34);
+        icon1.infoWindowAnchor = new GPoint(9, 2);
+        icon2.iconAnchor = new GPoint(9, 34);
+        icon2.infoWindowAnchor = new GPoint(9, 2);
+        icon3.iconAnchor = new GPoint(9, 34);
+        icon3.infoWindowAnchor = new GPoint(9, 2);
+        icon4.iconAnchor = new GPoint(9, 34);
+        icon4.infoWindowAnchor = new GPoint(9, 2);
+        icon5.iconAnchor = new GPoint(9, 34);
+        icon5.infoWindowAnchor = new GPoint(9, 2);
+        icon0.image = "images/mapicons/blue-dot.png";
+        icon1.image = PIN_CATEGORY1_BIG;
+        icon2.image = PIN_CATEGORY2_BIG;
+        icon3.image = PIN_CATEGORY3_BIG;
+        icon4.image = PIN_CATEGORY4_BIG;
+        icon5.image = PIN_CATEGORY5_BIG;
+
+        if (icon0.image.indexOf('dot') != -1) {
+            icon0.iconSize = new GSize(20, 34);
+            icon0.shadow = "images/mapicons/shadow-dot.png";
+        } else {
+            icon0.iconSize = new GSize(32, 32);
+            icon0.shadow = "";
+        }
+        if (icon1.image.indexOf('dot') != -1) {
+            icon1.iconSize = new GSize(20, 34);
+            icon1.shadow = "images/mapicons/shadow-dot.png";
+        } else {
+            icon1.iconSize = new GSize(32, 32);
+            icon1.shadow = "";
+        }
+        if (icon2.image.indexOf('dot') != -1) {
+            icon2.iconSize = new GSize(20, 34);
+            icon2.shadow = "images/mapicons/shadow-dot.png";
+        } else {
+            icon2.iconSize = new GSize(32, 32);
+            icon2.shadow = "";
+        }
+        if (icon3.image.indexOf('dot') != -1) {
+            icon3.iconSize = new GSize(20, 34);
+            icon3.shadow = "images/mapicons/shadow-dot.png";
+        } else {
+            icon3.iconSize = new GSize(32, 32);
+            icon3.shadow = "";
+        }
+        if (icon4.image.indexOf('dot') != -1) {
+            icon4.iconSize = new GSize(20, 34);
+            icon4.shadow = "images/mapicons/shadow-dot.png";
+        } else {
+            icon4.iconSize = new GSize(32, 32);
+            icon4.shadow = "";
+        }
+        if (icon5.image.indexOf('dot') != -1) {
+            icon5.iconSize = new GSize(20, 34);
+            icon5.shadow = "images/mapicons/shadow-dot.png";
+        } else {
+            icon5.iconSize = new GSize(32, 32);
+            icon5.shadow = "";
+        }
+       var url = "${request.getContextPath()}/search.do?${pageStyleUtil.addOrSetQuery(request.getQueryString(), "templateName", "Map")}";       
+       $.getJSON(url, function(data){
+           $.each(data.items, function(i,item){
+                var content = "";
+                var showStreetView = false;
+                        content = content + "<b>Account Number</b> : " + item.ACCOUNT_NUM + "<br>";                  
+                        content = content + "<b>Owner</b> : " + item.OWNER_NAME1 + "<br>";                  
+                        content = content + "<b>Address</b> : " + item.OWNER_ADDRESS + "<br>";                  
+                        content = content + "<b>City</b> : " + item.OWNER_CITY + "<br>";                  
+                        content = content + "<b>State</b> : " + item.OWNER_STATE + "<br>";                  
+                        content = content + "<b>Property Value</b> : $" + item.TOT_VAL + ".00<br>";   
+                        content = content + "<b>Number of Bedrooms</b> : " + item.NUM_BEDROOMS + "<br>";
+                        content = content + "<b>Number of Full Baths</b> : " + item.NUM_FULL_BATHS + "<br>";    
+                        content = content + "<b>Number of Half Baths</b> : " + item.NUM_HALF_BATHS + "<br>";     
+                        content = content + "<b>Number of Kitchens</b> : " + item.NUM_KITCHENS + "<br>";                  
+                        maplocation(i, item.OWNER_ADDRESS, "", item.OWNER_CITY, item.OWNER_STATE, item.OWNER_ZIPCODE, "", "", "", content, showStreetView);
+           });
+       });             
+       function maplocation(id, addressLine1, addressLine2, city, state, zip, latitude, longitude, key, content, showStreetView) {
+            var gPoint, category;
+            if (latitude!="" && longitude!=""){
+                gPoint = new GLatLng(latitude, longitude);
+                popuphtml = content;
+                popuphtml = "<div id=\"popup\">" + popuphtml + "<\/div>";
+                marker = createMarker(id, gPoint, popuphtml, key, showStreetView);
+                bounds.extend(marker.getPoint());
+                mgr.addMarker(marker, ZOOM_MIN, ZOOM_MAX);
+                typesHash.put(id, marker);
+                pushAllMarkers();
+             } else {
+                var address = addressLine1 + " " + addressLine2 + ", " + city + ", " + state + " " + zip;
+                geoCode(id, address, content, category, key, showStreetView);
+            }            
+        }
+        function geoCode(id, address, content, category, key, showStreetView) {
+            var locpoint;
+            geocoder = new GClientGeocoder();
+            geocoder.getLocations(address, addToMap);
+            function addToMap(response) {
+                if (response && response.Status.code == 200) {
+                    var respPoint = response.Placemark[0];
+                    locpoint = new GLatLng(respPoint.Point.coordinates[1], respPoint.Point.coordinates[0]);
+                    popuphtml = content;                    
+                    popuphtml = "<div class=\"header\"><b></b></div>" + "<div class=\"bubble1\" style=\"font-size:12px;\">" + popuphtml + "</div>" + "<div class=\"footer\"><b></b><br></div>";
+                    marker = createMarker(id, locpoint, popuphtml, key, showStreetView);
+                    bounds.extend(marker.getPoint());
+                    mgr.addMarker(marker, ZOOM_MIN, ZOOM_MAX);
+                    typesHash.put(id, marker);                    
+                    pushAllMarkers(); 
+                } else {
+                    locpoint = new GLatLng(0,0);
+                    popuphtml = "";
+                    marker = createMarker(id, locpoint, popuphtml, key, showStreetView);
+                    typesHash.put(id, marker);                    
+                }               
+            }           
+        }
+        function createMarker(id, point, popuphtml, key, showStreetView) {           
+            var icon;
+            icon = icon0;            
+            var objType = "";
+            var marker = new GMarker(point, icon);
+            if (showStreetView) {
+                GEvent.addListener(marker, "click", function() {
+                    NavigateToAddressWithSW(point);
+                });
+            }
+            marker.zoomMin = ZOOM_MIN;
+            marker.zoomMax = ZOOM_MAX;
+            GEvent.addListener(marker, "click", function() {
+                marker.openInfoWindowHtml(popuphtml);
+            });
+            if (objType != ""){
+               markerGroups[objType].push(marker);
+            }
+            return marker;
+        }
+        function pushAllMarkers() {
+            mgr.refresh();
+            gmap.setZoom(gmap.getBoundsZoomLevel(bounds));
+            gmap.setCenter(bounds.getCenter());
+        }
+        function NavigateToAddressWithSW(currentPoint) {
+            gmap.setCenter(currentPoint, 17);
+            svc.getNearestPanorama(currentPoint, function(reply) {
+                if (reply.code = 200) {
+                    if (reply.Location) { var html = "<div class=\"header\"><b>" + reply.Location.description + "</b></div>" + "<div class=\"bubble2\" style=\"font-size:12px;\"><iframe width=\"100%\" height=\"90%\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" src=\"http://maps.google.com/maps/sv?cbp=1,479.7175735027764,,0,-3.50219513621329&amp;cbll=" + currentPoint.lat() + "," + currentPoint.lng() + "&amp;v=1&amp;panoid=" + reply.Location.panoId + "&amp;gl=&amp;hl=en\"></iframe></div>" + "<div class=\"footer\"><b>Copyright: " + reply.Data.copyright + "</b><br></div>"; var pp = new GLatLng(parseFloat(reply.Location.lat), parseFloat(reply.Location.lng)); gmap.openInfoWindowHtml(pp, html); } else { alert('Street View is not available for the address currently.');}
+                }
+            });
+        } 
+        function navigate(id, sw)
+        {
+            var currentMarker = typesHash.get(id);
+            var currentPoint = currentMarker.getLatLng();
+            if (currentMarker != null && currentPoint.x != 0 && currentPoint.y != 0) {            
+                if (sw){                    
+                    NavigateToAddressWithSW(currentPoint);
+                } else {                    
+                    GEvent.trigger(currentMarker, "click");
+                }
+            } else {
+                alert("This location could not be mapped.")
+            }            
+        }
+
+</script>

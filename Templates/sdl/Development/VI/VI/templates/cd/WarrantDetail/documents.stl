@@ -1,0 +1,102 @@
+<A HREF="javascript:history.go(-1)">« Back to search results</a>
+<br /><br />
+<#if searchResult.docs?has_content>
+	<#assign caseCounter = 0>        
+	<#foreach doc in searchResult.docs>
+		<#if doc.getValues("CaseID")?has_content>
+			<#assign caseCounter = 1>
+		</#if>
+	</#foreach>
+
+	<#foreach doc in searchResult.docs>
+
+
+	<#--Start General Case Info-->
+	<#if (caseCounter > 0)>
+	  <b>General Case Information</b>
+		 <table id="case" class="tablesorter">
+				<thead>
+					<tr>
+					  <th>${searchResult.datasetConfiguration.getColumn("CaseNumber").displayName}</th>
+					  <th>Case Status<#--${searchResult.datasetConfiguration.getColumn("CaseStatus").displayName}--></th>
+					  <th>${searchResult.datasetConfiguration.getColumn("Jurisdiction").displayName}</th>
+                                        </tr>
+				</thead>
+			<tbody>
+			<#assign CaseIDS = doc.getValues("CaseID") CaseStatus = doc.getValues("CaseStatus") Jurisdiction = doc.getValues("Jurisdiction") loopCounter = 0>
+
+			<#foreach CaseNumber in doc.getValues("CaseNumber")>
+					<tr>
+						<#assign caseNumberKey = CaseIDS[loopCounter]>
+						<td>${CaseNumber}</td>
+						<td>${CaseStatus[loopCounter]}</td>
+                                                <td><#if Jurisdiction?has_content>${Jurisdiction[loopCounter]?replace('|', '&nbsp;')}<#else></#if></td>
+						<#assign loopCounter = loopCounter + 1>
+					</tr>
+			</#foreach>
+			</tbody>
+		 </table>
+	<#else>
+		<br /><br />
+		<b><i>No Case Information Available.</i></b>
+		<br /><br />
+	</#if>
+	</#foreach>	
+</#if>
+<script type="text/javascript">
+function open_win()
+{
+window.open('${request.getContextPath()}/search.do?indexName=sd&templateName=service&lq=CaseID%3A%22${caseNumberKey}%22')
+}
+</script>
+<div id="partiescontainer"></div>
+<div id="chargescontainer"></div>
+<div id="warrantcontainer"></div>
+<div id="hearingscontainer"></div>
+<div id="docketcontainer"></div>
+<input type="button" value="View Service Info" onclick="open_win()"/>
+
+<br/><br/><br/><br/><br/><br/><br/>
+
+<#--ADD FOOTER WITH ROAM and AMCAD LOGO-->
+<table style="padding:0px 10px 0px 10px;width:100%">
+    <tr>
+	<td width=15%>
+	   <a href = "http://www.amcad.com"><img src="${request.getContextPath()}/templates/sttcasesearch/Main/resource/AmCad-Small-New-Logo.png"  border = "0" style="margin-top:70px;float:left;"></a>
+	</td>
+	<td width="70%" align="center" >
+	   <p style="margin-top:90px;color:#696969;">Copyright &copy; 1986 - 2013 American Cadastre LLC (dba AmCad & AmCad Digital Conversions)</p>
+	</td>	    
+	<td>
+	   <img src="templates/resources/images/ROAM.png" border="0" width="150px" style="margin-top:70px;float:right;"/>
+	</td>
+    </tr>
+</table>
+	        
+	        
+<script type="text/javascript">
+$(document).ready(function() {
+var url1 = "search.do?indexName=pd&templateName=WarrantDetail&lq=CaseID%3A%22${caseNumberKey}%22";
+$('#partiescontainer').load(url1);
+var url2 = "search.do?indexName=chd&templateName=WarrantDetail&lq=CaseID%3A%22${caseNumberKey}%22";
+$('#chargescontainer').load(url2);
+var url4 = "search.do?indexName=dd&templateName=WarrantDetail&lq=CaseID%3A%22${caseNumberKey}%22";
+$('#docketcontainer').load(url4);
+var url5 = "search.do?indexName=sh&templateName=WarrantDetail&lq=CaseID%3A%22${caseNumberKey}%22";
+$('#hearingscontainer').load(url5);
+
+
+$("#case").tablesorter({widgets: ['zebra']});
+$("#parties").tablesorter({widgets: ['zebra']});	    
+$("#charges").tablesorter({widgets: ['zebra']});
+$("#warrant").tablesorter({widgets: ['zebra']});
+$("#docket").tablesorter({widgets: ['zebra']});
+$("#hearings").tablesorter({widgets: ['zebra']});
+
+
+
+});
+</script>
+
+        
+

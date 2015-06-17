@@ -1,0 +1,56 @@
+<@display.column media="html" title="${searchResult.datasetConfiguration.getColumn(\"CaseNumber\").displayName}">
+	<#if doc.get("CourtType") = "CIVIL">
+		<a href="${request.getContextPath()}/search.do?indexName=publicdetail&templateName=civildetail&lq=${pageStyleUtil.encodeURL("CaseID:\"" + doc.get("CaseID") + "\"")}">${searchResult.highlight(doc, "CaseNumber")}</a>             
+	<#else>
+		<a href="${request.getContextPath()}/search.do?indexName=publicdetail&templateName=criminaldetail&lq=${pageStyleUtil.encodeURL("CaseID:\"" + doc.get("CaseID") + "\"")}">${searchResult.highlight(doc, "CaseNumber")}</a> 
+	</#if>
+</@display.column>
+
+<@display.column media="rtf excel pdf" title="${searchResult.datasetConfiguration.getColumn(\"CaseNumber\").displayName}">
+	${doc.get("CaseNumber")}
+</@display.column>
+
+<@display.column media= "html" title="${searchResult.datasetConfiguration.getColumn(\"CaseType\").displayName}">
+	${searchResult.highlight(doc, "CaseType")}
+</@display.column>
+
+
+<@display.column  media="rtf excel pdf"  title="${searchResult.datasetConfiguration.getColumn(\"CaseType\").displayName}">
+	${doc.get("CaseType")}
+</@display.column>
+
+<@display.column media= "html" title="${searchResult.datasetConfiguration.getColumn(\"CaseStyle\").displayName}">
+	${searchResult.highlight(doc, "CaseStyle")}
+</@display.column>
+
+
+<@display.column  media="rtf excel pdf"  title="${searchResult.datasetConfiguration.getColumn(\"CaseStyle\").displayName}">
+	${doc.get("CaseStyle")}
+</@display.column>
+
+
+<@display.column media= "html" title="${searchResult.datasetConfiguration.getColumn(\"Party\").displayName}">
+	${searchResult.highlight(doc, "Party")}
+</@display.column>
+
+<@display.column  media="rtf excel pdf"  title="${searchResult.datasetConfiguration.getColumn(\"Party\").displayName}">
+	${doc.get("Party")}
+</@display.column>
+
+<@display.column media= "html" title="${searchResult.datasetConfiguration.getColumn(\"PartyType\").displayName}">
+	${searchResult.highlight(doc, "PartyType")}
+</@display.column>
+
+
+<@display.column  media="rtf excel pdf"  title="${searchResult.datasetConfiguration.getColumn(\"PartyType\").displayName}">
+	${doc.get("PartyType")}
+</@display.column>
+
+<@display.column media= "html" title="${searchResult.datasetConfiguration.getColumn(\"CaseStatus\").displayName}">
+	${searchResult.highlight(doc, "CaseStatus")}
+</@display.column>
+
+
+<@display.column  media="rtf excel pdf"  title="${searchResult.datasetConfiguration.getColumn(\"CaseStatus\").displayName}">
+	${doc.get("CaseStatus")}
+</@display.column>

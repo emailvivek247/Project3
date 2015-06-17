@@ -1,0 +1,19 @@
+
+@charset "utf-8";
+/* paginationHolder for glossy-red */
+
+a.otherPage {
+	background-color: #ffffff;
+	border: solid 1px #333333;
+	color: #000;	
+}
+.paginationHolder a.otherPage:visited {
+    color: #ED0E67;
+}
+span.text {
+    background: none;
+}
+a.prev, a.next, a.goPaginate {
+	color: #333333;	
+}
+

@@ -1,0 +1,22 @@
+<#macro layout(title="", encoding="utf-8")>
+<html><head><title>Warrant Search</title>
+<meta http-equiv="content-type" content="text/html; charset=${encoding}">
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/theme-base.css" type="text/css" media="print, projection, screen" />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/theme-glossy-blue.css" type="text/css" media="print, projection, screen" />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/export.css" type="text/css" media="print, projection, screen" />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/calendar.css" type="text/css" media="print, projection, screen" />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/prompt.css" type="text/css" media="print, projection, screen" />
+<link rel="stylesheet" href="templates/resources/basket.css" type="text/css" media="projection, screen" />
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/prompt.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/sdl-min.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/calendar_us.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.tablesorter.js"></script>
+<link rel="shortcut icon" href="favicon.ico"/>
+<#assign searchable = pageStyleUtil.encodeURL(searchResult.request.getParameter("searchable"))
+     searchType = searchResult.request.getParameter("searchType") isPhoneticSearch = request.getParameter("isPhoneticSearch")>
+</head>
+<body onKeyPress="trapKeyBoardEvents(event)">
+<#nested>
+</body></html>
+</#macro>

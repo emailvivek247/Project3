@@ -1,0 +1,31 @@
+@charset "utf-8";
+/* paginationHolder for glossy-olive */
+.paginationHolder a {
+	background-color: white;
+	border: solid 1px #443113;
+	color: #333333;
+}
+.paginationHolder a:visited {
+	color: #333333;
+}
+.paginationHolder a, .paginationHolder span {
+	background:#fff /*url(glossy-blue-button.gif)*/);
+}
+span.text {
+    background: none;
+}
+.paginationHolder .current {
+	background:#d9db56 /*url(glossy-blue-button.gif)*/;
+	color: #000;
+	border: solid 1px #443113;
+}
+.paginationHolder .current.prev, .paginationHolder .current.next{
+	color:#f58400;
+	border-color:#443113;
+	background:#fff /*url(glossy-blue-button.gif)*/);
+}
+a.goPaginate {
+	background:#171717 url(black-bar-striped.png) repeat-x 50% 50%;
+	color:#b8ec79;
+}
+

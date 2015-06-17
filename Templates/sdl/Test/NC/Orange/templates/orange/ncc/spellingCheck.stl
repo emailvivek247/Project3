@@ -1,0 +1,3 @@
+<#assign spellChecker = new("net.javacoding.xsearch.search.SpellCheckManager")>
+<#assign spellSuggestion = spellChecker.checkSpellHtml(dc, parsedQuery, q, "<b>", "</b>")>
+

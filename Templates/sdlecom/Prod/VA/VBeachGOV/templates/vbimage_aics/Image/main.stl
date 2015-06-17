@@ -1,0 +1,43 @@
+<#if searchResult.docs?has_content>
+    <#foreach doc in searchResult.docs>
+        <#assign imagelocation = doc.get("FILE_SERVER") +  doc.get("FILE_PATH") + doc.get("SPLIT_FOLDER")>
+        <#assign tree = pageStyleUtil.getHierarchialTreeForFolder(imagelocation)>
+        <#assign docName = doc.get("DOCUMENT_NAME")>
+        <#list tree?keys as key>
+	    <#if key == doc.get("DOCUMENT_NAME") >
+	    	<#assign listOfFiles = tree[key]> 
+		<#assign baos  = new("java.io.ByteArrayOutputStream")>
+		<#assign converter = new("com.fdt.common.util.TIFFToPDFConverter")>
+		<#if (converter.convert(listOfFiles, "", 159,159,159,90,true,baos,false,0.5,true) == true)> 			
+		    ${response.reset()}
+		    ${response.resetBuffer()}
+		    ${response.setContentType("application/pdf")}
+		    ${response.setHeader("Content-Disposition",  " inline; filename=document.pdf" )}
+		    ${response.setHeader("Expires", " 0")}
+		    ${response.setHeader("Cache-Control", " must-revalidate, post-check=0, pre-check=0" )} 
+		    ${response.setHeader("Pragma" , "public")}      
+		    ${baos.writeTo(response.getOutputStream())}
+		    ${response.getOutputStream().flush()}
+	       <#else>
+		    <br>
+		    <br>
+		    <center><b>Image is Unavailable.</b></center>
+		    <br>
+		    <center><b>Please contact Virginia Beach.</center>
+		    <center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>
+		</#if>
+	    <#else>
+	    	<center><b>Image is Unavailable.</b></center>
+	    </#if>
+	</#list>
+        
+        
+        <#assign baos  = new("java.io.ByteArrayOutputStream")>
+        <#assign converter = new("com.fdt.common.util.TIFFToPDFConverter")>
+        
+    </#foreach>
+<#else>
+    No image available.
+</#if>
+
+

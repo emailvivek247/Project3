@@ -1,0 +1,83 @@
+<b>Contact Information</b>
+<#if searchResult.docs?has_content>
+	<table id="phone" class="tablesorter">
+		<thead>
+			<tr>
+				<th>${searchResult.datasetConfiguration.getColumn("PhoneType").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("Prefix").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("PhoneNumber").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("Extension").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("PhoneCurrent").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("PhoneComment").displayName}</th>
+			</tr>
+		</thead>
+		<tbody>
+		<#assign ResultId =0>
+			<#foreach doc in searchResult.docs>
+					<#assign PhoneType = doc.getValues("PhoneType")>  
+					<#assign Prefix = doc.getValues("Prefix")>  
+					<#assign PhoneNumber = doc.getValues("PhoneNumber")>  
+					<#assign Extension = doc.getValues("Extension")> 
+					<#assign PhoneCurrent = doc.getValues("PhoneCurrent")>  
+					<#assign PhoneComment = doc.getValues("PhoneComment")> 
+					
+					<#assign loopCounter = 0>
+		<#foreach doc in searchResult.docs>
+			<tr>
+				<td>${PhoneType[loopCounter]?replace('|', '&nbsp;')}</td>
+				<td>${Prefix[loopCounter]?replace('|', '&nbsp;')}</td>
+				<td>${PhoneNumber[loopCounter]?replace('|', '&nbsp;')}</td>
+				<td>${Extension[loopCounter]?replace('|', '&nbsp;')}</td>
+				<td>${PhoneCurrent[loopCounter]?replace('|', '&nbsp;')}</td>
+				<td>${PhoneComment[loopCounter]?replace('|', '&nbsp;')}</td>
+			</tr>
+		</#foreach>
+		</#foreach>
+		</tbody>
+	</table>
+<#else>
+	<table id="phone" class="tablesorter">
+		<thead>
+			<tr>
+				<th>${searchResult.datasetConfiguration.getColumn("PhoneType").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("Prefix").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("PhoneNumber").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("Extension").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("PhoneCurrent").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("PhoneComment").displayName}</th>
+			</tr>
+		</thead>
+		<tbody>
+		<#assign ResultId =0>
+		<#foreach doc in searchResult.docs>
+			<tr>
+				<td>No additional information provided</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</#foreach>
+
+		</tbody>
+	</table> 
+</#if>
+<script type="text/javascript">
+	$(document).ready(function() {
+	oTable = $('#phone').dataTable({
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bSort": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		"aaSorting": []
+	});
+} );
+</script>
+
+
+
+

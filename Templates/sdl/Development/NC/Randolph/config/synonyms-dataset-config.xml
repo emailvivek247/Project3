@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset name="Synonyms" exportedBy="null" createdAt="Mon Feb 18 15:33:50 EST 2013">
+  <display-order>-1</display-order>
+  <description><![CDATA[Synonyms]]></description>
+  <index-dir>synonyms</index-dir>
+  <is-prefix-root-index-directory>true</is-prefix-root-index-directory>
+  <use-server-db-connection>true</use-server-db-connection>
+  <number-of-hours-before-deletion>6</number-of-hours-before-deletion>
+  <work-directory>_work</work-directory>
+  <temporary-index-minimal-merge-percentage>0.0</temporary-index-minimal-merge-percentage>
+  <merge-hours enabled="false" begin="1" end="3"/>
+  <fetcher-threads>7</fetcher-threads>
+  <writer-threads>3</writer-threads>
+  <index-max-size>100000.0</index-max-size>
+  <schedules>
+   <schedule id="0">
+    <is-enabled>false</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>0 5 * * ?</cron-setting>
+    <indexing-mode>Re-create Index</indexing-mode>
+   </schedule>
+  </schedules>
+  <language>Any</language>
+  <analyzer-name>com.fdt.sdl.core.analyzer.NumberLowerCaseAnalyzer</analyzer-name>
+  <data-source-type>0</data-source-type>
+  <fetcher-configuration dir="null">
+  </fetcher-configuration>
+  <dataquery name="WorkingQueue" batch-size="128" is-skipping-null-parameters="false">
+    <sql><![CDATA[
+SELECT 1 AS PK_KEY,'bank and trust' AS EKEY, 'bank & trust' AS VALUE UNION
+SELECT 2 AS PK_KEY,'bank and trust' AS EKEY, 'b&t' AS VALUE UNION
+SELECT 3 AS PK_KEY,'bank & trust' AS EKEY, 'bank and trust' AS VALUE UNION
+SELECT 4 AS PK_KEY,'bank & trust' AS EKEY, 'b&t' AS VALUE UNION
+SELECT 5 AS PK_KEY,'b&t' AS EKEY, 'bank and trust' AS VALUE UNION
+SELECT 6 AS PK_KEY,'b&t' AS EKEY, 'bank & trust' AS VALUE UNION
+SELECT 7 AS PK_KEY,'branch banking & trust company' AS EKEY, 'bb&t' AS VALUE UNION
+SELECT 8 AS PK_KEY,'branch banking & trust company' AS EKEY, 'branch banking & trust co.' AS VALUE UNION
+SELECT 9 AS PK_KEY,'bb&t' AS EKEY, 'branch banking & trust company' AS VALUE UNION
+SELECT 10 AS PK_KEY,'bb&t' AS EKEY, 'branch banking & trust co.' AS VALUE UNION
+SELECT 11 AS PK_KEY,'branch banking & trust co.' AS EKEY, 'branch banking & trust company' AS VALUE UNION
+SELECT 12 AS PK_KEY,'branch banking & trust co.' AS EKEY, 'bb&t' AS VALUE UNION
+SELECT 13 AS PK_KEY,'nc dept of transportation' AS EKEY, 'north carolina department of transportation' AS VALUE UNION
+SELECT 14 AS PK_KEY,'nc dept of transportation' AS EKEY, 'ncdot' AS VALUE UNION
+SELECT 15 AS PK_KEY,'nc dept of transportation' AS EKEY, 'department of transportation' AS VALUE UNION
+SELECT 16 AS PK_KEY,'nc dept of transportation' AS EKEY, 'north carolina dept of transportation' AS VALUE UNION
+SELECT 17 AS PK_KEY,'nc dept of transportation' AS EKEY, 'nc department of transportation' AS VALUE UNION
+SELECT 18 AS PK_KEY,'nc dept of transportation' AS EKEY, 'dept of transportation' AS VALUE UNION
+SELECT 19 AS PK_KEY,'nc department of transportation' AS EKEY, 'north carolina department of transportation' AS VALUE UNION
+SELECT 20 AS PK_KEY,'nc department of transportation' AS EKEY, 'ncdot' AS VALUE UNION
+SELECT 21 AS PK_KEY,'nc department of transportation' AS EKEY, 'department of transportation' AS VALUE UNION
+SELECT 22 AS PK_KEY,'nc department of transportation' AS EKEY, 'north carolina dept of transportation' AS VALUE UNION
+SELECT 23 AS PK_KEY,'nc department of transportation' AS EKEY, 'nc dept of transportation' AS VALUE UNION
+SELECT 24 AS PK_KEY,'nc department of transportation' AS EKEY, 'dept of transportation' AS VALUE UNION
+SELECT 25 AS PK_KEY,'north carolina dept of transportation' AS EKEY, 'north carolina department of transportation' AS VALUE UNION
+SELECT 26 AS PK_KEY,'north carolina dept of transportation' AS EKEY, 'ncdot' AS VALUE UNION
+SELECT 27 AS PK_KEY,'north carolina dept of transportation' AS EKEY, 'department of transportation' AS VALUE UNION
+SELECT 28 AS PK_KEY,'north carolina dept of transportation' AS EKEY, 'nc dept of transportation' AS VALUE UNION
+SELECT 29 AS PK_KEY,'north carolina dept of transportation' AS EKEY, 'nc department of transportation' AS VALUE UNION
+SELECT 30 AS PK_KEY,'north carolina dept of transportation' AS EKEY, 'dept of transportation' AS VALUE UNION
+SELECT 31 AS PK_KEY,'north carolina department of transportation' AS EKEY, 'nc dept of transportation' AS VALUE UNION
+SELECT 32 AS PK_KEY,'north carolina department of transportation' AS EKEY, 'ncdot' AS VALUE UNION
+SELECT 33 AS PK_KEY,'north carolina department of transportation' AS EKEY, 'department of transportation' AS VALUE UNION
+SELECT 34 AS PK_KEY,'north carolina department of transportation' AS EKEY, 'north carolina dept of transportation' AS VALUE UNION
+SELECT 35 AS PK_KEY,'north carolina department of transportation' AS EKEY, 'nc department of transportation' AS VALUE UNION
+SELECT 36 AS PK_KEY,'north carolina department of transportation' AS EKEY, 'dept of transportation' AS VALUE UNION
+SELECT 37 AS PK_KEY,'department of transportation' AS EKEY, 'north carolina department of transportation' AS VALUE UNION
+SELECT 38 AS PK_KEY,'department of transportation' AS EKEY, 'ncdot' AS VALUE UNION
+SELECT 39 AS PK_KEY,'department of transportation' AS EKEY, 'nc dept of transportation' AS VALUE UNION
+SELECT 40 AS PK_KEY,'department of transportation' AS EKEY, 'north carolina dept of transportation' AS VALUE UNION
+SELECT 41 AS PK_KEY,'department of transportation' AS EKEY, 'nc department of transportation' AS VALUE UNION
+SELECT 42 AS PK_KEY,'department of transportation' AS EKEY, 'dept of transportation' AS VALUE UNION
+SELECT 43 AS PK_KEY,'dept of transportation' AS EKEY, 'north carolina department of transportation' AS VALUE UNION
+SELECT 44 AS PK_KEY,'dept of transportation' AS EKEY, 'ncdot' AS VALUE UNION
+SELECT 45 AS PK_KEY,'dept of transportation' AS EKEY, 'department of transportation' AS VALUE UNION
+SELECT 46 AS PK_KEY,'dept of transportation' AS EKEY, 'north carolina dept of transportation' AS VALUE UNION
+SELECT 47 AS PK_KEY,'dept of transportation' AS EKEY, 'nc department of transportation' AS VALUE UNION
+SELECT 48 AS PK_KEY,'dept of transportation' AS EKEY, 'nc dept of transportation' AS VALUE UNION
+SELECT 49 AS PK_KEY,'ncdot' AS EKEY, 'north carolina department of transportation' AS VALUE UNION
+SELECT 50 AS PK_KEY,'ncdot' AS EKEY, 'nc dept of transportation' AS VALUE UNION
+SELECT 51 AS PK_KEY,'ncdot' AS EKEY, 'department of transportation' AS VALUE UNION
+SELECT 52 AS PK_KEY,'ncdot' AS EKEY, 'north carolina dept of transportation' AS VALUE UNION
+SELECT 53 AS PK_KEY,'ncdot' AS EKEY, 'nc department of transportation' AS VALUE UNION
+SELECT 54 AS PK_KEY,'ncdot' AS EKEY, 'nc dept of transportation' AS VALUE UNION
+SELECT 55 AS PK_KEY,'orange water & sewer authority' AS EKEY, 'owasa' AS VALUE UNION
+SELECT 56 AS PK_KEY,'owasa' AS EKEY, 'orange water & sewer authority' AS VALUE UNION
+SELECT 57 AS PK_KEY,'state employees credit union' AS EKEY, 'secu' AS VALUE UNION
+SELECT 58 AS PK_KEY,'secu' AS EKEY, 'state employees credit union' AS VALUE UNION
+SELECT 59 AS PK_KEY,'usaa federal savings bank' AS EKEY, 'usaafsb' AS VALUE UNION
+SELECT 60 AS PK_KEY,'usaafsb' AS EKEY, 'usaa federal savings bank' AS VALUE UNION
+SELECT 61 AS PK_KEY,'department of environment and natural resources' AS EKEY, 'denr' AS VALUE UNION
+SELECT 62 AS PK_KEY,'department of environment and natural resources' AS EKEY, 'dept of environment and natural resources' AS VALUE UNION
+SELECT 63 AS PK_KEY,'dept of environment and natural resources' AS EKEY, 'department of environment and natural resources' AS VALUE UNION
+SELECT 64 AS PK_KEY,'dept of environment and natural resources' AS EKEY, 'denr' AS VALUE UNION
+SELECT 65 AS PK_KEY,'denr' AS EKEY, 'department of environment and natural resources' AS VALUE UNION
+SELECT 66 AS PK_KEY,'denr' AS EKEY, 'dept of environment and natural resources' AS VALUE UNION
+SELECT 67 AS PK_KEY,'limited liability company' AS EKEY, 'llc' AS VALUE UNION
+SELECT 68 AS PK_KEY,'llc' AS EKEY, 'limited liability company' AS VALUE UNION
+SELECT 69 AS PK_KEY,'savings and loan' AS EKEY, 'savings&loan' AS VALUE UNION
+SELECT 70 AS PK_KEY,'savings and loan' AS EKEY, 's&l' AS VALUE UNION
+SELECT 71 AS PK_KEY,'savings & loan' AS EKEY, 'savings and loan' AS VALUE UNION
+SELECT 72 AS PK_KEY,'savings & loan' AS EKEY, 's&l' AS VALUE UNION
+SELECT 73 AS PK_KEY,'s&l' AS EKEY, 'savings and loan' AS VALUE UNION
+SELECT 74 AS PK_KEY,'s&l' AS EKEY, 'savings & loan' AS VALUE UNION
+SELECT 75 AS PK_KEY,'united states' AS EKEY, 'usa' AS VALUE UNION
+SELECT 76 AS PK_KEY,'united states' AS EKEY, 'us' AS VALUE UNION
+SELECT 77 AS PK_KEY,'new hampshire' AS EKEY, 'nh' AS VALUE UNION
+SELECT 78 AS PK_KEY,'new jersey' AS EKEY, 'nj' AS VALUE UNION
+SELECT 79 AS PK_KEY,'new mexico' AS EKEY, 'nm' AS VALUE UNION
+SELECT 80 AS PK_KEY,'new york' AS EKEY, 'ny' AS VALUE UNION
+SELECT 81 AS PK_KEY,'north carolina' AS EKEY, 'nc' AS VALUE UNION
+SELECT 82 AS PK_KEY,'north dakota' AS EKEY, 'nd' AS VALUE UNION
+SELECT 83 AS PK_KEY,'rhode island' AS EKEY, 'ri' AS VALUE UNION
+SELECT 84 AS PK_KEY,'south carolina' AS EKEY, 'sc' AS VALUE UNION
+SELECT 85 AS PK_KEY,'south dakota' AS EKEY, 'sd' AS VALUE UNION
+SELECT 86 AS PK_KEY,'west virginia' AS EKEY, 'wv' AS VALUE UNION
+SELECT 87 AS PK_KEY,'mortgage electronic registration systems' AS EKEY, 'mortgage electronic registration systems inc' AS VALUE UNION
+SELECT 88 AS PK_KEY,'mortgage electronic registration systems' AS EKEY, 'mers' AS VALUE UNION
+SELECT 89 AS PK_KEY,'mortgage electronic registration systems' AS EKEY, 'mtg electronic registration systems' AS VALUE UNION
+SELECT 90 AS PK_KEY,'mortgage electronic registration systems' AS EKEY, 'mtg electronic registration systems inc' AS VALUE UNION
+SELECT 91 AS PK_KEY,'mortgage electronic registration systems' AS EKEY, 'mortgage electronic registration systems incorporated' AS VALUE UNION
+SELECT 92 AS PK_KEY,'mortgage electronic registration systems' AS EKEY, 'mtg electronic registration systems incorporated' AS VALUE UNION
+SELECT 93 AS PK_KEY,'mortgage electronic registration systems inc' AS EKEY, 'mortgage electronic registration systems' AS VALUE UNION
+SELECT 94 AS PK_KEY,'mortgage electronic registration systems inc' AS EKEY, 'mers' AS VALUE UNION
+SELECT 95 AS PK_KEY,'mortgage electronic registration systems inc' AS EKEY, 'mtg electronic registration systems' AS VALUE UNION
+SELECT 96 AS PK_KEY,'mortgage electronic registration systems inc' AS EKEY, 'mtg electronic registration systems inc' AS VALUE UNION
+SELECT 97 AS PK_KEY,'mortgage electronic registration systems inc' AS EKEY, 'mortgage electronic registration systems incorporated' AS VALUE UNION
+SELECT 98 AS PK_KEY,'mortgage electronic registration systems inc' AS EKEY, 'mtg electronic registration systems incorporated' AS VALUE UNION
+SELECT 99 AS PK_KEY,'mers' AS EKEY, 'mortgage electronic registration systems inc' AS VALUE UNION
+SELECT 100 AS PK_KEY,'mers' AS EKEY, 'mortgage electronic registration systems' AS VALUE UNION
+SELECT 101 AS PK_KEY,'mers' AS EKEY, 'mtg electronic registration systems' AS VALUE UNION
+SELECT 102 AS PK_KEY,'mers' AS EKEY, 'mtg electronic registration systems inc' AS VALUE UNION
+SELECT 103 AS PK_KEY,'mers' AS EKEY, 'mortgage electronic registration systems incorporated' AS VALUE UNION
+SELECT 104 AS PK_KEY,'mers' AS EKEY, 'mtg electronic registration systems incorporated' AS VALUE UNION
+SELECT 105 AS PK_KEY,'mtg electronic registration systems' AS EKEY, 'mortgage electronic registration systems inc' AS VALUE UNION
+SELECT 106 AS PK_KEY,'mtg electronic registration systems' AS EKEY, 'mers' AS VALUE UNION
+SELECT 107 AS PK_KEY,'mtg electronic registration systems' AS EKEY, 'mortgage electronic registration systems' AS VALUE UNION
+SELECT 108 AS PK_KEY,'mtg electronic registration systems' AS EKEY, 'mtg electronic registration systems inc' AS VALUE UNION
+SELECT 109 AS PK_KEY,'mtg electronic registration systems' AS EKEY, 'mortgage electronic registration systems incorporated' AS VALUE UNION
+SELECT 110 AS PK_KEY,'mtg electronic registration systems' AS EKEY, 'mtg electronic registration systems incorporated' AS VALUE UNION
+SELECT 111 AS PK_KEY,'mtg electronic registration systems inc' AS EKEY, 'mortgage electronic registration systems inc' AS VALUE UNION
+SELECT 112 AS PK_KEY,'mtg electronic registration systems inc' AS EKEY, 'mers' AS VALUE UNION
+SELECT 113 AS PK_KEY,'mtg electronic registration systems inc' AS EKEY, 'mtg electronic registration systems' AS VALUE UNION
+SELECT 114 AS PK_KEY,'mtg electronic registration systems inc' AS EKEY, 'mortgage electronic registration systems' AS VALUE UNION
+SELECT 115 AS PK_KEY,'mtg electronic registration systems inc' AS EKEY, 'mortgage electronic registration systems incorporated' AS VALUE UNION
+SELECT 116 AS PK_KEY,'mtg electronic registration systems inc' AS EKEY, 'mtg electronic registration systems incorporated' AS VALUE UNION
+SELECT 117 AS PK_KEY,'mortgage electronic registration systems incorporated' AS EKEY, 'mortgage electronic registration systems inc' AS VALUE UNION
+SELECT 118 AS PK_KEY,'mortgage electronic registration systems incorporated' AS EKEY, 'mers' AS VALUE UNION
+SELECT 119 AS PK_KEY,'mortgage electronic registration systems incorporated' AS EKEY, 'mtg electronic registration systems' AS VALUE UNION
+SELECT 120 AS PK_KEY,'mortgage electronic registration systems incorporated' AS EKEY, 'mtg electronic registration systems inc' AS VALUE UNION
+SELECT 121 AS PK_KEY,'mortgage electronic registration systems incorporated' AS EKEY, 'mortgage electronic registration systems' AS VALUE UNION
+SELECT 122 AS PK_KEY,'mortgage electronic registration systems incorporated' AS EKEY, 'mtg electronic registration systems incorporated' AS VALUE UNION
+SELECT 123 AS PK_KEY,'mtg electronic registration systems incorporated' AS EKEY, 'mortgage electronic registration systems inc' AS VALUE UNION
+SELECT 124 AS PK_KEY,'mtg electronic registration systems incorporated' AS EKEY, 'mers' AS VALUE UNION
+SELECT 125 AS PK_KEY,'mtg electronic registration systems incorporated' AS EKEY, 'mtg electronic registration systems' AS VALUE UNION
+SELECT 126 AS PK_KEY,'mtg electronic registration systems incorporated' AS EKEY, 'mtg electronic registration systems inc' AS VALUE UNION
+SELECT 127 AS PK_KEY,'mtg electronic registration systems incorporated' AS EKEY, 'mortgage electronic registration systems incorporated' AS VALUE UNION
+SELECT 128 AS PK_KEY,'mtg electronic registration systems incorporated' AS EKEY, 'mortgage electronic registration systems' AS VALUE UNION
+SELECT 129 AS PK_KEY,'south carolina savings & loan' AS EKEY, 'sc savings and loan inc' AS VALUE UNION
+SELECT 130 AS PK_KEY,'south carolina savings & loan' AS EKEY, 'south carolina s&l' AS VALUE UNION
+SELECT 131 AS PK_KEY,'south carolina savings & loan' AS EKEY, 'sc s&l' AS VALUE UNION
+SELECT 132 AS PK_KEY,'sc savings and loan inc' AS EKEY, 'south carolina s&l' AS VALUE UNION
+SELECT 133 AS PK_KEY,'sc savings and loan inc' AS EKEY, 'south carolina savings & loan' AS VALUE UNION
+SELECT 134 AS PK_KEY,'sc savings and loan inc' AS EKEY, 'sc s&l' AS VALUE UNION
+SELECT 135 AS PK_KEY,'south carolina s&l' AS EKEY, 'sc savings and loan inc' AS VALUE UNION
+SELECT 136 AS PK_KEY,'south carolina s&l' AS EKEY, 'south carolina savings & loan' AS VALUE UNION
+SELECT 137 AS PK_KEY,'south carolina s&l' AS EKEY, 'sc s&l' AS VALUE UNION
+SELECT 138 AS PK_KEY,'sc s&l' AS EKEY, 'south carolina s&l' AS VALUE UNION
+SELECT 139 AS PK_KEY,'sc s&l' AS EKEY, 'sc savings and loan inc' AS VALUE UNION
+SELECT 140 AS PK_KEY,'sc s&l' AS EKEY, 'south carolina savings & loan' AS VALUE UNION
+SELECT 141 AS PK_KEY,'lowry ins associates of north carolina' AS EKEY, 'lowry ins associates of nc' AS VALUE UNION
+SELECT 142 AS PK_KEY,'lowry ins associates of nc' AS EKEY, 'lowry ins associates of north carolina' AS VALUE UNION
+SELECT 143 AS PK_KEY,'dewey cheetum and howe mtg company incorporated' AS EKEY, 'dewey cheetum & howe mtg company incorporated' AS VALUE UNION
+SELECT 144 AS PK_KEY,'dewey cheetum & howe mtg company incorporated' AS EKEY, 'dewey cheetum and howe mtg company incorporated' AS VALUE UNION
+SELECT 145 AS PK_KEY,'l&m ptnr' AS EKEY, 'l and m ptnr' AS VALUE UNION
+SELECT 146 AS PK_KEY,'l and m ptnr' AS EKEY, 'l&m ptnr' AS VALUE UNION
+SELECT 147 AS PK_KEY,'united states' AS EKEY, 'us' AS VALUE UNION
+SELECT 148 AS PK_KEY,'united states' AS EKEY, 'usa' AS VALUE UNION
+SELECT 149 AS PK_KEY,'us' AS EKEY, 'united states' AS VALUE UNION
+SELECT 150 AS PK_KEY,'us' AS EKEY, 'usa' AS VALUE UNION
+SELECT 151 AS PK_KEY,'usa' AS EKEY, 'united states' AS VALUE UNION
+SELECT 152 AS PK_KEY,'usa' AS EKEY, 'us' AS VALUE UNION
+SELECT 153 AS PK_KEY,'saint Patrick''s cathedral ' AS EKEY, 'Saint Patricks cathedral' AS VALUE UNION
+SELECT 154 AS PK_KEY,'Saint Patricks cathedral' AS EKEY, 'saint Patrick''s cathedral ' AS VALUE UNION
+SELECT 155 AS PK_KEY,'winston r and p company' AS EKEY, 'winston r & p company' AS VALUE UNION
+SELECT 156 AS PK_KEY,'winston r & p company' AS EKEY, 'winston r and p company' AS VALUE UNION
+SELECT 157 AS PK_KEY,'sugar mountain condominium hoa' AS EKEY, 'sugar mountain condominium home owners association' AS VALUE UNION
+SELECT 158 AS PK_KEY,'sugar mountain condominium home owners association' AS EKEY, 'sugar mountain condominium hoa' AS VALUE UNION
+SELECT 159 AS PK_KEY,'adam''s bilt lot company' AS EKEY, 'adam''s bit company' AS VALUE UNION
+SELECT 160 AS PK_KEY,'adam''s bilt lot company' AS EKEY, 'adams'' bilt co' AS VALUE UNION
+SELECT 161 AS PK_KEY,'adam''s bilt lot company' AS EKEY, 'adam''s bilt lot co' AS VALUE UNION
+SELECT 162 AS PK_KEY,'adam''s bilt lot company' AS EKEY, 'adams bilt co' AS VALUE UNION
+SELECT 163 AS PK_KEY,'adam''s bilt lot company' AS EKEY, 'adams bilt lot co' AS VALUE UNION
+SELECT 164 AS PK_KEY,'adam''s bit company' AS EKEY, 'adams'' bilt lot company' AS VALUE UNION
+SELECT 165 AS PK_KEY,'adam''s bit company' AS EKEY, 'adams'' bilt co' AS VALUE UNION
+SELECT 166 AS PK_KEY,'adam''s bit company' AS EKEY, 'adam''s bilt lot co' AS VALUE UNION
+SELECT 167 AS PK_KEY,'adam''s bit company' AS EKEY, 'adams bilt co' AS VALUE UNION
+SELECT 168 AS PK_KEY,'adam''s bit company' AS EKEY, 'adams bilt lot co' AS VALUE UNION
+SELECT 169 AS PK_KEY,'adam''s bilt co' AS EKEY, 'adam''s bit company' AS VALUE UNION
+SELECT 170 AS PK_KEY,'adam''s bilt co' AS EKEY, 'adams'' bilt lot company' AS VALUE UNION
+SELECT 171 AS PK_KEY,'adam''s bilt co' AS EKEY, 'adam''s bilt lot co' AS VALUE UNION
+SELECT 172 AS PK_KEY,'adam''s bilt co' AS EKEY, 'adams bilt co' AS VALUE UNION
+SELECT 173 AS PK_KEY,'adam''s bilt co' AS EKEY, 'adams bilt lot co' AS VALUE UNION
+SELECT 174 AS PK_KEY,'adam''s bilt lot co' AS EKEY, 'adam''s bit company' AS VALUE UNION
+SELECT 175 AS PK_KEY,'adam''s bilt lot co' AS EKEY, 'adams'' bilt co' AS VALUE UNION
+SELECT 176 AS PK_KEY,'adam''s bilt lot co' AS EKEY, 'adams'' bilt lot company' AS VALUE UNION
+SELECT 177 AS PK_KEY,'adam''s bilt lot co' AS EKEY, 'adams bilt co' AS VALUE UNION
+SELECT 178 AS PK_KEY,'adam''s bilt lot co' AS EKEY, 'adams bilt lot co' AS VALUE UNION
+SELECT 179 AS PK_KEY,'adams bilt co' AS EKEY, 'adam''s bit company' AS VALUE UNION
+SELECT 180 AS PK_KEY,'adams bilt co' AS EKEY, 'adams'' bilt co' AS VALUE UNION
+SELECT 181 AS PK_KEY,'adams bilt co' AS EKEY, 'adam''s bilt lot co' AS VALUE UNION
+SELECT 182 AS PK_KEY,'adams bilt co' AS EKEY, 'adam''s bilt lot company' AS VALUE UNION
+SELECT 183 AS PK_KEY,'adams bilt co' AS EKEY, 'adams bilt lot co' AS VALUE UNION
+SELECT 184 AS PK_KEY,'adams bilt lot co' AS EKEY, 'adam''s bit company' AS VALUE UNION
+SELECT 185 AS PK_KEY,'adams bilt lot co' AS EKEY, 'adams'' bilt co' AS VALUE UNION
+SELECT 186 AS PK_KEY,'adams bilt lot co' AS EKEY, 'adam''s bilt lot co' AS VALUE UNION
+SELECT 187 AS PK_KEY,'adams bilt lot co' AS EKEY, 'adams bilt co' AS VALUE UNION
+SELECT 188 AS PK_KEY,'adams bilt lot co' AS EKEY, 'adam''s bilt lot company' AS VALUE UNION
+SELECT 189 AS PK_KEY,'loudoun cnty department of parks and recreation inc' AS EKEY, 'loudoun county dept of parks and recreation inc' AS VALUE UNION
+SELECT 190 AS PK_KEY,'loudoun cnty department of parks and recreation inc' AS EKEY, 'loudoun cnty dept of parks and recreation inc' AS VALUE UNION
+SELECT 191 AS PK_KEY,'loudoun county dept of parks and recreation inc' AS EKEY, 'loudoun cnty department of parks and recreation inc' AS VALUE UNION
+SELECT 192 AS PK_KEY,'loudoun county dept of parks and recreation inc' AS EKEY, 'loudoun cnty dept of parks and recreation inc' AS VALUE UNION
+SELECT 193 AS PK_KEY,'loudoun cnty dept of parks and recreation inc' AS EKEY, 'loudoun county dept of parks and recreation inc' AS VALUE UNION
+SELECT 194 AS PK_KEY,'loudoun cnty dept of parks and recreation inc' AS EKEY, 'loudoun cnty department of parks and recreation inc' AS VALUE UNION
+SELECT 195 AS PK_KEY,'fairfax associates savings & loan llc' AS EKEY, 'fairfax assoc savings & loan llc' AS VALUE UNION
+SELECT 196 AS PK_KEY,'fairfax associates savings & loan llc' AS EKEY, 'fairfax assoc savings & loan limited liability company' AS VALUE UNION
+SELECT 197 AS PK_KEY,'fairfax associates savings & loan llc' AS EKEY, 'fairfax assoc s&l limited liability company' AS VALUE UNION
+SELECT 198 AS PK_KEY,'fairfax associates savings & loan llc' AS EKEY, 'fairfax assoc s&l llc' AS VALUE UNION
+SELECT 199 AS PK_KEY,'fairfax assoc savings & loan llc' AS EKEY, 'fairfax associates savings & loan llc' AS VALUE UNION
+SELECT 200 AS PK_KEY,'fairfax assoc savings & loan llc' AS EKEY, 'fairfax assoc savings & loan limited liability company' AS VALUE UNION
+SELECT 201 AS PK_KEY,'fairfax assoc savings & loan llc' AS EKEY, 'fairfax assoc s&l limited liability company' AS VALUE UNION
+SELECT 202 AS PK_KEY,'fairfax assoc savings & loan llc' AS EKEY, 'fairfax assoc s&l llc' AS VALUE UNION
+SELECT 203 AS PK_KEY,'fairfax assoc savings & loan limited liability company' AS EKEY, 'fairfax assoc savings & loan llc' AS VALUE UNION
+SELECT 204 AS PK_KEY,'fairfax assoc savings & loan limited liability company' AS EKEY, 'fairfax associates savings & loan llc' AS VALUE UNION
+SELECT 205 AS PK_KEY,'fairfax assoc savings & loan limited liability company' AS EKEY, 'fairfax assoc s&l limited liability company' AS VALUE UNION
+SELECT 206 AS PK_KEY,'fairfax assoc savings & loan limited liability company' AS EKEY, 'fairfax assoc s&l llc' AS VALUE UNION
+SELECT 207 AS PK_KEY,'fairfax assoc s&l limited liability company' AS EKEY, 'fairfax assoc savings & loan llc' AS VALUE UNION
+SELECT 208 AS PK_KEY,'fairfax assoc s&l limited liability company' AS EKEY, 'fairfax assoc savings & loan limited liability company' AS VALUE UNION
+SELECT 209 AS PK_KEY,'fairfax assoc s&l limited liability company' AS EKEY, 'fairfax associates savings & loan llc' AS VALUE UNION
+SELECT 210 AS PK_KEY,'fairfax assoc s&l limited liability company' AS EKEY, 'fairfax assoc s&l llc' AS VALUE UNION
+SELECT 211 AS PK_KEY,'fairfax assoc s&l llc' AS EKEY, 'fairfax assoc savings & loan llc' AS VALUE UNION
+SELECT 212 AS PK_KEY,'fairfax assoc s&l llc' AS EKEY, 'fairfax assoc savings & loan limited liability company' AS VALUE UNION
+SELECT 213 AS PK_KEY,'fairfax assoc s&l llc' AS EKEY, 'fairfax assoc s&l limited liability company' AS VALUE UNION
+SELECT 214 AS PK_KEY,'fairfax assoc s&l llc' AS EKEY, 'fairfax associates savings & loan llc' AS VALUE UNION
+SELECT 215 AS PK_KEY,'mammoth engineering limited liability company' AS EKEY, 'mammoth engineering llc' AS VALUE UNION
+SELECT 216 AS PK_KEY,'mammoth engineering llc' AS EKEY, 'mammoth engineering limited liability company' AS VALUE UNION
+SELECT 217 AS PK_KEY,'at and t' AS EKEY, 'at &t' AS VALUE UNION
+SELECT 218 AS PK_KEY,'united states department of wildlife' AS EKEY, 'us department of wildlife' AS VALUE UNION
+SELECT 219 AS PK_KEY,'us department of wildlife' AS EKEY, 'united states department of wildlife' AS VALUE UNION
+SELECT 220 AS PK_KEY,'and' AS EKEY, '&' AS VALUE UNION
+SELECT 221 AS PK_KEY,'&' AS EKEY, 'and' AS VALUE UNION
+SELECT 222 AS PK_KEY,'associate' AS EKEY, 'associates,assoc' AS VALUE UNION
+SELECT 223 AS PK_KEY,'associates' AS EKEY, 'associate,assoc' AS VALUE UNION
+SELECT 224 AS PK_KEY,'assoc' AS EKEY, 'associates,associate' AS VALUE UNION
+SELECT 225 AS PK_KEY,'association' AS EKEY, 'assn' AS VALUE UNION
+SELECT 226 AS PK_KEY,'assn' AS EKEY, 'association' AS VALUE UNION
+SELECT 227 AS PK_KEY,'owasa' AS EKEY, 'orange water & sewer authority' AS VALUE UNION
+SELECT 228 AS PK_KEY,'secu' AS EKEY, 'state employees credit union' AS VALUE UNION
+SELECT 229 AS PK_KEY,'usaafsb' AS EKEY, 'usaa federal savings bank' AS VALUE UNION
+SELECT 230 AS PK_KEY,'company' AS EKEY, 'companies,co' AS VALUE UNION
+SELECT 231 AS PK_KEY,'companies' AS EKEY, 'co,company' AS VALUE UNION
+SELECT 232 AS PK_KEY,'co' AS EKEY, 'companies,company' AS VALUE UNION
+SELECT 233 AS PK_KEY,'condominium' AS EKEY, 'condo' AS VALUE UNION
+SELECT 234 AS PK_KEY,'condo' AS EKEY, 'condominium' AS VALUE UNION
+SELECT 235 AS PK_KEY,'corporation' AS EKEY, 'corp' AS VALUE UNION
+SELECT 236 AS PK_KEY,'corp' AS EKEY, 'corporation ' AS VALUE UNION
+SELECT 237 AS PK_KEY,'county' AS EKEY, 'cnty' AS VALUE UNION
+SELECT 238 AS PK_KEY,'cnty' AS EKEY, 'county' AS VALUE UNION
+SELECT 239 AS PK_KEY,'department' AS EKEY, 'dept' AS VALUE UNION
+SELECT 240 AS PK_KEY,'dept' AS EKEY, 'department' AS VALUE UNION
+SELECT 241 AS PK_KEY,'denr' AS EKEY, 'department of environment and natural resources' AS VALUE UNION
+SELECT 242 AS PK_KEY,'finance' AS EKEY, 'fin' AS VALUE UNION
+SELECT 243 AS PK_KEY,'fin' AS EKEY, 'finance' AS VALUE UNION
+SELECT 244 AS PK_KEY,'incorporated' AS EKEY, 'inc' AS VALUE UNION
+SELECT 245 AS PK_KEY,'inc' AS EKEY, 'incorporated' AS VALUE UNION
+SELECT 246 AS PK_KEY,'insurance' AS EKEY, 'ins' AS VALUE UNION
+SELECT 247 AS PK_KEY,'ins' AS EKEY, 'insurance' AS VALUE UNION
+SELECT 248 AS PK_KEY,'limited' AS EKEY, 'ltd' AS VALUE UNION
+SELECT 249 AS PK_KEY,'ltd' AS EKEY, 'limited' AS VALUE UNION
+SELECT 250 AS PK_KEY,'llc' AS EKEY, 'limited liability company' AS VALUE UNION
+SELECT 251 AS PK_KEY,'mortgage' AS EKEY, 'mtg' AS VALUE UNION
+SELECT 252 AS PK_KEY,'mtg' AS EKEY, 'mortgage' AS VALUE UNION
+SELECT 253 AS PK_KEY,'mount' AS EKEY, 'mt' AS VALUE UNION
+SELECT 254 AS PK_KEY,'mt' AS EKEY, 'mount' AS VALUE UNION
+SELECT 255 AS PK_KEY,'partner' AS EKEY, 'partners' AS VALUE UNION
+SELECT 256 AS PK_KEY,'partner' AS EKEY, 'ptnr' AS VALUE UNION
+SELECT 257 AS PK_KEY,'partners' AS EKEY, 'partner' AS VALUE UNION
+SELECT 258 AS PK_KEY,'partners' AS EKEY, 'ptnr' AS VALUE UNION
+SELECT 259 AS PK_KEY,'ptnr' AS EKEY, 'partner' AS VALUE UNION
+SELECT 260 AS PK_KEY,'ptnr' AS EKEY, 'partners' AS VALUE UNION
+SELECT 261 AS PK_KEY,'partnership' AS EKEY, 'partnerships' AS VALUE UNION
+SELECT 262 AS PK_KEY,'partnership' AS EKEY, 'ptnrp' AS VALUE UNION
+SELECT 263 AS PK_KEY,'partnerships' AS EKEY, 'partnership' AS VALUE UNION
+SELECT 264 AS PK_KEY,'partnerships' AS EKEY, 'ptnrp' AS VALUE UNION
+SELECT 265 AS PK_KEY,'ptnrp' AS EKEY, 'partnership' AS VALUE UNION
+SELECT 266 AS PK_KEY,'ptnrp' AS EKEY, 'partnerships' AS VALUE UNION
+SELECT 267 AS PK_KEY,'saint' AS EKEY, 'st' AS VALUE UNION
+SELECT 268 AS PK_KEY,'st' AS EKEY, 'saint' AS VALUE UNION
+SELECT 269 AS PK_KEY,'alabama' AS EKEY, 'al' AS VALUE UNION
+SELECT 270 AS PK_KEY,'al' AS EKEY, 'alabama' AS VALUE UNION
+SELECT 271 AS PK_KEY,'alaska' AS EKEY, 'ak' AS VALUE UNION
+SELECT 272 AS PK_KEY,'ak' AS EKEY, 'alaska' AS VALUE UNION
+SELECT 273 AS PK_KEY,'arizona' AS EKEY, 'az' AS VALUE UNION
+SELECT 274 AS PK_KEY,'az' AS EKEY, 'arizona' AS VALUE UNION
+SELECT 275 AS PK_KEY,'arkansas' AS EKEY, 'ar' AS VALUE UNION
+SELECT 276 AS PK_KEY,'ar' AS EKEY, 'arkansas' AS VALUE UNION
+SELECT 277 AS PK_KEY,'california' AS EKEY, 'ca' AS VALUE UNION
+SELECT 278 AS PK_KEY,'ca' AS EKEY, 'california' AS VALUE UNION
+SELECT 279 AS PK_KEY,'colorado' AS EKEY, 'co' AS VALUE UNION
+SELECT 280 AS PK_KEY,'co' AS EKEY, 'colorado' AS VALUE UNION
+SELECT 281 AS PK_KEY,'connecticut' AS EKEY, 'ct' AS VALUE UNION
+SELECT 282 AS PK_KEY,'ct' AS EKEY, 'connecticut' AS VALUE UNION
+SELECT 283 AS PK_KEY,'delaware' AS EKEY, 'de' AS VALUE UNION
+SELECT 284 AS PK_KEY,'de' AS EKEY, 'delaware' AS VALUE UNION
+SELECT 285 AS PK_KEY,'florida' AS EKEY, 'fl' AS VALUE UNION
+SELECT 286 AS PK_KEY,'fl' AS EKEY, 'florida' AS VALUE UNION
+SELECT 287 AS PK_KEY,'georgia' AS EKEY, 'ga' AS VALUE UNION
+SELECT 288 AS PK_KEY,'ga' AS EKEY, 'georgia' AS VALUE UNION
+SELECT 289 AS PK_KEY,'hawaii' AS EKEY, 'hi' AS VALUE UNION
+SELECT 290 AS PK_KEY,'hi' AS EKEY, 'hawaii' AS VALUE UNION
+SELECT 291 AS PK_KEY,'idaho' AS EKEY, 'id' AS VALUE UNION
+SELECT 292 AS PK_KEY,'id' AS EKEY, 'idaho' AS VALUE UNION
+SELECT 293 AS PK_KEY,'illinois' AS EKEY, 'il' AS VALUE UNION
+SELECT 294 AS PK_KEY,'il' AS EKEY, 'illinois' AS VALUE UNION
+SELECT 295 AS PK_KEY,'indiana' AS EKEY, 'in' AS VALUE UNION
+SELECT 296 AS PK_KEY,'in' AS EKEY, 'indiana' AS VALUE UNION
+SELECT 297 AS PK_KEY,'iowa' AS EKEY, 'ia' AS VALUE UNION
+SELECT 298 AS PK_KEY,'ia' AS EKEY, 'iowa' AS VALUE UNION
+SELECT 299 AS PK_KEY,'kansas' AS EKEY, 'ks' AS VALUE UNION
+SELECT 300 AS PK_KEY,'ks' AS EKEY, 'kansas' AS VALUE UNION
+SELECT 301 AS PK_KEY,'kentucky' AS EKEY, 'ky' AS VALUE UNION
+SELECT 302 AS PK_KEY,'ky' AS EKEY, 'kentucky' AS VALUE UNION
+SELECT 303 AS PK_KEY,'louisiana' AS EKEY, 'la' AS VALUE UNION
+SELECT 304 AS PK_KEY,'la' AS EKEY, 'louisiana' AS VALUE UNION
+SELECT 305 AS PK_KEY,'maine' AS EKEY, 'me' AS VALUE UNION
+SELECT 306 AS PK_KEY,'me' AS EKEY, 'maine' AS VALUE UNION
+SELECT 307 AS PK_KEY,'maryland' AS EKEY, 'md' AS VALUE UNION
+SELECT 308 AS PK_KEY,'md' AS EKEY, 'maryland' AS VALUE UNION
+SELECT 309 AS PK_KEY,'massachusetts' AS EKEY, 'ma' AS VALUE UNION
+SELECT 310 AS PK_KEY,'ma' AS EKEY, 'massachusetts' AS VALUE UNION
+SELECT 311 AS PK_KEY,'michigan' AS EKEY, 'mi' AS VALUE UNION
+SELECT 312 AS PK_KEY,'mi' AS EKEY, 'michigan' AS VALUE UNION
+SELECT 313 AS PK_KEY,'minnesota' AS EKEY, 'mn' AS VALUE UNION
+SELECT 314 AS PK_KEY,'mn' AS EKEY, 'minnesota' AS VALUE UNION
+SELECT 315 AS PK_KEY,'mississippi' AS EKEY, 'ms' AS VALUE UNION
+SELECT 316 AS PK_KEY,'ms' AS EKEY, 'mississippi' AS VALUE UNION
+SELECT 317 AS PK_KEY,'missouri' AS EKEY, 'mo' AS VALUE UNION
+SELECT 318 AS PK_KEY,'mo' AS EKEY, 'missouri' AS VALUE UNION
+SELECT 319 AS PK_KEY,'montana' AS EKEY, 'mt' AS VALUE UNION
+SELECT 320 AS PK_KEY,'mt' AS EKEY, 'montana' AS VALUE UNION
+SELECT 321 AS PK_KEY,'nebraska' AS EKEY, 'ne' AS VALUE UNION
+SELECT 322 AS PK_KEY,'ne' AS EKEY, 'nebraska' AS VALUE UNION
+SELECT 323 AS PK_KEY,'nevada' AS EKEY, 'nv' AS VALUE UNION
+SELECT 324 AS PK_KEY,'nv' AS EKEY, 'nevada' AS VALUE UNION
+SELECT 325 AS PK_KEY,'nh' AS EKEY, 'new hampshire' AS VALUE UNION
+SELECT 326 AS PK_KEY,'nj' AS EKEY, 'new jersey' AS VALUE UNION
+SELECT 327 AS PK_KEY,'nm' AS EKEY, 'new mexico' AS VALUE UNION
+SELECT 328 AS PK_KEY,'ny' AS EKEY, 'new york' AS VALUE UNION
+SELECT 329 AS PK_KEY,'nc' AS EKEY, 'north carolina' AS VALUE UNION
+SELECT 330 AS PK_KEY,'nd' AS EKEY, 'north dakota' AS VALUE UNION
+SELECT 331 AS PK_KEY,'ohio' AS EKEY, 'oh' AS VALUE UNION
+SELECT 332 AS PK_KEY,'oh' AS EKEY, 'ohio' AS VALUE UNION
+SELECT 333 AS PK_KEY,'oklahoma' AS EKEY, 'ok' AS VALUE UNION
+SELECT 334 AS PK_KEY,'ok' AS EKEY, 'oklahoma' AS VALUE UNION
+SELECT 335 AS PK_KEY,'oregon' AS EKEY, 'or' AS VALUE UNION
+SELECT 336 AS PK_KEY,'or' AS EKEY, 'oregon' AS VALUE UNION
+SELECT 337 AS PK_KEY,'pennsylvania' AS EKEY, 'pa' AS VALUE UNION
+SELECT 338 AS PK_KEY,'pa' AS EKEY, 'pennsylvania' AS VALUE UNION
+SELECT 339 AS PK_KEY,'ri' AS EKEY, 'rhode island' AS VALUE UNION
+SELECT 340 AS PK_KEY,'sc' AS EKEY, 'south carolina' AS VALUE UNION
+SELECT 341 AS PK_KEY,'sd' AS EKEY, 'south dakota' AS VALUE UNION
+SELECT 342 AS PK_KEY,'tennessee' AS EKEY, 'tn' AS VALUE UNION
+SELECT 343 AS PK_KEY,'tn' AS EKEY, 'tennessee' AS VALUE UNION
+SELECT 344 AS PK_KEY,'texas' AS EKEY, 'tx' AS VALUE UNION
+SELECT 345 AS PK_KEY,'tx' AS EKEY, 'texas' AS VALUE UNION
+SELECT 346 AS PK_KEY,'utah' AS EKEY, 'ut' AS VALUE UNION
+SELECT 347 AS PK_KEY,'ut' AS EKEY, 'utah' AS VALUE UNION
+SELECT 348 AS PK_KEY,'vermont' AS EKEY, 'vt' AS VALUE UNION
+SELECT 349 AS PK_KEY,'vt' AS EKEY, 'vermont' AS VALUE UNION
+SELECT 350 AS PK_KEY,'virginia' AS EKEY, 'va' AS VALUE UNION
+SELECT 351 AS PK_KEY,'va' AS EKEY, 'virginia' AS VALUE UNION
+SELECT 352 AS PK_KEY,'washinton' AS EKEY, 'wa' AS VALUE UNION
+SELECT 353 AS PK_KEY,'wa' AS EKEY, 'washinton' AS VALUE UNION
+SELECT 354 AS PK_KEY,'wv' AS EKEY, 'west virginia' AS VALUE UNION
+SELECT 355 AS PK_KEY,'wisconsin' AS EKEY, 'wi' AS VALUE UNION
+SELECT 356 AS PK_KEY,'wi' AS EKEY, 'wisconsin' AS VALUE UNION
+SELECT 357 AS PK_KEY,'wyoming' AS EKEY, 'wy' AS VALUE UNION
+SELECT 358 AS PK_KEY,'wy' AS EKEY, 'wyoming' AS VALUE UNION
+SELECT 359 AS PK_KEY,'mountain' AS EKEY, 'mtn' AS VALUE UNION
+SELECT 360 AS PK_KEY,'mtn' AS EKEY, 'mountain' AS VALUE UNION
+SELECT 361 AS PK_KEY,'condominium' AS EKEY, 'condo' AS VALUE UNION
+SELECT 362 AS PK_KEY,'condo' AS EKEY, 'condominium' AS VALUE UNION
+SELECT 363 AS PK_KEY,'hoa' AS EKEY, 'home owners association' AS VALUE UNION
+SELECT 364 AS PK_KEY,'north carolina state' AS EKEY, 'nc state' AS VALUE UNION
+SELECT 365 AS PK_KEY,'nc state' AS EKEY, 'north carolina state' AS VALUE UNION
+SELECT 366 AS PK_KEY,'nc state' AS EKEY, 'state of nc' AS VALUE UNION
+SELECT 367 AS PK_KEY,'nc state' AS EKEY, 'state of north carolina' AS VALUE UNION
+SELECT 368 AS PK_KEY,'north carolina state' AS EKEY, 'state of north carolina' AS VALUE UNION
+SELECT 369 AS PK_KEY,'north carolina state' AS EKEY, 'state of nc' AS VALUE UNION
+SELECT 370 AS PK_KEY,'state of north carolina' AS EKEY, 'nc state' AS VALUE UNION
+SELECT 371 AS PK_KEY,'state of north carolina' AS EKEY, 'north carolina state' AS VALUE UNION
+SELECT 372 AS PK_KEY,'state of nc' AS EKEY, 'nc state' AS VALUE UNION
+SELECT 373 AS PK_KEY,'state of nc' AS EKEY, 'north carolina state' AS VALUE UNION
+SELECT 374 AS PK_KEY,'state of nc' AS EKEY, 'state of north carolina' AS VALUE UNION
+SELECT 375 AS PK_KEY,'state of north carolina' AS EKEY, 'state of nc' AS VALUE
+    ]]></sql>
+    <column>
+      <column-name>PK_KEY</column-name>
+      <display-name><![CDATA[PK_KEY]]></display-name>
+      <column-index>1</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <primary-key>true</primary-key>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="1000.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>EKEY</column-name>
+      <display-name><![CDATA[EKEY]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <analyzer-name>com.fdt.sdl.core.analyzer.synonym.SynonymAlgorithm</analyzer-name>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>VALUE</column-name>
+      <display-name><![CDATA[VALUE]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <default-template>default</default-template>
+  <tablet-template>default</tablet-template>
+  <mobile-template>default</mobile-template>
+  <searcher-max-active>8</searcher-max-active>
+  <searcher-when-exhausted>1</searcher-when-exhausted>
+  <searcher-max-wait>10000</searcher-max-wait>
+  <searcher-max-idle>7</searcher-max-idle>
+  <is-in-memory-search>false</is-in-memory-search>
+  <allowed-ip-list>*</allowed-ip-list>
+  <is-empty-query-match-all>false</is-empty-query-match-all>
+  <date-weight-formula>
+    <time-weight time="600" weight="12.0"/>
+    <time-weight time="1800" weight="11.0"/>
+    <time-weight time="3600" weight="10.0"/>
+    <time-weight time="21600" weight="9.0"/>
+    <time-weight time="43200" weight="8.0"/>
+    <time-weight time="86400" weight="7.0"/>
+    <time-weight time="1296000" weight="6.0"/>
+    <time-weight time="2678400" weight="5.0"/>
+    <time-weight time="5356800" weight="4.0"/>
+    <time-weight time="8035200" weight="3.0"/>
+    <time-weight time="16070400" weight="2.0"/>
+    <time-weight time="32140800" weight="1.3"/>
+    <time-weight time="64281600" weight="1.2"/>
+    <time-weight time="96422400" weight="1.1"/>
+    <time-weight time="128563200" weight="1.05"/>
+    <time-weight time="160704000" weight="1.04"/>
+    <time-weight time="192844800" weight="1.03"/>
+    <time-weight time="224985600" weight="1.02"/>
+    <time-weight time="321408000" weight="1.01"/>
+  </date-weight-formula>
+  <spell-checking enabled="true"></spell-checking>
+</dataset>

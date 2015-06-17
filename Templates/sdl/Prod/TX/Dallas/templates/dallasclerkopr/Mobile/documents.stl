@@ -1,0 +1,36 @@
+<#if (searchResult.docs?has_content && searchResult.docs.size() > 0) >
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+     <p class="result">
+     <br/><b>Instrument</b>:
+                  <a href="${request.getContextPath()}/search.do?indexName=dallasdetails&templateName=details_SNMobile&lq=${pageStyleUtil.encodeURL("Instrument:\"" + doc.get("Instrument") + "\"")}"> ${searchResult.highlight(doc, "Instrument")}</a> 
+          <br/><b>Recorded Date</b>:
+                     <#if doc.get("RECDATEDISPLAY")?has_content>
+	                 ${pageStyleUtil.format(doc.get("RECDATEDISPLAY"), "yyyy-MM-dd hh:mm:ss", "MM/dd/yyyy hh:mm:ss a")} 	   	
+    	             </#if>
+     <br/><b>Name</b>:
+ <#if isPhoneticSearch == "1">
+ 	   <br/><b>${searchResult.datasetConfiguration.getColumn("PhoneticName").displayName}</b>:${searchResult.highlight(doc, "PhoneticName")}      
+       <#else>
+            <br/><b>${searchResult.datasetConfiguration.getColumn("Name").displayName}</b>:${searchResult.highlight(doc, "Name")}
+       </#if>  
+      <br/><b>${searchResult.datasetConfiguration.getColumn("PartyRole").displayName}</b>:${searchResult.highlight(doc, "PartyRole")}
+      <br/><b>${searchResult.datasetConfiguration.getColumn("DocType").displayName}</b>:${searchResult.highlight(doc, "DocType")}
+      <br/><b>${searchResult.datasetConfiguration.getColumn("Book").displayName}</b>:${searchResult.highlight(doc, "Book")}
+      <br/><b>${searchResult.datasetConfiguration.getColumn("Page").displayName}</b>:${searchResult.highlight(doc, "Page")}
+      <br/><b>${searchResult.datasetConfiguration.getColumn("OtherName").displayName}</b>:${searchResult.highlight(doc, "OtherName")}
+      <br/><b>${searchResult.datasetConfiguration.getColumn("LegalDescription").displayName}</b>:${searchResult.highlight(doc, "LegalDescription")}
+      <br/><b>${searchResult.datasetConfiguration.getColumn("FirstReference").displayName}</b>:${searchResult.highlight(doc, "FirstReference")}
+
+
+<!--<b>Add to Briefcase</b>:-->
+</br>	  
+<a href="javascript:;" onclick="addToCart('indexName?=?${indexName}?=?${dc.displayName}', 'pk_key?=?${doc.get("pk_key")}?con?Instrument?=?${doc.get("Instrument")?replace("'", "\\'")?replace("\"", "\\\"")}?con?${searchResult.datasetConfiguration.getColumn("DocType").displayName}?=?${doc.get("DocType")?replace("'", "\\'")?replace("\"", "\\\"")?trim}', 'Instrument%3A${doc.get("Instrument")}', '25');" >Add to Briefcase</a>
+<br/><a class="nocolor" href="search.do?indexName=dallasimages&lq=${pageStyleUtil.encodeURL("Instrument:" + doc.get("Instrument"))}" target="_blank">View Image</a>
+<br/>&nbsp;
+ </#foreach>
+
+<#else>
+ <#include "noResults.stl"> 
+</#if>
+

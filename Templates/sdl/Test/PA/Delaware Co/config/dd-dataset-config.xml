@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset name="Docket Details" exportedBy="null" createdAt="Fri Dec 07 14:30:49 EST 2012">
+  <display-order>-1</display-order>
+  <description><![CDATA[Details for Warren Municipal]]></description>
+  <index-dir>dd</index-dir>
+  <is-prefix-root-index-directory>true</is-prefix-root-index-directory>
+  <use-server-db-connection>true</use-server-db-connection>
+  <number-of-hours-before-deletion>6</number-of-hours-before-deletion>
+  <work-directory>_work</work-directory>
+  <temporary-index-minimal-merge-percentage>1.0</temporary-index-minimal-merge-percentage>
+  <merge-hours enabled="true" begin="0" end="24"/>
+  <fetcher-threads>3</fetcher-threads>
+  <writer-threads>3</writer-threads>
+  <index-max-size>60.0</index-max-size>
+  <list-fetch-size>100000</list-fetch-size>
+  <schedules>
+   <schedule id="0">
+    <is-enabled>true</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>1</interval>
+    <cron-setting>0 0 * * ?</cron-setting>
+    <indexing-mode>Re-create Index</indexing-mode>
+   </schedule>
+  </schedules>
+  <language>Any</language>
+  <analyzer-name>com.fdt.sdl.core.analyzer.NumberLowerCaseAnalyzer</analyzer-name>
+  <data-source-type>0</data-source-type>
+  <fetcher-configuration dir="null">
+  </fetcher-configuration>
+  <data-sources>
+    <data-source>
+      <name>default</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+    </data-source>
+  </data-sources>
+  <dataquery name="WorkingQueue" batch-size="128" is-skipping-null-parameters="false">
+    <sql><![CDATA[
+SELECT DISTINCT
+    ISNULL(RTRIM(FC.CASE_ID), '|') AS 'CaseID'
+   ,CONVERT(VARCHAR(10),  EE.FILING_DT, 101) AS 'DateStamped' 
+   ,CASE WHEN LTRIM(RTRIM(EE.EVENT_ENTRY_DESC)) = '' THEN ' ' ELSE ISNULL(EE.EVENT_ENTRY_DESC, ' ') END AS 'Description'
+   ,CASE WHEN LTRIM(RTRIM(EEN.ADDITIONAL_COMMENTS)) = '' THEN ' ' ELSE ISNULL(EEN.ADDITIONAL_COMMENTS, ' ') END AS 'Comments'
+FROM ACM_FACTS_CASE FC
+LEFT join ACM_EVENT_TO_CASE ETC on ETC.CASE_ID = FC.CASE_ID
+LEFT join ACM_EVENT_ENTRY EE on EE.EVENT_ENTRY_ID = ETC.EVENT_ENTRY_ID
+LEFT join ACM_EVENT_ENTRY_NOTES EEN on EEN.EVENT_ENTRY_ID = EE.EVENT_ENTRY_ID
+WHERE FC.SEALED_CASE_FLG <> 'Y'
+AND EE.IS_SEALED_FLG <> 'Y'
+AND EE.IS_RESTRICTED_FLG <> 'Y'
+AND EE.ROA_HIDDEN <> 'Y'
+AND EE.IS_DRAFT <> 'Y'
+    ]]></sql>
+    <column>
+      <column-name>CaseID</column-name>
+      <display-name><![CDATA[Case ID]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="1000.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DateStamped</column-name>
+      <display-name><![CDATA[Date Stamped]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Description</column-name>
+      <display-name><![CDATA[Description]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Comments</column-name>
+      <display-name><![CDATA[Comments]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <default-template>WarrantDetail</default-template>
+  <searcher-max-active>8</searcher-max-active>
+  <searcher-when-exhausted>1</searcher-when-exhausted>
+  <searcher-max-wait>10000</searcher-max-wait>
+  <searcher-max-idle>7</searcher-max-idle>
+  <is-in-memory-search>false</is-in-memory-search>
+  <max-open-files>1000</max-open-files>
+  <jvm-max-heap-size>1024</jvm-max-heap-size>
+  <max-field-length>1000000</max-field-length>
+  <document-buffer-size-mb>512</document-buffer-size-mb>
+  <allowed-ip-list>*</allowed-ip-list>
+  <date-weight-formula>
+    <time-weight time="600" weight="12.0"/>
+    <time-weight time="1800" weight="11.0"/>
+    <time-weight time="3600" weight="10.0"/>
+    <time-weight time="21600" weight="9.0"/>
+    <time-weight time="43200" weight="8.0"/>
+    <time-weight time="86400" weight="7.0"/>
+    <time-weight time="1296000" weight="6.0"/>
+    <time-weight time="2678400" weight="5.0"/>
+    <time-weight time="5356800" weight="4.0"/>
+    <time-weight time="8035200" weight="3.0"/>
+    <time-weight time="16070400" weight="2.0"/>
+    <time-weight time="32140800" weight="1.3"/>
+    <time-weight time="64281600" weight="1.2"/>
+    <time-weight time="96422400" weight="1.1"/>
+    <time-weight time="128563200" weight="1.05"/>
+    <time-weight time="160704000" weight="1.04"/>
+    <time-weight time="192844800" weight="1.03"/>
+    <time-weight time="224985600" weight="1.02"/>
+    <time-weight time="321408000" weight="1.01"/>
+  </date-weight-formula>
+  <spell-checking enabled="true"></spell-checking>
+</dataset>

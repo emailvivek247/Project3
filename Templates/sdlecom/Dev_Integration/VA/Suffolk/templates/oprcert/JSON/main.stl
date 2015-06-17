@@ -1,0 +1,5 @@
+<#assign result = new("org.json.simple.JSONObject")>
+<#assign filters = new("org.json.simple.JSONArray")>
+<#include "documents.stl">
+
+${result}

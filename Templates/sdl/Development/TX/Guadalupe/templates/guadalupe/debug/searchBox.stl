@@ -1,0 +1,355 @@
+<script type="text/javascript">
+    function unique(arrayName) {
+        var newArray=new Array();
+        label:for(var i=0; i<arrayName.length;i++ )
+        {  
+            for(var j=0; j<newArray.length;j++ ) {
+                if(newArray[j].name == arrayName[i].name) 
+                 continue label;
+            }
+            setCookie('debug' + arrayName[i].name, jQuery.trim(arrayName[i].value), 0);
+            if (arrayName[i].type == 'text' && jQuery.trim(arrayName[i].value).length != 0) {
+                newArray[newArray.length] = arrayName[i];
+            }
+        }
+        return newArray;
+    }   
+    function postAdvancedSearch() {
+        try {
+            document.getElementById("q").value = '';
+            var inputElemenets =  $('input[type="text"]');
+            var elem = unique(inputElemenets);
+            var searchString = '';
+            var searchQuery = '';
+            var andOrClause ='';
+            var doubleQuotes = '"';
+            var counter = 0;
+            var textcounter = 0;
+            var searchValue = '';
+            var searchValueQuery = '';
+            for(var i = 0; i < elem.length; i++) {
+                if (document.getElementById(elem[i].name + '_select') != null) {
+                    counter++;
+                }                   
+            }
+            for(var i = 0; i < elem.length; i++) {
+                if (document.getElementById(elem[i].name + '_select') != null) {
+                    setCookie('debug' + elem[i].name + '_select', document.getElementById(elem[i].name + '_select').selectedIndex, 0);
+                    textcounter++
+                    if (textcounter == counter) {
+                        andOrClause = '';
+                    } else {
+                        andOrClause = ' ' + document.getElementById(elem[i].name + '_select').value + '  ';
+                    }
+                        searchValue = elem[i].name + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes + '~5';
+                        searchValue = '#' + searchValue + '#';
+                        searchValueQuery = elem[i].title + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes;
+                    searchString = searchString + searchValue + andOrClause;
+                    searchQuery = searchQuery  + searchValueQuery + andOrClause;
+                }
+            }
+            document.getElementById("lq").value = searchString;
+            document.getElementById("searchQuery").value = searchQuery;
+            document.search_${searchResult.indexName}.method = "get";
+            document.search_${searchResult.indexName}.action = "search.do";
+            document.search_${searchResult.indexName}.searchType.value = "2";           
+            document.search_${searchResult.indexName}.submit();
+        } catch (err) {
+            $.prompt(err.message,{buttons:{Ok:true},	prefix:'extblue'});
+        }
+    }   
+    function postBasicSearch() {
+        try {   
+            setCookie('debug' + document.getElementById("q").name, document.getElementById("q").value, 0);
+            document.getElementById("lq").value = '';
+            document.search_${searchResult.indexName}.method = "get";
+            document.getElementById('searchQuery').value = document.getElementById('q').value
+            document.search_${searchResult.indexName}.action = "search.do";
+            document.search_${searchResult.indexName}.searchType.value = "1";
+            document.search_${searchResult.indexName}.submit();
+        } catch (err) {
+            $.prompt(err.message,{buttons:{Ok:true},	prefix:'extblue'});
+        }
+    } 
+</script>
+<form name="search_${searchResult.indexName}" id="search_${searchResult.indexName}">
+    <input type="hidden" name="indexName" value="${searchResult.indexName}">
+    <input type="hidden" name="templateName" value="${searchResult.templateName}">
+    <input type="hidden" name="searchQuery" id="searchQuery">
+    <input type="hidden" name="lq" id="lq">
+    <input type="hidden" name="searchType" id="searchType" value="${Request.searchForm.searchType}">
+    
+        <#if Request.searchForm.searchType = "1">
+            <div id="basicSearch">
+        <#else>
+            <div id="basicSearch" style="display:none">
+        </#if>
+            
+            <table  align="center" >
+                <tr >
+                        <td align="right">
+                            <input type="text" class="text" name="q" id="q" size="41" maxlength="2048" value="${searchResult.userInput?html}">
+                                <#if Request.searchForm.searchType = "1">
+                                    <script language="javascript">  
+                                          document.getElementById('q').focus();
+                                    </script>
+                                </#if>
+                        </td>
+                        <td align="left">   
+                            <button type="button" class="search" onclick="javascript:postBasicSearch()">Search</button>
+                        </td>
+                        <td align="left"><a onClick="toggleDiv('advancedSearch');return false" href="#"><font size="1">Advanced Search</font></a>   
+                        </td>
+                </tr>       
+            </table>
+            
+        </div>
+
+            <#if Request.searchForm.searchType = "2">
+                <div id="advancedSearch">
+            <#else>
+                <div id="advancedSearch" style="display:none">
+            </#if>
+
+        <table align="center" border="0" cellspacing="1" cellpadding="1">
+                                <tr>                                
+                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("BACKFILENUMEXACT").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td colspan="2">
+                                            <input type="text" id="BACKFILENUMEXACT"  title="${searchResult.datasetConfiguration.getColumn("BACKFILENUMEXACT").displayName}" name="BACKFILENUMEXACT" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('debugBACKFILENUMEXACT') != null) {
+                                                    document.getElementById("BACKFILENUMEXACT").value = getCookie('debugBACKFILENUMEXACT');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td align="left">
+                                            <select name="BACKFILENUMEXACT_select" id="BACKFILENUMEXACT_select" >
+                                                <option value="AND" >AND</option>
+                                                <option value="OR" >OR</option>
+                                                <option value="NOT" >NOT</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('debugBACKFILENUMEXACT_select') != null) {
+                                                    document.getElementById("BACKFILENUMEXACT_select").options[getCookie('debugBACKFILENUMEXACT_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+                                <tr>                                
+                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("BACKFILENUM").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td colspan="2">
+                                            <input type="text" id="BACKFILENUM"  title="${searchResult.datasetConfiguration.getColumn("BACKFILENUM").displayName}" name="BACKFILENUM" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('debugBACKFILENUM') != null) {
+                                                    document.getElementById("BACKFILENUM").value = getCookie('debugBACKFILENUM');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td align="left">
+                                            <select name="BACKFILENUM_select" id="BACKFILENUM_select" >
+                                                <option value="AND" >AND</option>
+                                                <option value="OR" >OR</option>
+                                                <option value="NOT" >NOT</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('debugBACKFILENUM_select') != null) {
+                                                    document.getElementById("BACKFILENUM_select").options[getCookie('debugBACKFILENUM_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+                                <tr>                                
+                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("BOOK").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td colspan="2">
+                                            <input type="text" id="BOOK"  title="${searchResult.datasetConfiguration.getColumn("BOOK").displayName}" name="BOOK" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('debugBOOK') != null) {
+                                                    document.getElementById("BOOK").value = getCookie('debugBOOK');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td align="left">
+                                            <select name="BOOK_select" id="BOOK_select" >
+                                                <option value="AND" >AND</option>
+                                                <option value="OR" >OR</option>
+                                                <option value="NOT" >NOT</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('debugBOOK_select') != null) {
+                                                    document.getElementById("BOOK_select").options[getCookie('debugBOOK_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+                                <tr>                                
+                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("BOOKEXACT").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td colspan="2">
+                                            <input type="text" id="BOOKEXACT"  title="${searchResult.datasetConfiguration.getColumn("BOOKEXACT").displayName}" name="BOOKEXACT" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('debugBOOKEXACT') != null) {
+                                                    document.getElementById("BOOKEXACT").value = getCookie('debugBOOKEXACT');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td align="left">
+                                            <select name="BOOKEXACT_select" id="BOOKEXACT_select" >
+                                                <option value="AND" >AND</option>
+                                                <option value="OR" >OR</option>
+                                                <option value="NOT" >NOT</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('debugBOOKEXACT_select') != null) {
+                                                    document.getElementById("BOOKEXACT_select").options[getCookie('debugBOOKEXACT_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+                                <tr>                                
+                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("PAGE").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td colspan="2">
+                                            <input type="text" id="PAGE"  title="${searchResult.datasetConfiguration.getColumn("PAGE").displayName}" name="PAGE" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('debugPAGE') != null) {
+                                                    document.getElementById("PAGE").value = getCookie('debugPAGE');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td align="left">
+                                            <select name="PAGE_select" id="PAGE_select" >
+                                                <option value="AND" >AND</option>
+                                                <option value="OR" >OR</option>
+                                                <option value="NOT" >NOT</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('debugPAGE_select') != null) {
+                                                    document.getElementById("PAGE_select").options[getCookie('debugPAGE_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+                                <tr>                                
+                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("PAGEEXACT").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td colspan="2">
+                                            <input type="text" id="PAGEEXACT"  title="${searchResult.datasetConfiguration.getColumn("PAGEEXACT").displayName}" name="PAGEEXACT" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('debugPAGEEXACT') != null) {
+                                                    document.getElementById("PAGEEXACT").value = getCookie('debugPAGEEXACT');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td align="left">
+                                            <select name="PAGEEXACT_select" id="PAGEEXACT_select" >
+                                                <option value="AND" >AND</option>
+                                                <option value="OR" >OR</option>
+                                                <option value="NOT" >NOT</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('debugPAGEEXACT_select') != null) {
+                                                    document.getElementById("PAGEEXACT_select").options[getCookie('debugPAGEEXACT_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+                                <tr>                                
+                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("INSTRUMENT").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td colspan="2">
+                                            <input type="text" id="INSTRUMENT"  title="${searchResult.datasetConfiguration.getColumn("INSTRUMENT").displayName}" name="INSTRUMENT" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('debugINSTRUMENT') != null) {
+                                                    document.getElementById("INSTRUMENT").value = getCookie('debugINSTRUMENT');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td align="left">
+                                            <select name="INSTRUMENT_select" id="INSTRUMENT_select" >
+                                                <option value="AND" >AND</option>
+                                                <option value="OR" >OR</option>
+                                                <option value="NOT" >NOT</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('debugINSTRUMENT_select') != null) {
+                                                    document.getElementById("INSTRUMENT_select").options[getCookie('debugINSTRUMENT_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+                                <tr>                                
+                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("LIKENAME").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td colspan="2">
+                                            <input type="text" id="LIKENAME"  title="${searchResult.datasetConfiguration.getColumn("LIKENAME").displayName}" name="LIKENAME" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('debugLIKENAME') != null) {
+                                                    document.getElementById("LIKENAME").value = getCookie('debugLIKENAME');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td align="left">
+                                            <select name="LIKENAME_select" id="LIKENAME_select" >
+                                                <option value="AND" >AND</option>
+                                                <option value="OR" >OR</option>
+                                                <option value="NOT" >NOT</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('debugLIKENAME_select') != null) {
+                                                    document.getElementById("LIKENAME_select").options[getCookie('debugLIKENAME_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+                                <tr>                                
+                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("NAME").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td colspan="2">
+                                            <input type="text" id="NAME"  title="${searchResult.datasetConfiguration.getColumn("NAME").displayName}" name="NAME" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('debugNAME') != null) {
+                                                    document.getElementById("NAME").value = getCookie('debugNAME');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td align="left">
+                                            <select name="NAME_select" id="NAME_select" >
+                                                <option value="AND" >AND</option>
+                                                <option value="OR" >OR</option>
+                                                <option value="NOT" >NOT</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('debugNAME_select') != null) {
+                                                    document.getElementById("NAME_select").options[getCookie('debugNAME_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+                                <tr>                                
+                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("NAMEDISPLAY").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td colspan="2">
+                                            <input type="text" id="NAMEDISPLAY"  title="${searchResult.datasetConfiguration.getColumn("NAMEDISPLAY").displayName}" name="NAMEDISPLAY" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('debugNAMEDISPLAY') != null) {
+                                                    document.getElementById("NAMEDISPLAY").value = getCookie('debugNAMEDISPLAY');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td align="left">
+                                            <select style="display:none" name="NAMEDISPLAY_select" id="NAMEDISPLAY_select" >
+                                                <option value="AND" >AND</option>
+                                                <option value="OR" >OR</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('debugNAMEDISPLAY_select') != null) {
+                                                    document.getElementById("NAMEDISPLAY_select").options[getCookie('debugNAMEDISPLAY_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td align="right"><button type="button" class="search" onclick="javascript:postAdvancedSearch()">Search</button></td>
+                            <td align="left"><a onClick="javascript:toggleDiv('basicSearch');return false;" href="#"><font size="1">Basic Search</font></a><br>
+                            <a onClick="javascript:clearFormElements();return false;" href="#"><font size="1">Clear</font></a></td>
+                            <td>&nbsp;</td>
+                        </tr>
+            </table>
+        
+        </div>
+</form>
+<#include "searchBox_extra.stl">

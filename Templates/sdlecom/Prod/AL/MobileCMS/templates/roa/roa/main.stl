@@ -1,0 +1,20 @@
+<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (request.isUserInRole('ROAM_ADMIN') || request.isUserInRole('MOBILECMS_EMPLOYEE_ACCESS') || request.isUserInRole('MOBILECMS_ADMIN'))>
+<!--  -->
+<@com.useHighlightTag '<span class="highlight">', '</span>' />
+<#include "layout.stl">
+<@layout title="Register of Actions" encoding="${searchResult.encoding}">
+
+
+
+ <@com.errorMarkup/>
+
+ <br>
+ <table class="main"><tr valign="top"><td class="mainRight">
+  <div id="documents"><#include "documents.stl"></div>
+ </td></tr></table>
+ 
+ 
+</@layout>
+<#else>
+ You do not have permission to see this content.
+ </#if>

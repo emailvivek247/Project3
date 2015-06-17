@@ -1,0 +1,109 @@
+<script type="text/javascript">
+var timeout         = 500;
+var closetimer      = 0;
+var ddmenuitem      = 0;
+function mopen(id)
+{
+    mcancelclosetime();
+    if(ddmenuitem) ddmenuitem.style.visibility = 'hidden';
+    ddmenuitem = document.getElementById(id);
+    ddmenuitem.style.visibility = 'visible';
+}
+function mclose()
+{
+    if(ddmenuitem) ddmenuitem.style.visibility = 'hidden';
+}
+function mclosetime()
+{
+    closetimer = window.setTimeout(mclose, timeout);
+}
+function mcancelclosetime()
+{
+    if(closetimer)
+    {
+        window.clearTimeout(closetimer);
+        closetimer = null;
+    }
+}document.onclick = mclose;
+</script>
+
+<style>
+.ui-icon {
+width: 16px;
+height: 16px;
+background-image: url(resources/styles/images/ui-icons_222222_256x240.png);
+}
+.ui-icon-triangle-1-s {
+background-position: -64px -16px;
+}
+.ui-widget-content {
+border: 1px solid #7E7783;
+background: white;
+color: #100F0F;
+}
+.jumpmenu {
+    width:200px;
+}
+
+/* General */
+    #cssdropdown, #cssdropdown ul { list-style: none; }
+    #cssdropdown, #cssdropdown * { padding: 0; margin: 0; }
+    
+    /* Head links */
+    
+#cssdropdown {
+    background: #0078AE url(resources/styles/images/ui-bg_highlight-soft_25_30273a_1x100.png) 50% 50% repeat-x;  
+    width:100%;
+    height:35px;
+}
+#cssdropdown li.headlink {
+    vertical-align: middle;
+    text-align: center;
+    float: left;    
+    border-right: 1px solid white;   
+}
+#cssdropdown li.headlink a {display: block; padding: 10px; font-size: 0.9em; color: #EDF7F7;}
+.headerList{margin: 0;padding: 0; z-index: 30; float:right}
+.headerList li{margin: 0;padding: 0;list-style: none; float: left;}
+.headerList li a{display: block;margin: 0 1px 0 0;padding: 4px 10px;text-align: center;text-decoration: none;font-size: 90%;}
+.headerList div{position: absolute;visibility: hidden;margin: 0;padding: 0;}
+.headerList div a{position: relative;display: block;margin: 0;padding: 5px 10px;width: auto;white-space: nowrap;text-align: left;text-decoration: none;border-bottom:1px solid #CCC}
+.headerList li a span.ui-icon{display:inline}
+/*
+
+</style>
+
+<#--
+<table width="100%"  border="0" cellpadding="0" cellspacing="0">
+  <tr>
+  <td>
+<table border=0 cellpadding=0 cellspacing=0 ><tr>
+ <#foreach dc in dcs>
+  <#if dc.isValid() && (dc.displayOrder>=0) && dc.getDefaultTemplateName()?has_content>
+    <td class=<#if indexName == dc.name>"active"<#else>"inactive"</#if>>
+      
+      <a class=<#if indexName == dc.name>"active"<#else>"inactive"</#if> href="search.do?indexName=${dc.name}&q=${searchResult.getURLEncodedClearQuery()}">${dc.displayName}</a>
+      
+    </td>
+ 
+  </#if>
+</#foreach>
+</tr>
+-->
+
+<table class="ui-state-default" border=0 cellpadding=0 cellspacing=0 width="100%">
+    <tr>
+        <td style="width:100%" >
+            <div style="float:left;">
+                <ul class="headerList">
+                    <li class="<#if indexName == "aoc">ui-state-active </#if>ui-state-default">
+                      <a class=<#if indexName == "aoc">"active"<#else>"inactive"</#if> href="search.do?indexName=aoc&q=${searchResult.getURLEncodedClearQuery()}&searchable=CaseNumberName,DOB,SSN,LicenseNumber,DLState,Race,Sex"><font size = "2pt" style="text-decoration:underline"><b>Case Search<b></font></a>
+                    </li>
+                </ul>
+            </div>
+            <div style="float:right;">
+                <#include "/web-inf/view/admin/layout/loginMenu.stl">
+            </div>
+        </td>       
+    </tr>
+</table>

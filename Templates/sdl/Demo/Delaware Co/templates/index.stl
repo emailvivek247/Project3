@@ -1,0 +1,1 @@
+${request.getRequestDispatcher("/search.do?searchType=1&indexName=legacyjudgement").forward(request, response)}

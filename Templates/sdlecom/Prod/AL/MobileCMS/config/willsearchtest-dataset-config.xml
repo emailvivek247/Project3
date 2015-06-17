@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset name="Probate Wills Search - Test" exportedBy="null" createdAt="Thu Apr 03 15:25:34 CDT 2014">
+  <display-order>-1</display-order>
+  <description><![CDATA[Probate Wills Search]]></description>
+  <index-dir>willsearchtest</index-dir>
+  <is-prefix-root-index-directory>true</is-prefix-root-index-directory>
+  <use-server-db-connection>true</use-server-db-connection>
+  <number-of-hours-before-deletion>6</number-of-hours-before-deletion>
+  <work-directory>_work</work-directory>
+  <temporary-index-minimal-merge-percentage>1.0</temporary-index-minimal-merge-percentage>
+  <merge-hours enabled="false" begin="1" end="3"/>
+  <fetcher-threads>7</fetcher-threads>
+  <writer-threads>3</writer-threads>
+  <index-max-size>100000.0</index-max-size>
+  <language>Any</language>
+  <analyzer-name>com.fdt.sdl.core.analyzer.NumberLowerCaseAnalyzer</analyzer-name>
+  <data-source-type>0</data-source-type>
+  <fetcher-configuration dir="null">
+  </fetcher-configuration>
+  <dataquery name="WorkingQueue" batch-size="128" is-skipping-null-parameters="false">
+    <sql><![CDATA[
+SELECT DISTINCT
+    PS.CASE_NUMBER AS 'CaseNumber'
+   ,PS.CASE_ID AS 'CaseID'
+   ,EBP.STARTING_SEQUENCE AS 'Book'
+   ,EBP.ENDING_SEQUENCE AS 'Page'
+   ,PS.LAST_NAME AS 'LastName'
+   ,PS.FIRST_NAME AS 'FirstName'
+   ,PS.DISPLAYNAME AS 'DisplayName'
+   ,DS.EVENT_ENTRY_ID AS 'EventEntryID'
+   ,case when DS.EVENT_ENTRY_ID IS null then 'N' ELSE 'Y' END AS 'IDFlag'
+   ,EET.EVENT_ENTRY_TYP_CD AS 'EventEntryTypeCode'
+   ,EN.ADDITIONAL_COMMENTS  AS  'Comments'
+   ,PS.DATE_TIME_MOD
+FROM PARTYSEARCH PS
+INNER JOIN ACM_EVENT_TO_CASE ETC ON ETC.CASE_ID = PS.CASE_ID
+INNER JOIN ACM_EVENT_ENTRY EE ON ETC.EVENT_ENTRY_ID = EE.EVENT_ENTRY_ID
+LEFT JOIN DOCUMENT_STORAGE DS ON EE.EVENT_ENTRY_ID = DS.EVENT_ENTRY_ID
+LEFT JOIN ACM_EVENT_BOOK_PAGE EBP ON EBP.EVENT_ENTRY_ID = ETC.EVENT_ENTRY_ID
+LEFT JOIN ACM_EVENT_ENTRY_NOTES EN ON EN.EVENT_ENTRY_ID = EE.EVENT_ENTRY_ID
+LEFT JOIN ACM_EVENT_ENT_TYP EET ON EET.EVENT_ENTRY_TYP_ID = EE.EVENT_ENTRY_TYP_ID 
+WHERE PS.CASE_TYP_CD IN ('WIT','FNG','CVA','ADM','TES')
+AND PS.PARTY_ROLE_TYP_CD IN ('DEC')
+AND PS.SEALED_FLAG <> 'Y'
+AND PS.SEALED_CASE_FLAG <> 'Y'
+AND PS.IS_RESTRICTED_FLG <> 'Y'
+AND EBP.STARTING_SEQUENCE IS NOT NULL
+OR PS.CASE_NUMBER IN ('20080140','20080141')
+    ]]></sql>
+    <column>
+      <column-name>CaseNumber</column-name>
+      <display-name><![CDATA[Case Number]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CaseID</column-name>
+      <display-name><![CDATA[Case ID]]></display-name>
+      <column-index>2</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Book</column-name>
+      <display-name><![CDATA[Book]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Page</column-name>
+      <display-name><![CDATA[Page]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>LastName</column-name>
+      <display-name><![CDATA[Last Name]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>FirstName</column-name>
+      <display-name><![CDATA[First Name]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DisplayName</column-name>
+      <display-name><![CDATA[Name]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>EventEntryID</column-name>
+      <display-name><![CDATA[EventEntryID]]></display-name>
+      <column-index>8</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>IDFlag</column-name>
+      <display-name><![CDATA[IDFlag]]></display-name>
+      <column-index>9</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>EventEntryTypeCode</column-name>
+      <display-name><![CDATA[EventEntryTypeCode]]></display-name>
+      <column-index>10</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Comments</column-name>
+      <display-name><![CDATA[Comments]]></display-name>
+      <column-index>11</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DATE_TIME_MOD</column-name>
+      <display-name><![CDATA[DATE_TIME_MOD]]></display-name>
+      <column-index>12</column-index>
+      <column-type>java.sql.Timestamp</column-type>
+      <modified-date>true</modified-date>
+      <index-field-type>KeywordDateHierarchical</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <is-filterable sort-filter-counts-by="1">true</is-filterable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Incremental">
+    <sql><![CDATA[
+SELECT DISTINCT
+    PS.CASE_NUMBER AS 'CaseNumber'
+   ,PS.CASE_ID AS 'CaseID'
+   ,EBP.STARTING_SEQUENCE AS 'Book'
+   ,EBP.ENDING_SEQUENCE AS 'Page'
+   ,PS.LAST_NAME AS 'LastName'
+   ,PS.FIRST_NAME AS 'FirstName'
+   ,PS.DISPLAYNAME AS 'DisplayName'
+   ,DS.EVENT_ENTRY_ID AS 'EventEntryID'
+  ,case when DS.EVENT_ENTRY_ID IS null then 'N' ELSE 'Y' END AS 'IDFlag'
+  ,PS.DATE_TIME_MOD
+FROM PARTYSEARCH PS
+LEFT JOIN ACM_EVENT_TO_CASE ETC ON ETC.CASE_ID = PS.CASE_ID
+LEFT JOIN ACM_EVENT_BOOK_PAGE EBP ON EBP.EVENT_ENTRY_ID = ETC.EVENT_ENTRY_ID
+LEFT JOIN DOCUMENT_STORAGE DS ON PS.CASE_ID = DS.CASE_ID
+WHERE PS.CASE_TYP_CD IN ('WIT')
+AND PS.SEALED_FLAG <> 'Y'
+AND PS.SEALED_CASE_FLAG <> 'Y'
+AND PS.IS_RESTRICTED_FLG <> 'Y'
+AND PS.DATE_TIME_CREATED > DATEADD(HH,-2,GETDATE())
+OR PS.DATE_TIME_MOD > DATEADD(HH,-2,GETDATE())
+    ]]></sql>
+  </dataquery>
+  <default-template>willsearch</default-template>
+  <tablet-template>willsearch</tablet-template>
+  <mobile-template>willsearch</mobile-template>
+  <searcher-max-active>8</searcher-max-active>
+  <searcher-when-exhausted>1</searcher-when-exhausted>
+  <searcher-max-wait>10000</searcher-max-wait>
+  <searcher-max-idle>7</searcher-max-idle>
+  <is-in-memory-search>false</is-in-memory-search>
+  <jvm-max-heap-size>2048</jvm-max-heap-size>
+  <document-buffer-size-mb>1024</document-buffer-size-mb>
+  <allowed-ip-list>*</allowed-ip-list>
+  <is-empty-query-match-all>false</is-empty-query-match-all>
+  <date-weight-formula>
+    <time-weight time="600" weight="12.0"/>
+    <time-weight time="1800" weight="11.0"/>
+    <time-weight time="3600" weight="10.0"/>
+    <time-weight time="21600" weight="9.0"/>
+    <time-weight time="43200" weight="8.0"/>
+    <time-weight time="86400" weight="7.0"/>
+    <time-weight time="1296000" weight="6.0"/>
+    <time-weight time="2678400" weight="5.0"/>
+    <time-weight time="5356800" weight="4.0"/>
+    <time-weight time="8035200" weight="3.0"/>
+    <time-weight time="16070400" weight="2.0"/>
+    <time-weight time="32140800" weight="1.3"/>
+    <time-weight time="64281600" weight="1.2"/>
+    <time-weight time="96422400" weight="1.1"/>
+    <time-weight time="128563200" weight="1.05"/>
+    <time-weight time="160704000" weight="1.04"/>
+    <time-weight time="192844800" weight="1.03"/>
+    <time-weight time="224985600" weight="1.02"/>
+    <time-weight time="321408000" weight="1.01"/>
+  </date-weight-formula>
+  <spell-checking enabled="true"></spell-checking>
+</dataset>

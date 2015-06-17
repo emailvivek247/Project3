@@ -1,0 +1,11 @@
+
+<#if !searchResult.docs?has_content || searchResult.docs.size() <= 0>
+	<h4 class="noResults">
+	No Results Found!
+
+	</h4>
+<#elseif !searchResult.xstreamdocs?has_content || searchResult.xstreamdocs.size() <= 0>
+	<h4 class="noResults">
+	No Results Found!
+	</h4>
+</#if>

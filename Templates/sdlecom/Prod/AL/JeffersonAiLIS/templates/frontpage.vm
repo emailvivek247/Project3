@@ -1,0 +1,161 @@
+#set($layout = "OtherDefault.vm")
+<script type="text/javascript" src="styles/tp.js"></script>
+
+<link rel="stylesheet" href="styles/tp.css" />
+<link rel="shortcut icon" href="/Globe.ico"/>
+
+            <table width="80%" align="center" border="0">
+            <tr>
+            	<td align="center">
+            		<!--<p id="headerText">Jefferson County Alabama, Probate Judge's Office</p>-->
+            	</td>	
+            </tr>
+            </table>
+
+
+            <table width="80%" align="center" border="0">         
+            <tr>
+			<td width="2%">&nbsp</td> 
+			<td align="left"><img src="templates/images/seal.png" alt="Jefferson Seal" width="140" height="140"/></td>
+			<td align="right"><img src="templates/images/king.jpg" alt="Judge King" width="180" height="261"/></td>
+			<td width="2%">&nbsp</td> 
+                        </tr>
+            </table>
+
+<br>
+
+<div id="controla" style="margin-left:auto; margin-right:auto;width:80%; ">
+
+#foreach( $dc in $dcs )
+  #if($dc.isValid() && $dc.displayOrder >= 0 && $dc.getDefaultTemplateName())
+    #set($_controlStringa = "$!{_controlStringa},'${dc.name}'")
+<div id="${dc.name}" title="${dc.displayName}" style="height:100px;">
+<br/>
+
+<form method="get" action="search.do">
+     <table align="center" border="0">
+        <tr>
+           <td align="right">
+		<input type="hidden" name="indexName" value="$!{dc.name}">
+	    #if($dc.name == "jeffersonopr") 
+  	        <input type="hidden" name="searchable" value="Name,Instrument,RecDate,PartyRole,Book,Page,LegalType,LegalSeq,Lot,Block,MapBook,MapPage,SubDivision,Con,TT,Area,QT,Parcel,PID,FirstReference,Phase,Section,LotNum,FreeForm1Other,FreeForm2,FreeForm3,Address,Unit,City,State,Zip">
+	    #else
+	        <input type="hidden" name="searchable" value="Name,Instrument,OtherName,OtherRoleName,PartyRole,RecDate1Search,RecDate2">
+	    #end
+		<input type="hidden" name="templateName" value="$!{templateName}">
+                <input class="text" type="text" name="q" size="81" maxlength="2048" value="$!{HTMLEncodedQuery}">
+           </td>   
+           <td >   
+                <button type="submit" class="search">Search</button>
+           </td>
+        </tr>
+     </table>
+</form>
+
+<br/>
+</div>
+
+  #end
+#end
+</div>
+
+<br>
+
+<div id="control" style="margin-left:auto; margin-right:auto;width:80%;">
+
+ #set($_controlString = ",'MessageCenter'")
+<div id="MessageCenter" title="Message Center" style="height:400px;">
+</br>
+	<table align="left" border="0" width="100%" >
+     		<tr>
+			<td width="2%">&nbsp</td>
+			<td width="96%"><font face="arial">
+</b>
+<br>As we head into a new year, I'm proud to annouce that the Jefferson County Probate Office will once again make it's indexes available for searching over the internet.  In our continued efforts to provide the best customer service and technology we have moved forward with implementing Granicus' Rapid Online Access Method (ROAM).  ROAM will provide the constituents of Jefferson County with advanced search tools not available anywhere else in Alabama.
+<br><br>
+I am also pleased to annouce that we will provide access to all images from February 20th 2006 to present.  These images have had sensitive SSN information redacted from them by my staff.   For users who wish to access all images please contact Jimmy Kennedy, at phone number 205-325-5301 Ext. 226 or email address <a href="mailto:kennedyj@jccal.org">kennedyj@jccal.org</a>, to apply for a secure access to the Jefferson County system via a Citrix connection. 
+<br><br>
+We will be hold training sessions at the below date starting in January to help users learn how to utilize these advanced tools for searching:<br><br>
+	ROAM Training<br>
+	Where: Jefferson County Probate Judge's Court Room <br>
+	When: January 5th, 12 PM, January 8th 3 PM. <br>
+
+<br>
+Please RSVP via e-mail to Jackie Rhodes at <a href="mailto:rhodesj.jccal.org">rhodesj@jccal.org</a> by close of business on Friday, December 31st, 2010 if you would like to attend.
+<br><br>
+- Alan King, Jefferson County Judge of Probate, Place 1
+<br><br>
+Learn help tips about ROAM <a href = "search.do?indexName=jeffdoctypes&templateName=ROAMHelp&q=&length=300">HERE</a>! 
+<br>
+
+</font></td>
+<td width="1%">&nbsp</td>  
+              	</tr>
+	</table>
+</br>
+</div>
+</br>
+</div>
+</br>
+<br>
+<div id="controlb" style="margin-left:auto; margin-right:auto;width:80%;">
+	#set($_controlStringb = ",'Presented By'")
+        <div id="Presented By" title="Presented By" style="height:275px;">
+	</br>
+	<table align="left" border="0" width="100%" >
+     		<tr>
+			<td width="2%">
+			     <font face="arial">
+			        <!--<td align="left"><img src="templates/images/king.jpg"/></td>-->
+			        <td align="left"><img src="templates/images/jefferson_judges.jpg"/></td>
+                                <!--<td align="right"><img src="templates/images/butler.jpg"/></td>-->&nbsp; 			
+		             </font>
+		        </td>
+              	</tr>
+	</table>
+</br>
+</div>
+</br>
+</div>
+</br>
+
+#if($dcs.size() > 0)
+
+<script type="text/javascript">
+<!--
+tpSet('control', 'tabs' $!{_controlString});
+// -->
+</script>
+
+<script type="text/javascript">
+<!--
+tpSet('controlb', 'tabs' $!{_controlStringb});
+// -->
+</script>
+
+<script type="text/javascript">
+<!--
+tpSet('controla', 'tabs' $!{_controlStringa});
+// -->
+</script>
+
+
+
+
+#else
+
+<script type="text/javascript">
+<!--
+window.location='login.do';
+// -->
+</script>
+#end
+
+<br><br>
+<table width="100%" border="0">
+ <tr>
+  <td width="100%" align="center"><font color=#696969>Copyright &copy; <script>document.write(new Date().getFullYear())</script> Granicus, INC.</font></td>
+ </tr>
+</table>
+
+

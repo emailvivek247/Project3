@@ -1,0 +1,37 @@
+
+  		  <@display.column media="html" indexColumnName="CaseNumber" title="${searchResult.datasetConfiguration.getColumn(\"CaseNumber\").displayName}">
+		   	${searchResult.highlight(doc, "CaseNumber")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseNumber" title="${searchResult.datasetConfiguration.getColumn(\"CaseNumber\").displayName}">
+		   	${doc.get("CaseNumber")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="DATEFILEDDISPLAY" title="${searchResult.datasetConfiguration.getColumn(\"DATEFILEDDISPLAY\").displayName}">
+		   	${searchResult.highlight(doc, "DATEFILEDDISPLAY")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DATEFILEDDISPLAY" title="${searchResult.datasetConfiguration.getColumn(\"DATEFILEDDISPLAY\").displayName}">
+		   	${doc.get("DATEFILEDDISPLAY")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="CaseType" title="${searchResult.datasetConfiguration.getColumn(\"CaseType\").displayName}">
+		   	${searchResult.highlight(doc, "CaseType")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseType" title="${searchResult.datasetConfiguration.getColumn(\"CaseType\").displayName}">
+		   	${doc.get("CaseType")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="Division" title="${searchResult.datasetConfiguration.getColumn(\"Division\").displayName}">
+		   	${searchResult.highlight(doc, "Division")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="Division" title="${searchResult.datasetConfiguration.getColumn(\"Division\").displayName}">
+		   	${doc.get("Division")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="DefendantName" title="${searchResult.datasetConfiguration.getColumn(\"DefendantName\").displayName}">
+		   	${searchResult.highlight(doc, "DefendantName")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DefendantName" title="${searchResult.datasetConfiguration.getColumn(\"DefendantName\").displayName}">
+		   	${doc.get("DefendantName")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="PlaintiffName" title="${searchResult.datasetConfiguration.getColumn(\"PlaintiffName\").displayName}">
+		   	${searchResult.highlight(doc, "PlaintiffName")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="PlaintiffName" title="${searchResult.datasetConfiguration.getColumn(\"PlaintiffName\").displayName}">
+		   	${doc.get("PlaintiffName")}
+		  </@display.column>

@@ -1,0 +1,72 @@
+.basket {
+ 	z-index:1;
+	position: absolute;
+	top: 20px;
+	right: 30px;
+	display: none;
+	background: #F7F7F7;
+	border:1px solid #111111;
+	width: 40%;
+	height: 85%;
+	padding: 0px 0px 30px 20px;
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-weight:bold; 
+	margin:4px 6px 4px 6px;
+	font-size: 8pt;
+	overflow: auto;
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
+	text-align:center;
+}
+
+.basket table {
+	font-size: 11px;
+	text-align: center;
+	font-family: Verdana;
+	font-weight: normal; 
+	color: #404040; 
+	background-color: #fafafa; 
+	border: 1px #6699CC solid; 
+	border-collapse: collapse;
+	border-spacing: 0px;
+}
+
+.basketContent {
+	text-align:center;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.basketContent table {
+	margin-left: auto;
+	margin-right: auto;	
+	background: whitesmoke;
+	border-collapse: collapse;
+}
+.basketContent table th, .basketContent table td {
+  border: 1px silver solid;
+  padding: 0.2em;
+}
+.basketContent table th {
+  background: gainsboro;
+  text-align: left;
+}
+.basketContent table caption {
+  margin-left: inherit;
+  margin-right: inherit;
+}
+
+a.trigger{
+position: absolute;
+text-decoration: none;
+top: 110px; right: 10px;
+color:#fff;
+padding: 10px 15px 20px 20px;
+background:url(images/closedCase.png) 0 0 no-repeat;
+display: block;
+}
+
+a.basketActive {
+background:url(images/closedCase.png) 0 0 no-repeat;
+text-decoration: none;
+}

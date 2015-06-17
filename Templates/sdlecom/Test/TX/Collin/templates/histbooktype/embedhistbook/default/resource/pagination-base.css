@@ -1,0 +1,22 @@
+@charset "utf-8";
+/* PAGINATION BASE CSS */
+.paginationHolder{
+	width: 100%;
+	text-align: center;
+	vertical-align: middle;
+	padding: 0.3em 0.5em;
+}
+.paginationHolder a {
+	text-decoration: none;         
+}
+.paginationHolder a, .paginationHolder span {
+	padding: 0.4em 0.5em 0.1em 0.5em;
+	font-size: 70%;	
+}	
+span.text {
+	background: none;	
+}
+.paginationHolder input {
+	font-size:70%;
+	width:50px;
+}

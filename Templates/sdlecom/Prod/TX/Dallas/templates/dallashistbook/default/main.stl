@@ -1,0 +1,39 @@
+<!--  -->
+<@com.useHighlightTag '<span style="background-color:#B2C9FA">', '</span>' />
+<#include "layout.stl">
+<@layout title="Historical Book" encoding="${searchResult.encoding}">
+<#include "/templates/globalNav.stl">
+<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (pageStyleUtil.isUserInRoleGroup('ALL_ROLE', request))>
+
+ <#include "searchBox.stl">
+ <@com.errorMarkup/>
+ <#include "displayPagination.stl">
+ <#include "map.stl">
+ <#include "searchResultHeader.stl">
+ 
+ <br>
+
+ <table class="main">
+     <tr valign="top">
+        <td class="mainRight">
+                <div id="documents"><#include "documents.stl"></div>
+        </td>
+        <td class="mainRight">
+ 		<iframe frameborder=0 height=1000 width=1500 name="image" id="image" allowtransparency="true" src=''>Your browser does not support iframes.</iframe>
+ 	</td>
+</tr></table>
+
+ <#include "displayPagination.stl">
+
+<#--<#include "resultsPerPage.stl">-->
+<#else>
+<br /><br /><br />
+<table align="center" border="0">
+   <tr>
+    <td align="center">
+       This is premium content. To view how historical data please subscribe to our premium subscription which will provide you access to historical data and other premium features. <br /><br />You can add the premium access using this link -- <a href="viewAvailableSubscriptions.admin">Add Subscriptions</a><br /><br />
+    </td>
+   </tr>
+</table> 
+</#if>
+</@layout>

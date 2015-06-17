@@ -1,0 +1,70 @@
+<#assign display=JspTaglibs["http://displaytag.sf.net"]>
+
+<#if searchResult.docs?has_content>
+    <#assign ResultId =0>
+	<@display.table name="searchResult.docs" id="doc" export=false requestURI="/search.do" excludedParams="searchQuery searchType CASE_NUMBER CASE_NUMBER_select DisplayName DisplayName_select DOB DOB_select LicenseNumber LicenseNumber_select PartyRole PartyRole_select StatuteNumber StatuteNumber_select StatuteDescription StatuteDescription_select ActiveWarrantFlag ActiveWarrantFlag_select CaseFilingDate CaseFilingDateSelect">
+	  <#include "document.stl">	
+	</@display.table>
+<#else>
+ <#include "noResults.stl"> 
+</#if>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	oTable = $('#doc').dataTable({
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bSort": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		"aaSorting": []
+	});
+}); 
+</script>
+    <style type="text/css">
+      /* HOVER STYLES */
+        div#pop-up2 {
+        display: none;
+        position: absolute;
+        width: 200px;
+        height: 60px;
+        padding: 10px;
+        background: #fff;
+        color: #000000;
+        border: 3px solid #7EB544;
+        font-size: 80%;
+        z-index: 1;
+        float: right;
+        text-align:justify;
+      }
+    </style>
+<!-- HIDDEN / POP-UP DIV -->
+      <div id="pop-up2" style="position:absolute;">
+        <p>
+          <font color="#2E7EE4"><b>Clicking</b></font> on the Column below will only sort the current page.
+        </p>
+      </div>
+
+    <script type="text/javascript">
+      $(function() {
+        var moveLeft = -230;
+        var moveDown = -125;
+        
+        $('thead').hover(function(e) {
+          $('div#pop-up2').show();
+          //.css('top', e.pageY + moveDown)
+          //.css('left', e.pageX + moveLeft)
+          //.appendTo('body');
+        }, function() {
+          $('div#pop-up2').hide();          
+        });
+        
+        $('table#doc').mousemove(function(e) {
+          $("div#pop-up2").css('top', e.pageY + moveDown).css('left', e.pageX + moveLeft);
+        });
+        
+      });
+    </script>

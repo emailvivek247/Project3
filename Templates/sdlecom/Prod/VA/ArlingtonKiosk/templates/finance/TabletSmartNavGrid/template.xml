@@ -1,0 +1,5 @@
+<template>
+  <longname>Smart Navigation Template</longname>
+  <description>Client Side Sortable Template used in the Recent Search in Orange Details</description>
+  <defaultLength>25</defaultLength>
+</template>

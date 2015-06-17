@@ -1,0 +1,53 @@
+<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (request.isUserInRole('ROAM_ADMIN') || request.isUserInRole('MOBILE_ADMIN') || request.isUserInRole('MOBILE_FREE_ACCESS'))>
+<#macro layout(title="")>
+<html><head><title>Dashboard Counts</title>
+<meta http-equiv="content-type" content="text/html; charset=${encoding}">
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/sdl.js"></script>
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/calendar.css" />
+<link rel="shortcut icon" href="images/favicon.ico"/>
+<#if rssUrl?has_content><link rel="alternate" type="application/rss+xml" title="RSS" href="${rssUrl}?fileName=rss/rss20.stl">
+</#if><script type="text/javascript">
+<!--
+function setCookie(name, value, days) {
+  if (!days) days = 100;
+  var expire = new Date();
+  expire.setTime(expire.getTime() + 3600000*24*days);
+  document.cookie = name + "=" + escape(value) + "; expires=" + expire.toGMTString();
+}
+function getCookie(name) {
+  var dc = document.cookie;
+  var prefix = name + "=";
+  var begin = dc.indexOf("; " + prefix);
+  if (begin == -1) {
+    begin = dc.indexOf(prefix);
+    if (begin != 0) return null;
+  } else {
+    begin += 2;
+  }
+  var end = dc.indexOf(";", begin);
+  if (end == -1) end = dc.length;
+  return unescape(dc.substring(begin + prefix.length, end));
+}
+function delCookie(name) {
+  if (getCookie(name)) document.cookie = name + "=" + "; expires=Fri, 31-Dec-99 23:59:59 GMT";
+}
+//-->
+</script>
+<style type="text/css" media=all>
+<!--
+body{margin:4px 6px 4px 6px;background-color:#fff}
+body,th,td,div,.p,a{font-family:verdana,sans-serif;font-size:90%}
+.box{width:100%;border:1px solid #d2e4fc;border-collapse:collapse;float:top}
+.box th,.box .header{text-align:left;font-weight:bold;background:#2191C0 url(styles/images/ui-bg_gloss-wave_75_2191c0_500x100.png) repeat-x scroll 50% 50%;border:1px}
+.center{text-align:center;}
+//-->
+</style>
+</head>
+<body link="#0000ff" vlink="#0000ff" onKeyPress="trapKeyBoardEvents(event)" >
+<#nested>
+</body></html>
+</#macro>
+<#else>
+You are not authorized to view this page. Please sign up for a premium subscription in order to view Dashboards.
+</#if>

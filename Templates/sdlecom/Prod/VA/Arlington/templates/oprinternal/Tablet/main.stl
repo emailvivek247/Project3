@@ -1,0 +1,94 @@
+<#-- *Assign variables for Searchable Parameters -->
+<#assign searchable = pageStyleUtil.encodeURL(searchResult.request.getParameter("searchable"))>
+
+
+<#assign t0 = pageStyleUtil.addOrSetQuery(searchResult.queryString, "start", null)>
+<#assign t1 = ("seq%3A%221%2C0%22")>
+<#assign t2 = pageStyleUtil.appendQuery(t1, "q", "seq:\"1,0\"")>
+
+<#assign t3 = ("PartySeq%3A%221%2C0%22")>
+<#assign t4 = pageStyleUtil.appendQuery(t3, "q", "PartySeq:\"1,0\"")>
+
+<#assign t5 = ("PartySeq%3A%221%2C0%22%2Cseq%3A%221%2C0%22%2CRoleFilter%3A%221%2C0%22")>
+<#assign t6 = pageStyleUtil.appendQuery(t5, "q", "PartySeq:\"1,0\",seq:\"1,0\",RoleFilter:\"1,0\"")>
+
+
+
+<#assign t7 = pageStyleUtil.addOrSetQuery(searchResult.queryString, "start", null)>
+<#assign t8 = ("seq%3A%221%2C0%22")>
+<#assign t9 = pageStyleUtil.appendQuery(t8, "q", "seq:\"1,0\"")>
+
+<#assign t10 = ("PartySeq%3A%221%2C0%22")>
+<#assign t11 = pageStyleUtil.appendQuery(t10, "q", "PartySeq:\"1,0\"")>
+
+<#assign t12 = ("PartySeq%3A%221%2C0%22%2Cseq%3A%221%2C0%22%2CRoleFilter%3A%221%2C0%22")>
+<#assign t13 = pageStyleUtil.appendQuery(t12, "q", "PartySeq:\"1,0\",seq:\"1,0\",RoleFilter:\"1,0\"")>
+
+
+
+<#-- *Modified highlighting color -->
+<@com.useHighlightTag '<span style="background-color:#B2C9FA">', '</span>' />
+<#include "layout.stl">
+<@layout title="ROAM" encoding="${searchResult.encoding}">
+
+<#include "/templates/globalNav.stl">
+
+
+<#include "/templates/globalBriefCase.stl">
+
+
+<#if request.isUserInRole('ARLINGTONGOV_FREE_ACCESS') || request.isUserInRole('ROAM_ADMIN')>
+ <#include "searchBox.stl">
+ <@com.errorMarkup/>
+
+<table width="100%" margin="0" border="0" cellpadding="0" cellspacing="1">
+ <tr>
+  <td style="width:18%;">
+    	<font size="2">Mode:<a href="${request.getContextPath()}/search.do?indexName=opr<#if isPhoneticSearch?has_content>&isPhoneticSearch=${isPhoneticSearch}</#if>&templateName=Main&q=${q}&searchable=${searchable}<#if lq?has_content>&lq=${lq}</#if><#if searchQuery?has_content>&searchQuery=${searchQuery}</#if><#if searchType?has_content>&searchType=${searchType}</#if><#if sortBy?has_content>&sortBy=${sortBy}</#if><#if desc?has_content>&desc=${desc}</#if><#if asc?has_content>&asc=${asc}</#if>">PC</a></font>|
+    	<font size="2"><a href="${request.getContextPath()}/search.do?indexName=opr<#if isPhoneticSearch?has_content>&isPhoneticSearch=${isPhoneticSearch}</#if>&templateName=Mobile&q=${q}&searchable=${searchable}<#if lq?has_content>&lq=${lq}</#if><#if searchQuery?has_content>&searchQuery=${searchQuery}</#if><#if searchType?has_content>&searchType=${searchType}</#if><#if sortBy?has_content>&sortBy=${sortBy}</#if><#if desc?has_content>&desc=${desc}</#if><#if asc?has_content>&asc=${asc}</#if>">Mobile</a></font>|
+    	<font size="2"><a href="${request.getContextPath()}/search.do?indexName=opr<#if isPhoneticSearch?has_content>&isPhoneticSearch=${isPhoneticSearch}</#if>&templateName=Tablet&q=${q}&searchable=${searchable}<#if lq?has_content>&lq=${lq}</#if><#if searchQuery?has_content>&searchQuery=${searchQuery}</#if><#if searchType?has_content>&searchType=${searchType}</#if><#if sortBy?has_content>&sortBy=${sortBy}</#if><#if desc?has_content>&desc=${desc}</#if><#if asc?has_content>&asc=${asc}</#if>">Tablet</a></font>    
+  </td>
+  </tr>
+  <tr>
+  <td width="30%">&nbsp;</td>
+  <td style="width:60%;text-align:center;" valign="top"><#include "displayPagination.stl"></td>
+
+
+  <td rowspan="2" style="width:18%;">
+      <#-- *Add iframe for oprcert index -->
+      <iframe align="right" height="25" width="300px" frameborder=0 text-align="right" scrolling="no" src='search.do?indexName=oprcert&templateName=se'></iframe>
+  </td>
+  </tr>
+
+</table>
+
+ <#include "searchResultHeader.stl">
+ <br />
+ <#include "spellingCheck.stl">
+
+ <table class="main"><tr valign="top"><td class="mainLeft">
+  <div id="narrowBy"><#include "narrowBy.stl"></div>
+  <#include "recentSearches.stl">
+  <!--  -->
+ </td><td class="mainRight">
+  <div id="documents"><#include "documents.stl"></div>
+ </td></tr></table>
+
+ <#include "displayPagination.stl">
+
+<#-- *Add table for footer with Granicus logo -->
+
+ <BR>
+ <BR>
+
+<table width="100%" border="0">
+ <tr>
+  <td width=15%>&nbsp;</td>
+  <td width="70%" align="center"><font color=#696969>Copyright &copy; <script>document.write(new Date().getFullYear())</script> Granicus, INC.</font></td>
+  <td width="15%"><#include "resultsPerPage.stl"></td>
+ </tr>
+</table>
+<#else>
+You are not authorized to view this page. Please register for the Restricted Government Subscription (Arlington Government Employees only) in order to view these pages.
+</#if>
+</@layout>

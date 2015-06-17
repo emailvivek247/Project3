@@ -1,0 +1,14 @@
+<#assign display=JspTaglibs["http://displaytag.sf.net"]>
+
+
+	<@display.table name="searchResult.docs" id="doc" export=true requestURI="/search.do">
+	  <#include "document.stl">
+	</@display.table>
+
+
+
+<script type="text/javascript">
+$(function() {      
+    $("#doc").tablesorter({widgets: ['zebra']});
+}); 
+</script>

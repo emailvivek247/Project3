@@ -1,0 +1,27 @@
+
+<#assign filterColumn = searchResult.filterResult.getFilterColumn("Race")>
+<#if (filterColumn?has_content && filterColumn.counts.size()>0) >
+<#if (filterColumn.counts.size() >= 1) && !(filterColumn.counts[0].isFiltered) >
+ <#assign c = filterColumn.setRendered().column>
+	 <div class="box">
+	  <h2 class="collapse">Filter By ${c.displayName}<p class="active">&nbsp&nbsp&nbsp&nbsp</p></h2>
+		  <div class="multi_select" id="ChartdIdRace">
+		    <#assign xml = "">
+		    <#foreach cCount in filterColumn.getTopCounts(20)>
+				<#assign t1 = pageStyleUtil.addOrSetQuery(searchResult.queryString, "start", null)>
+				<#if (!cCount.isFiltered)>
+					  <#assign t2 = pageStyleUtil.appendQuery(t1, "q", c.name + ":\"" + cCount.columnValue?if_exists + "\"")>
+				      <#assign xml = xml + '<set label=\'${pageStyleUtil.encodeChartText(cCount.columnValue)}\' value=\'${cCount.value}\' link=\'?${t2}\'/>'>
+				</#if>
+		    </#foreach>
+		  </div>
+	 </div>
+	<script type="text/javascript" src="smartcharts/js/SmartCharts.js"></script>
+	<script type="text/javascript">
+		var chart = new SmartCharts("smartcharts/charts/Pie3D.swf", "Chartd_id${c.name}", "350", "350", "0", "1");
+		var encodedXML = "<chart showFCMenuItem='0' setAdaptiveYMin='0' formatNumber='0' formatNumberScale='0'  imageSave='1' caption='Race' subcaption='' xAxisName='' yAxisName='' bgColor='FFFFF0' bgAlpha='80' canvasbgAlpha='80' canvasbgColor='F5DEB3' borderColor='000000' borderThickness='1' borderAlpha='80' baseFont='Arial' baseFontSize='8' baseFontColor='000000' use3DLighting='1' showPercentageValues='0' animation='1' showNames='1' showValues='1' rotatenames='0' showToolTip='1' toolTipSepChar='' numberPrefix='' decimals='0' forceDecimals='0' logoURL='' logoLink='' logoPosition='BR' logoAlpha='10'>${xml}</chart>";
+		chart.setDataXML('<?xml version="1.0" encoding="UTF-8" ?>' + encodedXML);
+		chart.render("ChartdIdRace");
+	</script>
+</#if>
+</#if>

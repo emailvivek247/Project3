@@ -1,0 +1,34 @@
+<#assign num_pages = (searchResult.total/searchResult.length)?int>
+<#if num_pages*searchResult.length < searchResult.total>
+ <#assign num_pages = num_pages + 1>
+</#if>
+<#assign current_page_index = (searchResult.start/searchResult.length)?int + 1>
+ <#assign pagination_already_defined = true >
+
+ <div class="pagination" style="margin-left:35em">
+  <#if (num_pages>1)>
+    <#--determin pagination rage-->
+    <#assign start_page = current_page_index-5>
+    <#if start_page <= 0><#assign start_page = 1></#if>
+    <#assign end_page = start_page + 9>
+    <#if (end_page>num_pages)><#assign end_page = num_pages></#if>
+
+    <#--Render Previous-->
+    <#if (current_page_index>=2)>
+      <a class="prev" href="?${noStartQueryString}&start=${length*(current_page_index - 2)}">Previous</a>
+    </#if>
+    <#foreach page_index in start_page..end_page>
+      <#if page_index == current_page_index>
+        <span class="current">${page_index}</span>
+      <#else>
+        <a href="?${noStartQueryString}&start=${length*(page_index-1)}">${page_index}</a>
+      </#if>
+    </#foreach>
+
+    <#--Render Next -->
+    <#if current_page_index < num_pages>
+      <a class="next" href="?${noStartQueryString}&start=${length*current_page_index}">Next</a>
+    </#if>
+  </#if>
+ </div>
+ <div style="clear: both;"></div>

@@ -1,0 +1,7 @@
+ <tr>
+             <td>${searchResult.highlight(doc, "CourtRoomDesc")}</td>
+             <td>${searchResult.highlight(doc, "JudgeName")}</td>
+             <td>${searchResult.highlight(doc, "SessionEndDate")}</td>
+             <td>${searchResult.highlight(doc, "SessionStartDate")}</td>
+ </tr>
+

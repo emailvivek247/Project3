@@ -1,0 +1,171 @@
+                  <@display.column media="html" indexColumnName="FIRSTNAME" title="${searchResult.datasetConfiguration.getColumn(\"FIRSTNAME\").displayName}">
+		   	    <#foreach FIRSTNAME in doc.getValues("FIRSTNAME")>
+                                   ${searchResult.highlight(FIRSTNAME?replace('|', ''), "FIRSTNAME")}<br>
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="FIRSTNAME" title="${searchResult.datasetConfiguration.getColumn(\"FIRSTNAME\").displayName}">
+		   	    <#foreach FIRSTNAME in doc.getValues("FIRSTNAME")>
+                                  ${FIRSTNAME?replace('|', '')}
+                            </#foreach>
+		  </@display.column>
+                  <@display.column media="html" indexColumnName="FIRSTNAMELIKE" title="${searchResult.datasetConfiguration.getColumn(\"FIRSTNAMELIKE\").displayName}">
+		   	    <#foreach FIRSTNAMELIKE in doc.getValues("FIRSTNAMELIKE")>
+                                   ${searchResult.highlight(FIRSTNAMELIKE?replace('|', ''), "FIRSTNAMELIKE")}<br>
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="FIRSTNAMELIKE" title="${searchResult.datasetConfiguration.getColumn(\"FIRSTNAMELIKE\").displayName}">
+		   	    <#foreach FIRSTNAMELIKE in doc.getValues("FIRSTNAMELIKE")>
+                                  ${FIRSTNAMELIKE?replace('|', '')}
+                            </#foreach>
+		  </@display.column>
+
+		  <@display.column media="html" indexColumnName="MIDDLENAME" title="${searchResult.datasetConfiguration.getColumn(\"MIDDLENAME\").displayName}">
+		   	    <#foreach MIDDLENAME in doc.getValues("MIDDLENAME")>
+                                   ${searchResult.highlight(MIDDLENAME?replace('|', ''), "MIDDLENAME")}<br>
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="MIDDLENAME" title="${searchResult.datasetConfiguration.getColumn(\"MIDDLENAME\").displayName}">
+		   	    <#foreach MIDDLENAME in doc.getValues("MIDDLENAME")>
+                                  ${MIDDLENAME?replace('|', '')}
+                            </#foreach>
+		  </@display.column>
+                  <@display.column media="html" indexColumnName="MIDDLENAMELIKE" title="${searchResult.datasetConfiguration.getColumn(\"MIDDLENAMELIKE\").displayName}">
+		   	    <#foreach MIDDLENAMELIKE in doc.getValues("MIDDLENAMELIKE")>
+                                   ${searchResult.highlight(MIDDLENAMELIKE?replace('|', ''), "MIDDLENAMELIKE")}<br>
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="MIDDLENAMELIKE" title="${searchResult.datasetConfiguration.getColumn(\"MIDDLENAMELIKE\").displayName}">
+		   	    <#foreach MIDDLENAMELIKE in doc.getValues("MIDDLENAMELIKE")>
+                                  ${MIDDLENAMELIKE?replace('|', '')}
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="LASTNAME" title="${searchResult.datasetConfiguration.getColumn(\"LASTNAME\").displayName}">
+		   	    <#foreach LASTNAME in doc.getValues("LASTNAME")>
+                                  ${searchResult.highlight(LASTNAME?replace('|', ''), "LASTNAME")}<br>
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="LASTNAME" title="${searchResult.datasetConfiguration.getColumn(\"LASTNAME\").displayName}">
+		   	    <#foreach LASTNAME in doc.getValues("LASTNAME")>
+                                  ${LASTNAME?replace('|', '')}
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="LASTNAMELIKE" title="${searchResult.datasetConfiguration.getColumn(\"LASTNAMELIKE\").displayName}">
+		   	    <#foreach LASTNAMELIKE in doc.getValues("LASTNAMELIKE")>
+                                   ${searchResult.highlight(LASTNAMELIKE?replace('|', ''), "LASTNAMELIKE")}<br>
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="LASTNAMELIKE" title="${searchResult.datasetConfiguration.getColumn(\"LASTNAMELIKE\").displayName}">
+		   	    <#foreach LASTNAMELIKE in doc.getValues("LASTNAMELIKE")>
+                                  ${LASTNAMELIKE?replace('|', '')}
+                            </#foreach>
+		  </@display.column>
+                  <@display.column media="html" indexColumnName="LASTNAMESOUNDEX" title="${searchResult.datasetConfiguration.getColumn(\"LASTNAMESOUNDEX\").displayName}">
+		   	    <#foreach LASTNAMESOUNDEX in doc.getValues("LASTNAMESOUNDEX")>
+                                   ${searchResult.highlight(LASTNAMESOUNDEX?replace('|', ''), "LASTNAMESOUNDEX")}<br>
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="LASTNAMESOUNDEX" title="${searchResult.datasetConfiguration.getColumn(\"LASTNAMESOUNDEX\").displayName}">
+		   	    <#foreach LASTNAMESOUNDEX in doc.getValues("LASTNAMESOUNDEX")>
+                                  ${LASTNAMESOUNDEX?replace('|', '')}
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="SUFFIXNAME" title="${searchResult.datasetConfiguration.getColumn(\"SUFFIXNAME\").displayName}">
+		   	    <#foreach SUFFIXNAME in doc.getValues("SUFFIXNAME")>
+                                   ${searchResult.highlight(SUFFIXNAME?replace('|', ''), "SUFFIXNAME")}<br>
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="SUFFIXNAME" title="${searchResult.datasetConfiguration.getColumn(\"SUFFIXNAME\").displayName}">
+		   	    <#foreach SUFFIXNAME in doc.getValues("SUFFIXNAME")>
+                                  ${SUFFIXNAME?replace('|', '')}
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="DLNUMBER" title="${searchResult.datasetConfiguration.getColumn(\"DLNUMBER\").displayName}">
+		            <#foreach DLNUMBER in doc.getValues("DLNUMBER")>
+                                  ${searchResult.highlight(DLNUMBER?replace('|', ''), "DLNUMBER")}<br>
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DLNUMBER" title="${searchResult.datasetConfiguration.getColumn(\"DLNUMBER\").displayName}">
+		   	    <#foreach DLNUMBER in doc.getValues("DLNUMBER")>
+                                  ${DLNUMBER?replace('|', '')}
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="DLSTATE" title="${searchResult.datasetConfiguration.getColumn(\"DLSTATE\").displayName}">
+		            <#foreach DLSTATE in doc.getValues("DLSTATE")>
+                                   ${searchResult.highlight(DLSTATE?replace('|', ''), "DLSTATE")}<br>
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DLSTATE" title="${searchResult.datasetConfiguration.getColumn(\"DLSTATE\").displayName}">
+		   	    <#foreach DLSTATE in doc.getValues("DLSTATE")>
+                                  ${DLSTATE?replace('|', '')}
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="DOB" title="${searchResult.datasetConfiguration.getColumn(\"DOB\").displayName}">
+		      	        <#if doc.get("DOB")?has_content>
+				     <#foreach DOB in doc.getValues("DOB")>
+                                         ${searchResult.highlight(DOB?replace('|', ''), "DOB")}<br>
+                                     </#foreach>
+				</#if>			   	
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DOB" title="${searchResult.datasetConfiguration.getColumn(\"DOB\").displayName}">
+			  	<#if doc.get("DOB")?has_content>
+		                     <#foreach DOB in doc.getValues("DOB")>
+                                          ${pageStyleUtil.format(DOB, "yyyymmdd", "mm/dd/yyyy")?replace('|', '')}
+                                     </#foreach>	   	
+				</#if>   	
+	          </@display.column>
+		  <@display.column media="html" indexColumnName="SSN" title="${searchResult.datasetConfiguration.getColumn(\"SSN\").displayName}">
+		            <#foreach SSN in doc.getValues("SSN")>
+                                   ${searchResult.highlight(SSN?replace('|', ''), "SSN")}<br>
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="SSN" title="${searchResult.datasetConfiguration.getColumn(\"SSN\").displayName}">
+		            <#foreach SSN in doc.getValues("SSN")>
+                                  ${SSN?replace('|', '')}
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="ADDRESS" title="${searchResult.datasetConfiguration.getColumn(\"ADDRESS\").displayName}">
+		   	    <#foreach ADDRESS in doc.getValues("ADDRESS")>
+                                   ${searchResult.highlight(ADDRESS?replace('|', ''), "ADDRESS")}<br>
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="ADDRESS" title="${searchResult.datasetConfiguration.getColumn(\"ADDRESS\").displayName}">
+		   	    <#foreach ADDRESS in doc.getValues("ADDRESS")>
+                                  ${ADDRESS?replace('|', '')}
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="GENDER" title="${searchResult.datasetConfiguration.getColumn(\"GENDER\").displayName}">
+                            <#foreach GENDER in doc.getValues("GENDER")>
+                                   ${searchResult.highlight(GENDER?replace('|', ''), "GENDER")}<br>
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="GENDER" title="${searchResult.datasetConfiguration.getColumn(\"GENDER\").displayName}">
+                            <#foreach GENDER in doc.getValues("GENDER")>
+                                  ${GENDER?replace('|', '')}
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="DLPLATE" title="${searchResult.datasetConfiguration.getColumn(\"DLPLATE\").displayName}">
+                            <#foreach DLPLATE in doc.getValues("DLPLATE")>
+                                   ${searchResult.highlight(DLPLATE?replace('|', ''), "DLPLATE")}<br>
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DLPLATE" title="${searchResult.datasetConfiguration.getColumn(\"DLPLATE\").displayName}">
+                            <#foreach DLPLATE in doc.getValues("DLPLATE")>
+                                  ${DLPLATE?replace('|', '')}
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="DLPLATESTATE" title="${searchResult.datasetConfiguration.getColumn(\"DLPLATESTATE\").displayName}">
+                            <#foreach DLPLATESTATE in doc.getValues("DLPLATESTATE")>
+                                  ${searchResult.highlight(DLPLATESTATE?replace('|', ''), "DLPLATESTATE")}<br>
+                            </#foreach>
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DLPLATESTATE" title="${searchResult.datasetConfiguration.getColumn(\"DLPLATESTATE\").displayName}">
+                            <#foreach DLPLATESTATE in doc.getValues("DLPLATESTATE")>
+                                  ${DLPLATESTATE?replace('|', '')}
+                            </#foreach>
+		  </@display.column>
+
+  <@display.column media="html" indexColumnName="PERSON_ALIAS_ID" title="${searchResult.datasetConfiguration.getColumn(\"PERSON_ALIAS_ID\").displayName}">
+     ${doc.get("PERSON_ALIAS_ID")}
+  </@display.column>
+
+

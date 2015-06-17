@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="9E56FCDD0278AA2A1A47B2305FD4841934BE32B0E9018BD8" adminuser="EF7859429D6187B4E2D1F853E2097C85DFA80D8C76FCFB51">
+  <index-root-directory><![CDATA[D:\index\suffolkailis\]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[F2C4C67283BCBAB9ED0052AA36B17FF0A7DB65196632A937FC4082819AEF3AEE51F6601CBF775D74A0830C138CCDDD5B9D0CE46EDD4526482D63CAA5DA572EAB]]></db-url>
+      <db-username><![CDATA[BCA7825671FCAE2A0CD41CD4CFA2370B1D8C6BD1F241F78C]]></db-username>
+      <db-password><![CDATA[1B42FF0E39208A84A5251EFEDF3DD30730BF6FC8C6EBDF8F]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

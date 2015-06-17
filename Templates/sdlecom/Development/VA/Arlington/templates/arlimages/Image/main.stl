@@ -1,0 +1,96 @@
+<#-- ADD GOOGLE ANALYTICS -->
+<#include "/templates/googleAnalytics-ARL.stl">
+
+<#if request.isUserInRole('ARLINGTON_IMAGE_ACCESS') || request.isUserInRole('ARLINGTONGOV_FREE_ACCESS') || request.isUserInRole('ROAM_ADMIN')>
+	<#if searchResult.docs?has_content>
+		<#foreach doc in searchResult.docs>
+			<#assign onbaseAdapter = new("com.fdt.common.util.adapter.DocumentManagementSystemAdapter")>
+			<#assign useDMSID = pageStyleUtil.getSystemValue("system", "useDMSID") >
+			<#if useDMSID == "true">
+				<#assign dmsID = "14127" >
+
+				<#assign SDLDMSDocument = onbaseAdapter.getDocumentByDMSID(dmsID) >
+			<#else>
+				<#assign seqKey = doc.get("Instrument") >
+				<#assign SDLDMSDocument = onbaseAdapter.getDocumentBySeqKey(seqKey) >
+			</#if>					
+			<#assign baos = new("java.io.ByteArrayOutputStream")>
+			<#if SDLDMSDocument?has_content && SDLDMSDocument.getFileExtension()?has_content>
+				<#assign fileExtension = SDLDMSDocument.getFileExtension() >				
+				<#if doc.get("QueueStatus")!="5" && (doc.get("DocTypeDesc")="LRMOD" || doc.get("DocTypeDesc")="LRDECTRUST" || doc.get("DocTypeDesc")="LRHOME" || doc.get("DocTypeDesc")="LRPOWER" || doc.get("DocTypeDesc")="LRAFFIT")>
+					No Image available at this time. Please check back later.
+				<#elseif (doc.get("QueueStatus")="5" || doc.get("QueueStatus")="4" || doc.get("QueueStatus")="3" || doc.get("QueueStatus")="2")>
+					<#if fileExtension == "tif" || fileExtension == "tiff">	
+						<#assign converter = new("com.fdt.common.util.TIFFToPDFConverter")>					
+						<#if (converter.convert(SDLDMSDocument.getFile(), "", 159,159,159,90,0,true,baos,false,1,true) == true)>  		 
+							${response.reset()}
+							${response.resetBuffer()}
+							${response.setContentType("application/pdf")}
+							${response.setHeader("Content-Disposition",  " inline; filename=document.pdf" )}
+							${response.setHeader("Expires", " 0")}
+							${response.setHeader("Cache-Control", " must-revalidate, post-check=0, pre-check=0" )} 
+							${response.setHeader("Pragma" , "public")}      
+							${baos.writeTo(response.getOutputStream())}
+							${response.getOutputStream().flush()}
+						<#else>
+							<br />
+							<br />
+							<center><b>Image is Unavailable. Please contact AMCAD Support at support@amcad.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
+							<center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>
+						</#if>
+					<#elseif fileExtension == "pdf">
+						<#assign baos  = pageStyleUtil.getByteArrayOutputStreamFromByteArray(SDLDMSDocument.getFile()) >
+						<#if baos?has_content> 			
+								${response.reset()}
+								${response.resetBuffer()}
+								${response.setContentType("application/pdf")}
+								${response.setHeader("Content-Disposition",  " inline; filename=document.pdf" )}
+								${response.setHeader("Expires", " 0")}
+								${response.setHeader("Cache-Control", " must-revalidate, post-check=0, pre-check=0" )} 
+								${response.setHeader("Pragma" , "public")}      
+								${baos.writeTo(response.getOutputStream())}
+								${response.getOutputStream().flush()}       
+						<#else>
+							<br />
+							<br />
+							<center><b>Image is Unavailable. Please contact AMCAD Support at support@amcad.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
+							<center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>
+						</#if>				
+					<#else>				
+						<br />
+						<br />
+						<center><b>Image is Unavailable. Please contact AMCAD Support at support@amcad.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
+						<center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>				
+					</#if><#--File Extensions IF STATEMENT-->
+				<#else>
+					Nothing to show.
+				</#if><#--QueueStatus IF STATEMENT-->
+				
+				
+				
+			<#elseif SDLDMSDocument?has_content && SDLDMSDocument.getErrorCode()?has_content>
+					<br />
+					<br />
+					<center><b>${SDLDMSDocument.getErrorCode()} ${dmsID}Image is Unavailable. Please contact AMCAD Support at support@amcad.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
+					<center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>
+			<#else>
+					<br />
+					<br />
+					<center><b>Image is Unavailable. Please contact AMCAD Support at support@amcad.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
+					<center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>
+			</#if>
+				
+		</#foreach>
+	<#else>
+		<br />
+	<br />
+	<center><b>Image is Unavailable. Please contact AMCAD Support at support@amcad.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
+	<center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>	
+	</#if>
+
+<#else>
+    <br>
+    <br>
+    <center><b>Please Upgrade to Premium Subscription to view the image.</b></center>
+    <center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>  
+</#if>

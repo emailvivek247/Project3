@@ -1,0 +1,34 @@
+<!--  -->
+<@com.useHighlightTag '<span class="highlight">', '</span>' />
+<#include "layout.stl">
+<@layout title="Probate Wills Search" encoding="${searchResult.encoding}">
+
+<#include "/templates/globalNav.stl">
+<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (request.isUserInRole('ROAM_ADMIN') || request.isUserInRole('MOBILECMS_FREE_ACCESS') || request.isUserInRole('MOBILECMS_ATTORNEY_ACCESS') || request.isUserInRole('MOBILECMS_EMPLOYEE_ACCESS') || request.isUserInRole('MOBILECMS_ADMIN'))>
+
+
+ <#include "searchBox.stl">
+ <@com.errorMarkup/>
+ <#include "displayPagination.stl">
+ <#include "map.stl">
+ <#include "searchResultHeader.stl">
+<center> 
+<span style="color:green;font-weight:normal;">**Note: To view additional information about a case, please click the Case Number hyperlink.</span>
+</center>
+
+ <table class="main"><tr valign="top"><td class="mainLeft">
+  <div id="narrowBy"><#include "narrowBy.stl"></div>
+  <#include "recentSearches.stl">
+  
+ </td><td class="mainRight">
+  <div id="documents"><#include "documents.stl"></div>
+ </td></tr></table>
+
+ <#include "displayPagination.stl">
+
+ <#include "resultsPerPage.stl">
+ 
+ <#else>
+ You do not have permission to see this content.
+ </#if>
+</@layout>

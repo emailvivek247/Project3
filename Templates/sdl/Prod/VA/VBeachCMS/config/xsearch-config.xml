@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="D641F1BCE4A0C6CDD0E5B29ADDC7085AC60C41A840C90901" adminuser="D82D12C289696B895A30412DA4B4DF24F164E17B4A2B1441">
+  <search-log-size-in-MB>10</search-log-size-in-MB>
+  <index-root-directory><![CDATA[E:\index\vbeachcms\]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[7A4A1D65C83A77632F98047772A99AB1F77DC405DE7EFB77E047E5ECBCFF3FC743418B75EF743D8154F4939F3BE128AD3A059B6079E99719469A285D9B2A02F4FC18BF4EC01BB2E1D59FEB51AE296D1E]]></db-url>
+      <db-username><![CDATA[B92E30713E8991478DDBC36FA2A40A54]]></db-username>
+      <db-password><![CDATA[61E3F13CA2A1C695C8D9460976190166]]></db-password>
+      <dbcp-validation-query><![CDATA[
+Select 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+   <instance-job-schedule id="0">
+  <schedule-name><![CDATA[RECREATE]]></schedule-name>
+  <job-data-string><![CDATA[publicdetail,Re-create Index|publiccasesearch,Re-create Index|publiccourtdatesearch,Re-create Index|]]></job-data-string>
+   <schedule id="0">
+    <is-enabled>true</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>0 0 ? * 2,3,4,5,6</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+    </instance-job-schedule>
+   <instance-job-schedule id="0">
+  <schedule-name><![CDATA[JOB1]]></schedule-name>
+  <job-data-string><![CDATA[publicdetail,Incremental Indexing with Thorough Deletion Detection|publiccasesearch,Incremental Indexing with Thorough Deletion Detection|publiccourtdatesearch,Incremental Indexing with Thorough Deletion Detection|]]></job-data-string>
+   <schedule id="0">
+    <is-enabled>true</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>0,10,20,30,40,50 7,8,9,10,11,12,13,14,15,16,17 ? * 2,3,4,5,6</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+    </instance-job-schedule>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

@@ -1,0 +1,98 @@
+.basketUCC {
+    position: absolute;
+    top: 35px;
+    right: 0;
+    display: none;
+    background: #F7F7F7;
+    border:1px solid #111111;
+    width: 95%;
+    --height: 85%;
+    height: 1000px;
+    padding: 10px 10px 10px 0px;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-weight:bold; 
+    margin:4px 6px 4px 6px;
+    font-size: 9pt;
+    overflow: auto;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+    text-align:center;
+    z-index: 1;    
+}
+
+.basketUCC table {
+    font-size: 11px;
+    text-align: center;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-weight: normal; 
+    color: #404040; 
+    background-color: #fafafa; 
+    border: 1px #6699CC solid; 
+    border-collapse: collapse;
+    border-spacing: 0px;
+    width: 55%;
+    float: right;
+}
+
+.basketContent {
+    text-align:center;
+    margin-left: auto;
+    margin-right: 0px;
+}
+
+.basketContent table {
+    margin-left: auto;
+    margin-right: auto; 
+    background: whitesmoke;
+    border-collapse: collapse;
+}
+.basketContent table th, .basketContent table td {
+  border: 1px silver solid;
+  padding: 0.2em;
+}
+.basketContent table th {
+  background: #245fab url(blue-bar-solid.png) 53% 53% repeat-x;
+  text-align: left;
+  color: #fff;
+}
+.basketContent table caption {
+  margin-left: inherit;
+  margin-right: inherit;
+}
+
+a.triggerUCC{
+position: absolute;
+text-decoration: none;
+top: 5px; right: 0px;
+color:#fff;
+padding: 10px 15px 20px 20px;
+background:url(images/closedCase.png) 0 0 no-repeat;
+display: block;
+}
+
+a.basketActiveUCC {
+background:url(images/closedCase.png) 0 0 no-repeat;
+text-decoration: none;
+}
+
+caption{
+font-size: 20px;
+font-weight:bold; 
+}
+
+
+.imageViewer{
+    background-color: #fff;
+    margin-left: auto; 
+    margin-right: 0px; 
+    float: left;
+    height: auto;
+    width: 685px;
+    height: 920px;    
+}    
+.imageViewerHolder{
+    --background-color: #fff;
+    width: 45%;
+    height: 40%
+} 
+

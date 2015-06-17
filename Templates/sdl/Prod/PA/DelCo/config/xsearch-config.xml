@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="2B8F772BE4948F1A4F5CCF571FE2E354D6B13A0742B78313" adminuser="4509A773D406819FC2E2221BD84B8F2F864092CB009D7969">
+  <index-root-directory><![CDATA[E:\index\delaware\]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[425FB3FBFE0CF3B58303F0AC20E61DDBF8F0FF85E578BEEFCED4BF2FC4CE41E4996A0657053F40C5DA105FC55A05C6472E3EE2325DC911F0E0E0AD426FF31CBA0F87F32D3AD2A71EA33D87F9A3EA017B]]></db-url>
+      <db-username><![CDATA[E65A03F95C6A30B3CF673575CD600750]]></db-username>
+      <db-password><![CDATA[5B14E5E33DF79BA132324057718DDE000A77574E70FB8F9A]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+   <instance-job-schedule id="0">
+  <schedule-name><![CDATA[DAILY RECREATE]]></schedule-name>
+  <job-data-string><![CDATA[casesearch,Re-create Index|judgement,Re-create Index|docketcase,Re-create Index|docketparty,Re-create Index|docket,Re-create Index|judgementdetails2,Re-create Index|delcoimages,Re-create Index|casecategoryjudgment,Re-create Index|casesearchprivate,Re-create Index|casecategory,Re-create Index|]]></job-data-string>
+   <schedule id="0">
+    <is-enabled>true</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>0 0 ? * 2,3,4,5,6,7</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+    </instance-job-schedule>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

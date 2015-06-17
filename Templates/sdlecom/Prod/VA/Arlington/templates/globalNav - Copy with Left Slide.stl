@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="templates/resources/style.css">
+	<link rel="stylesheet" href="templates/resources/arl-override.css">
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+	
+	<script type="text/javascript">
+	var timeout         = 500;
+	var closetimer      = 0;
+	var ddmenuitem      = 0;
+	function mopen(id)
+	{
+	    mcancelclosetime();
+	    if(ddmenuitem) ddmenuitem.style.visibility = 'hidden';
+	    ddmenuitem = document.getElementById(id);
+	    ddmenuitem.style.visibility = 'visible';
+	}
+	function mclose()
+	{
+	    if(ddmenuitem) ddmenuitem.style.visibility = 'hidden';
+	}
+	function mclosetime()
+	{
+	    closetimer = window.setTimeout(mclose, timeout);
+	}
+	function mcancelclosetime()
+	{
+	    if(closetimer)
+	    {
+	        window.clearTimeout(closetimer);
+	        closetimer = null;
+	    }
+	}document.onclick = mclose;
+</script>
+</head>
+<body>
+	<header class="main">
+		<a href="#menu" class="menu-trigger" style="text-shadow:none;"><i class="fa fa-bars"></i>&nbsp;Menu</a>
+		<nav style="overflow-y: auto;">
+			<ul>
+			<#foreach dc in dcs>
+			  <#if dc.isValid() && (dc.displayOrder>=0) && dc.getDefaultTemplateName()?has_content>
+			    <li class=<#if indexName == dc.name>"active"<#else>"inactive"</#if>>
+			      <a href="search.do?indexName=${dc.name}&q=${searchResult.getURLEncodedClearQuery()}">${dc.displayName}</a>
+			    </li>
+			  </#if>
+			</#foreach>
+			<#if request.isUserInRole('ARLINGTONGOV_FREE_ACCESS') || request.isUserInRole('ROAM_ADMIN')>
+				<li class=<#if indexName == dc.name>"active"<#else>"inactive"</#if>>
+				    <a href="search.do?indexName=oprinternal&q=${searchResult.getURLEncodedClearQuery()}&searchable=DisplayName,LastName,FirstMiddle,Instrument,RecDate,PartyRole,DocTypeDesc,DocType,Book,Page,Unit,StreetNum,StreetName,FileNum,LegalDescription,Freeform,Address,OtherName<#if searchQuery?has_content>&searchQuery=${searchQuery}</#if><#if sortBy?has_content>&sortBy=${sortBy}</#if><#if desc?has_content>&desc=${desc}</#if><#if asc?has_content>&asc=${asc}</#if>">Land Records Internal</a>
+				</li>
+			</#if>
+			<li class=<#if indexName == dc.name>"active"<#else>"inactive"</#if>>
+				<a href = "${request.getContextPath()}/search.do?indexName=dash_opr_count&q=&length=10000&sortBy=YEAR&desc=N">Dashboard</a>
+			</li>
+			<li class=<#if indexName == dc.name>"active"<#else>"inactive"</#if>>
+				<a href = "${request.getContextPath()}/search.do?indexName=documenttypes&templateName=ROAMHelp&q=&length=300">ROAM Help</a>
+			</li>
+			</ul>
+		</nav>
+	</header>
+	<div style="float:right; font-weight:bold;top:0;">
+	     <#include "/WEB-INF/view/admin/layout/loginMenu.stl"> 
+	</div>
+
+	<script src="templates/resources/js/script.min.js"></script>
+	<script>
+		$.noConflict();
+	</script>
+</body>
+</html>

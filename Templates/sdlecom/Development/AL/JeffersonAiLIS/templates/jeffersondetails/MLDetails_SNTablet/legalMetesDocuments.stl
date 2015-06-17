@@ -1,0 +1,40 @@
+<b>METES</b>
+<table id="legal" class="tablesorter">
+	<thead>
+		<tr>
+			<th>${searchResult.datasetConfiguration.getColumn("LegalSeq").displayName}</th>
+	  		<th>${searchResult.datasetConfiguration.getColumn("Con").displayName}</th>
+	  		<th>${searchResult.datasetConfiguration.getColumn("TT").displayName}</th>
+	  		<th>${searchResult.datasetConfiguration.getColumn("Area").displayName}</th>
+	  		<th>${searchResult.datasetConfiguration.getColumn("Quarter").displayName}</th>		
+	  		<th>${searchResult.datasetConfiguration.getColumn("Section").displayName}</th>
+	  		<th>${searchResult.datasetConfiguration.getColumn("Block").displayName}</th>
+	  		<th>${searchResult.datasetConfiguration.getColumn("Parcel").displayName}</th>
+	  		<th>${searchResult.datasetConfiguration.getColumn("PID").displayName}</th>
+	   	</tr>
+	</thead>
+	<tbody>
+		<#assign legalSeq = doc.getValues("LegalSeq")>
+		<#assign con = doc.getValues("Con")>
+		<#assign tt = doc.getValues("TT")>
+		<#assign area = doc.getValues("Area")>
+		<#assign quarter = doc.getValues("Quarter")>
+		<#assign section = doc.getValues("Section")>
+		<#assign block = doc.getValues("Block")>
+		<#assign parcel = doc.getValues("Parcel")>
+		<#assign pid = doc.getValues("PID")>
+		<#assign loopCounter = 0>
+		<tr>
+			<td>${legalSeq[loopCounter]?replace('|', '&nbsp;')}</td>
+		    <td>${con[loopCounter]?replace('|', '&nbsp;')}</td>
+	  		<td>${tt[loopCounter]?replace('|', '&nbsp;')}</td>
+	  		<td>${area[loopCounter]?replace('|', '&nbsp;')}</td>
+	  		<td>${quarter[loopCounter]?replace('|', '&nbsp;')}</td>
+		    <td>${section[loopCounter]?replace('|', '&nbsp;')}</td>
+	  		<td>${block[loopCounter]?replace('|', '&nbsp;')}</td>
+	  		<td>${parcel[loopCounter]?replace('|', '&nbsp;')}</td>
+	  		<td>${pid[loopCounter]?replace('|', '&nbsp;')}</td>
+			<#assign loopCounter = loopCounter + 1>
+	    </tr>
+	</tbody>
+</table>

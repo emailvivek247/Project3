@@ -1,0 +1,20 @@
+
+
+<#assign display=JspTaglibs["http://displaytag.sf.net"]>
+
+
+<#if searchResult.docs?has_content>
+    <#assign ResultId =0>
+	<@display.table name="searchResult.docs" id="doc" export=true requestURI="/search.do" excludedParams="searchQuery searchType DocRefBook2 DocRefBook2_select DocRefBookType2 DocRefBookType2_select DocRefLegacy2 DocRefLegacy2_select DocRefPage2 DocRefPage2_select Instrument Instrument_select RefInstrument2 RefInstrument2_select ">
+	  <#include "document.stl">
+	</@display.table>
+<#else>
+ <#include "noResults.stl"> 
+</#if>
+
+
+<script type="text/javascript">
+$(function() {      
+    $("#doc").tablesorter({widgets: ['zebra']});
+}); 
+</script>

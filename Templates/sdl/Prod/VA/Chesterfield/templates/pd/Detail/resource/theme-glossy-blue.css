@@ -1,0 +1,200 @@
+	@charset "utf-8";
+/* GLOSSY BLUE CSS */
+
+
+@import url("theme-base.css");
+
+
+body {
+    background: #e7e7e7;
+    color: #000;
+}
+
+a:link {
+	color: #2e7ee4;
+	text-decoration: none;             
+}
+
+a:visited {
+	color: #f58400;
+}
+a:hover {
+	background-color: none;
+}
+
+a.gotoPage, a.gotoPage:link, a.gotoPage:visited {
+background-color: #44569E;
+}
+
+a.gotoPage:hover,a.gotoPage:active {
+background-color:#051761;
+}
+
+span.highlight {
+        background-color:#fec98a;
+}
+
+td.mainLeft {
+    --background: #032c55 url(striped-gray-bg.gif);
+}
+
+td.mainRight {
+      
+}
+
+p.result {
+      border-bottom:1px solid #DDDDDD;
+}
+
+table.resultHeader {
+    font-family: helvetica, arial, sans-serif;      
+    /* background:#184795 url(blue-bar-solid.png) repeat-x 55% 55%; */
+    background: #184795 url(ui-bg_gloss-wave_75_2191c0_500x100.png) repeat-x 55% 55%;
+
+}
+
+font.label{
+    font-family:verdana,sans-serif;
+}
+
+input.text {
+    background: #FFF url('magnifying-glass.gif') no-repeat;
+    border-color:#362d06; 
+}
+
+button.search {
+    background:#184795 url(blue-bar-striped.png) repeat-x 50% 50%;
+    border-color: #4297D7; 
+    color:#EAF5F7;
+    padding:5px 5px 5px 5px;
+    width:150px;
+    font-weight:bold;    
+    clear:none;
+    cursor:pointer;
+    display:block;
+    line-height:1.2em;
+}
+
+a.gotoPage {
+    background:#184795 url(blue-bar-striped.png) repeat-x 50% 50%;
+    border-color: #4297D7; 
+    color:#EAF5F7;
+}
+
+td.resultHeadercolleft {
+    color:#EAF5F7;
+    
+}
+
+td.resultHeadercolright {
+    color:#EAF5F7;
+}
+
+.multi_select form input.button,button.button {
+  font-family:verdana,arial,geneva,sans-serif;
+  background:#245fab;
+  border-color: #3D4D5A; 
+  color:#FFF;  
+}
+
+.multi_select form input.button:active {
+  background:#ED0E67;
+  border-top:solid 2px #2A537B;
+  border-left:solid 2px #2A537B;
+}
+
+.multi_select form input.button:hover,button.button:hover {
+  background:#f58400 repeat-x scroll 50% 50%;
+  border-color: #000;
+  color:#EAF5F7;
+}
+
+
+/* TABLES */
+
+table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+    /* background:#184795 url(blue-bar-solid.png) repeat-x 55% 55%; */
+    background: #184795 url(ui-bg_gloss-wave_75_2191c0_500x100.png) repeat-x 55% 55%;
+    border-color: #333333;
+    color:#EAF5F7;
+}
+
+table.tablesorter tbody td {
+    color: #3D3D3D;    
+    background-color: #FFF;
+}
+
+table.tablesorter tbody tr.odd td {
+    background:#d7e1ef;
+}
+
+table.tablesorter tbody tr.even td {
+    background-color:#ffffff;
+}
+
+table.tablesorter thead tr .headerSortUp {
+    background:#f58400 url(orange-bar-solid.png) repeat-x 55% 55%;
+}
+
+table.tablesorter thead tr .headerSortDown {
+    background:#f58400 url(orange-bar-solid.png) repeat-x 55% 55%;
+}
+
+table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
+    background-color: #f58400 url(orange-bar-solid.png) repeat-x 55% 55%;
+}
+
+.column{
+    background:#fff;
+}
+
+div.box {
+    border:1px solid #333333;
+}
+
+.box th,.box .header{
+    background:#382214 repeat-x scroll 50% 50%; 
+    border:1px
+}
+
+.box h2{
+    background: #184795 url(blue-bar-striped.png) repeat-x 50% 50%;
+    color:#fff;
+    border-bottom:1px solid #eee;
+    font-family:Verdana;    
+}
+
+.box h2.collapse{
+    background:#f58400 url(orange-bar-striped.png) repeat-x 50% 50%;
+
+}
+
+.success{
+    background:#d9f9e0;
+    border-color: #339933;
+}
+
+.box{
+    background:#fff;
+}
+
+.smartLink:hover {
+       background-color: #ffff00;
+       color: #024769;   
+}
+
+table.tablesorter thead tr .headerSortUp p.active {
+	background: url(asc_blue.gif) no-repeat center;	
+}
+
+table.tablesorter thead tr .headerSortDown p.active {
+	background: url(desc_blue.gif) no-repeat center;	
+}
+
+.box h2.collapse:hover p.active{            	
+	background:url(collapse_blue.png) no-repeat center;	
+}
+
+@charset "utf-8";
+/* CSS Document */
+

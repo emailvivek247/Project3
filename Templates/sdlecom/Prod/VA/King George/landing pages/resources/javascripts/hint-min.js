@@ -1,0 +1,1 @@
+jQuery.fn.hint=function(a){if(!a){a="blur"}return this.each(function(){var f=jQuery(this),d=f.attr("title"),c=jQuery(this.form),e=jQuery(window);function b(){if(f.val()===d&&f.hasClass(a)){f.val("").removeClass(a)}}if(d){f.blur(function(){if(this.value===""){f.val(d).addClass(a)}}).focus(b).blur();c.submit(b);e.unload(b)}})};

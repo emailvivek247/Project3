@@ -1,0 +1,41 @@
+<#if searchResult.docs?has_content>
+<table id="searchResult" class="tablesorter">
+ <thead>
+    <tr> 
+       <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("Booktype").displayName}</th>
+       <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("BookName").displayName}</th>
+       <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("IndexName").displayName}</th>
+       <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("Page").displayName}</th>
+       <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("Image").displayName}</th>
+      <#-- <th class="ui-state-default" style="text-align:center;">Add to Briefcase</th>-->
+    </tr>
+</thead>
+ <tbody>
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+  <#include "document.stl">
+ </#foreach>
+<#else>
+ <#include "noResults.stl"> 
+</#if>
+ </tbody>
+</table>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+
+    oTable = $('#searchResult').dataTable({
+            "bJQueryUI": true,
+            "bPaginate": false,
+            "bLengthChange": false,
+            "bFilter": false,
+            "bSort": true,
+            "bInfo": false,
+            "bAutoWidth": false,
+            "aaSorting": []
+        });
+        
+});
+$("#searchResult").tablesorter( {sortList: [[0,0], [1,0], [4,0]]} );
+</script>

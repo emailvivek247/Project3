@@ -1,0 +1,17 @@
+<#assign urlEncoder = new("net.javacoding.xsearch.utility.EscapeChars")>
+ <tr>
+    <td>
+      <a target="_parent" onClick='rowSelected(this)' href="${request.getContextPath()}/search.do?indexName=okdetails&templateName=UCCDetails_SN&lq=${urlEncoder.forURL("Instrument:\"" + doc.get("Instrument") + "\"")}">${number.format("###0.##",doc.get("Instrument"))}</a>
+   </td>
+    <td>
+    <#if isPhoneticSearch == "1">
+      ${searchResult.highlight(doc, "PhoneticName")}      
+   <#else>
+          ${searchResult.highlight(doc, "Name")}
+   </#if>      
+ 
+   <td>${doc.get("DocType")}</td>
+   <td>${doc.get("PartyRole")}</td>
+   <td>${doc.get("Collateral")}</td>
+   <td>${doc.get("BigCollateral")}</td>
+ </tr>

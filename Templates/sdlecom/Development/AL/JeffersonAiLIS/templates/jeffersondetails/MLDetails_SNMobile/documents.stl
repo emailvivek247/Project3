@@ -1,0 +1,267 @@
+<#-- This is used for Basket -->
+<#assign KEY = request.getParameter("pk")>
+
+<#if searchResult.docs?has_content>
+
+<#-- Check Whether Document/Property/Entity/Legal/DocRef/CustomerInfo Exists or Not -->
+<#assign 
+	documentCounter = 0 
+	propertyCounter = 0 
+	entityCounter = 0
+	docrefCounter = 0	
+	legalCounter = 0
+	returneeCounter = 0
+>
+   
+<#foreach doc in searchResult.docs>
+    <#if doc.getValues("Instrument")?has_content>
+	   	<#assign documentCounter = 1>
+	</#if>
+    <#if doc.getValues("Property")?has_content>
+	   	<#assign propertyCounter = 1>
+	</#if>
+    <#if doc.getValues("EntityRole")?has_content>
+	   	<#assign entityCounter = 1>
+	</#if>
+    <#if doc.getValues("DocRefType")?has_content>
+	   	<#assign docrefCounter = 1>
+	</#if>
+    <#if doc.getValues("LegalType")?has_content>
+	   	<#assign legalCounter = 1>
+	</#if>
+    <#if doc.getValues("CustomerInfoSeq")?has_content>
+	   	<#assign returneeCounter = 1>
+	</#if>
+</#foreach>
+
+<#foreach doc in searchResult.docs>
+   
+<table width="100%" height="100%">
+	<tr>  
+		<td valign = "TOP" width="40%">
+	
+		<#-- Start of Document --> 
+		<#if (documentCounter > 0)>
+			<b>Document</b>
+			<table  id="document" class="tablesorter">
+	 			<thead>
+	 				<tr>
+	  					<th>${searchResult.datasetConfiguration.getColumn("Instrument").displayName}</th>
+	  					<th>${searchResult.datasetConfiguration.getColumn("RecDate1").displayName}</th>
+	  					<th><#--${searchResult.datasetConfiguration.getColumn("RecDate2").displayName}-->Date Married</th>
+	  					<th>${searchResult.datasetConfiguration.getColumn("DocType").displayName}</th>
+	  					<th>${searchResult.datasetConfiguration.getColumn("BookType").displayName}</th>
+	  					<th>${searchResult.datasetConfiguration.getColumn("Book").displayName}</th>
+	  					<th>${searchResult.datasetConfiguration.getColumn("Page").displayName}</th>
+					</tr>
+				</thead>
+				<tbody>
+	    		<#assign RecDate1 = doc.getValues("RecDate1") RecDate2 = doc.getValues("RecDate2") DocType = doc.getValues("DocType")
+	    				 BookType = doc.getValues("BookType") Book = doc.getValues("Book") Page = doc.getValues("Page") loopCounter = 0>
+	    		<#foreach Instrument in doc.getValues("Instrument")>
+					<tr>
+	        			<td>${Instrument}</td>
+	            		<td>${RecDate1[loopCounter]?replace('|', '&nbsp;')}</td>
+	            		<td>${RecDate2[loopCounter]?replace('|', '&nbsp;')}</td>
+	            		<td>${DocType[loopCounter]?replace('|', '&nbsp;')}</td>
+	            		<td>${BookType[loopCounter]?replace('|', '&nbsp;')}</td>
+	            		<td>${Book[loopCounter]?replace('|', '&nbsp;')}</td>
+	            		<td>${Page[loopCounter]?replace('|', '&nbsp;')}</td>
+	     				<#assign loopCounter = loopCounter + 1>
+	    			</tr>
+	    		</#foreach>
+				</tbody>
+			</table>
+		
+			<table id="remarks" class="tablesorter">
+	 			<thead>
+	 				<tr>
+	  					<th>${searchResult.datasetConfiguration.getColumn("Remarks1").displayName}</th>
+	  					<th>${searchResult.datasetConfiguration.getColumn("Remarks2").displayName}</th>
+	  					<th>${searchResult.datasetConfiguration.getColumn("PageCount").displayName}</th>
+	  					<th>${searchResult.datasetConfiguration.getColumn("Amount6").displayName}</th>
+	  					<th>${searchResult.datasetConfiguration.getColumn("Legacy").displayName}</th>
+	  					<th>${searchResult.datasetConfiguration.getColumn("QueueStatus").displayName}</th>
+	  					<th>${searchResult.datasetConfiguration.getColumn("ImageStatus").displayName}</th>
+	 				</tr>
+	 			</thead>
+	 			<tbody>
+	 			<#assign Remarks1 = doc.getValues("Remarks1")   Remarks2 = doc.getValues("Remarks2") 
+	 					 PageCount = doc.getValues("PageCount") Amount6 = doc.getValues("Amount6")
+	    		         LegacyNumber = doc.getValues("Legacy") QueueStatus = doc.getValues("QueueStatus") 
+	    		         ImageStatus= doc.getValues("ImageStatus") loopCounter = 0>
+			
+			    <#foreach Instrument in doc.getValues("Instrument")>
+	    		<tr>
+	            	<td>${Remarks1[loopCounter]?replace('|', '&nbsp;')}</td>
+	             	<td>${Remarks2[loopCounter]?replace('|', '&nbsp;')}</td>
+	             	<td>${PageCount[loopCounter]?replace('|', '&nbsp;')}</td>
+	             	<td align = "right">$${Amount6[loopCounter]?replace('|', '&nbsp;')}</td>
+	             	<td>${LegacyNumber[loopCounter]?replace('|', '&nbsp;')}</td>
+	             	<td><#if doc.get("QueueStatus")="5">
+	             			<#assign QueueStatus = "Y">${QueueStatus[loopCounter]?replace('|', '&nbsp;')}
+	              		<#else>
+	              			<#assign QueueStatus = "N">${QueueStatus[loopCounter]?replace('|', '&nbsp;')}
+	             		</#if>
+	             	</td>
+	             	<td>${ImageStatus[loopCounter]?replace('|', '&nbsp;')}</td>
+	             	<#assign loopCounter = loopCounter + 1>
+	    		</tr>
+	     		</#foreach>
+				</tbody>
+			</table>
+		</#if>
+		<#-- End of Document -->
+	
+		<#-- Start of Property -->
+	
+		<#if (propertyCounter > 0)>
+			<b>Property</b>
+			<table id="property" class="tablesorter">
+		 		<thead>
+		 			<tr>
+		  				<th>${searchResult.datasetConfiguration.getColumn("Property").displayName}</th>
+		  				<th>${searchResult.datasetConfiguration.getColumn("PropertyValue").displayName}</th>
+		 			</tr>
+		 		</thead>
+		 		<tbody>
+		    	<#assign PropertyValue = doc.getValues("PropertyValue") loopCounter = 0>
+		    	<#foreach Property in doc.getValues("Property")>
+		    		<tr>
+		  				<td>${Property?replace('|', '&nbsp;')}</td>
+		        		<td>${PropertyValue[loopCounter]?replace('|', '&nbsp;')}</td>
+		   				<#assign loopCounter = loopCounter + 1>
+		    		</tr>
+		     	</#foreach>
+		 		</tbody>
+			</table>
+		</#if>
+		<#-- End of Property -->
+		
+		<#-- Start of Entity -->
+		<#if (entityCounter > 0)>
+			<b>Entity</b>
+			<table id="entity" class="tablesorter">
+		 		<thead>
+		 			<tr>
+						<th>${searchResult.datasetConfiguration.getColumn("EntityName").displayName}</th>
+		  				<th>${searchResult.datasetConfiguration.getColumn("EntityRole").displayName}</th>
+		  				<th>${searchResult.datasetConfiguration.getColumn("DesigStatus").displayName}</th>
+		  				<th>${searchResult.datasetConfiguration.getColumn("Corp").displayName}</th>
+		  				<th>${searchResult.datasetConfiguration.getColumn("EntitySeq").displayName}</th>
+		   			</tr>
+				</thead>
+			 	<tbody>
+			    <#assign EntityRole = doc.getValues("EntityRole") DesigStatus = doc.getValues("DesigStatus") Corp = doc.getValues("Corp")
+			             EntitySeq = doc.getValues("EntitySeq") loopCounter = 0>
+			    <#foreach EntityName in doc.getValues("EntityName")>
+			    	<tr>
+			        	<td>${EntityName?replace('|', '&nbsp;')}</td>
+			     		<td>${EntityRole[loopCounter]?replace('|', '&nbsp;')} </td>
+			        	<td>${DesigStatus[loopCounter]?replace('|', '&nbsp;')} </td>
+			  			<td>${Corp[loopCounter]?replace('|', '&nbsp;')}</td>
+			  			<td>${EntitySeq[loopCounter]?replace('|', '&nbsp;')}</td>
+						<#assign loopCounter = loopCounter + 1>
+			    	</tr>
+			    </#foreach>
+				</tbody>
+			</table>
+		</#if>
+		<#-- End of Entity -->
+		
+		<#-- Start of Legal -->
+		<#if (legalCounter > 0)>
+			<b>Legal</b><BR>
+			<#foreach legalType in doc.getValues("LegalType")>
+				<#if legalType = "FREEFORM">
+					<BR><#include "legalFreeFormDocuments.stl">
+				</#if>
+				<#if legalType = "MAPS">
+					<BR><#include "legalMapsDocuments.stl">
+				</#if>
+				<#if legalType = "METES">
+					<BR><#include "legalMetesDocuments.stl">
+				</#if>
+				<#if legalType = "ADDRESS">
+					<BR><#include "legalAddressDocuments.stl">
+				</#if>
+			</#foreach>	
+		</#if>
+		<#-- End Of Legal -->
+		
+		<#-- Start of Document References -->
+		<#if (docrefCounter > 0)>
+			<b>References</b>
+			<table id="docref" class="tablesorter">
+	 			<thead>
+	 				<tr>
+						<th>${searchResult.datasetConfiguration.getColumn("DocRefSeq").displayName}</th>
+	  					<th>${searchResult.datasetConfiguration.getColumn("RefInstrument").displayName}</th>
+	  					<th>${searchResult.datasetConfiguration.getColumn("DocRefBookType").displayName}</th>
+	  					<th>${searchResult.datasetConfiguration.getColumn("DocRefBook").displayName}</th>
+	  					<th>${searchResult.datasetConfiguration.getColumn("DocRefPage").displayName}</th>
+	  					<th>${searchResult.datasetConfiguration.getColumn("DocRefLegacy").displayName}</th>
+			   		</tr>
+			   	</thead>
+	 			<tbody>
+				<#assign RefInstrument = doc.getValues("RefInstrument") DocRefBookType = doc.getValues("DocRefBookType") DocRefBook = doc.getValues("DocRefBook")
+	    		         DocRefPage = doc.getValues("DocRefPage") DocRefLegacy = doc.getValues("DocRefLegacy") loopCounter = 0>
+		    	<#foreach DocRefSeq in doc.getValues("DocRefSeq")>
+					<tr>
+						<td>${DocRefSeq?replace('|', '&nbsp;')}</td>
+						<td><a href="${request.getContextPath()}/search.do?indexName=jeffersondetails&templateName=MLDetails_SN&lq=${pageStyleUtil.encodeURL("Instrument:" + RefInstrument[loopCounter])}">${RefInstrument[loopCounter]?replace('|', '&nbsp;')}</a></td>
+						<td>${DocRefBookType[loopCounter]?replace('|', '&nbsp;')}</td>
+						<td>${DocRefBook[loopCounter]?replace('|', '&nbsp;')}</td>
+						<td>${DocRefPage[loopCounter]?replace('|', '&nbsp;')}</td>
+						<td>${DocRefLegacy[loopCounter]?replace('|', '&nbsp;')}</td>
+			 			<#assign loopCounter = loopCounter + 1>
+		   			</tr>
+	     		</#foreach>
+				</tbody>
+			</table>
+		</#if>
+		<#-- End of Document References -->
+	
+		<#-- Start of Returnee Info -->
+		<#if (returneeCounter > 0)>
+			<b>Returnee</b>
+			<table id="returnee" class="tablesorter">
+				<thead>
+					<tr>
+	  					<th>${searchResult.datasetConfiguration.getColumn("CustomerInfoSeq").displayName}</th>
+						<th>${searchResult.datasetConfiguration.getColumn("CustomerInfoName").displayName}</th>
+	  					<th>${searchResult.datasetConfiguration.getColumn("DateReturned").displayName}</th>
+	   				</tr>
+	   			</thead>
+	 			<tbody>
+		    	<#assign CustomerInfoName = doc.getValues("CustomerInfoName") DateReturned = doc.getValues("DateReturned") loopCounter = 0>
+	    		<#foreach CustomerInfoSeq in doc.getValues("CustomerInfoSeq")>
+		    		<tr>
+						<td>${CustomerInfoSeq?replace('|', '&nbsp;')}</td>
+		     			<td>${CustomerInfoName[loopCounter]?replace('|', '&nbsp;')}</td>
+		        		<td>${DateReturned[loopCounter]?replace('|', '&nbsp;')}</td>
+			   			<#assign loopCounter = loopCounter + 1>
+		    		</tr>
+	     		</#foreach>
+	 			</tbody>
+			</table>
+		</#if>
+	</td>
+ </tr>
+</table>
+</#foreach>	
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#document").tablesorter({widgets: ['zebra']});
+		$("#remarks").tablesorter({widgets: ['zebra']});
+        $("#property").tablesorter({widgets: ['zebra']});
+ 		$("#entity").tablesorter({             
+        	 sortList: [[1,1],[4,0]] 
+    	}); 	    
+	    $("#entity").tablesorter({widgets: ['zebra']});
+	    $("#legal").tablesorter({widgets: ['zebra']});
+	    $("#docref").tablesorter({widgets: ['zebra']});
+	    $("#returnee").tablesorter({widgets: ['zebra']});
+	}); 
+</script>
+</#if>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="5CC9C6FA9B0ADE2C593E96BF9F53FD1974BAA4D59785BCF5" adminuser="4FE35F3CD3FFF0BACFF470544A07660892442A46B961B945">
+  <search-log-size-in-MB>7</search-log-size-in-MB>
+  <index-root-directory><![CDATA[D:\index\dallas\]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[35F58567D2F05764B277B38C2D52BE3592E3A09DC9008EED10A0C782170309228080FA3DD1CF09A0F534AA5A4A89D7C9AA82FF5CEA165F2873B21D7D5E7482723A7BF518DFE100F1956EF76C18685FE180D0FC67D26E8D37]]></db-url>
+      <db-username><![CDATA[AF24775ECFB98A5906EC2C7224F98533]]></db-username>
+      <db-password><![CDATA[876D853F43BAF7C697BCA596E833140477EFAC530BA4F0BC]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

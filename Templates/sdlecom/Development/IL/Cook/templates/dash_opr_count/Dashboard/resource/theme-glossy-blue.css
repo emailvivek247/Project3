@@ -1,0 +1,114 @@
+	@charset "utf-8";
+/* GLOSSY BLUE CSS */
+
+
+@import url("theme-base.css");
+
+
+body {
+    background: #fff;
+    color: #000;
+}
+
+a:link {
+	color: #2e7ee4;
+	text-decoration: none;             
+}
+
+a:visited {
+	color: #f58400;
+}
+a:hover {
+	background-color: none;
+}
+
+span.highlight {
+        background-color:#fec98a;
+}
+
+td.mainLeft {
+    --background: #032c55 url(striped-gray-bg.gif);
+}
+
+td.mainRight {
+      
+}
+
+table.resultHeader {
+    font-family: helvetica, arial, sans-serif;      
+    background:#184795 url(blue-bar-solid.png) repeat-x 55% 55%;
+}
+
+font.label{
+    font-family:verdana,sans-serif;
+}
+
+input.text {
+    background: #FFF url('magnifying-glass.gif') no-repeat;
+    border-color:#362d06; 
+}
+
+button.search {
+    background:#184795 url(blue-bar-striped.png) repeat-x 50% 50%;
+    border-color: #4297D7; 
+    color:#EAF5F7;
+}
+
+td.resultHeadercolleft {
+    color:#EAF5F7;
+    
+}
+
+td.resultHeadercolright {
+    color:#EAF5F7;
+}
+
+.filter_body form input.button{
+  font-family:verdana,arial,geneva,sans-serif;
+  background:#245fab;
+  border-color: #3D4D5A; 
+  color:#FFF;  
+}
+
+.filter_body form input.button:active {
+  background:#ED0E67;
+  border-top:solid 2px #2A537B;
+  border-left:solid 2px #2A537B;
+}
+
+.filter_body form input.button:hover {
+  background:#f58400 repeat-x scroll 50% 50%;
+  border-color: #000;
+  color:#EAF5F7;
+}
+
+.filter_head {   
+    background: #184795 url(blue-bar-solid.png) repeat-x 50% 50%;	 
+	color: #EAF5F7;   
+    border: 1px solid #333333; 
+}
+
+.filter_head span {
+    background: #184795 url(blue-bar-solid.png) no-repeat right center;
+}
+
+.filter_head:hover {
+	 background: #184795 url(orange-bar-solid.png) repeat-x 50% 50%;	 
+}
+    
+.filter_body {    
+    background-color:#ffffff;
+    border-color: #333333;
+    
+}
+
+.filter_head span.active {	 	 	
+	 background:url(active_white.png) no-repeat top right;
+}
+
+.filter_head span.inactive {	 	 	
+	 background:url(inactive_white.png) no-repeat top right;
+}
+@charset "utf-8";
+/* CSS Document */
+

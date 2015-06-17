@@ -1,0 +1,103 @@
+
+<#if searchResult.docs?has_content>
+<table id="searchResult" class="tablesorter">
+ <thead>
+      <tr>
+ 	 <th>${searchResult.datasetConfiguration.getColumn("CaseNumber").displayName}</th>
+ 	 <th>${searchResult.datasetConfiguration.getColumn("CaseStyle").displayName}</th>
+ 	 <th>${searchResult.datasetConfiguration.getColumn("AppReason").displayName}</th>
+ 	 <th>${searchResult.datasetConfiguration.getColumn("NextSession").displayName}</th>
+      </tr>
+ </thead>
+ <tbody>
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+ 
+     <#assign CaseNumber = doc.getValues("CaseNumber")>
+     <#assign CaseStyle = doc.getValues("CaseStyle")>
+     <#assign AppReason = doc.getValues("AppReason")>
+     <#assign NextSession = doc.getValues("NextSession")>
+     <#assign loopCounter = 0>
+     
+   <tr>
+	<td>${CaseNumber[loopCounter]?replace('|', '&nbsp;')}</td>
+	<td>${searchResult.highlight(doc, "CaseStyle")}</td>
+	<td>${AppReason[loopCounter]?replace('|', '&nbsp;')}</td>
+	<td>${NextSession[loopCounter]?replace('|', '&nbsp;')}</td>
+	<#assign loopCounter = loopCounter + 1>
+   </tr>
+
+ </#foreach>
+ </tbody>
+</table>
+ 
+ 
+ <table id="doc2" class="tablesorter">
+  <thead>
+      <tr>
+	   <th>${searchResult.datasetConfiguration.getColumn("CaseFilingDate").displayName}</th>
+	   <th>${searchResult.datasetConfiguration.getColumn("Book").displayName}</th>
+	   <th>${searchResult.datasetConfiguration.getColumn("Page").displayName}</th>
+      </tr>
+  </thead>
+  <tbody>
+ <#assign ResultId =0>
+  <#foreach doc in searchResult.docs>
+  
+	<#assign CaseID = doc.getValues("CaseID")>
+	<#assign Book = doc.getValues("Book")>
+	<#assign Page = doc.getValues("Page")>
+	<#assign loopCounter = 0>
+  
+    <tr>
+          <td>${pageStyleUtil.format(date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("CaseFilingDate")), "yyyy/MM/dd HH:mm:ss z", "MM/dd/yyyy HH:mm:ss z")}</td>
+          <td>${Book[loopCounter]?replace('|', '&nbsp;')}</td>
+          <td>${Page[loopCounter]?replace('|', '&nbsp;')}</td>
+	</tr>
+   <#assign loopCounter = loopCounter + 1> 
+   <#assign caseNumberKey = doc.getValues("CaseID")>
+ 
+  </#foreach>
+  </tbody>
+</table>
+
+
+ 
+ 
+<#else>
+ <#include "noResults.stl"> 
+</#if>
+ 
+
+<div id="details2container"></div>
+<div id="docketcontainer"></div>
+<script type="text/javascript">
+$(document).ready(function() {
+var url1 = "search.do?indexName=casedetails2&templateName=casedetails2&lq=CaseID%3A%22<#list caseNumberKey as CaseNumber>${CaseNumber}</#list>%22";
+$('#details2container').load(url1);
+var url2 = "search.do?indexName=dd&lq=CaseID%3A%22<#list caseNumberKey as CaseNumber>${CaseNumber}</#list>%22";
+$('#docketcontainer').load(url2);
+
+	oTable = $('#searchResult').dataTable({
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bSort": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		"aaSorting": []
+	});
+	oTable = $('#doc2').dataTable({
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bSort": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		"aaSorting": []
+	});
+	
+} );
+</script>

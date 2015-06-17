@@ -1,0 +1,20 @@
+<!--  -->
+<@com.useHighlightTag '<span style="background-color:#00ff00">', '</span>' />
+<#include "layout.stl">
+<@layout title="Details" encoding="${searchResult.encoding}">
+<#if request.isUserInRole('ROAM_ADMIN') || request.isUserInRole('DALLAS_ADMIN') || request.isUserInRole('DALLAS_FREE_ACCESS') || request.isUserInRole('DALLAS_PERPAGE_ACCESS') || request.isUserInRole('DALLAS_DCAD_ACCESS') || request.isUserInRole('DALLAS_LAND_MARR_ACCESS') || request.isUserInRole('DALLAS_ALL_ACCESS')>
+<a id="backLink" href = "">« Back to search results</a>
+</br></br></br>
+<@com.errorMarkup/>
+<#include "searchResultHeader.stl">
+<table class="main">
+	<tr valign="top">
+		<td class="mainRight">
+			<div id="documents"><#include "documents.stl"></div>
+ 		</td>
+ 	</tr>
+</table>
+<#else>
+   You are not authorized to access this information.
+</#if>
+</@layout>

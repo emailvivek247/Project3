@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset name="Case Search INTERNAL" exportedBy="null" createdAt="Wed Oct 17 14:45:38 EDT 2012">
+  <display-order>3</display-order>
+  <description><![CDATA[]]></description>
+  <index-dir>casesearch</index-dir>
+  <is-prefix-root-index-directory>true</is-prefix-root-index-directory>
+  <use-server-db-connection>true</use-server-db-connection>
+  <number-of-hours-before-deletion>1</number-of-hours-before-deletion>
+  <work-directory>_work</work-directory>
+  <temporary-index-minimal-merge-percentage>80.0</temporary-index-minimal-merge-percentage>
+  <merge-hours enabled="true" begin="0" end="24"/>
+  <fetcher-threads>1</fetcher-threads>
+  <writer-threads>1</writer-threads>
+  <index-max-size>60.0</index-max-size>
+  <schedules>
+   <schedule id="0">
+    <is-enabled>false</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>1</interval>
+    <cron-setting>3,8,13,18,23,28,33,38,43,48,53,58 * * * ?</cron-setting>
+    <indexing-mode>Incremental Indexing with Thorough Deletion Detection</indexing-mode>
+   </schedule>
+  </schedules>
+  <language>Any</language>
+  <analyzer-name>com.fdt.sdl.core.analyzer.NumberLowerCaseAnalyzer</analyzer-name>
+  <data-source-type>0</data-source-type>
+  <fetcher-configuration dir="null">
+  </fetcher-configuration>
+  <data-sources>
+    <data-source>
+      <name>default</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-password>$enc$null</db-password>
+    </data-source>
+  </data-sources>
+  <dataquery name="WorkingQueue" batch-size="128" is-skipping-null-parameters="false">
+    <sql><![CDATA[
+SELECT DISTINCT
+             PARTY_ID AS 'PartyID',
+             CASE_NUMBER AS 'CaseNumber',
+             CASE_ID AS 'CaseID',
+  	CASE_STATUS AS 'CaseStatus',
+             LAST_NAME AS 'LastName',
+             FIRST_NAME AS 'FirstName',
+             MIDDLE_NAME AS 'MiddleName',
+      	DISPLAYNAME AS 'Party',
+             SUFFIX_NAME AS 'SuffixName',
+             PARTY_ROLE_DESC AS 'PartyType',
+      	COURT_CD AS 'CourtType',
+      	CASE_TYPE AS 'CaseType',
+             CASE_TYPE AS 'FilterByCaseType',
+             COURT_CD AS 'FilterByCourtType',
+      	CONVERT(varchar(10), CASE_FILING_DT, 112) AS 'CaseFilingDate',
+      	CATEGORY_TYPE AS 'CategoryType',
+      	CASE_SHORT_TITLE AS 'CaseStyle',
+      	CONVERT(varchar(20), NEXT_SESSION_DATE, 100) AS 'HearingDate',
+             CASE_SEALED AS 'CaseSealed',
+             PERSON_SEALED AS 'PersonSealed',
+             PARTY_RESTRICTED AS 'PartyRestricted',
+             CASE_RESTRICTED AS 'CaseRestricted',
+             DATE_TIME_MOD
+FROM  ACM_V_ESCASESEARCH
+WHERE (CASE_SEALED = 'N' AND PERSON_SEALED = 'N' OR COURT_CD = 'JAPPL')
+AND CASE_VOID = 'N'
+AND PARTY_VOID = 'N'
+AND PARTY_ROLE_DESC IN ('PLAINTIFF', 'DEFENDANT')
+AND COURT_CD IN ('JAPPL', 'CRIMINAL', 'CIVIL')
+ORDER BY DISPLAYNAME,  DATE_TIME_MOD DESC
+    ]]></sql>
+    <column>
+      <column-name>PartyID</column-name>
+      <display-name><![CDATA[PartyID]]></display-name>
+      <column-index>1</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <primary-key>true</primary-key>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CaseNumber</column-name>
+      <display-name><![CDATA[Case Number]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CaseID</column-name>
+      <display-name><![CDATA[CaseID]]></display-name>
+      <column-index>3</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CaseStatus</column-name>
+      <display-name><![CDATA[Case Status]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>LastName</column-name>
+      <display-name><![CDATA[Last Name]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>FirstName</column-name>
+      <display-name><![CDATA[First Name]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>MiddleName</column-name>
+      <display-name><![CDATA[Middle Name]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Party</column-name>
+      <display-name><![CDATA[Party]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>SuffixName</column-name>
+      <display-name><![CDATA[Suffix Name]]></display-name>
+      <column-index>9</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PartyType</column-name>
+      <display-name><![CDATA[Party Type]]></display-name>
+      <column-index>10</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CourtType</column-name>
+      <display-name><![CDATA[Court Type]]></display-name>
+      <column-index>11</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CaseType</column-name>
+      <display-name><![CDATA[Case Type]]></display-name>
+      <column-index>12</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>FilterByCaseType</column-name>
+      <display-name><![CDATA[Case Type]]></display-name>
+      <column-index>13</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>FilterByCourtType</column-name>
+      <display-name><![CDATA[Court Type]]></display-name>
+      <column-index>14</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <is-filterable>true</is-filterable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CaseFilingDate</column-name>
+      <display-name><![CDATA[Case Filing Date]]></display-name>
+      <column-index>15</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <analyzer-name>com.fdt.sdl.core.analyzer.DateAnalyzer</analyzer-name>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CategoryType</column-name>
+      <display-name><![CDATA[Category Type]]></display-name>
+      <column-index>16</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CaseStyle</column-name>
+      <display-name><![CDATA[Case Style]]></display-name>
+      <column-index>17</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>HearingDate</column-name>
+      <display-name><![CDATA[Court Date]]></display-name>
+      <column-index>18</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <analyzer-name>com.fdt.sdl.core.analyzer.DateAnalyzer</analyzer-name>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CaseSealed</column-name>
+      <display-name><![CDATA[CaseSealed]]></display-name>
+      <column-index>19</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PersonSealed</column-name>
+      <display-name><![CDATA[PersonSealed]]></display-name>
+      <column-index>20</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PartyRestricted</column-name>
+      <display-name><![CDATA[PartyRestricted]]></display-name>
+      <column-index>21</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CaseRestricted</column-name>
+      <display-name><![CDATA[CaseRestricted]]></display-name>
+      <column-index>22</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DATE_TIME_MOD</column-name>
+      <display-name><![CDATA[DATE_TIME_MOD]]></display-name>
+      <column-index>23</column-index>
+      <column-type>java.sql.Timestamp</column-type>
+      <modified-date>true</modified-date>
+      <index-field-type>KeywordDateHierarchical</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Deletion" is-delete-only="true">
+    <sql><![CDATA[
+SELECT RT.TAB_PK_KEY
+FROM ROAM_TRACK RT
+WHERE 
+RT.DATE_TIME_MOD > DATEADD(mi, -10, GETDATE()) and 
+RT.DML_TYP IN ('D', 'U') AND RT.TAB_NAME = 'ACM_PARTY'
+UNION ALL
+SELECT ES.PARTY_ID
+FROM ACM_V_ESCASESEARCH ES INNER JOIN ROAM_TRACK RT
+ON ES.CASE_ID = RT.PK_KEY
+WHERE 
+RT.DATE_TIME_MOD > DATEADD(mi, -10, GETDATE()) AND 
+RT.DML_TYP IN ('D', 'U') AND 
+((ES.CASE_SEALED = 'Y' OR ES.PERSON_SEALED = 'Y' AND COURT_CD IN ('CRIMINAL','CIVIL')) OR CASE_VOID = 'Y' OR PARTY_VOID = 'Y')
+    ]]></sql>
+  </dataquery>
+  <dataquery name="Incremental">
+    <sql><![CDATA[
+SELECT DISTINCT
+             PARTY_ID AS 'PartyID',
+             CASE_NUMBER AS 'CaseNumber',
+             CASE_ID AS 'CaseID',
+  	CASE_STATUS AS 'CaseStatus',
+             LAST_NAME AS 'LastName',
+             FIRST_NAME AS 'FirstName',
+             MIDDLE_NAME AS 'MiddleName',
+      	DISPLAYNAME AS 'Party',
+             SUFFIX_NAME AS 'SuffixName',
+             PARTY_ROLE_DESC AS 'PartyType',
+      	COURT_CD AS 'CourtType',
+      	CASE_TYPE AS 'CaseType',
+             CASE_TYPE AS 'FilterByCaseType',
+             COURT_CD AS 'FilterByCourtType',
+      	CONVERT(varchar(10), CASE_FILING_DT, 112) AS 'CaseFilingDate',
+      	CATEGORY_TYPE AS 'CategoryType',
+      	CASE_SHORT_TITLE AS 'CaseStyle',
+      	CONVERT(varchar(20), NEXT_SESSION_DATE, 100) AS 'HearingDate',
+             CASE_SEALED AS 'CaseSealed',
+             PERSON_SEALED AS 'PersonSealed',
+             PARTY_RESTRICTED AS 'PartyRestricted',
+             CASE_RESTRICTED AS 'CaseRestricted',
+             RT.DATE_TIME_MOD
+FROM ACM_V_ESCASESEARCH CS INNER JOIN ROAM_TRACK RT
+ON CS.CASE_ID = RT.PK_KEY
+WHERE (CASE_SEALED = 'N' AND PERSON_SEALED = 'N' OR COURT_CD = 'JAPPL')
+AND CASE_VOID = 'N'
+AND PARTY_VOID = 'N'
+AND PARTY_ROLE_DESC IN ('PLAINTIFF', 'DEFENDANT')
+AND COURT_CD IN ('JAPPL', 'CRIMINAL', 'CIVIL')
+AND RT.DML_TYP IN ('I', 'U')
+AND (RT.DATE_TIME_MOD > ? OR RT.DATE_TIME_MOD > DATEADD(mi, -15, GETDATE()))
+ORDER BY RT.DATE_TIME_MOD DESC
+    ]]></sql>
+  </dataquery>
+  <default-template>CaseSearch</default-template>
+  <tablet-template>CaseSearch</tablet-template>
+  <mobile-template>CaseSearch</mobile-template>
+  <searcher-max-active>8</searcher-max-active>
+  <searcher-when-exhausted>1</searcher-when-exhausted>
+  <searcher-max-wait>10000</searcher-max-wait>
+  <searcher-max-idle>7</searcher-max-idle>
+  <is-in-memory-search>false</is-in-memory-search>
+  <jvm-max-heap-size>10240</jvm-max-heap-size>
+  <document-buffer-size-mb>1024</document-buffer-size-mb>
+  <is-wildcard-allowed>true</is-wildcard-allowed>
+  <min-wildcard-prefix-length>2</min-wildcard-prefix-length>
+  <allowed-ip-list>*</allowed-ip-list>
+  <date-weight-formula>
+    <time-weight time="600" weight="12.0"/>
+    <time-weight time="1800" weight="11.0"/>
+    <time-weight time="3600" weight="10.0"/>
+    <time-weight time="21600" weight="9.0"/>
+    <time-weight time="43200" weight="8.0"/>
+    <time-weight time="86400" weight="7.0"/>
+    <time-weight time="1296000" weight="6.0"/>
+    <time-weight time="2678400" weight="5.0"/>
+    <time-weight time="5356800" weight="4.0"/>
+    <time-weight time="8035200" weight="3.0"/>
+    <time-weight time="16070400" weight="2.0"/>
+    <time-weight time="32140800" weight="1.3"/>
+    <time-weight time="64281600" weight="1.2"/>
+    <time-weight time="96422400" weight="1.1"/>
+    <time-weight time="128563200" weight="1.05"/>
+    <time-weight time="160704000" weight="1.04"/>
+    <time-weight time="192844800" weight="1.03"/>
+    <time-weight time="224985600" weight="1.02"/>
+    <time-weight time="321408000" weight="1.01"/>
+  </date-weight-formula>
+  <spell-checking enabled="true"></spell-checking>
+</dataset>

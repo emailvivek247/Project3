@@ -1,0 +1,6 @@
+  		  <@display.column media="html" indexColumnName="DOB" title="${searchResult.datasetConfiguration.getColumn(\"DOB\").displayName}">
+		   		<#--${date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("DOB"))}-->
+${pageStyleUtil.format(date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("DOB")), "yyyy/MM/dd HH:mm:ss z", "MM/dd/yyyy")}--
+${doc.getDate("DOB")?date}
+		  </@display.column>
+		 

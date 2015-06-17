@@ -1,0 +1,33 @@
+
+<#macro layout(title="", encoding="utf-8")>
+<html><head><title>Superior Court Case Search</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/export.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/prompt.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/jquery-ui-1.8.19.base.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/jquery-ui-1.8.19.glossy-burgundy.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/theme-base.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/theme-glossy-burgundy.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/demo_table_jui.css" type="text/css"  />
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/prompt.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/sdl-min.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/filterControl.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery-ui-1.8.19.custom.min.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.dataTables.min.js"></script>
+<link rel="shortcut icon" href="favicon.ico"/>
+<#assign q = pageStyleUtil.encodeURL(searchResult.request.getParameter("q"))
+     lq = pageStyleUtil.encodeURL(searchResult.request.getParameter("lq"))
+     start = searchResult.request.getParameter("start") 
+     searchable = pageStyleUtil.encodeURL(searchResult.request.getParameter("searchable"))
+     searchType = searchResult.request.getParameter("searchType") 
+     isPhoneticSearch = request.getParameter("isPhoneticSearch") 
+     searchQuery = pageStyleUtil.encodeURL(searchResult.request.getParameter("searchQuery")) 
+     sortBy = pageStyleUtil.encodeURL(searchResult.request.getParameter("sortBy")) 
+     desc = pageStyleUtil.encodeURL(searchResult.request.getParameter("desc")) 
+     asc = pageStyleUtil.encodeURL(searchResult.request.getParameter("asc"))>
+</head>
+<body onKeyPress="trapKeyBoardEvents(event)" style="background:#fff;">
+<#nested>
+</body></html>
+</#macro>

@@ -1,0 +1,95 @@
+<@display.column media="html" indexColumnName="Book" title="${searchResult.datasetConfiguration.getColumn(\"Book\").displayName}">
+    ${searchResult.highlight(doc, "Book")}
+</@display.column>
+<@display.column media="rtf excel pdf" indexColumnName="Book" title="${searchResult.datasetConfiguration.getColumn(\"Book\").displayName}">
+    ${doc.get("Book")}
+</@display.column>
+<@display.column media="html" indexColumnName="Page" title="${searchResult.datasetConfiguration.getColumn(\"Page\").displayName}">
+    ${searchResult.highlight(doc, "Page")}
+</@display.column>
+<@display.column media="rtf excel pdf" indexColumnName="Page" title="${searchResult.datasetConfiguration.getColumn(\"Page\").displayName}">
+    ${doc.get("Page")}
+</@display.column>
+<@display.column media="html" indexColumnName="RecDateDisplay" title="${searchResult.datasetConfiguration.getColumn(\"RecDateDisplay\").displayName}">
+    <#if doc.get("RecDateDisplay")?has_content>
+        ${pageStyleUtil.format(doc.get("RecDateDisplay"), "yyyy-MM-dd HH:mm:ss", "MM/dd/yyyy HH:mm:ss a")}      
+    </#if>
+</@display.column>
+<#if isPhoneticSearch == "1">
+    <@display.column media="html" indexColumnName="PhoneticName" title="${searchResult.datasetConfiguration.getColumn(\"PhoneticName\").displayName}">
+         ${searchResult.highlight(doc, "PhoneticName")} 
+    </@display.column>
+    <@display.column media="rtf excel pdf" indexColumnName="PhoneticName" title="${searchResult.datasetConfiguration.getColumn(\"PhoneticName\").displayName}">
+        ${doc.get("PhoneticName")}
+    </@display.column>
+<#else> 
+    <@display.column media="html" indexColumnName="Name" title="${searchResult.datasetConfiguration.getColumn(\"Name\").displayName}">
+        ${searchResult.highlight(doc, "Name")}
+    </@display.column>
+    <@display.column media="rtf excel pdf" indexColumnName="Name" title="${searchResult.datasetConfiguration.getColumn(\"Name\").displayName}">
+        ${doc.get("Name")}
+    </@display.column>
+</#if>
+<@display.column media="html" indexColumnName="PartyRole" title="${searchResult.datasetConfiguration.getColumn(\"PartyRole\").displayName}">
+    ${searchResult.highlight(doc, "PartyRole")}
+</@display.column>
+<@display.column media="rtf excel pdf" indexColumnName="PartyRole" title="${searchResult.datasetConfiguration.getColumn(\"PartyRole\").displayName}">
+    ${doc.get("PartyRole")}
+</@display.column>
+<@display.column media="html" indexColumnName="OtherName" title="${searchResult.datasetConfiguration.getColumn(\"OtherName\").displayName}">
+    ${searchResult.highlight(doc, "OtherName")}
+</@display.column>
+<@display.column media="rtf excel pdf" indexColumnName="OtherName" title="${searchResult.datasetConfiguration.getColumn(\"OtherName\").displayName}">
+    ${doc.get("OtherName")}
+ </@display.column>
+<@display.column media="html" indexColumnName="DocType" title="${searchResult.datasetConfiguration.getColumn(\"DocType\").displayName}">
+    ${searchResult.highlight(doc, "DocType")}
+</@display.column>
+<@display.column media="rtf excel pdf" indexColumnName="DocType" title="${searchResult.datasetConfiguration.getColumn(\"DocType\").displayName}">
+    ${doc.get("DocType")}
+</@display.column>
+<@display.column media="html" indexColumnName="FirstReference" title="${searchResult.datasetConfiguration.getColumn(\"FirstReference\").displayName}">
+     ${searchResult.highlight(doc, "FirstReference")} <#-- </a> -->
+</@display.column>
+<@display.column media="rtf excel pdf" indexColumnName="FirstReference" title="${searchResult.datasetConfiguration.getColumn(\"FirstReference\").displayName}">
+     ${doc.get("FirstReference")}
+</@display.column>
+<@display.column media="html" indexColumnName="LegalDescription" title="${searchResult.datasetConfiguration.getColumn(\"LegalDescription\").displayName}">
+    ${searchResult.highlight(doc, "LegalDescription")}
+</@display.column>
+<@display.column media="rtf excel pdf" indexColumnName="LegalDescription" title="${searchResult.datasetConfiguration.getColumn(\"LegalDescription\").displayName}">
+    ${doc.get("LegalDescription")}
+</@display.column>
+
+<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (request.isUserInRole('ROAM_ADMIN') || request.isUserInRole('JEFFERSON_ADMIN') || request.isUserInRole('JEFFERSON_PROBATE_ACCESS'))>
+	<@display.column  media="html" title="View Image">
+	<div style="text-align:center" class="gallery clearfix">
+		<a class="nocolor" href="search.do?indexName=publicimages&lq=${pageStyleUtil.encodeURL("Instrument:\"" + doc.get("Instrument") + "\"")}&format=PDF&page=1&view=FitV&scrollbar=0&navpanes=0&statusbar=0&messages=0?iframe=true&width=50%&height=95%" rel="prettyPhoto[iframe]" title="Instrument : <a  class='nocolor' href='search.do?indexName=jeffersondetails&templateName=default&lq=${pageStyleUtil.encodeURL("Instrument:\"" + doc.get("Instrument") + "\"")}'><b>${doc.get("Instrument")}</b></a> </br> Doc Type: ${doc.get("DocType")} </br> Date Recorded: ${pageStyleUtil.format(doc.get("RecDateDisplay"), "yyyy-MM-dd HH:mm:ss", "MM/dd/yyyy HH:mm:ss a")} </br>" ><img id="preview" title="Preview" src="<@com.currentUrlPrefix/>/resource/preview.png"></a>
+	</@display.column>
+	<@display.column  media="html" title="Briefcase">
+		<a href="javascript:;" onclick="addToCart('indexName?=?${indexName}?=?${dc.displayName}', 'pk_key?=?${doc.get("pk_key")}?con?Instrument?=?${doc.get("Instrument")?replace("'", "\\'")?replace("\"", "\\\"")}?con?${searchResult.datasetConfiguration.getColumn("DocType").displayName}?=?${doc.get("DocType")?replace("'", "\\'")?replace("\"", "\\\"")?trim}', 'Instrument:${doc.get("Instrument")}', '25');" >Add</a>
+        </@display.column>
+<#elseif request.isUserInRole('JEFFERSON_PERPAGE_ACCESS')>
+
+	<@display.column  media="html" title="Preview Image">
+	    <div style="text-align:center" class="gallery clearfix">
+	    	<a class="nocolor" href="search.do?indexName=publicimages&templateName=imagepreview&lq=${pageStyleUtil.encodeURL("Instrument:\"" + doc.get("Instrument") + "\"")}&format=PDF&page=1&view=FitV&scrollbar=0&navpanes=0&statusbar=0&messages=0?iframe=true&width=50%&height=95%" rel="prettyPhoto[iframe]" title="Instrument : <a  class='nocolor' href='search.do?indexName=jeffersondetails&templateName=default&lq=${pageStyleUtil.encodeURL("Instrument:\"" + doc.get("Instrument") + "\"")}'><b>${doc.get("Instrument")}</b></a> </br> Doc Type: ${doc.get("DocType")} </br> Date Recorded: ${pageStyleUtil.format(doc.get("RecDateDisplay"), "yyyy-MM-dd HH:mm:ss", "MM/dd/yyyy HH:mm:ss a")} </br>" ><img id="preview" title="Preview" src="<@com.currentUrlPrefix/>/resource/preview.png"></a>
+	    </div>
+	</@display.column> 
+	
+	 <@display.column  media="html" title="Add to Cart">
+	    <input class="cartLink" type="button" title="${doc.get("Instrument")}" value="Add to Cart"/>
+	</@display.column> 
+</#if>
+
+<@display.column media="html" indexColumnName="Instrument" title="Details">
+    <a href="search.do?indexName=jeffersondetails&templateName=default_tablet&lq=Instrument:${doc.get("Instrument")}&pk=${doc.get("pk_key")}">View Details</a> 
+</@display.column>
+
+
+
+
+
+
+
+        

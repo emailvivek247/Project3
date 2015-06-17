@@ -1,0 +1,9 @@
+<#if searchResult.xstreamdocs?has_content>
+    <#assign ResultId =0>
+	<@display.table name="searchResult.xstreamdocs" id="doc" export=true requestURI="/search.do" excludedParams="searchType ActAttyList ActAttyList_select CaseNumber CaseNumber_select CourtCode CourtCode_select DateTimeMod DateTimeMod_select EventCode EventCode_select EventDate EventDate_select EventDesc EventDesc_select ">
+	  <#include "document.stl">
+	  <@display.setProperty name="export.title" value="Search Criteria :${Request.searchForm.searchQuery}" />
+	</@display.table>
+<#else>
+ <#include "noResults.stl">
+</#if>

@@ -1,0 +1,20 @@
+<#function getDocument URL, indexName, query>
+	<#assign sc = new("net.javacoding.xsearch.api.SearchConnection")>
+	<#assign searchQuery = new("net.javacoding.xsearch.api.SearchQuery")>
+	${sc.setIndex(indexName)}
+	${sc.setURL(URL)}
+	${searchQuery.setAdvancedQuery(query)}
+	<#assign sr = sc.search(searchQuery)>
+	<#return sr.getDocList()>
+</#function>
+
+<#assign uri = "http://nv-rd1/" + request.getContextPath()>
+<#assign judges = getDocument(uri, "judge", "")>
+<select name="JudgeName" id="JudgeName">
+     <#if judges?has_content>
+         <#foreach doc in judges>
+              <option value="${doc.getString("PersonAliasID")}">${doc.getString("JudgeName")}</option>  
+         </#foreach>
+     </#if>
+</select>
+

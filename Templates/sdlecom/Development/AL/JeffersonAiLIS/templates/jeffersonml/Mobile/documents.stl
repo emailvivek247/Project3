@@ -1,0 +1,26 @@
+<#if (searchResult.docs?has_content && searchResult.docs.size() > 0) >
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+  <p class="result">
+  
+     <br/><b>${searchResult.datasetConfiguration.getColumn("Instrument").displayName}</b>:<a href="search.do?indexName=jeffersondetails&templateName=defaultml_mobile&lq=${pageStyleUtil.encodeURL("Instrument:\"" + doc.get("Instrument") + "\"")}"> ${doc.get("Instrument")}</a></b>
+	<#if isPhoneticSearch == "1">
+		  		<br/><b>${searchResult.datasetConfiguration.getColumn("PhoneticName").displayName}</b>:${searchResult.highlight(doc, "PhoneticName")}      
+      <#else>
+          <br/><b>${searchResult.datasetConfiguration.getColumn("Name").displayName}</b>:${searchResult.highlight(doc, "Name")}
+      </#if>
+     <br/><b>${searchResult.datasetConfiguration.getColumn("PartyRole").displayName}</b>:${searchResult.highlight(doc, "PartyRole")}
+     <br/><b>${searchResult.datasetConfiguration.getColumn("OtherName").displayName}</b>:${searchResult.highlight(doc, "OtherName")}
+     <br/><b>${searchResult.datasetConfiguration.getColumn("OtherRoleName").displayName}</b>:${searchResult.highlight(doc, "OtherRoleName")}
+     <br/><b>Date Married</b>:
+    		<#if doc.get("RECDATE2")?has_content>
+		      ${pageStyleUtil.format(doc.get("RECDATE2"), "yyyymmdd", "mm/dd/yyyy")}&nbsp;<b>(MM/DD/YYYY)</b>
+		</#if>
+     <br/><b>${searchResult.datasetConfiguration.getColumn("DocType").displayName}</b>:${searchResult.highlight(doc, "DocType")}
+     <br/><b>${searchResult.datasetConfiguration.getColumn("RecDate1Display").displayName}</b>:&nbsp;${pageStyleUtil.format(doc.get("RecDate1Display"), "yyyy-MM-dd hh:mm:ss", "MM/dd/yyyy hh:mm:ss a")}     
+          
+ <br/>&nbsp;
+ </#foreach>
+<#else>
+ <#include "noResults.stl"> 
+</#if>

@@ -1,0 +1,235 @@
+<#include "/admin/lib/include.stl" />
+<@loginLayout encoding="utf-8">
+<#assign form  =JspTaglibs["http://www.springframework.org/tags/form"]>
+<#assign spring=JspTaglibs["http://www.springframework.org/tags"]>
+<link rel="stylesheet" href="resources/styles/validationEngine.jquery.css" type="text/css" />
+<link rel="stylesheet" href="resources/styles/login.css" />
+<link rel="stylesheet" href="resources/styles/jquery-ui-1.8.11.base.css" />
+<link rel="stylesheet" href="resources/styles/jquery-ui-custom-ext.css" />
+<script type="text/javascript" src="resources/javascripts/jquery.min.js"/></script>
+<script type="text/javascript" src="resources/javascripts/jquery-ui.min.js"/></script>
+<script type="text/javascript" src="resources/javascripts/jquery.validationEngine-en.js"></script>
+<script type="text/javascript" src="resources/javascripts/jquery.validationEngine.js"></script>
+<script type="text/javascript" src="resources/javascripts/jquery.cookie.js"></script>
+
+<!--ARL HEADER-->
+	<meta name="msapplication-TileColor" content="#015CB9">
+	<meta name="msapplication-TileImage" content="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-144x144.png">
+	<link rel="shortcut icon" href="https://d1rn8z435cu2eh.cloudfront.net/favicon.ico" sizes="16x16 32x32 64x64" type="image/x-icon">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-152x152.png" sizes="152x152">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-144x144.png" sizes="144x144">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-120x120.png" sizes="120x120">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-114x114.png" sizes="114x114">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-72x72.png" sizes="72x72">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-57x57.png" sizes="57x57">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon.png">
+	<link rel='stylesheet' id='open-sans-pt-sans-css'  href='resources/styles/OpenSans.css' type='text/css' media='all' />
+	
+	<script type="text/javascript">
+	var _gas = _gas || [];
+	_gas.push(['_setAccount', 'UA-23381988-1']); // All ACG
+	_gas.push(['_trackPageview']);
+	_gas.push(['_gasTrackOutboundLinks']);
+	_gas.push(['_gasTrackMailto']);
+	_gas.push(['_gasTrackDownloads', {
+	  category: 'Download',
+	  extensions: ['']
+	}]);
+	_gas.push(['_gasTrackYoutube', {
+	  percentages: [1, 20, 40, 60, 80],
+	  category: 'YouTube Video'
+	}]);
+	_gas.push(['_gasTrackVimeo', {
+	  category: 'Vimeo Video'
+	}]);
+	_gas.push(['_gasTrackAudio']);
+	_gas.push(['_gasTrackVideo']);
+	(function () {
+	  var ga = document.createElement('script');
+	  ga.type = 'text/javascript';
+	  ga.async = true;
+	  ga.src = 'resources/javascripts/gas.min.js';
+	  var s = document.getElementsByTagName('script')[0];
+	  s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+<!--END ARL HEADER-->
+
+<style>
+
+span.ADCSI_leftcol {
+	width: 200px;
+	text-align:right;
+	display: inline-block;
+}
+div.ADCSI_row {
+	margin-right: 20px;
+}
+table#subscriptionDetails {
+	border-collapse: collapse;
+	margin: 10px;
+}
+
+table#subscriptionDetails td {	
+	padding: 5px 5px;
+}
+
+table#subscriptionDetails tr.paid {	
+	color: #527838;
+}
+
+table#subscriptionDetails tr.unPaid {	
+	color: #ED1C43;
+}
+
+th.header{
+	color: #039;
+	border-bottom: 2px solid #6678B1;
+	padding: 5px 5px;
+}
+
+td.footer{
+	color: #039;
+	border-top: 2px solid #6678B1;
+	padding: 5px 5px;
+}
+#pay {
+	background: #55a003 url(resources/styles/images/greenGrad.png) 50% 50% repeat-x;
+	color: white;
+}
+#pay:hover {
+	background: #55a003 url(resources/styles/images/greenGrad.png) 50% 50% repeat-x;
+	color: white;
+}
+
+</style>
+	<div class="content">
+		<div style="width: 700px; margin-left: auto;margin-right:auto;">
+			<div style="margin-top: 0px; margin-bottom: 12px;">			
+			<@form.form id="accountSummary-form" action="fetAccountSummary.admin" method="post" autocomplete="on">						
+			<table style="width:100%">
+				<tr>
+				<th><b><@spring.message code="form.name.accountSummary" /></b></th>
+				</tr>
+				<tr>				
+					<td style="width:50%;vertical-align:top;">					
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.authentication.userName" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									${user.firstName}&nbsp;${user.lastName}						
+								</span>
+							</span>
+							</div>			
+							<div class="ADCSI_row">
+							<span class="ADCSI_leftcol" ><@spring.message code="security.authentication.username" /></span>
+							<span class="ADCSI_rightcol" style="width: 250px; display: inline-block; ">
+								<span>
+									${user.username}
+								</span>
+							</span>
+							</div>
+							<div class="ADCSI_row">
+							<span class="ADCSI_rightcol" style="width: 700px; display: inline-block;text-align:center">
+								<b><@spring.message code="security.ecommerce.currentSubscriptions" /></b>
+							</span>
+							</div>							
+							<div class="ADCSI_row">							
+							<span class="ADCSI_rightcol" style="width: 700px; display: inline-block; ">
+								
+								<table width="670px" id="subscriptionDetails">
+								<th class="header" width="100px"><@spring.message code="security.ecommerce.label.site" /></th>
+								<th class="header" width="300px"><@spring.message code="security.ecommerce.label.subscription" /></th>
+								<th class="header" width="70px"><@spring.message code="security.ecommerce.label.fee" /></th>
+								<th class="header" width="100px"><@spring.message code="security.ecommerce.label.paymentStatus" /></th>
+								<th class="header" width="100px"><@spring.message code="security.ecommerce.label.nextBillingDate" /></th>								
+								<#assign totalDue = 0 >
+								<#list subscriptions as subscription >								
+								<#if subscription.isPayMentPending() >
+									<tr class="unPaid">
+								<#else>
+									<tr class="paid">
+								</#if>
+									<td>${subscription.siteName}</td>
+									<td>${subscription.subscription}</td>
+									<td>${subscription.subscriptionFee?string.currency}</td>
+									<td>
+										<#if subscription.subscriptionFee = 0 >
+											<@spring.message code="security.ecommerce.label.free" />
+										<#elseif subscription.subscriptionFee &gt; 0 >
+											<#if subscription.isPayMentPending() >
+												<#assign totalDue = totalDue + subscription.subscriptionFee >
+												<@spring.message code="security.ecommerce.label.paymentDue" />												
+											<#else >
+												<#if subscription.category = 'NON_RECURRING_SUBSCRIPTION'>
+													<@spring.message code="security.ecommerce.label.payasyougo" />	
+												<#else>
+													<@spring.message code="security.ecommerce.label.paid" />
+												</#if >												
+											</#if >
+										</#if >		
+									</td>					
+									<td><#if subscription.nextBillingDate?has_content >${subscription.nextBillingDate?date}<#else >N/A</#if ></td>
+								</tr>																	
+						        </#list>
+						        <tr>
+									<td class="footer" colspan="2">
+										<@spring.message code="security.ecommerce.totalAmountDue" />	
+									</td>
+									<td class="footer" colspan="3">
+										 <#if totalDue &gt; 0>
+						            		${totalDue?string.currency}<sup>*</sup>&nbsp;&nbsp;<a id="pay" href="paymentInfo.admin">Pay Now</a>
+						            	 <#else>
+						                	$0.00<sup>*</sup>	
+						                 </#if>
+									</td>									
+								</tr>
+						        </table>
+							</span>
+							</div>							
+					</td>
+				</tr>
+			</table>
+		</@form.form>
+		</div>
+	</div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+	    $("input:submit").button(); 
+		$(':input:visible:enabled:first').focus();
+		$("#j_username").val($.cookie("username"));
+		if ($.cookie("username") != "") {
+			$('#rememberme').attr('checked', true);
+		}		
+        //$('#login-form').validationEngine();
+        //$('#login-form').validationEngine('hide');		
+		$('#btnLogin').click(function() {
+			if ($('#rememberme').is(':checked')) {
+				$.cookie("username", $("#j_username").val(), { expires : 10 });				
+			}
+			else {
+				$.cookie("username", "", { expires : 10 });
+			}
+		});	
+		jQuery('.sverror').each(function() {
+		    var currentElement = '#' + $(this).attr('id').split('.')[0];	     
+	        $(currentElement).validationEngine('showPrompt', $(this).html(), 'fail', 'topRight', true);
+		});	
+		$('#isAddressMatch').click(function() {
+			if ($('#isAddressMatch').is(':checked')) {	
+	    		$("#billingAddressLine1").val($("#addressLine1").val())
+	    		$("#billingAddressLine2").val($("#addressLine2").val())
+	    		$("#billingCity").val($("#city").val())
+	    		$("#billingState").val($("#state").val())
+	    		$("#billingZip").val($("#zip").val())
+			}
+		});	
+		$( "#pay" ).button({
+	            icons: {
+	                primary: "ui-icon-cart"
+	            }
+	    });	
+	});
+</script>
+</@loginLayout>

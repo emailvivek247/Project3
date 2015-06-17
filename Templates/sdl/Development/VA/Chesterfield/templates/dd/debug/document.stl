@@ -1,0 +1,12 @@
+
+ <tr>
+               <td>${searchResult.highlight(doc, "CaseID")}</td>
+             <td>${searchResult.highlight(doc, "DocketDate")}</td>
+             <td>${searchResult.highlight(doc, "DocketText")}</td>
+             <td>${searchResult.highlight(doc, "IS_RESTRICTED_FLG")}</td>
+             <td>${searchResult.highlight(doc, "IS_DRAFT")}</td>
+             <td>${searchResult.highlight(doc, "IS_SEALED_FLG")}</td>
+             <td>${searchResult.highlight(doc, "ROA_HIDDEN")}</td>
+             <td>${searchResult.highlight(doc, "SEALED_CASE_FLG")}</td>
+ </tr>
+

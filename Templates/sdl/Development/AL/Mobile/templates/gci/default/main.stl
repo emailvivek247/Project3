@@ -1,0 +1,17 @@
+<!--  -->
+<@com.useHighlightTag '<span class="highlight">', '</span>' />
+<#include "layout.stl">
+<@layout title="General Case Info" encoding="${searchResult.encoding}">
+
+<#include "/templates/globalNav.stl">
+
+ <@com.errorMarkup/>
+ <br> <br> <br> <br>
+ <table class="main">
+ <tr valign="top">
+ <td class="mainRight">
+  <div id="documents"><#include "documents.stl"></div>
+ </td></tr></table>
+ 
+ 
+</@layout>

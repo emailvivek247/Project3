@@ -1,0 +1,126 @@
+<#assign display=JspTaglibs["http://displaytag.sf.net"]>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.fileDownload.js"></script>
+<style type="text/css">
+body, th, td, div, .p, a {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-size: 95%;
+}
+</style>
+<center>
+	<a href="http://www.amcad.com/index.php?option=com_content&view=article&id=94&Itemid=50"><img src="templates/roamhelp/ROAMHelp/resource/ROAM.png" border="0" /></a>
+</center><br>
+
+<#-- 
+<LEFT><a href="javascript:history.go(-1)">« Back to Search Screen</a></LEFT> <CENTER><A HREF = "#TIPS">Helpful Tips</A> | <A HREF = "#FAQ">Frequently Asked Questions</A> | <A HREF = "#DOCTYPE">Document Type List</A> | <A HREF = "${request.getContextPath()}/QuickTips.pdf">ROAM User Manual</A> </CENTER>
+-->
+     <CENTER><A style="color:#2E7EE4;" HREF = "#TIPS">Helpful Tips</A> | <A style="color:#2E7EE4;" HREF = "#FAQ">Frequently Asked Questions</A> | <a style="color:#2E7EE4;" href = "#DOCTYPE">Document Type List</a> <#-- | <a href = "${request.getContextPath()}/templates/QuickTips.pdf">ROAM User Manual</a> --> </center>
+
+<BR><font color="#000066">
+<B>AmCad’s Rapid Online Access Method (ROAM) is a robust, easy to use, enterprise data retrieval solution.  ROAM allows you to run full text searches across all data elements, or selected data elements, with near instant results.  Learn more about ROAM and its capabilities below
+</B></font>
+<BR>
+<BR>
+
+<BR>
+<B><A NAME = "TIPS"><FONT SIZE = "3">HELPFUL TIPS</FONT></A></B>
+<BR>
+
+<BR>
+<B>Basic Search</B><P><UL><LI>
+The Basic Search is a full text search across all indexed fields.  
+<p>
+Example:  If a user types <I>John Smith</I> into the Basic Search it will find all instances of <I>John Smith</I> located in all fields indexed.  The user would also get instances of <I>Smith John</I> that are located in all fields indexed.
+<P><img src="templates/roamhelp/ROAMHelp/resource/ROAM_BasicSearch_Box.PNG" border="0" />
+
+</LI></UL>
+
+<B>Advanced Search</B><P><UL><LI>
+The Advanced Search is a full text field-level search that can be accessed from the <I>Advanced Search</I> hyperlink on the main search page.  The Advanced Search can be used to search by Instrument Number, Name, Date Recorded, individual Legal fields, and more!
+<P>
+Example: Select the <I>Advanced Search</I> hyperlink (shown below) 
+<P> By selecting the <I>Advanced Search</I> hyperlink, ROAM will list all the field-level searches that can be performed (example below)
+<P><img src="templates/roamhelp/ROAMHelp/resource/ROAM_AdvancedSearch2.PNG" border="0" />
+</LI></UL>
+
+
+
+<B>Results Ranking</B><P><UL><LI>
+ROAM ranks the entire search results by relevance first, and time recorded second.  If a user enters a search for <I>John Smith</I> in ROAM, records that contain an exact match of <I>John Smith</I> will be displayed first.  Records that contain the exact match within the exact field will be ranked by the date and time they were recorded in descending order.  Records that contain <I>Smith John</I> will be ranked after records that contain <I>John Smith</I>. 
+</LI></UL>
+
+<B>Results Sorting</B><P><UL><LI>
+Users can sort their entire results set by selecting a sorting option from the Sort Dropdown located below each of the search boxes in both Basic and Advanced search. In order to sort, the user must type in a search criteria and select one of the sorting options, Name or Date sort, and click the search button.
+<P><img src="templates/roamhelp/ROAMHelp/resource/SORT_ROAM_BasicSearch_Box.PNG" border="0" />
+</LI></UL>
+
+
+<B>Wild Card Searching</B><P><UL><LI>
+ROAM supports Wildcard searching.  A user can perform a Wildcard search by entering a ‘*’ after a minimum of 2 characters in order to utilize wildcard searching capability.
+<P>
+Example:  Entering <I>Jo* Smith</I> in ROAM will return results matching <I>John Smith, Smith John, Joe Smith, Smith Joe, Joseph Smith, Smith Joseph, etc.</I>  Entering <I>J* Smith</I> into ROAM will only return results matching <I>J Smith</I> and <I>Smith J</I>.  You must enter a minimum of 2 characters to use ROAM’s Wildcard searching capability 
+</LI></UL>
+
+
+
+<B>Faceting (Filter)</B><P><UL><LI>
+ROAM provides the ability to filter searches utilizing ROAM’s faceting functionality.  The Facet is located on the left hand side of your search results screen.  When selecting an item in the facet it will filter your results to include only results that match that item.  Selected filters are shown at the top of the facet. Users have the option of removing filters by clicking on them again in the top of the facet.  
+</LI></UL>
+
+<B>Exact Searches</B><P><UL><LI>
+Users can run an exact search in the Basic Search window by placing quotation marks (“ “) around the string of text they want to search on. This feature is not permitted in the Advanced Search Window
+<P>
+Example: Entering <I>“Smith John”</I> will return results matching <I>Smith John</I> and will not return results matching <I>John Smith</I>
+</LI></UL>
+
+
+<B>Results Per Page</B><P><UL><LI>
+The results per page in ROAM can be adjusted by the user to any of the allowed settings in the results per page drop down located in the lower right hand corner of the web page. 
+</LI></UL>
+
+
+<B>Export Options</B><P><UL><LI>
+ROAM allows the user to export the contents of the page into excel, pdf, and work using the Export feature located at the bottom of the search results
+</LI></UL>
+
+<B><A NAME = "DASH">Dashboards</A></B><P><UL><LI>
+ROAM’s dashboards allow data to be represented graphical to provide better analysis.  Many of ROAM’s dashboards are interactive, meaning that selecting an item on a dashboard will update the dashboard, initialize another dashboard, or even run a search within ROAM.  In addition, some dashboards can be downloaded to PDF, JPEG, and PNG.
+</LI></UL>
+
+<B>Browser Compatibility</B><P>
+<img src = "${request.getContextPath()}/templates/roamhelp/ROAMHelp/browsers.png" alt = "IE, Firefox, Chrome, Safari, Opera">
+
+
+<BR><BR><BR><P>
+<B><A NAME = "FAQ"><FONT SIZE = "3">FREQUENTLY ASKED QUESTIONS</FONT></A></B>
+<BR><BR><P>
+<B><I>Why does it appear that some records duplicate?</I></B><UL><LI>
+ROAM allows you to search on all records located in the index.  This means that the results grid includes all parties and all legal descriptions for a given record.  
+</LI></UL>
+<B><I>I clicked on a document type on ROAM's Timeline Statistics dashboard and it ran a search.  Why are the number of records returned different then the number of
+records displayed on the dashboard?</I></B><UL><LI>
+The ROAM dashboard displayed the total number of documents, however the ROAM search page is displaying all associated parties and legal descriptions for those selected documents. 
+</LI></UL>
+<B><I><A NAME = "PHONETIC">What is a Phonetic Search?</A></I></B><UL><LI>
+ROAM's Phonetic Search uses advanced mathematical algorithms to search across names indexed within the system and return records 
+where the name is pronounced like the name that is being searched on. The phonetic search will only apply these advanced algorithms 
+to names in the index, and not to other fields.  Also, as a result of searching across the indexed names for results that 
+are pronounced like the name being searched on, the phonetic search will bring back more results than a traditional exact name search.  
+</LI></UL>
+
+
+<BR><BR>
+
+<B><A NAME = "DOCTYPE"><FONT SIZE = "3">DOCUMENT TYPE LIST</FONT></A></B>
+
+<#if searchResult.docs?has_content>
+	<@display.table name="searchResult.docs" id="doc" export=true requestURI="/search.do" excludedParams="CODE CODE_select DESCR DESCR_select ">
+	  <#include "document.stl">
+	</@display.table>
+</#if>
+
+
+<script type="text/javascript">
+$(function() {      
+    $("#doc").tablesorter({widgets: ['zebra']});
+}); 
+</script>

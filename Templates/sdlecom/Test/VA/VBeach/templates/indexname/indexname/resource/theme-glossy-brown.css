@@ -1,0 +1,191 @@
+@charset "utf-8";
+/* GLOSSY BROWN CSS */
+
+
+@import url("theme-base.css");
+
+
+body {
+        background-color: #ebe2cc;
+        color: #443113;
+}
+
+a:link {
+	color: #2e7ee4;
+	text-decoration: none;
+                
+}
+a:visited {
+	color: #803f1e;
+}
+a:hover {
+	background-color: none;
+}
+
+a.gotoPage, a.gotoPage:link, a.gotoPage:visited {
+background-color: #44569E;
+}
+
+a.gotoPage:hover,a.gotoPage:active {
+background-color:#051761;
+}
+
+span.highlight {
+        background-color:#8dc3e9;
+}
+
+table.main{ 
+    color: #000;
+}
+
+td.mainLeft {
+    --background: #032c555 url(striped-gray-bg.gif);
+}
+
+p.result {
+      border-bottom:1px solid #DDDDDD;
+}
+
+table.resultHeader {
+    font-family: helvetica, arial, sans-serif;;    
+    background:#30210c url(brown-bar-solid.png) repeat-x 55% 55%;
+}
+
+font.label{
+    font-family:verdana,sans-serif;
+}
+
+input.text {
+    background: #FFF url('magnifying-glass.gif') no-repeat;
+    border-color:#443113; 
+}  
+ 
+button.search {
+    background:#30210c url(brown-bar-striped.png) repeat-x 50% 50%;
+    border-color:#4297D7; 
+    color:#EAF5F7;
+}
+a.gotoPage {
+    background:#30210c url(brown-bar-striped.png) repeat-x 50% 50%;
+    border-color:#4297D7; 
+    color:#EAF5F7;
+}
+
+td.resultHeadercolleft {
+    color:#EAF5F7;    
+}
+
+td.resultHeadercolright {
+    color:#EAF5F7;
+}
+
+.multi_select form input.button,button.button {
+  font-family:verdana,arial,geneva,sans-serif;
+  text-decoration:none;
+  background:#fee4bd;
+  border-color:#3D4D5A; 
+  color:#443113;  
+}
+
+.multi_select form input.button:active {
+  background:#ff8106;
+  border-top:solid 2px #2A537B;
+  border-left:solid 2px #2A537B;
+}
+
+.multi_select form input.button:hover,button.button:hover {
+  background:#2e7ee4 repeat-x scroll 50% 50%;
+  border-color:#4297D7;
+  color:#EAF5F7;
+}
+
+
+/* TABLES */
+
+table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+    background:#30210c url(brown-bar-solid.png) repeat-x 55% 55%;
+    border-color: #333333;
+    color:#EAF5F7;
+}
+
+table.tablesorter tbody td {
+    color: #3D3D3D;
+    background-color: #FFF;
+}
+
+table.tablesorter tbody tr.odd td {
+    background:#feecd1;
+}
+
+table.tablesorter tbody tr.even td {
+    background-color:#ffffff;
+}
+
+table.tablesorter thead tr .headerSortUp {
+    background:#feddaf url(cream-bar-solid.png) repeat-x 55% 55%;
+    color: #443113;
+}
+
+table.tablesorter thead tr .headerSortDown {
+    background:#feddaf url(cream-bar-solid.png) repeat-x 55% 55%;
+    color: #443113;
+}
+
+table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
+    background-color: #feddaf;
+}
+
+.column{
+    background:#fff;
+}
+
+div.box {
+    border-color: #443113;
+}
+
+.box th,.box .header{
+    background:#382214 repeat-x scroll 50% 50%; 
+}
+
+.box h2{
+    font-family:Verdana;
+    background: #30210c url(brown-bar-striped.png) repeat-x 55% 55%;
+    color:#fff;
+    border-bottom:1px solid #eee;      
+}
+
+.box h2.collapse{
+    background:#feddaf url(cream-bar-striped.png) repeat-x 50% 50%;
+    color:#443113;
+}
+
+.success{
+    background:#d9f9e0;
+    border-color:#339933;
+}
+
+.box{
+    background:#fff;
+    border-color:#443113;
+}
+
+.smartLink:hover {
+       background-color: #ffff00;
+       color: #024769;   
+}
+
+table.tablesorter thead tr .headerSortUp p.active {
+	background: url(asc_brown.gif) no-repeat center;	
+}
+
+table.tablesorter thead tr .headerSortDown p.active {
+	background: url(desc_brown.gif) no-repeat center;	
+}
+
+.box h2.collapse:hover p.active{            	
+	background:url(collapse_brown.png) no-repeat center;	
+}
+
+@charset "utf-8";
+/* CSS Document */
+

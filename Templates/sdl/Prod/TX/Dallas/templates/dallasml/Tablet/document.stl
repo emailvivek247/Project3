@@ -1,0 +1,67 @@
+<@display.column media="html" indexColumnName="Instrument" title="${searchResult.datasetConfiguration.getColumn(\"Instrument\").displayName}">
+	<a href="${request.getContextPath()}/search.do?indexName=dallasdetails&templateName=MLDetails_SN&lq=${pageStyleUtil.encodeURL("Instrument:\"" + doc.get("Instrument") + "\"")}"> ${doc.get("Instrument")}</a>
+</@display.column>
+<@display.column media="rtf excel pdf" indexColumnName="Instrument" title="${searchResult.datasetConfiguration.getColumn(\"Instrument\").displayName}">
+	${number.format("###0.##",doc.get("Instrument"))}
+</@display.column>
+<#if isPhoneticSearch == "1">
+	<@display.column media="html" indexColumnName="Name" title="${searchResult.datasetConfiguration.getColumn(\"PhoneticName\").displayName}">
+	   ${searchResult.highlight(doc, "PhoneticName")}
+	</@display.column>
+	<@display.column media="rtf excel pdf" indexColumnName="Name" title="${searchResult.datasetConfiguration.getColumn(\"PhoneticName\").displayName}">
+		${doc.get("PhoneticName")}
+	</@display.column>
+<#else>
+	<@display.column media="html" indexColumnName="Name" title="${searchResult.datasetConfiguration.getColumn(\"Name\").displayName}">
+		${searchResult.highlight(doc, "Name")}
+	</@display.column>
+	<@display.column media="rtf excel pdf" indexColumnName="Name" title="${searchResult.datasetConfiguration.getColumn(\"Name\").displayName}">
+		${doc.get("Name")}
+	</@display.column>
+</#if>	
+<@display.column media="html" indexColumnName="PartyRole" title="${searchResult.datasetConfiguration.getColumn(\"PartyRole\").displayName}">
+	${searchResult.highlight(doc, "PartyRole")}
+</@display.column>
+<@display.column media="rtf excel pdf" indexColumnName="PartyRole" title="${searchResult.datasetConfiguration.getColumn(\"PartyRole\").displayName}">
+	${doc.get("PartyRole")}		   	
+</@display.column>
+<@display.column media="html" indexColumnName="OtherName" title="${searchResult.datasetConfiguration.getColumn(\"OtherName\").displayName}">
+	${searchResult.highlight(doc, "OtherName")}
+</@display.column>
+<@display.column media="rtf excel pdf" indexColumnName="OtherName" title="${searchResult.datasetConfiguration.getColumn(\"OtherName\").displayName}">
+	${doc.get("OtherName")}
+</@display.column>
+<@display.column media="html" indexColumnName="OtherRole" title="${searchResult.datasetConfiguration.getColumn(\"OtherRole\").displayName}">
+	${searchResult.highlight(doc, "OtherRole")}
+</@display.column>
+<@display.column media="rtf excel pdf" indexColumnName="OtherRole" title="${searchResult.datasetConfiguration.getColumn(\"OtherRole\").displayName}">
+	${doc.get("OtherRole")}
+</@display.column>
+<@display.column media="html" indexColumnName="RECDATE2" title="${searchResult.datasetConfiguration.getColumn(\"RECDATE2\").displayName}">
+	<#if doc.get("RECDATE2")?has_content>
+		${pageStyleUtil.format(doc.get("RECDATE2"), "yyyymmdd", "mm/dd/yyyy")}
+	</#if>			   	
+</@display.column>
+<@display.column media="rtf excel pdf" indexColumnName="RECDATE2" title="${searchResult.datasetConfiguration.getColumn(\"RECDATE2\").displayName}">
+	<#if doc.get("RECDATE2")?has_content>
+		${pageStyleUtil.format(doc.get("RECDATE2"), "yyyymmdd", "mm/dd/yyyy")}
+	</#if>   	
+</@display.column>
+<@display.column media="html" indexColumnName="DocType" title="${searchResult.datasetConfiguration.getColumn(\"DocType\").displayName}">
+		${searchResult.highlight(doc, "DocType")}
+	  </@display.column>
+	  <@display.column media="rtf excel pdf" indexColumnName="DocType" title="${searchResult.datasetConfiguration.getColumn(\"DocType\").displayName}">
+		${doc.get("DocType")}
+</@display.column>
+<@display.column media="html" indexColumnName="LicenseNum" title="${searchResult.datasetConfiguration.getColumn(\"LicenseNum\").displayName}">
+	${searchResult.highlight(doc, "LicenseNum")}
+</@display.column>
+<@display.column media="rtf excel pdf" indexColumnName="LicenseNum" title="${searchResult.datasetConfiguration.getColumn(\"LicenseNum\").displayName}">
+	${doc.get("LicenseNum")}
+</@display.column>
+<@display.column media="html" indexColumnName="RECDATE1DISPLAY" title="${searchResult.datasetConfiguration.getColumn(\"RECDATE1DISPLAY\").displayName}">
+	${searchResult.highlight(doc, "RECDATE1DISPLAY")}
+</@display.column>
+<@display.column media="rtf excel pdf" indexColumnName="RECDATE1DISPLAY" title="${searchResult.datasetConfiguration.getColumn(\"RECDATE1DISPLAY\").displayName}">
+	${doc.get("RECDATE1DISPLAY")}
+</@display.column>

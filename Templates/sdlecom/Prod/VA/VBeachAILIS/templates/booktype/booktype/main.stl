@@ -1,0 +1,19 @@
+<#function getDocument URL, indexName, query>
+	<#assign sc = new("net.javacoding.xsearch.api.SearchConnection")>
+	<#assign searchQuery = new("net.javacoding.xsearch.api.SearchQuery")>
+	${sc.setIndex(indexName)}
+	${sc.setURL(URL)}
+	${searchQuery.setAdvancedQuery(query)}
+	<#assign sr = sc.search(searchQuery)>
+	<#return sr.getDocList()>
+</#function>
+
+<#--<#assign uri = pageStyleUtil.getSystemValue("url") + request.getContextPath()>-->
+<#assign booktypes = getDocument("http://nv-rd1/vbeachailistest/", "booktype", "")>
+<select name="Booktype" id="Booktype">
+     <#if booktypes?has_content>
+         <#foreach doc in booktypes>
+              <option value="${doc.getString("Booktype")}">${doc.getString("Booktype")}</option>  
+         </#foreach>
+     </#if>
+</select>

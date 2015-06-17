@@ -1,0 +1,254 @@
+
+
+<b>Documents</b>
+<table id="searchResult" class="tablesorter">
+ <thead>
+		 <tr>
+		  
+				  <th>${searchResult.datasetConfiguration.getColumn("Instrument").displayName}</th>
+				  <th>${searchResult.datasetConfiguration.getColumn("RecDateT").displayName}</th>
+				  <th>${searchResult.datasetConfiguration.getColumn("DocType").displayName}</th>
+				  <th>${searchResult.datasetConfiguration.getColumn("Book").displayName}</th>
+				  <th>${searchResult.datasetConfiguration.getColumn("Page").displayName}</th>
+
+		 </tr>
+ </thead>
+ <tbody>
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+		   <tr>
+					 <td>${number.format("###0.##",doc.get("Instrument"))}</td>
+					 <td>${pageStyleUtil.format(doc.get("RecDateT"), "yyyy-MM-dd hh:mm:ss", "MM/dd/yyyy hh:mm:ss a")}</td>
+					 <td>${searchResult.highlight(doc, "DocType")}</td>
+					 <td>${searchResult.highlight(doc, "Book")?replace('|', '&nbsp;')}</td>
+					 <td>${searchResult.highlight(doc, "Page")?replace('|', '&nbsp;')}</td>
+				  
+		 </tr>
+ </#foreach>
+
+
+ </tbody>
+</table>
+<table id="document2" class="tablesorter">
+ <thead>
+		 <tr>
+		  
+					  <th>${searchResult.datasetConfiguration.getColumn("Amount6").displayName}</th>
+					  <th>${searchResult.datasetConfiguration.getColumn("DocType").displayName}</th>
+					  <th>${searchResult.datasetConfiguration.getColumn("PageCount").displayName}</th>
+					  <th>${searchResult.datasetConfiguration.getColumn("Legacy").displayName}</th>
+
+		 </tr>
+ </thead>
+ <tbody>
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+		   <tr>
+						 <td>${number.format("###0.##",doc.get("Amount6"))}</td>
+						 <td>${searchResult.highlight(doc, "DocType")}</td>
+						 <td>${searchResult.highlight(doc, "PageCount")}</td>
+						 <td>${searchResult.highlight(doc, "Legacy")?replace('|', '&nbsp;')}</td>
+				  
+		 </tr>
+ </#foreach>
+
+ </tbody>
+</table>
+
+
+<table id="property" class="tablesorter">
+		 <thead>
+			 <tr>
+				  <th>${searchResult.datasetConfiguration.getColumn("Property").displayName}</th>
+				  <th>${searchResult.datasetConfiguration.getColumn("PropertyValue").displayName}</th>
+			 </tr>
+		 </thead>
+ <tbody>
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+		   <tr>
+					
+						 <td>${searchResult.highlight(doc, "Property")?replace('|', '&nbsp;')}</td>
+						 <td>${searchResult.highlight(doc, "PropertyValue")?replace('|', '&nbsp;')}</td>
+					
+				  
+		 </tr>
+ </#foreach>
+
+ </tbody>
+</table>
+
+
+
+<b>Party</b>
+<table id="entity" class="tablesorter">
+    <thead>
+			   <tr>
+						  <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("EntityName").displayName}</th>
+						  <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("EntityRole").displayName}</th>
+						  <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("Desigstatus").displayName}</th>
+						  <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("Corp").displayName}</th>
+						  <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("EntitySeq").displayName}</th>
+			   </tr>
+    </thead>
+  <tbody>
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+		   <tr>
+					
+						 <td>${searchResult.highlight(doc, "EntityName")?replace('|', '&nbsp;')}</td>
+						 <td>${searchResult.highlight(doc, "EntityRole")?replace('|', '&nbsp;')}</td>
+						 	 <td>${searchResult.highlight(doc, "Desigstatus")?replace('|', '&nbsp;')}</td>
+						 <td>${searchResult.highlight(doc, "Corp")?replace('|', '&nbsp;')}</td>
+						 	 <td>${searchResult.highlight(doc, "EntitySeq")?replace('|', '&nbsp;')}</td>
+						
+					
+				  
+		 </tr>
+ </#foreach>
+
+ </tbody>
+</table>
+
+<b>Legal</b>
+<table id="legal" class="tablesorter">
+    <thead>
+        <tr>
+      
+			  <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("Lot").displayName}</th>
+			  <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("Block").displayName}</th>
+			  <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("Subdivision").displayName}</th>
+			  <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("MapBook").displayName}</th>
+			  <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("MapPage").displayName}</th>
+			  <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("MapInstrumentNumber").displayName}</th>
+			  <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("Acreage").displayName}</th>
+			  <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("Freeform").displayName}</th>
+        </tr>
+     </thead>
+	 <tbody>
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+		   <tr>
+					
+						 <td>${searchResult.highlight(doc, "Lot")?replace('|', '&nbsp;')}</td>
+						 <td>${searchResult.highlight(doc, "Block")?replace('|', '&nbsp;')}</td>
+						 <td>${searchResult.highlight(doc, "Subdivision")?replace('|', '&nbsp;')}</td>
+						 <td>${searchResult.highlight(doc, "MapBook")?replace('|', '&nbsp;')}</td>
+						 <td>${searchResult.highlight(doc, "MapPage")?replace('|', '&nbsp;')}</td>
+						 <td>${searchResult.highlight(doc, "MapInstrumentNumber")?replace('|', '&nbsp;')}</td>
+						 <td>${searchResult.highlight(doc, "Acreage")?replace('|', '&nbsp;')}</td>
+						 <td>${searchResult.highlight(doc, "Freeform")?replace('|', '&nbsp;')}</td>
+						
+					
+				  
+		 </tr>
+ </#foreach>
+
+ </tbody>
+</table>
+
+<b>References</b> 
+<table id="docref" class="tablesorter">
+     <thead>
+        <tr>
+      <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("DocRefSeq").displayName}</th>
+      <th class="ui-state-default">${searchResult.datasetConfiguration.getColumn("RefInstrument").displayName}</th>
+   
+        </tr>
+     </thead>
+	 <tbody>
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+		   <tr>
+					
+						 <td>${searchResult.highlight(doc, "DocRefSeq")?replace('|', '&nbsp;')}</td>
+						 <td>${searchResult.highlight(doc, "RefInstrument")?replace('|', '&nbsp;')}</td>
+						
+						
+					
+				  
+		 </tr>
+ </#foreach>
+
+ </tbody>
+</table>
+ <table style="float-right, width="100%" >
+<td valign = "TOP" width="50% height="100%"">
+
+    <#foreach doc in searchResult.docs>
+    	<tr>Note: If you have issues viewing images with your current Adobe PDF Reader, please upgrade to the newest Adobe Reader version.</tr>
+        <tr valign = "TOP">
+		            <td align="left">     &nbsp; &nbsp;<a href = "http://www.adobe.com/products/acrobat/readstep2.html"><img src = "${request.getContextPath()}/templates/smithdetails/default/resource/adobe.bmp" border = "0"></a>
+            </td> 
+			 </#foreach>
+        </tr>
+		
+		
+
+<script type="text/javascript">
+$(document).ready(function() {
+	oTable = $('#searchResult').dataTable({
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bSort": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		"aaSorting": []
+	});
+} );
+
+      oTable = $('#document2').dataTable({
+        "bJQueryUI": true,
+        "bPaginate": false,
+        "bLengthChange": false,
+        "bFilter": false,
+        "bSort": true,
+        "bInfo": false,
+        "bAutoWidth": false,
+        "aaSorting": []
+        });
+		
+		   oTable = $('#property').dataTable({
+        "bJQueryUI": true,
+        "bPaginate": false,
+        "bLengthChange": false,
+        "bFilter": false,
+        "bSort": true,
+        "bInfo": false,
+        "bAutoWidth": false,
+        "aaSorting": []
+        });
+		
+		    oTable = $('#entity').dataTable({
+            "bJQueryUI": true,
+            "bPaginate": false,
+            "bLengthChange": false,
+            "bFilter": false,
+            "bSort": true,
+            "bInfo": false,
+            "bAutoWidth": false,
+            "aaSorting": []
+        });
+		     oTable = $('#legal').dataTable({
+            "bJQueryUI": true,
+            "bPaginate": false,
+            "bLengthChange": false,
+            "bFilter": false,
+            "bSort": true,
+            "bInfo": false,
+            "bAutoWidth": false,
+            "aaSorting": []
+        });
+        oTable = $('#docref').dataTable({
+        "bJQueryUI": true,
+        "bPaginate": false,
+        "bLengthChange": false,
+        "bFilter": false,
+        "bSort": true,
+        "bInfo": false,
+        "bAutoWidth": false,
+        "aaSorting": []
+        });
+</script>

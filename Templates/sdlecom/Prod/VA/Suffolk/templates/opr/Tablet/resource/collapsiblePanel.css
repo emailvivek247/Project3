@@ -1,0 +1,49 @@
+.module
+{
+	margin-bottom:7px;
+}
+.module .header, .module .header2
+{
+	background: #fff;
+	padding-left:310px;
+	padding-top:3px;
+        height:19px;
+        color:blue;
+        text-decoration:underline;
+        
+}
+.module .header h1, .module .header2 h1
+{
+	margin:0;
+	display:inline;
+	font-size:14px;
+	padding: 0px;
+}
+
+.module .content
+{
+	clear:both;
+        text-align:right;
+}
+.module .placeholder
+{
+	margin-top:1px;
+	margin-right:2px;
+}
+.module .expand
+{
+	--float:right;
+	display:inline;
+	width:16px;
+	height:16px;
+	
+}	
+.module .collapse
+{
+	float:right;
+	display:inline;
+	width:16px;
+	height:16px;
+	
+}
+	

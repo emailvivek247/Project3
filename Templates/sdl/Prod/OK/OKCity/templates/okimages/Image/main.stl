@@ -1,0 +1,48 @@
+<#-- ADD GOOGLE ANALYTICS -->
+<#include "/templates/googleAnalytics-OK.stl">
+
+<#if searchResult.docs?has_content>
+	<#foreach doc in searchResult.docs>
+		<#assign imagelocation = "\\\\" + "co-fs1.amcadco.local\\images\\oklahoma" + "\\" + doc.get("Year") + "\\" + doc.get("Month") + "\\" + doc.get("Day") + "\\" + doc.get("Instrument")>
+		<#assign baos = new("java.io.ByteArrayOutputStream")>
+		<#assign converter = new("com.fdt.common.util.TIFFToPDFConverter")>
+		<#if (converter.convert(imagelocation + ".tif" + ".burned", "UNOFFICIAL", 159,159,159,0,0,true,baos,false,1,true) == true)> 
+			${response.reset()}
+			${response.resetBuffer()}
+			${response.setContentType("application/pdf")}
+			${response.setHeader("Content-Disposition",  " inline; filename=document.pdf" )}
+			${response.setHeader("Expires", " 0")}
+			${response.setHeader("Cache-Control", " must-revalidate, post-check=0, pre-check=0" )} 
+			${response.setHeader("Pragma" , "public")}      
+			${baos.writeTo(response.getOutputStream())}
+			${response.getOutputStream().flush()}
+		<#elseif (converter.convert(imagelocation + ".burned", "UNOFFICIAL", 159,159,159,0,0,true,baos,false,1,true) == true)>        
+			${response.reset()}
+			${response.resetBuffer()}
+			${response.setContentType("application/pdf")}
+			${response.setHeader("Content-Disposition",  " inline; filename=document.pdf" )}
+			${response.setHeader("Expires", " 0")}
+			${response.setHeader("Cache-Control", " must-revalidate, post-check=0, pre-check=0" )} 
+			${response.setHeader("Pragma" , "public")}      
+			${baos.writeTo(response.getOutputStream())}
+		        ${response.getOutputStream().flush()}
+		<#elseif (converter.convert(imagelocation + ".tif", "UNOFFICIAL", 159,159,159,0,0,true,baos,false,1,true) == true)>        
+			${response.reset()}
+			${response.resetBuffer()}
+			${response.setContentType("application/pdf")}
+			${response.setHeader("Content-Disposition",  " inline; filename=document.pdf" )}
+			${response.setHeader("Expires", " 0")}
+			${response.setHeader("Cache-Control", " must-revalidate, post-check=0, pre-check=0" )} 
+			${response.setHeader("Pragma" , "public")}      
+			${baos.writeTo(response.getOutputStream())}
+			${response.getOutputStream().flush()}
+	   <#else>
+			<br>
+			<br>
+			<center><b>No Image Found</b></center>
+			<center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>                  
+	   </#if>
+	</#foreach>
+<#else>
+	Image is Unavailable. Please contact Granicus Support at supportRMS@granicus.com with subject line as Site Name and Instrument number you are trying to view.
+</#if>

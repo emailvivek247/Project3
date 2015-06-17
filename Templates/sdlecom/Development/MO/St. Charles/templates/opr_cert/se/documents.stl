@@ -1,0 +1,9 @@
+<#if (searchResult.docs?has_content && searchResult.docs.size() > 0) >
+ <#foreach doc in searchResult.docs>
+   <p style="border-bottom:0px solid #DDDDDD; margin:0 0 0 0; text-align:right">
+<#assign DateCert = doc.getValues("DateCert")>
+      <font size="-1">All Records Verified Through:${searchResult.directSummarize(doc,"DateCert")}</font>
+      <#break>
+ </#foreach> 
+</#if>
+

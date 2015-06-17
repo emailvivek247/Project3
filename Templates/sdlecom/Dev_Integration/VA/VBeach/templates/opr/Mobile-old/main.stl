@@ -1,0 +1,62 @@
+<#assign t0 = pageStyleUtil.addOrSetQuery(searchResult.queryString, "start", null)>
+<#assign t1 = t0?replace("+PartySeq%3A%221%22%2Bseq%3A%221%22", "")>
+<#assign t2 = pageStyleUtil.appendQuery(t1, "q", "PartySeq:\"1\"+seq:\"1\"")>
+
+<#-- *Modified highlighting color -->
+<@com.useHighlightTag '<span style="background-color:#B2C9FA">', '</span>' />
+<#include "layout.stl">
+<@layout title="ROAM">
+
+<#include "/templates/globalNavMobile-VABeach.stl">
+<#include "/templates/globalBriefCaseMobile-VABeach.stl">
+<#include "searchBox.stl">
+
+<@com.errorMarkup/>
+
+<table width="100%" margin="0" border="0" cellpadding="0" cellspacing="0">
+  <tr> 
+  <td style="width:18%;">
+    <font size="2">Results: 
+    <font size="2"><a href="?${t1}&searchable=${phonetic}"<#if isPhoneticSearch?has_content>&isPhoneticSearch=${isPhoneticSearch}</#if>>Multiple</a></font>|<font size="2"><a href="?${t2}&searchable=${phonetic}"<#if isPhoneticSearch?has_content>&isPhoneticSearch=${isPhoneticSearch}</#if>>Single</a></font>
+  </td>
+  <td rowspan="2" style="width:64%;" valign="top"><#include "displayPagination.stl"></td>
+  <td rowspan="2" style="width:18%;">
+      <#-- *Add iframe for oprcert index -->
+      <iframe align="right" height="25" width="300px" frameborder=0 text-align="right" scrolling="no" src='search.do?indexName=oprcert&templateName=se'></iframe>
+  </td>
+  </tr>
+ <tr>
+  <td style="width:18%;">
+    <font size="2">Mode: <a href="${request.getContextPath()}/search.do?indexName=opr<#if isPhoneticSearch?has_content>&isPhoneticSearch=${isPhoneticSearch}</#if>&templateName=Main&q=${q}&searchable=${searchable}">PC</a></font>|<font size="2"><a href="${request.getContextPath()}/search.do?indexName=opr<#if isPhoneticSearch?has_content>&isPhoneticSearch=${isPhoneticSearch}</#if>&templateName=Mobile&q=${q}&searchable=${searchable}">Mobile</a></font>|<font size="2"><a href="${request.getContextPath()}/search.do?indexName=opr<#if isPhoneticSearch?has_content>&isPhoneticSearch=${isPhoneticSearch}</#if>&templateName=Tablet&q=${q}&searchable=${searchable}">Tablet</a></font>    
+  </td>
+  </tr>
+</table>
+
+<#include "searchResultHeader.stl">
+<#-- <#include "sortBy.stl"> -->
+
+
+ <table class="main"><tr valign="top"><td class="mainLeft">
+  <div id="narrowBy"><#include "narrowBy.stl"></div>
+  <#include "recentSearches.stl">
+  
+ </td><td class="mainRight">
+  <div id="documents"><#include "documents.stl"></div>
+ </td></tr></table>
+ 
+ <#include "displayPagination.stl">
+
+<#-- *Add table for footer with AMCAD logo -->
+
+ <BR>
+ <BR>
+
+<table width="100%" border="0">
+ <tr>
+  <td width=15%><a href = "http://www.amcad.com"> <img src="templates/opr/Mobile/resource/AmCad-Small-New-Logo.png"  border = "0"></a></td>
+  <td width="70%" align="center"><font color=#696969>Copyright &copy; 1986 - 2011 American Cadastre LLC (dba AmCad & AmCad Digital Conversions)</font></td>
+  <td width="15%"><#include "resultsPerPage.stl"></td>
+ </tr>
+</table>
+
+</@layout>

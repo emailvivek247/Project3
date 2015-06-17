@@ -1,0 +1,60 @@
+
+<#assign caseCounter = 0>
+
+<#if searchResult.docs?has_content>
+    <#foreach doc in searchResult.docs>
+    <#foreach CaseID in doc.getValues("CaseID")>
+       <#assign caseCounter = 1>    
+       <#break>
+    </#foreach>
+    </#foreach>
+</#if>
+
+
+<#if searchResult.docs?has_content>
+
+<#if (caseCounter > 0)>
+<b>Cases</b>
+	<table id="case" class="tablesorter">
+		<thead>
+			<tr>
+				<th>${searchResult.datasetConfiguration.getColumn("CaseNumber").displayName}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<#foreach doc in searchResult.docs>    
+				<#assign CaseNumber = doc.getValues("CaseNumber")>
+				<#assign CourtType = doc.getValues("CourtType")>
+				<#assign loopCounter = 0>
+			<#foreach CaseID in doc.getValues("CaseID")>
+			<tr>
+				<#if doc.get("CourtType") = "CIVIL">
+					<td><a href="${request.getContextPath()}/search.do?indexName=detail&templateName=CivilDetail&lq=${pageStyleUtil.encodeURL("CaseID:\"" + doc.get("CaseID") + "\"")}">${searchResult.highlight(doc, "CaseNumber")}</a></td>
+				<#else>
+					<td><a href="${request.getContextPath()}/search.do?indexName=detail&templateName=CriminalDetail&lq=${pageStyleUtil.encodeURL("CaseID:\"" + doc.get("CaseID") + "\"")}">${searchResult.highlight(doc, "CaseNumber")}</a></td>
+				</#if>
+					<#assign loopCounter = loopCounter + 1>
+			</tr>
+			</#foreach>
+			</#foreach>
+		</tbody>
+	</table>
+</#if>
+</#if>
+<script type="text/javascript">
+	$(document).ready(function() {
+		oTable = $('#case').dataTable({
+			"bJQueryUI": true,
+			"bPaginate": false,
+			"bLengthChange": false,
+			"bFilter": false,
+			"bSort": true,
+			"bInfo": false,
+			"bAutoWidth": false,
+			"aaSorting": []
+		});
+	});
+</script>
+	
+
+

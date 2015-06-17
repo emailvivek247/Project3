@@ -1,0 +1,37 @@
+<#if searchResult.docs?has_content>
+    <#foreach doc in searchResult.docs>
+        <#assign imagelocation = "\\\\" + doc.get("Server") + "\\" +  doc.get("Path")  + "\\" + doc.get("Year") + "\\" + doc.get("Month") + "\\" + doc.get("Day") + "\\" + doc.get("ImageName")>
+        <#assign baos  = new("java.io.ByteArrayOutputStream")>
+        <#assign converter = new("com.fdt.common.util.TIFFToPDFConverter")>
+        <#if (converter.convert(imagelocation + ".burned", "", 159,159,159,90,0,true,baos,false,0.5,true) == true)> 			
+            ${response.reset()}
+            ${response.resetBuffer()}
+            ${response.setContentType("application/pdf")}
+            ${response.setHeader("Content-Disposition",  " inline; filename=document.pdf" )}
+            ${response.setHeader("Expires", " 0")}
+            ${response.setHeader("Cache-Control", " must-revalidate, post-check=0, pre-check=0" )} 
+            ${response.setHeader("Pragma" , "public")}      
+            ${baos.writeTo(response.getOutputStream())}
+            ${response.getOutputStream().flush()}
+        <#elseif (converter.convert(imagelocation, "", 159,159,159,90,0,true,baos,false,0.5.true) == true)>        
+            ${response.reset()}
+            ${response.resetBuffer()}
+            ${response.setContentType("application/pdf")}
+            ${response.setHeader("Content-Disposition",  " inline; filename=document.pdf" )}
+            ${response.setHeader("Expires", " 0")}
+            ${response.setHeader("Cache-Control", " must-revalidate, post-check=0, pre-check=0" )} 
+            ${response.setHeader("Pragma" , "public")}      
+            ${baos.writeTo(response.getOutputStream())}
+            ${response.getOutputStream().flush()}
+        <#else>
+            <br>
+            <br>
+	    <center><b>Image is Unavailable.</b></center>
+            <br>
+            <center><b>Please contact the Randolph County Register of Deeds Office at <font style="color:#2e7ee4;">336-318-6960</font> or at <font style="color:#2e7ee4; text-decoration:underline;">registerofdeeds@randrod.com</font> with subject line as <i>Online Services</i>.</b></center>
+            <center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>
+        </#if>
+    </#foreach>
+<#else>
+    <#include "denied.html">
+</#if>

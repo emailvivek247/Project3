@@ -1,0 +1,73 @@
+<#--
+displayMultiSelectFilterColumnCount:
+  display an checkbox entry in a to-be-filtered column. Each entry has a column value and a count value.
+-->
+<#macro displayMultiSelectFilterColumnCount(name, column count)>
+ <#assign t1 = pageStyleUtil.addOrSetQuery(searchResult.queryString, "start", null)>
+ <#if (!count.isFiltered)>
+  <#assign t2 = pageStyleUtil.appendQuery(t1, "q", name + ":\"" + count.columnValue?if_exists + "\"")>
+    <input type="checkbox" name="${name}" value="${count.columnValue}" /><a href="?${t2}&searchable=${searchable}&isPhoneticSearch=${isPhoneticSearch}">${count.columnValue}</a>(<span>${count.value}</span>)
+    <br/>
+ </#if>
+</#macro>
+
+<#--
+The real rendering is here. Actually, still render it almost similar to a normal narrowBy search
+-->
+
+<#assign filterColumn = searchResult.filterResult.getFilterColumn("PartyRole")>
+<#if (filterColumn?has_content && filterColumn.counts.size()>0) >
+ <#assign c = filterColumn.setRendered().column>
+ <div class="box">
+  <h2>Filter By ${c.displayName}</h2>
+  <div class="multi_select" id="multi_select_${c.name}">
+    <#foreach cCount in filterColumn.getTopCounts(500)>
+      <@displayMultiSelectFilterColumnCount c.name, c, cCount/>
+    </#foreach>
+    <form style="display:none">
+      <input type="submit" class="button" value="Filter"/>
+    </form>
+  </div>
+ </div>
+<br/>
+</#if>
+
+<#--
+Now put in some javascript magic. We use jQuery here. However, the code is simple enough to switch to any other javascript library.
+-->
+
+<style>
+.multi_select form input.button,button.button {
+  font-family:verdana,arial,geneva,sans-serif;
+  font-weight:bold;
+  font-size:12px;
+  margin:6px 0px 0px 0px;
+  padding:1px 3px 1px 3px;
+  color:white;
+  text-decoration:none;
+  background:#2191C0 url(resources/styles/images/ui-bg_gloss-wave_50_6eac2c_500x100.png) repeat-x scroll 50% 50%;border:1px solid #4297D7;color:#EAF5F7;	
+  cursor: pointer;
+}
+.multi_select form input.button:active {
+  background:#355A82;
+  border-top:solid 2px #2A537B;
+  border-left:solid 2px #2A537B;
+}
+.multi_select form input.button:hover,button.button:hover {
+  background:#2191C0 url(resources/styles/images/ui-bg_gloss-wave_50_6eac2c_500x100.png) repeat-x scroll 50% 50%;border:1px solid #4297D7;color:#EAF5F7;
+}
+</style>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.query.js"></script>
+<script>
+$().ready(function(){
+  $('#multi_select_PartyRole input').click(function(){
+    $('#multi_select_PartyRole form').show('slow');
+  });
+  $('#multi_select_PartyRole form input').click(function(event){
+    event.preventDefault();
+    var selections = $.map($('#multi_select_PartyRole input:checked'),function(a){return a.value.replace(",","\\,")}).join(",");
+    $.query.REMOVE('start');
+    window.location=$.query.set('q', $.query.get('q').toString() + " PartyRole:\""+selections+"\"").toString();
+  });
+});
+</script>

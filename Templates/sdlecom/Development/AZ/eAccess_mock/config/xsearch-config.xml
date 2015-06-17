@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="2B8F772BE4948F1A4F5CCF571FE2E354D6B13A0742B78313" adminuser="4509A773D406819FC2E2221BD84B8F2F864092CB009D7969">
+  <index-root-directory><![CDATA[E:\index\arizona\]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[C7B909DA3ECA4B0086C99B75939B5793681D53FF536AD77AD646F2726B21A1421CDC01D097705A20DF4BABBA1098A0968B1EA4DA10ED415CE9AE8295ABDFAB4271FF2903CD7D28BD4536E68723ACDC4EF2D1839D7F18FAFE88A297D6E27E05FA]]></db-url>
+      <db-username><![CDATA[66480FAE4A3D38AB163065975D6EF1EE7C90A916E1379A4B]]></db-username>
+      <db-password><![CDATA[6FEE34416E208E4A68E17EFC053E0B34E322DD81AA820E4E]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+   <instance-job-schedule id="0">
+  <schedule-name><![CDATA[JOB1]]></schedule-name>
+  <job-data-string><![CDATA[casedetails,Re-create Index|partydetails,Re-create Index|docdetails,Re-create Index|chargedetails,Re-create Index|hearingdetails,Re-create Index|eventdetails,Re-create Index|aocimages,Re-create Index|caseevents,Re-create Index|casesearchparty,Re-create Index|]]></job-data-string>
+   <schedule id="0">
+    <is-enabled>false</is-enabled>
+    <is-interval>true</is-interval>
+    <interval>180</interval>
+    <cron-setting>30 1 * * ?</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+    </instance-job-schedule>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

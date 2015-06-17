@@ -1,0 +1,5 @@
+<template>
+  <longname>OPR Main Details</longname>
+  <description>This page view can be used to configure a details page.</description>
+  <defaultLength>30</defaultLength>
+</template>

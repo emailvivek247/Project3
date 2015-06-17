@@ -1,0 +1,101 @@
+<#macro layout(title="", encoding="utf-8")>
+<html><head><title>Details</title>
+<meta http-equiv="content-type" content="text/html; charset=${encoding}">
+<link rel="stylesheet" href="templates/taxdetails/Details_SN/resource/theme-blue.css" type="text/css" media="print, projection, screen" />
+<script type="text/javascript" src="templates/taxdetails/Details_SN/resource/jquery.js"></script>
+<script type="text/javascript" src="templates/taxdetails/Details_SN/resource/jquery.tablesorter.js"></script>
+<script type="text/javascript" src="templates/taxdetails/Details_SN/resource/sdl.js"></script>
+
+<#-- *Add js file for SmartNav -->
+<script type="text/javascript" src="templates/taxdetails/Details_SN/resource/jquery.tabSlideOut.js"></script> 
+
+<link rel="shortcut icon" href="favicon.ico"/>
+
+<#-- *Assign variables for Phonetic Search -->
+<#assign searchable = request.getParameter("searchable")>
+<#assign phonetic = "PHONETICNAME,ACCOUNT_NUM,OWNER_ADDRESS,DISPLAY_ADDRESS,OWNER_CITY">
+<#assign search = "OWNER_NAME1,ACCOUNT_NUM,OWNER_ADDRESS,DISPLAY_ADDRESS,OWNER_CITY">
+
+
+<script type="text/javascript">
+function Initialize(){
+if (getCookie('SearchAlgorithm') == 'Phonetic')
+{
+    document.getElementById('backLink').href = 'search.do?indexName=taxassessor&templateName=Main&searchable=${phonetic}&' + getCookie('searchstring');
+}
+else 
+{
+    document.getElementById('backLink').href = 'search.do?indexName=taxassessor&templateName=Main&searchable=${search}&' + getCookie('searchstring');
+}  
+
+}
+
+
+</script>
+
+
+<#-- *Remove Loading -->
+
+<#-- *Tabs -->
+<style type="text/css"> 
+a:hover{
+
+}
+
+a {text-decoration:none;}
+p{
+margin: 0;
+padding: 5px;
+line-height: 1.5em;
+text-align: justify;
+border: 1px solid #000066;
+}
+#wrapper{
+width: 700px;
+margin: 0 auto;
+}
+.box{
+background: #fff;
+
+}
+.boxholder{
+clear: both;
+padding: 1px;
+background: #000066;
+}
+.tab{
+float: left;
+height: 35px;
+width: 225px;
+margin: 0 2px 0 0px;
+text-align: center;
+background: #000066 url(templates/taxdetails/Details_SN/resource/tab.png) repeat-x;
+}
+.tabtxt{
+margin: 0;
+color: #fff;
+font-size: 12px;
+font-weight: bold;
+padding: 0px 0 0 0;
+}
+</style>
+
+
+
+</head>
+
+<#-- *Include file for SmartNav -->
+<#include "slideOutDiv.stl">
+
+<#-- *Add onload function -->
+<body onKeyPress="trapKeyBoardEvents(event)" onload="Initialize()">
+<#nested>
+
+<#-- *Add div for SmartNav -->
+<script language="javascript">
+          if (getCookie('searchstring') != null) {          
+	  document.write('<div class="slide-out-div"><a class="handle" href="">Smart Nav</a> <label><b>Recent Search</b></label><div class="slide-out-div-content" width="100%" height="100%"><iframe id="SmartNavFrame"  width="100%" height="97%" frameborder="0" src="" filter="alpha(opacity=20)"></iframe></div></div>');
+	}
+</script>
+</body></html>
+</#macro>

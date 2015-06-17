@@ -1,0 +1,16 @@
+<tr>
+    <td>
+      <a target="_parent" onClick='rowSelected(this)' href="search.do?indexName=details&templateName=defaultml_tablet&lq=${pageStyleUtil.encodeURL("Instrument:" + doc.get("Instrument"))}">${number.format("###0.##",doc.get("Instrument"))}</a>
+   </td>    
+   <td>
+    <#if isPhoneticSearch == "1">
+      ${searchResult.highlight(doc, "PhoneticName")}      
+   <#else>
+          ${searchResult.highlight(doc, "Name")}
+   </#if>  
+   </td>
+   <td>${searchResult.highlight(doc, "PartyRole")}</td>
+   <td>${searchResult.highlight(doc, "DocType")}</td>
+   <#--<td>${searchResult.highlight(doc, "LicenseNum")}</td>-->
+  
+ </tr>

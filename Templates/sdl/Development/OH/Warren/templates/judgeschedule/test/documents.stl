@@ -1,0 +1,26 @@
+
+<#if searchResult.docs?has_content>
+<table id="searchResult" class="tablesorter">
+ <thead><tr>
+  <th>${searchResult.datasetConfiguration.getColumn("DISPLAYNAME").displayName}</th><th>${searchResult.datasetConfiguration.getColumn("ENDDAYTIME").displayName}</th><th>${searchResult.datasetConfiguration.getColumn("STARTDAYTIME").displayName}</th>
+  
+  
+  
+ </tr></thead>
+ <tbody>
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+  <#include "document.stl">
+ </#foreach>
+<#else>
+ <#include "noResults.stl"> 
+</#if>
+ </tbody>
+</table>
+
+
+<script type="text/javascript">
+$(function() {      
+    $("#searchResult").tablesorter({widgets: ['zebra']});
+}); 
+</script>

@@ -1,0 +1,38 @@
+<#if request.isUserInRole('HANOVER_IMAGE_ACCESS') || request.isUserInRole('HANOVER_ADMIN') || request.isUserInRole('ROAM_ADMIN')>
+<#if searchResult.docs?has_content>
+    <#foreach doc in searchResult.docs>
+    	 <#assign Path = doc.getValues("Path")>
+    	 <#list Path as Paths>
+    	 <#if Paths = 'images'>
+         <#assign imagelocation = pageStyleUtil.getSystemValue("system", "imageLoc") + "\\" + doc.get("Booktype") + "\\" + doc.get("BookName") + "\\" + doc.get("IndexName") + "\\" + doc.get("Book") + "\\" + doc.get("Image")>
+         <#else>
+         <#assign imagelocation = pageStyleUtil.getSystemValue("system", "imageLoc") +  doc.get("Path") + "\\" + doc.get("Booktype") + "\\" + doc.get("BookName") + "\\" + doc.get("IndexName") + "\\" + doc.get("Book") + "\\" + doc.get("Image")>
+         </#if>
+         </#list>
+         <#assign baos = new("java.io.ByteArrayOutputStream")> 
+         <#assign converter = new("com.fdt.common.util.TIFFToPDFConverter")>
+        <#if (converter.convert(imagelocation, "", 159,159,159,90,0,true,baos,false,1,true) == true)> 
+            ${response.reset()}
+            ${response.resetBuffer()}
+            ${response.setContentType("application/pdf")}
+            ${response.setHeader("Content-Disposition",  " inline; filename=document.pdf" )}
+            ${response.setHeader("Expires", " 0")}
+            ${response.setHeader("Cache-Control", " must-revalidate, post-check=0, pre-check=0" )} 
+            ${response.setHeader("Pragma" , "public")}      
+            ${baos.writeTo(response.getOutputStream())}
+            ${response.getOutputStream().flush()}
+
+        <#else>
+            <br>
+            <br>
+            <center><b>Image is Unavailable. Please contact Granicus Support at supportRMS@granicus.com with subject line as the <i>Site Name</i> you are trying to access and <i>Instrument</i> number you are trying to view.</b></center>
+            <center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>
+        </#if>
+    </#foreach>
+  <#else>
+    <br />
+    <br />
+    <center><b>Image is Unavailable. Please contact Granicus Support at supportRMS@granicus.com with subject line as the <i>Site Name</i> you are trying to access and <i>Instrument</i> number you are trying to view.</b></center>
+    <center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center> 
+  </#if> 
+  </#if> 

@@ -1,0 +1,25 @@
+<!--  -->
+<@com.useHighlightTag '<span class="highlight">', '</span>' />
+<#include "layout.stl">
+<@layout title="Case Details" encoding="${searchResult.encoding}">
+
+<#include "/templates/globalNav.stl">
+
+<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (pageStyleUtil.isUserInRoleGroup('ALL_ROLE', request))>
+
+ <@com.errorMarkup/>
+ </br>
+ <a href ="javascript:" onclick="history.go(-1); return false">« Back to search results</a> &nbsp; &nbsp;
+</br>
+  
+ <#include "searchResultHeader.stl">
+ 
+ <br>
+ <table class="main"><tr valign="top"><td class="mainRight">
+  <div id="documents"><#include "documents.stl"></div>
+ </td></tr></table>
+ 
+<#else>
+You are not authorized to view this page. Please sign up for one of the available sunscriptions to proceed.
+</#if>
+</@layout>

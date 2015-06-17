@@ -1,0 +1,46 @@
+@charset "utf-8";
+/* PAGINATION for glossy-orange */
+
+.paginationHolder{
+          width: 100%;
+          text-align: center;
+}
+
+.pagination {
+          font-size: 70%;
+          width: 400px;
+          margin: 0 auto;
+}
+        
+.pagination a {
+          background-color: white;
+          text-decoration: none;
+          border: solid 1px #fff;
+          color: #333333;
+}
+
+.pagination a:visited {
+          color: #333333;
+}
+
+.pagination a, .pagination span {
+          background:#fff /*url(glossy-blue-button.gif)*/);
+          display: block;
+          float: left;
+          padding: 0.3em 0.5em;
+          margin-right: 5px;
+          margin-bottom: 5px;
+          margin-top: 10px;
+}
+
+.pagination .current {
+          background:#f58400 /*url(glossy-blue-button.gif)*/;
+          color: #000;
+          border: solid 1px #443113;
+}
+
+.pagination .current.prev, .pagination .current.next{
+          color:#f58400;
+          background:#fff /*url(glossy-blue-button.gif)*/);
+}
+

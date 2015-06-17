@@ -1,0 +1,46 @@
+
+  		  
+		  <@display.column media="html" indexColumnName="DisplayCaseNumber" title="${searchResult.datasetConfiguration.getColumn(\"DisplayCaseNumber\").displayName}">
+		   	<a href="${request.getContextPath()}/search.do?indexName=casedetails&templateName=CaseDetails&lq=${pageStyleUtil.encodeURL("CaseID:\"" + doc.get("CaseID") + "\"")}">${searchResult.highlight(doc, "DisplayCaseNumber")}</a>
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DisplayCaseNumber" title="${searchResult.datasetConfiguration.getColumn(\"DisplayCaseNumber\").displayName}">
+		   	${doc.get("DisplayCaseNumber")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="EventDate" title="${searchResult.datasetConfiguration.getColumn(\"EventDate\").displayName}">
+		   	${searchResult.highlight(doc, "EventDate")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="EventDate" title="${searchResult.datasetConfiguration.getColumn(\"EventDate\").displayName}">
+		   	${doc.get("EventDate")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="EventTypeDescription" title="${searchResult.datasetConfiguration.getColumn(\"EventTypeDescription\").displayName}">
+		   	${searchResult.highlight(doc, "EventTypeDescription")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="EventTypeDescription" title="${searchResult.datasetConfiguration.getColumn(\"EventTypeDescription\").displayName}">
+		   	${doc.get("EventTypeDescription")}
+		  </@display.column>
+		  
+		  <@display.column media="html" indexColumnName="CaseTitle" title="${searchResult.datasetConfiguration.getColumn(\"CaseTitle\").displayName}">
+			${searchResult.highlight(doc, "CaseTitle")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseTitle" title="${searchResult.datasetConfiguration.getColumn(\"CaseTitle\").displayName}">
+			${doc.get("CaseTitle")}
+		  </@display.column>
+		  
+		  <@display.column media="html" indexColumnName="CourtCode" title="${searchResult.datasetConfiguration.getColumn(\"CourtCode\").displayName}">
+			${searchResult.highlight(doc, "CourtCode")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CourtCode" title="${searchResult.datasetConfiguration.getColumn(\"CourtCode\").displayName}">
+			${doc.get("CourtCode")}
+		  </@display.column>
+		  
+		  <@display.column media="html" indexColumnName="CountyName" title="${searchResult.datasetConfiguration.getColumn(\"CountyName\").displayName}">
+			${searchResult.highlight(doc, "CountyName")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CountyName" title="${searchResult.datasetConfiguration.getColumn(\"CountyName\").displayName}">
+			${doc.get("CountyName")}
+		  </@display.column>
+
+		  <@display.column  media="html" title="Add to Cart">
+			<input class="cartLink" type="button" title="amcad12345" value="Add to Cart"/>
+	          </@display.column>
+                 

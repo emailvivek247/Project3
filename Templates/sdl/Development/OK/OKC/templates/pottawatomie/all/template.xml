@@ -1,0 +1,7 @@
+<template>
+  <longname>Client-Side Sortable Table with export options</longname>
+  <description>
+    This page view displays result in a Client Side Sortable table. With an export option to export the grid to a PDF, RTF and an Excel file.
+  </description>
+  <defaultLength>30</defaultLength>
+</template>

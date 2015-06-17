@@ -1,0 +1,18 @@
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.suggest.js"></script>
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/jquery.suggest.css" type="text/css"/>
+<script>
+jQuery(function() {
+jQuery("#FirstName").suggest("suggest.do?indexName=${indexName}&length=2000",
+ {
+  minchars:1
+ });
+jQuery("#LastName").suggest("suggest.do?indexName=${indexName}&length=2000",
+ {
+  minchars:1
+ });
+jQuery("#MiddleName").suggest("suggest.do?indexName=${indexName}&length=2000",
+ {
+  minchars:1
+ });
+});
+</script>

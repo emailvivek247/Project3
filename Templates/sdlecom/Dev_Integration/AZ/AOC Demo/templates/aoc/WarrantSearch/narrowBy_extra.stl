@@ -1,0 +1,5 @@
+<#include "multiSelect_casetype.stl">
+<#include "multiSelect_filterpartyrole.stl">
+<#include "multiSelect_precint.stl">
+<#include "multiSelect_race.stl">
+<#include "multiSelect_sex.stl">

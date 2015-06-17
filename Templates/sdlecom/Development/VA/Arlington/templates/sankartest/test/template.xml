@@ -1,0 +1,6 @@
+<template>
+  <longname>Server-Side Sortable Table</longname>
+  <description>A Sortable Table, with server-side sorting and filterable categories. 
+  </description>
+  <defaultLength>30</defaultLength>
+</template>

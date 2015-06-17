@@ -1,0 +1,43 @@
+<b>MAPS</B>
+<table id="legal" class="tablesorter">
+	<thead>
+		<tr>
+			<th>${searchResult.datasetConfiguration.getColumn("LegalType").displayName}</th>
+	  		<th>${searchResult.datasetConfiguration.getColumn("Block").displayName}</th>
+	  		<th>${searchResult.datasetConfiguration.getColumn("Phase").displayName}</th>
+	  		<th>${searchResult.datasetConfiguration.getColumn("Section").displayName}</th>
+	  		<th>${searchResult.datasetConfiguration.getColumn("LotNum").displayName}</th>
+	  		<th>${searchResult.datasetConfiguration.getColumn("Lot").displayName}</th>
+	  		<th>${searchResult.datasetConfiguration.getColumn("MapBook").displayName}</th>
+	  		<th>${searchResult.datasetConfiguration.getColumn("MapPage").displayName}</th>
+	  		<th>${searchResult.datasetConfiguration.getColumn("SubDivision").displayName}</th>
+	  		<th>${searchResult.datasetConfiguration.getColumn("FreeForm1Other").displayName}</th>
+	   	</tr>
+   </thead>
+  	<tbody>
+		<#assign legalSeq = doc.getValues("LegalType")>
+		<#assign block = doc.getValues("Block")>
+		<#assign phase = doc.getValues("Phase")>
+		<#assign section = doc.getValues("Section")>
+		<#assign lotnum = doc.getValues("LotNum")>
+		<#assign lot = doc.getValues("Lot")>
+		<#assign mapbook = doc.getValues("MapBook")>
+		<#assign mappage = doc.getValues("MapPage")>
+		<#assign subdivision = doc.getValues("SubDivision")>
+		<#assign freeform1other = doc.getValues("FreeForm1Other")>
+		<#assign loopCounter = 0>
+		<tr>
+			<td>${legalSeq[loopCounter]?replace('|', '&nbsp;')}</td>
+		    <td>${block[loopCounter]?replace('|', '&nbsp;')}</td>
+	  		<td>${phase[loopCounter]?replace('|', '&nbsp;')}</td>
+	  		<td>${section[loopCounter]?replace('|', '&nbsp;')}</td>
+	  		<td>${lotnum[loopCounter]?replace('|', '&nbsp;')}</td>
+		    <td>${lot[loopCounter]?replace('|', '&nbsp;')}</td>
+	  		<td>${mapbook[loopCounter]?replace('|', '&nbsp;')}</td>
+	  		<td>${mappage[loopCounter]?replace('|', '&nbsp;')}</td>
+	  		<td>${subdivision[loopCounter]?replace('|', '&nbsp;')}</td>
+	  		<td>${freeform1other[loopCounter]?replace('|', '&nbsp;')}</td>
+			<#assign loopCounter = loopCounter + 1>
+	    </tr>
+	</tbody>
+</table>

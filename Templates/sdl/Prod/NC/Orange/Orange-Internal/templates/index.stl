@@ -1,0 +1,9 @@
+<#-- ${request.getRequestDispatcher("/search.do?searchType=1&indexName=orangeweb").forward(request, response)} -->
+
+<script type="text/javascript">
+<!--
+window.location = "http://roam.orangecountync.gov/orangeweb/search.do"
+//-->
+</script>
+
+

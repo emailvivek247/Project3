@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="BCE6C71191F87E2B1801C8B94A248B74D4169E9C4A0DE7F9" adminuser="0BE29EEB33C79DCB8D36F19A04A3015962A965DD8C747D41">
+  <index-root-directory><![CDATA[E:\index\aocdemo\]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[429C33E2EBC3335F1347B2D6CA123B9F011BC7836C7BDDDA2FA100378938761F011C923C1085D5CCD1A790E0585BD5EB34FC987900D8A0D1DC4D77C5F2B9DFBB3528D2CF9D34FFA23247F8BFCD04EB294A91A7C46C2EE904D4B0039314755D77765C267B0AC07FAC30C7F38AC9789959]]></db-url>
+      <db-username><![CDATA[]]></db-username>
+      <db-password><![CDATA[]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

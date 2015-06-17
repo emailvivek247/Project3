@@ -1,0 +1,41 @@
+.column{
+	width:100%;
+	margin-right:.5%;
+	min-height:100px;
+	background:#fff;
+}
+.box h2.collapse{
+	background:#1D1F84 url(collapse.png) no-repeat top right;
+}
+
+.box h2.configure{
+	font-size:11px; 
+        font-weight:normal;
+        margin-right:30px;	
+        float:right;
+}
+.success{
+	background:#d9f9e0;
+	border:1px solid #339933;
+	padding:5px;
+	font-weight:bold;
+}
+.more{
+        display:block;
+}
+.box{
+	background:#fff;
+	position:relative;
+	border:1px solid #ddd;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+}
+.box h2{
+	margin:0;
+	font-size:8pt;
+	padding:2px;
+        background:#1D1F84 url(ui-bg_gloss-wave_75_2191c0_500x100.png) repeat-x scroll 100% 50%;
+	color:#fff;
+	border-bottom:1px solid #eee;
+	font-family:Verdana;	
+}

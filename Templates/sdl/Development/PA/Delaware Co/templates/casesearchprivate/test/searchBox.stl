@@ -1,0 +1,116 @@
+<script type="text/javascript">
+    function unique(arrayName) {
+        var newArray=new Array();
+        label:for(var i=0; i<arrayName.length;i++ )
+        {  
+            for(var j=0; j<newArray.length;j++ ) {
+                if(newArray[j].name == arrayName[i].name) 
+                 continue label;
+            }
+            setCookie('test' + arrayName[i].name, jQuery.trim(arrayName[i].value), 0);
+            if (arrayName[i].type == 'text' && jQuery.trim(arrayName[i].value).length != 0) {
+                newArray[newArray.length] = arrayName[i];
+            }
+        }
+            setCookie('testfrmPartyID', document.getElementById('frmPartyID').value, 0);
+            setCookie('testtoPartyID',  document.getElementById('toPartyID').value, 0);
+        return newArray;
+    }   
+    function postAdvancedSearch() {
+        try {
+                    	if (!doNumericCheck('frmPartyID','toPartyID'))return;          
+            document.getElementById("q").value = '';
+            var inputElemenets =  $('input[type="text"]');
+            var elem = unique(inputElemenets);
+            var searchString = '';
+            var searchQuery = '';
+            var andOrClause ='';
+            var doubleQuotes = '"';
+            var counter = 0;
+            var textcounter = 0;
+            var searchValue = '';
+            var searchValueQuery = '';
+            for(var i = 0; i < elem.length; i++) {
+                if (document.getElementById(elem[i].name + '_select') != null) {
+                    counter++;
+                }                   
+            }
+            for(var i = 0; i < elem.length; i++) {
+                if (document.getElementById(elem[i].name + '_select') != null) {
+                    setCookie('test' + elem[i].name + '_select', document.getElementById(elem[i].name + '_select').selectedIndex, 0);
+                    textcounter++
+                    if (textcounter == counter) {
+                        andOrClause = '';
+                    } else {
+                        andOrClause = ' ' + document.getElementById(elem[i].name + '_select').value + '  ';
+                    }
+
+Expression searchRangeValueJS is undefined on line 98, column 68 in searchBox.stl.pagestyle.
+The problematic instruction:
+----------
+==> assignment: searchRangeValueJS=searchRangeValueJS + "elem[i].name == '" + c + "'" [on line 98, column 37 in searchBox.stl.pagestyle]
+----------
+
+Java backtrace for programmers:
+----------
+freemarker.core.InvalidReferenceException: Expression searchRangeValueJS is undefined on line 98, column 68 in searchBox.stl.pagestyle.
+	at freemarker.core.TemplateObject.assertNonNull(TemplateObject.java:125)
+	at freemarker.core.Expression.getStringValue(Expression.java:118)
+	at freemarker.core.AddConcatExpression._getAsTemplateModel(AddConcatExpression.java:96)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.AddConcatExpression._getAsTemplateModel(AddConcatExpression.java:77)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.AddConcatExpression._getAsTemplateModel(AddConcatExpression.java:77)
+	at freemarker.core.Expression.getAsTemplateModel(Expression.java:89)
+	at freemarker.core.Assignment.accept(Assignment.java:90)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IfBlock.accept(IfBlock.java:82)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.IteratorBlock$Context.runLoop(IteratorBlock.java:167)
+	at freemarker.core.Environment.visit(Environment.java:428)
+	at freemarker.core.IteratorBlock.accept(IteratorBlock.java:102)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.ConditionalBlock.accept(ConditionalBlock.java:79)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.MixedContent.accept(MixedContent.java:92)
+	at freemarker.core.Environment.visit(Environment.java:221)
+	at freemarker.core.Environment.process(Environment.java:199)
+	at freemarker.template.Template.process(Template.java:259)
+	at com.fdt.sdl.styledesigner.ScaffoldManager.process(ScaffoldManager.java:370)
+	at com.fdt.sdl.admin.ui.action.template.CreateTemplateAction.execute(CreateTemplateAction.java:77)
+	at org.apache.struts.chain.commands.servlet.ExecuteAction.execute(ExecuteAction.java:58)
+	at org.apache.struts.chain.commands.AbstractExecuteAction.execute(AbstractExecuteAction.java:67)
+	at org.apache.struts.chain.commands.ActionCommandBase.execute(ActionCommandBase.java:51)
+	at org.apache.commons.chain.impl.ChainBase.execute(ChainBase.java:191)
+	at org.apache.commons.chain.generic.LookupCommand.execute(LookupCommand.java:305)
+	at org.apache.commons.chain.impl.ChainBase.execute(ChainBase.java:191)
+	at org.apache.struts.chain.ComposableRequestProcessor.process(ComposableRequestProcessor.java:283)
+	at org.apache.struts.action.ActionServlet.process(ActionServlet.java:1913)
+	at com.fdt.sdl.admin.servlet.SDLActionServlet.process(SDLActionServlet.java:39)
+	at org.apache.struts.action.ActionServlet.doPost(ActionServlet.java:462)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:641)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:722)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:305)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:210)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:222)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:123)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:581)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:168)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:99)
+	at org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:929)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:118)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:407)
+	at org.apache.coyote.ajp.AjpAprProcessor.process(AjpAprProcessor.java:197)
+	at org.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:585)
+	at org.apache.tomcat.util.net.AprEndpoint$SocketProcessor.run(AprEndpoint.java:1813)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1110)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:603)
+	at java.lang.Thread.run(Thread.java:722)

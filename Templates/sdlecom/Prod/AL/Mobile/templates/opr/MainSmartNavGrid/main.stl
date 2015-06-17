@@ -1,0 +1,23 @@
+<#-- *Modified highlighting color -->
+<@com.useHighlightTag '<span style="background-color:#B2C9FA">', '</span>' />
+<#include "layout.stl">
+<@layout title="ROAM" encoding="${searchResult.encoding}">
+
+<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (request.isUserInRole('ROAM_ADMIN') || request.isUserInRole('MOBILE_FREE_ACCESS') || request.isUserInRole('MOBILE_ADMIN'))>
+
+ <@com.errorMarkup/>
+<#--
+ <#include "searchResultHeader.stl">
+-->
+<br>
+<#include "displayPagination.stl">
+<br />
+ <table class="main"><tr valign="top">
+ <td class="mainRight">
+  <div id="documents"><#include "documents.stl"></div>
+ </td></tr></table>
+ <#include "displayPagination.stl">
+<#else>
+   You are not authorized to access this information.
+</#if>
+</@layout>

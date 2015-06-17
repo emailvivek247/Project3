@@ -1,0 +1,52 @@
+        <input type="hidden" id="nm_portfolio_auto_scroll" name="nm_portfolio_auto_scroll" value="1" />
+        <input type="hidden" id="nm_color" name="nm_color" value="light" />
+
+        <!-- Begin header -->
+        <div id="header_wrapper">
+            <div id="top_bar">
+                    <div class="logo">
+                        <!-- Begin logo -->
+                        <img id="custom_logo" src="resources/custom_resources/images/seal.png" alt="Seal"/>
+
+                        <!-- End logo -->
+
+                    </div>
+
+                    <!-- Begin main nav -->
+                    <div class="right_nav"></div>
+
+                    <div id="secondary_nav">
+                        <!-- Begin main nav -->
+                        <div class="menu-main-menu-container">
+                        
+                            <ul id="main_menu" class="nav">
+                                <li>
+                                    <a href="/index.html">Home</a>
+                                </li>
+                                <li>
+                                   <a href="publicLogin.admin" <#if selectedTab?has_content && selectedTab == "Login">class="selected"</#if>>Log In</a>
+                                </li>
+                                <li>
+                                    <a href="publicSignUp.admin" <#if selectedTab?has_content && selectedTab == "Registration">class="selected"</#if>>Register</a>
+                                </li>
+                                <li>
+                                    <a href="/file-marriage.html">Online Filings</a>
+                                </li>
+                                <li>
+                                    <a href="/subscriptions.html">Subscriptions</a>
+                                </li>
+                                <li>
+                                    <a href="/sites.html">ROAM Sites</a>
+                                </li>
+                            </ul>
+
+                        
+                        </div>
+                    <!-- End main nav -->
+                    </div>
+                    <div class="left_nav"></div>
+                    <!-- End main nav -->
+            </div>
+        </div>
+        <!-- End header -->
+        <br class="clear"/>

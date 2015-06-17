@@ -1,0 +1,7 @@
+
+ <tr>
+    		     <td>${number.format("###0.##",doc.get("CaseID"))}</td>
+  		     <td>${number.format("###0.##",doc.get("EventEntryID"))}</td>
+             <td>${searchResult.highlight(doc, "Path")}</td>
+ </tr>
+

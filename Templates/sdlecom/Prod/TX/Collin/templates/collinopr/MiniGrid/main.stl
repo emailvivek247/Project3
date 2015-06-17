@@ -1,0 +1,29 @@
+<!--  -->
+<#-- *Modified highlighting color -->
+<@com.useHighlightTag '<span style="background-color:#B2C9FA">', '</span>' />
+<#include "layout.stl">
+<@layout title="ROAM" encoding="${searchResult.encoding}">
+<#if pageStyleUtil.isUserInRoleGroup('ALL_ROLE', request)>
+
+ <@com.errorMarkup/>
+
+
+ <#include "searchResultHeader.stl">
+
+
+ <table class="main"><tr valign="top">
+
+
+
+  <div id="documents"><#include "documents.stl"></div>
+ </td></tr></table>
+<br>
+ <#include "displayPagination.stl">
+
+
+
+<#else>
+   You are not authorized to access this information.
+</#if>
+
+</@layout>

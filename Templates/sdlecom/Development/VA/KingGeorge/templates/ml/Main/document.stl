@@ -1,0 +1,79 @@
+          <@display.column media="html" indexColumnName="Instrument" title="${searchResult.datasetConfiguration.getColumn(\"Instrument\").displayName}">
+<#-- *Link Instrument Number to Details page -->
+                <a href="${request.getContextPath()}/search.do?indexName=details&templateName=defaultml&lq=${pageStyleUtil.encodeURL("Instrument:\"" + doc.get("Instrument") + "\"")}"> ${doc.get("Instrument")}</a>             
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="Instrument" title="${searchResult.datasetConfiguration.getColumn(\"Instrument\").displayName}">
+                ${number.format("###0.##",doc.get("Instrument"))}
+          </@display.column>
+          
+        <#-- *Check type of search to allow for highlighting -->
+          <#if isPhoneticSearch == "1">
+              <@display.column media="html" indexColumnName="DisplayNamePhonetic" title="${searchResult.datasetConfiguration.getColumn(\"DisplayNamePhonetic\").displayName}">
+                 ${searchResult.highlight(doc, "DisplayNamePhonetic")} 
+              </@display.column>
+              <@display.column media="rtf excel pdf" indexColumnName="DisplayNamePhonetic" title="${searchResult.datasetConfiguration.getColumn(\"DisplayNamePhonetic\").displayName}">
+                ${doc.get("DisplayNamePhonetic")}
+              </@display.column>
+          <#else> 
+              <@display.column media="html" indexColumnName="DisplayName" title="${searchResult.datasetConfiguration.getColumn(\"DisplayName\").displayName}">
+                ${searchResult.highlight(doc, "DisplayName")}
+              </@display.column>
+              <@display.column media="rtf excel pdf" indexColumnName="DisplayName" title="${searchResult.datasetConfiguration.getColumn(\"DisplayName\").displayName}">
+                ${doc.get("DisplayName")}
+              </@display.column>
+           </#if>
+          <@display.column media="html" indexColumnName="PartyRole" title="${searchResult.datasetConfiguration.getColumn(\"PartyRole\").displayName}">
+            ${searchResult.highlight(doc, "PartyRole")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="PartyRole" title="${searchResult.datasetConfiguration.getColumn(\"PartyRole\").displayName}">
+            ${doc.get("PartyRole")}
+          </@display.column>
+          <@display.column media="html" indexColumnName="OtherName" title="${searchResult.datasetConfiguration.getColumn(\"OtherName\").displayName}">
+            ${searchResult.highlight(doc, "OtherName")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="OtherName" title="${searchResult.datasetConfiguration.getColumn(\"OtherName\").displayName}">
+            ${doc.get("OtherName")}
+          </@display.column>
+          <@display.column media="html" indexColumnName="OtherRoleName" title="${searchResult.datasetConfiguration.getColumn(\"OtherRoleName\").displayName}">
+            ${searchResult.highlight(doc, "OtherRoleName")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="OtherRoleName" title="${searchResult.datasetConfiguration.getColumn(\"OtherRoleName\").displayName}">
+            ${doc.get("OtherRoleName")}
+          </@display.column>
+          <@display.column media="html" indexColumnName="DocType" title="${searchResult.datasetConfiguration.getColumn(\"DocType\").displayName}">
+            ${searchResult.highlight(doc, "DocType")}
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="DocType" title="${searchResult.datasetConfiguration.getColumn(\"DocType\").displayName}">
+            ${doc.get("DocType")}
+          </@display.column>
+          
+          <@display.column media="html" indexColumnName="Book" title="${searchResult.datasetConfiguration.getColumn(\"Book\").displayName}">
+	      ${searchResult.highlight(doc, "Book")}
+	    </@display.column>
+	    <@display.column media="rtf excel pdf" indexColumnName="Book" title="${searchResult.datasetConfiguration.getColumn(\"Book\").displayName}">
+	      ${doc.get("Book")}
+          </@display.column>
+          
+          <@display.column media="html" indexColumnName="Page" title="${searchResult.datasetConfiguration.getColumn(\"Page\").displayName}">
+	      ${searchResult.highlight(doc, "Page")}
+	    </@display.column>
+	    <@display.column media="rtf excel pdf" indexColumnName="Page" title="${searchResult.datasetConfiguration.getColumn(\"Page\").displayName}">
+	      ${doc.get("Page")}
+          </@display.column>
+          <@display.column media="html" indexColumnName="RecDate1Display" title="${searchResult.datasetConfiguration.getColumn(\"RecDate1Display\").displayName}">
+<#-- *Format Date -->            
+                     <#if doc.get("RecDate1Display")?has_content>
+                     ${pageStyleUtil.format(doc.get("RecDate1Display"), "yyyy-MM-dd HH:mm:ss", "MM/dd/yyyy HH:mm:ss a")}        
+                     </#if>
+          </@display.column>
+          <@display.column media="rtf excel pdf" indexColumnName="RecDate1Display" title="${searchResult.datasetConfiguration.getColumn(\"RecDate1Display\").displayName}">
+<#-- *Format Date -->               
+                     <#if doc.get("RecDate1Display")?has_content>
+                     ${pageStyleUtil.format(doc.get("RecDate1Display"), "yyyy-MM-dd HH:mm:ss", "MM/dd/yyyy HH:mm:ss a")}        
+                     </#if>
+          </@display.column>
+<#if request.isUserInRole('KINGGEORGE_IMAGE_ACCESS') || request.isUserInRole('KINGGEORGE_ADMIN') || request.isUserInRole('ROAM_ADMIN')> 
+       <@display.column  media="html" title="View Image">
+                    <div style="text-align:center" class="gallery clearfix"><a class="nocolor pphoto" href="${request.getContextPath()}/search.do?indexName=images&lq=${pageStyleUtil.encodeURL("Instrument:" + doc.get("Instrument"))}&page=1&view=FitV&scrollbar=0&navpanes=0&statusbar=0&messages=0?iframe=true&width=50%25&height=95%25" rel="prettyPhoto[iframe]" title="Instrument : <a  class='nocolor' href='${request.getContextPath()}/search.do?indexName=details&templateName=Details_SN&lq=${pageStyleUtil.encodeURL("Instrument:\"" + doc.get("Instrument") + "\"")}'<b>${doc.get("Instrument")}</b></a> </br> Doc Type: ${doc.get("DocType")} </br> Date Recorded: ${pageStyleUtil.format(doc.get("RecDateDisplay"), "yyyy-MM-dd hh:mm:ss", "MM/dd/yyyy hh:mm:ss a")} </br>" ><img border="0" title="Preview" src="<@com.currentUrlPrefix/>/resource/preview.png"></a></div>
+       </@display.column>
+</#if>   

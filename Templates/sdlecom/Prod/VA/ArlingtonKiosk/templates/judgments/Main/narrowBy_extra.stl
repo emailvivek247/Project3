@@ -1,0 +1,3 @@
+<#include "multiSelect_recdatefilter.stl">
+<#include "multiSelect_doctypedescfilter.stl">
+<#include "multiSelect_namesort.stl">

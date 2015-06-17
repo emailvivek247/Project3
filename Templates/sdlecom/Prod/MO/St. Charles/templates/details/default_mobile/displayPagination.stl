@@ -1,0 +1,70 @@
+ <#assign num_pages = (searchResult.total/searchResult.length)?int>
+<#if num_pages*searchResult.length < searchResult.total>
+ <#assign num_pages = num_pages + 1>
+</#if>
+<#assign current_page_index = (searchResult.start/searchResult.length)?int + 1>
+
+ <center>
+  <#if (num_pages>1)>
+    Result Page:
+
+    <#--determin pagination rage-->
+    <#if current_page_index <= num_pages-4>
+    	<#assign start_page = current_page_index-5>
+    <#else>
+    	<#assign start_page = current_page_index-9+(num_pages-current_page_index)>
+    </#if>
+    
+    
+    <#if start_page <= 0><#assign start_page = 1></#if>
+    <#assign end_page = start_page + 9>
+    <#if (end_page>num_pages)><#assign end_page = num_pages></#if>
+
+    <#--Render Previous-->
+    <#if (current_page_index>=2)>
+      <font size=+1><a class="paginationNext" href="?${noStartQueryString}&start=${length*(current_page_index - 2)}">Previous</a></font>
+    </#if>
+    
+    <#foreach page_index in start_page..end_page>
+     
+      <#if page_index == current_page_index>
+        <i>${page_index}</i>
+      <#else>
+        <a class="paginationNormal" href="?${noStartQueryString}&start=${length*(page_index-1)}">${page_index}</a>
+      </#if>
+    </#foreach>
+    <#if num_pages &gt; end_page > 
+	     of
+	     <#if current_page_index == num_pages>        
+	       <i>${num_pages}</i>
+	     <#else>
+	       <a class="paginationNormal pagination_lastPage" href="?${noStartQueryString}&start=${length*(num_pages-1)}">${num_pages}</a>
+		 </#if>
+	 </#if>
+	 <#--Render Next -->
+    <#if current_page_index < num_pages>
+      <font size=+1><a class="paginationNext" href="?${noStartQueryString}&start=${length*current_page_index}">Next</a></font>
+    </#if>
+    <input type="text" id="pageNumber" name="pageNumber" size="2"/>
+    <a onclick="gotoPage('${num_pages}', '${length}', '?${noStartQueryString}&start=')" class="paginationButton gotoPage">Go »</a>
+  </#if>
+ </center>
+<script type="text/javascript">
+function gotoPage(pages, length, url) {
+  var a = $("#pageNumber").val();
+  if (a != "") {
+	  if(!(a.match(/^\d*\.{0,1}\d*$/)||a.match(/^-\d*\.{0,1}\d*$/))){
+	  	$.prompt('Invalid Page Number',{buttons:{Ok:true},	prefix:'extblue'});
+	  } else {
+	  	if (($("#pageNumber").val() * 1) <= pages && ($("#pageNumber").val() * 1) > 0) {  	
+		  	var url = url + (($("#pageNumber").val() - 1) * length);
+		  	window.location = url;
+	  	} else {
+	  		$.prompt('Entered Page Number is out of range',{buttons:{Ok:true},	prefix:'extblue'});  		
+	  	}
+	  }
+  } else {
+  	$.prompt('Please enter a page number',{buttons:{Ok:true}, prefix:'extblue'});
+  }
+}
+</script>

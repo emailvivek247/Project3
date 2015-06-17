@@ -1,0 +1,17 @@
+<!--  -->
+<@com.useHighlightTag '<span class="highlight">', '</span>' />
+<#include "layout.stl">
+<@layout title="schedule details" encoding="${searchResult.encoding}">
+
+
+
+ <@com.errorMarkup/>
+ 
+ 
+ <table class="main">
+ <td class="mainRight">
+  <div id="documents"><#include "documents.stl"></div>
+ </td></tr></table>
+ 
+ 
+</@layout>

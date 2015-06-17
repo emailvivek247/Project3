@@ -1,0 +1,28 @@
+<!--  -->
+<@com.useHighlightTag '<span style="background-color:#00ff00">', '</span>' />
+<#include "layout.stl">
+<@layout title="Details" encoding="${searchResult.encoding}">
+
+<#include "/templates/globalNav_KG.stl">
+<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (request.isUserInRole('ROAM_ADMIN') || request.isUserInRole('KINGGEORGE_ADMIN') || request.isUserInRole('KINGGEORGE_FREE_ACCESS')|| request.isUserInRole('KINGGEORGE_IMAGE_ACCESS'))>
+<br />
+<a id="backLink" href = "">« Back to search results</a> &nbsp; &nbsp;
+</br></br></br>
+
+<#--
+<#include "/templates/globalBriefCase-KG.stl">
+-->
+<@com.errorMarkup/>
+<#include "searchResultHeader.stl">
+<table class="main">
+    <tr valign="top">
+        <td class="mainRight">
+            <div id="documents"><#include "documents.stl"></div>
+        </td>
+    </tr>
+</table>
+
+<#else>
+You are not authorized to view this page.
+</#if>
+</@layout>

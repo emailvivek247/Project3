@@ -1,0 +1,27 @@
+<@com.useHighlightTag '<span style="background-color:#00ff00">', '</span>' />
+<#include "layout.stl">
+<@layout title="Details" encoding="${searchResult.encoding}">
+
+<#include "/templates/globalNav.stl">
+<br />
+<a id="backLink" href = "#" onclick="window.history.go(-1); return false;">« Back to search results</a> &nbsp; &nbsp;
+</br>
+</br>
+</br>
+
+<#include "/templates/globalBriefCase.stl">
+ <@com.errorMarkup/>
+ 
+<#include "searchResultHeader.stl">
+ 
+ <br>
+<table class="main">
+    <tr valign="top">   
+        <td class="mainRight">
+            <div id="documents"><#include "documents.stl"></div>
+        </td>
+    </tr>
+</table>
+ 
+ 
+</@layout>

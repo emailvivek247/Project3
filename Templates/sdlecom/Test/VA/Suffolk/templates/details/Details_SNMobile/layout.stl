@@ -1,0 +1,90 @@
+<#macro layout(title="", encoding="utf-8")>
+<html><head><title>ROAM Details</title>
+<meta http-equiv="content-type" content="text/html; charset=${encoding}">
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/prompt.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/jquery-ui-1.8.19.base.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/jquery-ui-1.8.19.glossy-classic.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/theme-base.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/theme-glossy-classic.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/demo_table_jui.css" type="text/css"  />
+<link rel="stylesheet" href="templates/resources/basket.css" type="text/css" media="projection, screen" />
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/prompt.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/sdl-min.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/filterControl.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery-ui-1.8.19.custom.min.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.tabSlideOut.js"></script> 
+<link rel="shortcut icon" href="favicon.ico"/>
+
+<#-- ADD GOOGLE ANALYTICS -->
+<#include "/templates/googleAnalytics-Suffolk.stl">
+
+<script type="text/javascript">
+function initialize() {
+
+<#assign q = pageStyleUtil.encodeURL(searchResult.request.getParameter("q")) lq = pageStyleUtil.encodeURL(searchResult.request.getParameter("lq"))
+	 start = searchResult.request.getParameter("start") searchable = pageStyleUtil.encodeURL(searchResult.request.getParameter("searchable"))
+     searchType = searchResult.request.getParameter("searchType") isPhoneticSearch = request.getParameter("isPhoneticSearch")>
+<#if !searchType?has_content>
+	searchType = 1	
+</#if>
+
+}
+
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#backLink').attr('href', 'search.do?indexName=opr&templateName=Mobile&' + getCookie('searchstring'));
+    }); 
+</script>
+
+
+
+<#-- *Loading -->
+<style type="text/css">
+#loading {
+padding:1ex;
+position:absolute;
+top:50%;
+left:70%;
+display:none;
+border:0px;
+background-color:#ffffff;
+color:#000000;
+}
+
+.basketcontent {
+    font-size: 17px;
+}
+.basket table { 
+    font-size: 17px;
+}
+.basket {
+    z-index: 1;
+    font-size: 17px;
+    width: 60%;
+}
+</style>
+
+<script type="text/javascript">
+var loadit=function(){
+var f=document.getElementById('image'), l=document.getElementById('loading').style;
+l.display='block';
+if(f.onload==null){
+f.onload=function(){l.display='none'};
+if(window.attachEvent)
+f.attachEvent('onload', f.onload);
+}
+return true;
+}
+</script>
+</head>
+
+<#-- *Add onload function -->
+<body onKeyPress="trapKeyBoardEvents(event)" onload="Initialize()">
+<#compress><#nested></#compress>
+
+</body></html>
+</#macro>

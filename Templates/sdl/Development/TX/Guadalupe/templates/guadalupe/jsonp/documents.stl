@@ -1,0 +1,53 @@
+
+<#assign num_pages = (searchResult.total/searchResult.length)?int>
+
+<#if num_pages*searchResult.length < searchResult.total>
+ <#assign num_pages = num_pages + 1>
+</#if>
+<#assign current_page_index = (searchResult.start/searchResult.length)?int + 1>
+
+<#assign startItemIndex = (current_page_index-1)*searchResult.length + 1>
+<#assign endItemIndex = current_page_index*searchResult.length>
+<#if (endItemIndex>searchResult.total)>
+ <#assign endItemIndex = searchResult.total>
+</#if>
+
+<#assign dummy = result.put("total_results", total)>
+<#assign dummy = result.put("total_pages", num_pages)>
+<#assign dummy = result.put("current_page", current_page_index)>
+<#assign dummy = result.put("page_length", length)>
+<#assign dummy = result.put("start_item_index", startItemIndex)>
+<#assign dummy = result.put("end_item_index", endItemIndex)>
+<#assign dummy = result.put("search_time", searchTime)>
+<#assign dummy = result.put("query", q)>
+<#assign items = new("org.json.simple.JSONArray")>
+
+<#if searchResult.docs?has_content>
+<#foreach doc in docs>
+ <#assign item = new("org.json.simple.JSONObject")>
+    <#assign dummy = item.put("VER", searchResult.highlight(doc,"VER"))>
+    <#assign dummy = item.put("STATUS", searchResult.highlight(doc,"STATUS"))>
+    <#assign dummy = item.put("DATERECDISPLAY", searchResult.highlight(doc,"DATERECDISPLAY"))>
+    <#assign dummy = item.put("NAME", searchResult.highlight(doc,"NAME"))>
+    <#assign dummy = item.put("PARTYROLE", searchResult.highlight(doc,"PARTYROLE"))>
+    <#assign dummy = item.put("DESIGSTATUS", searchResult.highlight(doc,"DESIGSTATUS"))>
+    <#assign dummy = item.put("OTHERNAME", searchResult.highlight(doc,"OTHERNAME"))>
+    <#assign dummy = item.put("OTHERDESIGSTATUS", searchResult.highlight(doc,"OTHERDESIGSTATUS"))>
+    <#assign dummy = item.put("BOOKSHORT", searchResult.highlight(doc,"BOOKSHORT"))>
+    <#assign dummy = item.put("BOOKPAGE", searchResult.highlight(doc,"BOOKPAGE"))>
+    <#assign dummy = item.put("OTHERROLENAME", searchResult.highlight(doc,"OTHERROLENAME"))>
+    <#assign dummy = item.put("BOOK", searchResult.highlight(doc,"BOOK"))>
+    <#assign dummy = item.put("REMARKS", searchResult.highlight(doc,"REMARKS"))>
+    <#assign dummy = item.put("CONSIDERATION", doc.getObject("CONSIDERATION"))>
+        <#assign dummy = item.put("TYPE", searchResult.highlight(doc,"TYPE"))>
+    <#assign dummy = item.put("PAGE", searchResult.highlight(doc,"PAGE"))>
+    <#assign dummy = item.put("MARGINALS", searchResult.highlight(doc,"MARGINALS"))>
+    <#assign dummy = item.put("INSTRUMENT", doc.getObject("INSTRUMENT"))>
+        <#assign dummy = item.put("BACKFILENUM", searchResult.highlight(doc,"BACKFILENUM"))>
+    <#assign dummy = item.put("OFFLINEIMAGE", searchResult.highlight(doc,"OFFLINEIMAGE"))>
+    <#assign dummy = item.put("Role", doc.getObject("Role"))>
+     <#assign dummy = items.add(item)>
+</#foreach>
+</#if>
+
+<#assign dummy = result.put("items", items)>

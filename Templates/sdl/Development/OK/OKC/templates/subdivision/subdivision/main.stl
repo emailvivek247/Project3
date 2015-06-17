@@ -1,0 +1,18 @@
+<#function getDocument URL, indexName, query>
+	<#assign sc = new("net.javacoding.xsearch.api.SearchConnection")>
+	<#assign searchQuery = new("net.javacoding.xsearch.api.SearchQuery")>
+	${sc.setIndex(indexName)}
+	${sc.setURL(URL)}
+        ${sc.setLength(1000000)}
+	${searchQuery.setAdvancedQuery(query)}
+	<#assign sr = sc.search(searchQuery)>
+	<#return sr.getDocList()>
+</#function>
+
+<#--<#assign uri = pageStyleUtil.getSystemValue(null, "url") + request.getContextPath()>-->
+<#assign subdivisions = getDocument("http://nv-rd1/oklahoma/", "subdivision", "")>
+     <#if subdivisions?has_content>
+         <#foreach doc in subdivisions>
+${doc.getString("Subdivision")}
+         </#foreach>
+     </#if>

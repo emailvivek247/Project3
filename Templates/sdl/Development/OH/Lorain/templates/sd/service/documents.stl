@@ -1,0 +1,59 @@
+  <b>Service Information</b>
+		 <table id="service" class="tablesorter">
+				<thead>
+					<tr>
+					  <th>${searchResult.datasetConfiguration.getColumn("IssueDate").displayName}</th>
+					  <th>${searchResult.datasetConfiguration.getColumn("ServiceType").displayName}</th>
+					  <th>${searchResult.datasetConfiguration.getColumn("EventDesc").displayName}</th>
+					  <th>${searchResult.datasetConfiguration.getColumn("ServiceProvider").displayName}</th>
+					  <th>${searchResult.datasetConfiguration.getColumn("ServiceDate").displayName}</th>
+					  <th>${searchResult.datasetConfiguration.getColumn("ReceivedBy").displayName}</th>
+					  <th>${searchResult.datasetConfiguration.getColumn("Comments").displayName}</th>
+
+					</tr>
+				</thead>
+			<tbody>
+<#if searchResult.docs?has_content>
+     <#foreach doc in searchResult.docs>
+		<#assign IssueDate = doc.getValues("IssueDate") 
+			 ServiceType = doc.getValues("ServiceType") 
+			 ServiceProvider = doc.getValues("ServiceProvider")
+			 ServiceDate = doc.getValues("ServiceDate")
+			 ReceivedBy = doc.getValues("ReceivedBy")
+			 Comments = doc.getValues("Comments")
+                         EventDesc = doc.getValues("EventDesc")
+			 loopCounter = 0>
+			 
+                          <#foreach IssueDates in doc.getValues("IssueDate")>
+					<tr>
+                                                <td>${IssueDate[loopCounter]?replace('|', '&nbsp;')}</td>
+						<td>${ServiceType[loopCounter]?replace('|', '&nbsp;')}</td>
+                                                <td>${EventDesc[loopCounter]?replace('|', '&nbsp;')}</td>						
+                                                <td>${ServiceProvider[loopCounter]?replace('|', '&nbsp;')}</td>
+						<td>${ServiceDate[loopCounter]?replace('|', '&nbsp;')}</td>
+						<td>${ReceivedBy[loopCounter]?replace('|', '&nbsp;')}</td>
+						<td>${Comments[loopCounter]?replace('|', '&nbsp;')}</td>
+                                                <#assign loopCounter = loopCounter + 1>
+					</tr>
+			  </#foreach>
+     </#foreach>
+			
+	<#else>
+		
+		<tr>
+		   <td><b><i>No Service Information Available.</i></b></td>               
+               </tr>
+ </#if>
+ </tbody>
+ </table>
+
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+       $("#service").tablesorter({sortList: [[0,0]]}); 
+       $("#service").tablesorter({widgets: ['zebra']});
+       
+});
+</script>
+       

@@ -1,0 +1,1295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset name="Tax Details" exportedBy="null" createdAt="Mon Aug 27 11:25:17 EDT 2012">
+  <display-order>-1</display-order>
+  <description><![CDATA[]]></description>
+  <index-dir>taxdetails</index-dir>
+  <is-prefix-root-index-directory>true</is-prefix-root-index-directory>
+  <use-server-db-connection>true</use-server-db-connection>
+  <work-directory>_work</work-directory>
+  <temporary-index-minimal-merge-percentage>1.0</temporary-index-minimal-merge-percentage>
+  <merge-hours enabled="false" begin="1" end="3"/>
+  <fetcher-threads>1</fetcher-threads>
+  <writer-threads>1</writer-threads>
+  <index-max-size>100000.0</index-max-size>
+  <list-fetch-size>1000000</list-fetch-size>
+  <language>Any</language>
+  <analyzer-name>com.fdt.sdl.core.analyzer.NumberLowerCaseAnalyzer</analyzer-name>
+  <data-source-type>0</data-source-type>
+  <fetcher-configuration dir="null">
+  </fetcher-configuration>
+  <dataquery name="WorkingQueue" batch-size="128" is-skipping-null-parameters="false">
+    <sql><![CDATA[
+SELECT DISTINCT 
+	ACCOUNT_NUM AS MAINACCOUNT_NUM
+FROM TAXABLE_OBJECT
+    ]]></sql>
+    <column>
+      <column-name>MAINACCOUNT_NUM</column-name>
+      <display-name><![CDATA[MAINACCOUNT_NUM]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <primary-key>true</primary-key>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="1000.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Content" is-batch-needed="true" batch-size="500">
+    <sql><![CDATA[
+SELECT                  CASE WHEN LTRIM(RTRIM(APPRAISAL_YR)) = '' THEN '|' ELSE ISNULL(APPRAISAL_YR, '|') END AS 'APPRAISAL_YR',
+                                CASE WHEN LTRIM(RTRIM(CASE WHEN OWNER_NAME1 LIKE '%&' THEN OWNER_NAME1 + ' ' + OWNER_ADDRESS_LINE1 ELSE OWNER_NAME1 END)) = '' THEN '|' ELSE ISNULL(CASE WHEN OWNER_NAME1 LIKE '%&' THEN OWNER_NAME1 + ' ' + OWNER_ADDRESS_LINE1 ELSE OWNER_NAME1 END, '|') END AS 'OWNER_NAME1',
+		CASE WHEN LTRIM(RTRIM(OWNER_ADDRESS)) = '' THEN '|' ELSE ISNULL(OWNER_ADDRESS, '|') END AS 'OWNER_ADDRESS',
+		CASE WHEN LTRIM(RTRIM(OWNER_CITY)) = '' THEN '|' ELSE ISNULL(OWNER_CITY, '|') END AS 'OWNER_CITY',
+		CASE WHEN LTRIM(RTRIM(OWNER_STATE)) = '' THEN '|' ELSE ISNULL(OWNER_STATE, '|') END AS 'OWNER_STATE',
+		CASE WHEN LTRIM(RTRIM(OWNER_ZIPCODE)) = '' THEN '|' ELSE ISNULL(OWNER_ZIPCODE, '|') END AS 'OWNER_ZIPCODE',
+		CASE WHEN LTRIM(RTRIM(OWNER_COUNTRY)) = '' THEN '|' ELSE ISNULL(OWNER_COUNTRY, '|') END AS 'OWNER_COUNTRY',
+		CASE WHEN LTRIM(RTRIM(ACCOUNT_NUM)) = '' THEN '|' ELSE ISNULL(ACCOUNT_NUM, '|') END AS 'MAINACCOUNT_NUM',
+		CASE WHEN LTRIM(RTRIM(MAPSCO)) = '' THEN '|' ELSE ISNULL(MAPSCO, '|') END AS 'MAPSCO',
+		CASE WHEN LTRIM(RTRIM(NBHD_CD)) = '' THEN '|' ELSE ISNULL(NBHD_CD, '|') END AS 'NBHD_CD',
+                                CASE WHEN LTRIM(RTRIM(PROPERTY_ADDRESS)) = '' THEN '|' ELSE ISNULL(PROPERTY_ADDRESS, '|') END AS 'PROPERTY_ADDRESS',
+                                'TEXAS' AS PROPERTY_STATE,
+                                ' ' AS PROPERTY_ZIPCODE
+FROM V_PROPERTYLOCATION
+WHERE ACCOUNT_NUM IN (?)
+    ]]></sql>
+    <parameter>
+      <name>MAINACCOUNT_NUM</name>
+      <index>1</index>
+      <type>java.lang.String</type>
+      <value>00000169477000000</value>
+    </parameter>
+    <column>
+      <column-name>APPRAISAL_YR</column-name>
+      <display-name><![CDATA[APPRAISAL_YR]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>OWNER_NAME1</column-name>
+      <display-name><![CDATA[Owner]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>OWNER_ADDRESS</column-name>
+      <display-name><![CDATA[Address]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>OWNER_CITY</column-name>
+      <display-name><![CDATA[City]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>OWNER_STATE</column-name>
+      <display-name><![CDATA[State]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>OWNER_ZIPCODE</column-name>
+      <display-name><![CDATA[Zipcode]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>OWNER_COUNTRY</column-name>
+      <display-name><![CDATA[Country]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>MAINACCOUNT_NUM</column-name>
+      <display-name><![CDATA[MAINACCOUNT_NUM]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="1000.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>MAPSCO</column-name>
+      <display-name><![CDATA[Mapsco]]></display-name>
+      <column-index>9</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>NBHD_CD</column-name>
+      <display-name><![CDATA[Neighborhood]]></display-name>
+      <column-index>10</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PROPERTY_ADDRESS</column-name>
+      <display-name><![CDATA[Address]]></display-name>
+      <column-index>11</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PROPERTY_STATE</column-name>
+      <display-name><![CDATA[PROPERTY_STATE]]></display-name>
+      <column-index>12</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PROPERTY_ZIPCODE</column-name>
+      <display-name><![CDATA[PROPERTY_ZIPCODE]]></display-name>
+      <column-index>13</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Content" is-batch-needed="true" batch-size="500">
+    <sql><![CDATA[
+SELECT	CASE WHEN LTRIM(RTRIM(APPRAISAL_YR)) = '' THEN '|' ELSE ISNULL(APPRAISAL_YR, '|') END AS 'MOAPPRAISAL_YR',
+		CASE WHEN LTRIM(RTRIM(OWNER_SEQ_NUM)) = '' THEN '|' ELSE ISNULL(OWNER_SEQ_NUM, '|') END AS 'OWNER_SEQ_NUM',
+		CASE WHEN LTRIM(RTRIM(OWNER_NAME)) = '' THEN '|' ELSE ISNULL(OWNER_NAME, '|') END AS 'OWNER_NAME',
+		CASE WHEN LTRIM(RTRIM(OWNERSHIP_PCT)) = '' THEN '|' ELSE ISNULL(OWNERSHIP_PCT, '|') END AS 'OWNERSHIP_PCT',
+		CASE WHEN LTRIM(RTRIM(ACCOUNT_NUM)) = '' THEN '|' ELSE ISNULL(ACCOUNT_NUM, '|') END AS 'MAINACCOUNT_NUM'
+FROM MULTI_OWNER
+WHERE ACCOUNT_NUM IN (?)
+ORDER BY OWNER_SEQ_NUM
+    ]]></sql>
+    <parameter>
+      <name>MAINACCOUNT_NUM</name>
+      <index>1</index>
+      <type>java.lang.String</type>
+      <value>00000169477000000</value>
+    </parameter>
+    <column>
+      <column-name>MOAPPRAISAL_YR</column-name>
+      <display-name><![CDATA[MOAPPRAISAL_YR]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>OWNER_SEQ_NUM</column-name>
+      <display-name><![CDATA[Owner Sequence]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>OWNER_NAME</column-name>
+      <display-name><![CDATA[Owner]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>OWNERSHIP_PCT</column-name>
+      <display-name><![CDATA[Ownership Percent]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>MAINACCOUNT_NUM</column-name>
+      <display-name><![CDATA[MAINACCOUNT_NUM]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="1000.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Content" is-batch-needed="true" batch-size="500">
+    <sql><![CDATA[
+SELECT	CASE WHEN LTRIM(RTRIM(LEGAL1)) = '' THEN '|' ELSE ISNULL(LEGAL1, '|') END AS 'LEGAL1',
+		CASE WHEN LTRIM(RTRIM(LEGAL2)) = '' THEN '|' ELSE ISNULL(LEGAL2, '|') END AS 'LEGAL2',
+		CASE WHEN LTRIM(RTRIM(LEGAL3)) = '' THEN '|' ELSE ISNULL(LEGAL3, '|') END AS 'LEGAL3',
+                                CASE WHEN LTRIM(RTRIM(LEGAL4)) = '' THEN '|' ELSE ISNULL(LEGAL4, '|') END AS 'LEGAL4',
+		CASE WHEN LTRIM(RTRIM(LEGAL5)) = '' THEN '|' ELSE ISNULL(LEGAL5, '|') END AS 'LEGAL5',
+		CASE WHEN LTRIM(RTRIM(CONVERT(VARCHAR(10), DEEDTRANSFERDATE, 101))) = '' THEN '|' ELSE ISNULL(CONVERT(VARCHAR(10), DEEDTRANSFERDATE, 101), '|') END AS 'DEEDTRANSFERDATE',
+		CASE WHEN LTRIM(RTRIM(ACCOUNT_NUM)) = '' THEN '|' ELSE ISNULL(ACCOUNT_NUM, '|') END AS 'MAINACCOUNT_NUM'
+FROM V_LEGALDESCRIPTION
+WHERE ACCOUNT_NUM IN (?)
+    ]]></sql>
+    <parameter>
+      <name>MAINACCOUNT_NUM</name>
+      <index>1</index>
+      <type>java.lang.String</type>
+      <value>00000169477000000</value>
+    </parameter>
+    <column>
+      <column-name>LEGAL1</column-name>
+      <display-name><![CDATA[Legal 1]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>LEGAL2</column-name>
+      <display-name><![CDATA[Legal 2]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>LEGAL3</column-name>
+      <display-name><![CDATA[Legal 3]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>LEGAL4</column-name>
+      <display-name><![CDATA[Legal 4]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>LEGAL5</column-name>
+      <display-name><![CDATA[Legal 5]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DEEDTRANSFERDATE</column-name>
+      <display-name><![CDATA[Deed Transfer Date]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>MAINACCOUNT_NUM</column-name>
+      <display-name><![CDATA[MAINACCOUNT_NUM]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="1000.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Content" is-batch-needed="true" batch-size="500">
+    <sql><![CDATA[
+SELECT  CASE WHEN LTRIM(RTRIM(APPRAISAL_YR)) = '' THEN '|' ELSE ISNULL(APPRAISAL_YR, '|') END AS 'TVAPPRAISAL_YR',
+		CASE WHEN LTRIM(RTRIM(IMPR_VAL)) = '' THEN '0' ELSE ISNULL(IMPR_VAL, '0') END AS 'IMPR_VAL',
+		CASE WHEN LTRIM(RTRIM(LAND_VAL)) = '' THEN '0' ELSE ISNULL(LAND_VAL, '0') END AS 'LAND_VAL',
+		CASE WHEN LTRIM(RTRIM(TOT_VAL)) = '' THEN '0' ELSE ISNULL(TOT_VAL, '0') END AS 'TOT_VAL',
+		CASE WHEN LTRIM(RTRIM(REVALUATION_YR)) = '' THEN '|' ELSE ISNULL(REVALUATION_YR, '|') END AS 'REVALUATION_YR',
+		CASE WHEN LTRIM(RTRIM(PREVIOUSREVALUATIONYEAR)) = '' THEN '|' ELSE ISNULL(PREVIOUSREVALUATIONYEAR, '|') END AS 'PREVIOUSREVALUATIONYEAR',
+		CASE WHEN LTRIM(RTRIM(ACCOUNT_NUM)) = '' THEN '|' ELSE ISNULL(ACCOUNT_NUM, '|') END AS 'MAINACCOUNT_NUM'
+FROM V_TAXVALUE
+WHERE ACCOUNT_NUM IN (?)
+    ]]></sql>
+    <parameter>
+      <name>MAINACCOUNT_NUM</name>
+      <index>1</index>
+      <type>java.lang.String</type>
+      <value>00000169477000000</value>
+    </parameter>
+    <column>
+      <column-name>TVAPPRAISAL_YR</column-name>
+      <display-name><![CDATA[TVAPPRAISAL_YR]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>IMPR_VAL</column-name>
+      <display-name><![CDATA[Improvement]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>LAND_VAL</column-name>
+      <display-name><![CDATA[Land]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>TOT_VAL</column-name>
+      <display-name><![CDATA[Market Value]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>REVALUATION_YR</column-name>
+      <display-name><![CDATA[Revaluation Year]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PREVIOUSREVALUATIONYEAR</column-name>
+      <display-name><![CDATA[Previous Revaluation Year]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>MAINACCOUNT_NUM</column-name>
+      <display-name><![CDATA[MAINACCOUNT_NUM]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="1000.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Content" is-batch-needed="true" batch-size="500">
+    <sql><![CDATA[
+SELECT	CASE WHEN LTRIM(RTRIM(DEPRECIATION_PCT)) = '' THEN '|' ELSE ISNULL(DEPRECIATION_PCT, '|') END AS 'DEPRECIATION_PCT',
+		CASE WHEN LTRIM(RTRIM(SAUNA_IND)) = '' THEN '|' ELSE ISNULL(SAUNA_IND, '|') END AS 'SAUNA_IND',
+		CASE WHEN LTRIM(RTRIM(POOL_IND)) = '' THEN '|' ELSE ISNULL(POOL_IND, '|') END AS 'POOL_IND',
+		CASE WHEN LTRIM(RTRIM(SPA_IND)) = '' THEN '|' ELSE ISNULL(SPA_IND, '|') END AS 'SPA_IND',
+		CASE WHEN LTRIM(RTRIM(DECK_IND)) = '' THEN '|' ELSE ISNULL(DECK_IND, '|') END AS 'DECK_IND',
+		CASE WHEN LTRIM(RTRIM(SPRINKLER_SYS_IND)) = '' THEN '|' ELSE ISNULL(SPRINKLER_SYS_IND, '|') END AS 'SPRINKLER_SYS_IND',
+		CASE WHEN LTRIM(RTRIM(NUM_BEDROOMS)) = '' THEN '|' ELSE ISNULL(NUM_BEDROOMS, '|') END AS 'NUM_BEDROOMS',
+		CASE WHEN LTRIM(RTRIM(NUM_WET_BARS)) = '' THEN '|' ELSE ISNULL(NUM_WET_BARS, '|') END AS 'NUM_WET_BARS',
+		CASE WHEN LTRIM(RTRIM(NUM_HALF_BATHS)) = '' THEN '|' ELSE ISNULL(NUM_HALF_BATHS, '|') END AS 'NUM_HALF_BATHS',
+		CASE WHEN LTRIM(RTRIM(NUM_FULL_BATHS)) = '' THEN '|' ELSE ISNULL(NUM_FULL_BATHS, '|') END AS 'NUM_FULL_BATHS',
+		CASE WHEN LTRIM(RTRIM(NUM_KITCHENS)) = '' THEN '|' ELSE ISNULL(NUM_KITCHENS, '|') END AS 'NUM_KITCHENS',
+		CASE WHEN LTRIM(RTRIM(NUM_FIREPLACES)) = '' THEN '|' ELSE ISNULL(NUM_FIREPLACES, '|') END AS 'NUM_FIREPLACES',
+		CASE WHEN LTRIM(RTRIM(ROOF_MAT_DESC)) = '' THEN '|' ELSE ISNULL(ROOF_MAT_DESC, '|') END AS 'ROOF_MAT_DESC',
+		CASE WHEN LTRIM(RTRIM(ROOF_TYP_DESC)) = '' THEN '|' ELSE ISNULL(ROOF_TYP_DESC, '|') END AS 'ROOF_TYP_DESC',
+		CASE WHEN LTRIM(RTRIM(BASEMENT_DESC)) = '' THEN '|' ELSE ISNULL(BASEMENT_DESC, '|') END AS 'BASEMENT_DESC',
+		CASE WHEN LTRIM(RTRIM(EXT_WALL_DESC)) = '' THEN '|' ELSE ISNULL(EXT_WALL_DESC, '|') END AS 'EXT_WALL_DESC',
+		CASE WHEN LTRIM(RTRIM(FENCE_TYP_DESC)) = '' THEN '|' ELSE ISNULL(FENCE_TYP_DESC, '|') END AS 'FENCE_TYP_DESC',
+		CASE WHEN LTRIM(RTRIM(AC_TYP_DESC)) = '' THEN '|' ELSE ISNULL(AC_TYP_DESC, '|') END AS 'AC_TYP_DESC',
+		CASE WHEN LTRIM(RTRIM(HEATING_TYP_DESC)) = '' THEN '|' ELSE ISNULL(HEATING_TYP_DESC, '|') END AS 'HEATING_TYP_DESC',
+		CASE WHEN LTRIM(RTRIM(FOUNDATION_TYP_DESC)) = '' THEN '|' ELSE ISNULL(FOUNDATION_TYP_DESC, '|') END AS 'FOUNDATION_TYP_DESC',
+		CASE WHEN LTRIM(RTRIM(CONSTR_FRAM_TYP_DESC)) = '' THEN '|' ELSE ISNULL(CONSTR_FRAM_TYP_DESC, '|') END AS 'CONSTR_FRAM_TYP_DESC',
+		CASE WHEN LTRIM(RTRIM(NUM_STORIES_DESC)) = '' THEN '|' ELSE ISNULL(NUM_STORIES_DESC, '|') END AS 'NUM_STORIES_DESC',
+		CASE WHEN LTRIM(RTRIM(PCT_COMPLETE)) = '' THEN '|' ELSE ISNULL(PCT_COMPLETE, '|') END AS 'PCT_COMPLETE',
+		CASE WHEN LTRIM(RTRIM(TOT_LIVING_AREA_SF)) = '' THEN '|' ELSE ISNULL(TOT_LIVING_AREA_SF, '|') END AS 'TOT_LIVING_AREA_SF',
+		CASE WHEN LTRIM(RTRIM(TOT_MAIN_SF)) = '' THEN '|' ELSE ISNULL(TOT_MAIN_SF, '|') END AS 'TOT_MAIN_SF',
+		CASE WHEN LTRIM(RTRIM(CDU_RATING_DESC)) = '' THEN '|' ELSE ISNULL(CDU_RATING_DESC, '|') END AS 'CDU_RATING_DESC',
+		CASE WHEN LTRIM(RTRIM(ACT_AGE)) = '' THEN '|' ELSE ISNULL(ACT_AGE, '|') END AS 'ACT_AGE',
+		CASE WHEN LTRIM(RTRIM(EFF_YR_BUILT)) = '' THEN '|' ELSE ISNULL(EFF_YR_BUILT, '|') END AS 'EFF_YR_BUILT',
+		CASE WHEN LTRIM(RTRIM(YR_BUILT)) = '' THEN '|' ELSE ISNULL(YR_BUILT, '|') END AS 'YR_BUILT',
+		CASE WHEN LTRIM(RTRIM(BLDG_CLASS_DESC)) = '' THEN '|' ELSE ISNULL(BLDG_CLASS_DESC, '|') END AS 'BLDG_CLASS_DESC',
+		CASE WHEN LTRIM(RTRIM(ACCOUNT_NUM)) = '' THEN '|' ELSE ISNULL(ACCOUNT_NUM, '|') END AS 'MAINACCOUNT_NUM'
+FROM V_MAINIMPROVEMENTS
+WHERE ACCOUNT_NUM IN (?)
+    ]]></sql>
+    <parameter>
+      <name>MAINACCOUNT_NUM</name>
+      <index>1</index>
+      <type>java.lang.String</type>
+      <value>00000169477000000</value>
+    </parameter>
+    <column>
+      <column-name>DEPRECIATION_PCT</column-name>
+      <display-name><![CDATA[Depreciation]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>SAUNA_IND</column-name>
+      <display-name><![CDATA[Sauna (Y/N)]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>POOL_IND</column-name>
+      <display-name><![CDATA[Pool (Y/N)]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>SPA_IND</column-name>
+      <display-name><![CDATA[Spa (Y/N)]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DECK_IND</column-name>
+      <display-name><![CDATA[Deck (Y/N)]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>SPRINKLER_SYS_IND</column-name>
+      <display-name><![CDATA[Sprinkler (Y/N)]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>NUM_BEDROOMS</column-name>
+      <display-name><![CDATA[No. of Bedrooms]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>NUM_WET_BARS</column-name>
+      <display-name><![CDATA[No. of Wet Bars]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>NUM_HALF_BATHS</column-name>
+      <display-name><![CDATA[No. of Half Baths]]></display-name>
+      <column-index>9</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>NUM_FULL_BATHS</column-name>
+      <display-name><![CDATA[No. of Full Baths]]></display-name>
+      <column-index>10</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>NUM_KITCHENS</column-name>
+      <display-name><![CDATA[No. of Kitchens]]></display-name>
+      <column-index>11</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>NUM_FIREPLACES</column-name>
+      <display-name><![CDATA[No. of Fireplaces]]></display-name>
+      <column-index>12</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>ROOF_MAT_DESC</column-name>
+      <display-name><![CDATA[Roof Material]]></display-name>
+      <column-index>13</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>ROOF_TYP_DESC</column-name>
+      <display-name><![CDATA[Roof Type]]></display-name>
+      <column-index>14</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>BASEMENT_DESC</column-name>
+      <display-name><![CDATA[Basement]]></display-name>
+      <column-index>15</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>EXT_WALL_DESC</column-name>
+      <display-name><![CDATA[Exterior Wall]]></display-name>
+      <column-index>16</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>FENCE_TYP_DESC</column-name>
+      <display-name><![CDATA[Fence Type]]></display-name>
+      <column-index>17</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>AC_TYP_DESC</column-name>
+      <display-name><![CDATA[Air Condition]]></display-name>
+      <column-index>18</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>HEATING_TYP_DESC</column-name>
+      <display-name><![CDATA[Heating]]></display-name>
+      <column-index>19</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>FOUNDATION_TYP_DESC</column-name>
+      <display-name><![CDATA[Foundation]]></display-name>
+      <column-index>20</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CONSTR_FRAM_TYP_DESC</column-name>
+      <display-name><![CDATA[Construction Type]]></display-name>
+      <column-index>21</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>NUM_STORIES_DESC</column-name>
+      <display-name><![CDATA[Number of Stories]]></display-name>
+      <column-index>22</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PCT_COMPLETE</column-name>
+      <display-name><![CDATA[Percent Complete]]></display-name>
+      <column-index>23</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>TOT_LIVING_AREA_SF</column-name>
+      <display-name><![CDATA[Living Area]]></display-name>
+      <column-index>24</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>TOT_MAIN_SF</column-name>
+      <display-name><![CDATA[Total Area]]></display-name>
+      <column-index>25</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CDU_RATING_DESC</column-name>
+      <display-name><![CDATA[CDU (Condition/Desirability/Utility)]]></display-name>
+      <column-index>26</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>ACT_AGE</column-name>
+      <display-name><![CDATA[Actual Age]]></display-name>
+      <column-index>27</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>EFF_YR_BUILT</column-name>
+      <display-name><![CDATA[Effective Year Built]]></display-name>
+      <column-index>28</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>YR_BUILT</column-name>
+      <display-name><![CDATA[Year Built]]></display-name>
+      <column-index>29</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>BLDG_CLASS_DESC</column-name>
+      <display-name><![CDATA[Building Class]]></display-name>
+      <column-index>30</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>MAINACCOUNT_NUM</column-name>
+      <display-name><![CDATA[MAINACCOUNT_NUM]]></display-name>
+      <column-index>31</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="1000.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Content" is-batch-needed="true" batch-size="500">
+    <sql><![CDATA[
+SELECT	CASE WHEN LTRIM(RTRIM(AREA_SIZE)) = '' THEN '|' ELSE ISNULL(AREA_SIZE, '|') END AS 'AREA_SIZE',
+		CASE WHEN LTRIM(RTRIM(EXT_WALL_DESC)) = '' THEN '|' ELSE ISNULL(EXT_WALL_DESC, '|') END AS 'DEXT_WALL_DESC',
+		CASE WHEN LTRIM(RTRIM(FLOOR_TYP_DESC)) = '' THEN '|' ELSE ISNULL(FLOOR_TYP_DESC, '|') END AS 'FLOOR_TYP_DESC',
+		CASE WHEN LTRIM(RTRIM(CONSTR_TYP_DESC)) = '' THEN '|' ELSE ISNULL(CONSTR_TYP_DESC, '|') END AS 'CONSTR_TYP_DESC',
+		CASE WHEN LTRIM(RTRIM(IMPR_TYP_DESC)) = '' THEN '|' ELSE ISNULL(IMPR_TYP_DESC, '|') END AS 'IMPR_TYP_DESC',
+		CASE WHEN LTRIM(RTRIM(SEQ_NUM)) = '' THEN '|' ELSE ISNULL(SEQ_NUM, '|') END AS 'SEQ_NUM',
+		CASE WHEN LTRIM(RTRIM(ACCOUNT_NUM)) = '' THEN '|' ELSE ISNULL(ACCOUNT_NUM, '|') END AS 'MAINACCOUNT_NUM'
+FROM V_ADDLIMPROVEMENTS
+WHERE ACCOUNT_NUM IN (?)
+    ]]></sql>
+    <parameter>
+      <name>MAINACCOUNT_NUM</name>
+      <index>1</index>
+      <type>java.lang.String</type>
+      <value>00000169477000000</value>
+    </parameter>
+    <column>
+      <column-name>AREA_SIZE</column-name>
+      <display-name><![CDATA[Area (sqft)]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DEXT_WALL_DESC</column-name>
+      <display-name><![CDATA[DEXT_WALL_DESC]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>FLOOR_TYP_DESC</column-name>
+      <display-name><![CDATA[Floor]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CONSTR_TYP_DESC</column-name>
+      <display-name><![CDATA[Construction]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>IMPR_TYP_DESC</column-name>
+      <display-name><![CDATA[Improvement Type]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>SEQ_NUM</column-name>
+      <display-name><![CDATA[Number]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>MAINACCOUNT_NUM</column-name>
+      <display-name><![CDATA[MAINACCOUNT_NUM]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="1000.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Content" is-batch-needed="true" batch-size="500">
+    <sql><![CDATA[
+SELECT                  'TAXING JURISDICTION' AS 'TJEXEMPDETAILLABEL',
+		CASE WHEN LTRIM(RTRIM(CITY_JURIS_DESC)) = '' THEN '|' ELSE ISNULL(CITY_JURIS_DESC, '|') END AS 'CITY_JURIS_DESC',
+		CASE WHEN LTRIM(RTRIM(SCHOOL_JURIS_DESC)) = '' THEN '|' ELSE ISNULL(SCHOOL_JURIS_DESC, '|') END AS 'SCHOOL_JURIS_DESC',
+		CASE WHEN LTRIM(RTRIM(COUNTY_JURIS_DESC)) = '' THEN '|' ELSE ISNULL(COUNTY_JURIS_DESC, '|') END AS 'COUNTY_JURIS_DESC',
+		CASE WHEN LTRIM(RTRIM(COLLEGE_JURIS_DESC)) = '' THEN '|' ELSE ISNULL(COLLEGE_JURIS_DESC, '|') END AS 'COLLEGE_JURIS_DESC',
+		CASE WHEN LTRIM(RTRIM(HOSPITAL_JURIS_DESC)) = '' THEN '|' ELSE ISNULL(HOSPITAL_JURIS_DESC, '|') END AS 'HOSPITAL_JURIS_DESC',
+		CASE WHEN LTRIM(RTRIM(SPECIAL_DIST_JURIS_DESC)) = '' THEN '|' ELSE ISNULL(SPECIAL_DIST_JURIS_DESC, '|') END AS 'SPECIAL_DIST_JURIS_DESC',
+		CASE WHEN LTRIM(RTRIM(ACCOUNT_NUM)) = '' THEN '|' ELSE ISNULL(ACCOUNT_NUM, '|') END AS 'MAINACCOUNT_NUM'		
+FROM V_TAXEXEMPTION 
+WHERE ACCOUNT_NUM IN (?)
+    ]]></sql>
+    <parameter>
+      <name>MAINACCOUNT_NUM</name>
+      <index>1</index>
+      <type>java.lang.String</type>
+      <value>00000169477000000</value>
+    </parameter>
+    <column>
+      <column-name>TJEXEMPDETAILLABEL</column-name>
+      <display-name><![CDATA[TJEXEMPDETAILLABEL]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CITY_JURIS_DESC</column-name>
+      <display-name><![CDATA[City]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>SCHOOL_JURIS_DESC</column-name>
+      <display-name><![CDATA[School]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>COUNTY_JURIS_DESC</column-name>
+      <display-name><![CDATA[County]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>COLLEGE_JURIS_DESC</column-name>
+      <display-name><![CDATA[College]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>HOSPITAL_JURIS_DESC</column-name>
+      <display-name><![CDATA[Hospital]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>SPECIAL_DIST_JURIS_DESC</column-name>
+      <display-name><![CDATA[Special District]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>MAINACCOUNT_NUM</column-name>
+      <display-name><![CDATA[MAINACCOUNT_NUM]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="1000.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Content" is-batch-needed="true" batch-size="500">
+    <sql><![CDATA[
+SELECT                  EXEMPTION AS 'HEXEMPDETAILLABEL',
+		CASE WHEN LTRIM(RTRIM(CITY_APPLD_VAL)) = '' THEN '0' ELSE ISNULL(CITY_APPLD_VAL, '0') END AS 'CITY_APPLD_VAL',
+		CASE WHEN LTRIM(RTRIM(ISD_APPLD_VAL)) = '' THEN '0' ELSE ISNULL(ISD_APPLD_VAL, '0') END AS 'ISD_APPLD_VAL',
+		CASE WHEN LTRIM(RTRIM(CNTY_APPLD_VAL)) = '' THEN '0' ELSE ISNULL(CNTY_APPLD_VAL, '0') END AS 'CNTY_APPLD_VAL',
+		CASE WHEN LTRIM(RTRIM(COLLEGE_APPLD_VAL)) = '' THEN '0' ELSE ISNULL(COLLEGE_APPLD_VAL, '0') END AS 'COLLEGE_APPLD_VAL',
+		CASE WHEN LTRIM(RTRIM(HOSPITAL_APPLD_VAL)) = '' THEN '0' ELSE ISNULL(HOSPITAL_APPLD_VAL, '0') END AS 'HOSPITAL_APPLD_VAL',
+		CASE WHEN LTRIM(RTRIM(SPCL_APPLIED_VAL)) = '' THEN '0' ELSE ISNULL(SPCL_APPLIED_VAL, '0') END AS 'SPCL_APPLIED_VAL',
+		CASE WHEN LTRIM(RTRIM(ACCOUNT_NUM)) = '' THEN '|' ELSE ISNULL(ACCOUNT_NUM, '0') END AS 'MAINACCOUNT_NUM'		
+FROM ACCT_EXEMPT_VALUE 
+WHERE ACCOUNT_NUM IN (?)
+    ]]></sql>
+    <parameter>
+      <name>MAINACCOUNT_NUM</name>
+      <index>1</index>
+      <type>java.lang.String</type>
+      <value>00000169477000000</value>
+    </parameter>
+    <column>
+      <column-name>HEXEMPDETAILLABEL</column-name>
+      <display-name><![CDATA[HEXEMPDETAILLABEL]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CITY_APPLD_VAL</column-name>
+      <display-name><![CDATA[CITY_APPLD_VAL]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>ISD_APPLD_VAL</column-name>
+      <display-name><![CDATA[ISD_APPLD_VAL]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CNTY_APPLD_VAL</column-name>
+      <display-name><![CDATA[CNTY_APPLD_VAL]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>COLLEGE_APPLD_VAL</column-name>
+      <display-name><![CDATA[COLLEGE_APPLD_VAL]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>HOSPITAL_APPLD_VAL</column-name>
+      <display-name><![CDATA[HOSPITAL_APPLD_VAL]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>SPCL_APPLIED_VAL</column-name>
+      <display-name><![CDATA[SPCL_APPLIED_VAL]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>MAINACCOUNT_NUM</column-name>
+      <display-name><![CDATA[MAINACCOUNT_NUM]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="1000.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Content" is-batch-needed="true" batch-size="500">
+    <sql><![CDATA[
+SELECT                   'ESTIMATED TAXES' AS 'ETEXEMPDETAILLABEL',
+		CASE WHEN LTRIM(RTRIM(CAST(REPLACE(CITY_TAXABLE_VAL,'.','') AS INT)*.007479)) = '' THEN '0' ELSE CAST(REPLACE(ISNULL(CITY_TAXABLE_VAL, '0'),'.','') AS INT)*.007479 END AS 'CITY_TAXABLE_VAL',
+		CASE WHEN LTRIM(RTRIM(CAST(REPLACE(SCHOOL_JURIS_VAL,'.','') AS INT)*.01271343)) = '' THEN '0' ELSE CAST(REPLACE(ISNULL(SCHOOL_JURIS_VAL, '0'),'.','') AS INT)*.01271343 END AS 'SCHOOL_JURIS_VAL',
+		CASE WHEN LTRIM(RTRIM(CAST(REPLACE(COUNTY_TAXABLE_VAL,'.','') AS INT)*.00233312)) = '' THEN '0' ELSE CAST(REPLACE(ISNULL(COUNTY_TAXABLE_VAL, '0'),'.','') AS INT)*.00233312 END AS 'COUNTY_TAXABLE_VAL',
+		CASE WHEN LTRIM(RTRIM(CAST(REPLACE(COLLEGE_TAXABLE_VAL,'.','') AS INT)*.000949)) = '' THEN '0' ELSE CAST(REPLACE(ISNULL(COLLEGE_TAXABLE_VAL, '0'),'.','') AS INT)*.000949 END AS 'COLLEGE_TAXABLE_VAL',
+		CASE WHEN LTRIM(RTRIM(CAST(REPLACE(HOSPITAL_TAXABLE_VAL,'.','') AS INT)*.00274)) = '' THEN '0' ELSE CAST(REPLACE(ISNULL(HOSPITAL_TAXABLE_VAL, '0'),'.','') AS INT)*.00274 END AS 'HOSPITAL_TAXABLE_VAL',
+		'N/A' AS 'SPECIAL_DIST_TAXABLE_VAL',
+		CASE WHEN LTRIM(RTRIM(ACCOUNT_NUM)) = '' THEN '|' ELSE ISNULL(ACCOUNT_NUM, '|') END AS 'MAINACCOUNT_NUM'
+FROM V_TAXEXEMPTIONAMT 
+WHERE ACCOUNT_NUM IN (?)
+    ]]></sql>
+    <parameter>
+      <name>MAINACCOUNT_NUM</name>
+      <index>1</index>
+      <type>java.lang.String</type>
+      <value>00000169477000000</value>
+    </parameter>
+    <column>
+      <column-name>ETEXEMPDETAILLABEL</column-name>
+      <display-name><![CDATA[ETEXEMPDETAILLABEL]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CITY_TAXABLE_VAL</column-name>
+      <display-name><![CDATA[CITY_TAXABLE_VAL]]></display-name>
+      <column-index>2</column-index>
+      <column-type precision="17" scale="6">java.math.BigDecimal</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>SCHOOL_JURIS_VAL</column-name>
+      <display-name><![CDATA[SCHOOL_JURIS_VAL]]></display-name>
+      <column-index>3</column-index>
+      <column-type precision="19" scale="8">java.math.BigDecimal</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>COUNTY_TAXABLE_VAL</column-name>
+      <display-name><![CDATA[COUNTY_TAXABLE_VAL]]></display-name>
+      <column-index>4</column-index>
+      <column-type precision="19" scale="8">java.math.BigDecimal</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>COLLEGE_TAXABLE_VAL</column-name>
+      <display-name><![CDATA[COLLEGE_TAXABLE_VAL]]></display-name>
+      <column-index>5</column-index>
+      <column-type precision="17" scale="6">java.math.BigDecimal</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>HOSPITAL_TAXABLE_VAL</column-name>
+      <display-name><![CDATA[HOSPITAL_TAXABLE_VAL]]></display-name>
+      <column-index>6</column-index>
+      <column-type precision="16" scale="5">java.math.BigDecimal</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>SPECIAL_DIST_TAXABLE_VAL</column-name>
+      <display-name><![CDATA[SPECIAL_DIST_TAXABLE_VAL]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>MAINACCOUNT_NUM</column-name>
+      <display-name><![CDATA[MAINACCOUNT_NUM]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="1000.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Content" is-batch-needed="true" batch-size="500">
+    <sql><![CDATA[
+SELECT		'TAXABLE VALUE' AS 'TVEXEMPDETAILLABEL',
+		CASE WHEN LTRIM(RTRIM(CITY_TAXABLE_VAL)) = '' THEN '0' ELSE ISNULL(CITY_TAXABLE_VAL, '0') END AS 'TVCITY_TAXABLE_VAL',
+		CASE WHEN LTRIM(RTRIM(SCHOOL_JURIS_VAL)) = '' THEN '0' ELSE ISNULL(SCHOOL_JURIS_VAL, '0') END AS 'TVSCHOOL_JURIS_VAL',
+		CASE WHEN LTRIM(RTRIM(COUNTY_TAXABLE_VAL)) = '' THEN '0' ELSE ISNULL(COUNTY_TAXABLE_VAL, '0') END AS 'TVCOUNTY_TAXABLE_VAL',
+		CASE WHEN LTRIM(RTRIM(COLLEGE_TAXABLE_VAL)) = '' THEN '0' ELSE ISNULL(COLLEGE_TAXABLE_VAL, '0') END AS 'TVCOLLEGE_TAXABLE_VAL',
+		CASE WHEN LTRIM(RTRIM(HOSPITAL_TAXABLE_VAL)) = '' THEN '0' ELSE ISNULL(HOSPITAL_TAXABLE_VAL, '0') END AS 'TVHOSPITAL_TAXABLE_VAL',
+		CASE WHEN LTRIM(RTRIM(SPECIAL_DIST_TAXABLE_VAL)) = '' THEN '0' ELSE ISNULL(SPECIAL_DIST_TAXABLE_VAL, '0') END AS 'TVSPECIAL_DIST_TAXABLE_VAL',
+		CASE WHEN LTRIM(RTRIM(ACCOUNT_NUM)) = '' THEN '|' ELSE ISNULL(ACCOUNT_NUM, '|') END AS 'MAINACCOUNT_NUM'		
+FROM V_TAXEXEMPTIONAMT 
+WHERE ACCOUNT_NUM IN (?)
+    ]]></sql>
+    <parameter>
+      <name>MAINACCOUNT_NUM</name>
+      <index>1</index>
+      <type>java.lang.String</type>
+      <value>00000169477000000</value>
+    </parameter>
+    <column>
+      <column-name>TVEXEMPDETAILLABEL</column-name>
+      <display-name><![CDATA[TVEXEMPDETAILLABEL]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>TVCITY_TAXABLE_VAL</column-name>
+      <display-name><![CDATA[TVCITY_TAXABLE_VAL]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>TVSCHOOL_JURIS_VAL</column-name>
+      <display-name><![CDATA[TVSCHOOL_JURIS_VAL]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>TVCOUNTY_TAXABLE_VAL</column-name>
+      <display-name><![CDATA[TVCOUNTY_TAXABLE_VAL]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>TVCOLLEGE_TAXABLE_VAL</column-name>
+      <display-name><![CDATA[TVCOLLEGE_TAXABLE_VAL]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>TVHOSPITAL_TAXABLE_VAL</column-name>
+      <display-name><![CDATA[TVHOSPITAL_TAXABLE_VAL]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>TVSPECIAL_DIST_TAXABLE_VAL</column-name>
+      <display-name><![CDATA[TVSPECIAL_DIST_TAXABLE_VAL]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>MAINACCOUNT_NUM</column-name>
+      <display-name><![CDATA[MAINACCOUNT_NUM]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="1000.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Content" is-batch-needed="true" batch-size="500">
+    <sql><![CDATA[
+SELECT  'TAX CEILING' AS 'TCEXEMPDETAILLABEL',
+		CASE WHEN LTRIM(RTRIM(CITY_CEIL_TAX_VAL)) = '' THEN '0' ELSE ISNULL(CITY_CEIL_TAX_VAL, '0') END AS 'CITY_CEIL_TAX_VAL',
+		CASE WHEN LTRIM(RTRIM(ISD_CEIL_TAX_VAL)) = '' THEN '0' ELSE ISNULL(ISD_CEIL_TAX_VAL, '0') END AS 'ISD_CEIL_TAX_VAL',
+		CASE WHEN LTRIM(RTRIM(COUNTY_CEIL_TAX_VAL)) = '' THEN '0' ELSE ISNULL(COUNTY_CEIL_TAX_VAL, '0') END AS 'COUNTY_CEIL_TAX_VAL',
+		CASE WHEN LTRIM(RTRIM(COLLEGE_CEIL_TAX_VAL)) = '' THEN '0' ELSE ISNULL(COLLEGE_CEIL_TAX_VAL, '0') END AS 'COLLEGE_CEIL_TAX_VAL',
+        'N/A' AS 'HOSPITAL_CEIL_TAX_VAL',
+        'N/A' AS 'SPECIAL_CEIL_TAX_VAL',
+		CASE WHEN LTRIM(RTRIM(ACCOUNT_NUM)) = '' THEN '|' ELSE ISNULL(ACCOUNT_NUM, '0') END AS 'MAINACCOUNT_NUM'		
+FROM APPLIED_STD_EXEMPT
+WHERE ACCOUNT_NUM IN (?)
+    ]]></sql>
+    <parameter>
+      <name>MAINACCOUNT_NUM</name>
+      <index>1</index>
+      <type>java.lang.String</type>
+      <value></value>
+    </parameter>
+    <column>
+      <column-name>TCEXEMPDETAILLABEL</column-name>
+      <display-name><![CDATA[TCEXEMPDETAILLABEL]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>CITY_CEIL_TAX_VAL</column-name>
+      <display-name><![CDATA[CITY_CEIL_TAX_VAL]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>ISD_CEIL_TAX_VAL</column-name>
+      <display-name><![CDATA[ISD_CEIL_TAX_VAL]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>COUNTY_CEIL_TAX_VAL</column-name>
+      <display-name><![CDATA[COUNTY_CEIL_TAX_VAL]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>COLLEGE_CEIL_TAX_VAL</column-name>
+      <display-name><![CDATA[COLLEGE_CEIL_TAX_VAL]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>HOSPITAL_CEIL_TAX_VAL</column-name>
+      <display-name><![CDATA[HOSPITAL_CEIL_TAX_VAL]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>SPECIAL_CEIL_TAX_VAL</column-name>
+      <display-name><![CDATA[SPECIAL_CEIL_TAX_VAL]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>MAINACCOUNT_NUM</column-name>
+      <display-name><![CDATA[MAINACCOUNT_NUM]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="1000.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <default-template>Details_SN</default-template>
+  <searcher-max-active>8</searcher-max-active>
+  <searcher-when-exhausted>1</searcher-when-exhausted>
+  <searcher-max-wait>10000</searcher-max-wait>
+  <searcher-max-idle>7</searcher-max-idle>
+  <is-in-memory-search>false</is-in-memory-search>
+  <jvm-max-heap-size>8192</jvm-max-heap-size>
+  <max-field-length>10000000</max-field-length>
+  <document-buffer-size-mb>4048</document-buffer-size-mb>
+  <allowed-ip-list>*</allowed-ip-list>
+  <date-weight-formula>
+    <time-weight time="600" weight="12.0"/>
+    <time-weight time="1800" weight="11.0"/>
+    <time-weight time="3600" weight="10.0"/>
+    <time-weight time="21600" weight="9.0"/>
+    <time-weight time="43200" weight="8.0"/>
+    <time-weight time="86400" weight="7.0"/>
+    <time-weight time="1296000" weight="6.0"/>
+    <time-weight time="2678400" weight="5.0"/>
+    <time-weight time="5356800" weight="4.0"/>
+    <time-weight time="8035200" weight="3.0"/>
+    <time-weight time="16070400" weight="2.0"/>
+    <time-weight time="32140800" weight="1.3"/>
+    <time-weight time="64281600" weight="1.2"/>
+    <time-weight time="96422400" weight="1.1"/>
+    <time-weight time="128563200" weight="1.05"/>
+    <time-weight time="160704000" weight="1.04"/>
+    <time-weight time="192844800" weight="1.03"/>
+    <time-weight time="224985600" weight="1.02"/>
+    <time-weight time="321408000" weight="1.01"/>
+  </date-weight-formula>
+  <spell-checking enabled="true"></spell-checking>
+</dataset>

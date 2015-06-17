@@ -1,0 +1,215 @@
+<#assign num_pages = (searchResult.total/searchResult.length)?int>
+
+<#if num_pages*searchResult.length < searchResult.total>
+ <#assign num_pages = num_pages + 1>
+</#if>
+<#assign current_page_index = (searchResult.start/searchResult.length)?int + 1>
+
+<#assign startItemIndex = (current_page_index-1)*searchResult.length + 1>
+<#assign endItemIndex = current_page_index*searchResult.length>
+<#if (endItemIndex>searchResult.total)>
+ <#assign endItemIndex = searchResult.total>
+</#if>
+
+<#assign searchQuery = request.getParameter("searchQuery")?replace('"', '')?replace(':','')?replace(' ','')>
+<#assign firstnameQuery = request.getParameter("FIRSTNAME")?replace('"', '')?replace(':','')?replace(' ','')>
+<#assign middlenameQuery = request.getParameter("MIDDLENAME")?replace('"', '')?replace(':','')?replace(' ','')>
+<#assign lastnameQuery = request.getParameter("LASTNAME")?replace('"', '')?replace(':','')?replace(' ','')>
+<#assign lastnamelikeQuery = request.getParameter("LASTNAMELIKE")?replace('"', '')?replace(':','')?replace(' ','')>
+<#assign lastnamesoundexQuery = request.getParameter("LASTNAMESOUNDEX")?replace('"', '')?replace(':','')?replace(' ','')>
+<#assign suffixnameQuery = request.getParameter("SUFFIXNAME")?replace('"', '')?replace(':','')?replace(' ','')>
+<#assign dlnumberQuery = request.getParameter("DLNUMBER")?replace('"', '')?replace(':','')?replace(' ','')>
+<#assign dlstateQuery = request.getParameter("DLSTATE")?replace('"', '')?replace(':','')?replace(' ','')>
+<#assign dobQuery = request.getParameter("DOB")?replace('"', '')?replace(':','')?replace(' ','')>
+<#assign genderQuery = request.getParameter("GENDER")?replace('"', '')?replace(':','')?replace(' ','')>
+<#assign ssnQuery = request.getParameter("SSN")?replace('"', '')?replace(':','')?replace(' ','')>
+<#assign addressQuery = request.getParameter("ADDRESS")?replace('"', '')?replace(':','')?replace(' ','')>
+<#assign dlplateQuery = request.getParameter("DLPLATE")?replace('"', '')?replace(':','')?replace(' ','')>
+<#assign dlplatestateQuery = request.getParameter("DLPLATESTATE")?replace('"', '')?replace(':','')?replace(' ','')>
+
+<Items>
+  <TotalResults>${total}</TotalResults>
+  <TotalPages>${num_pages}</TotalPages>
+  <CurrentPage>${current_page_index}</CurrentPage>
+  <PageLength>${length}</PageLength>
+  <StartItemIndex>${startItemIndex}</StartItemIndex>
+  <EndItemIndex>${endItemIndex}</EndItemIndex>
+  <RequestProcessingTime>${searchTime}</RequestProcessingTime>
+  <QueryString><![CDATA[${q}]]></QueryString>
+<searchQuery>${searchQuery}</searchQuery>
+<firstnameQuery>${firstnameQuery}</firstnameQuery>
+<middlenameQuery>${middlenameQuery}</middlenameQuery>
+<lastnameQuery>${lastnameQuery}</lastnameQuery>
+
+  <#if searchResult.docs?has_content>
+  <#foreach doc in searchResult.docs>
+  <Item>
+<PERSONALIASIDS>
+
+<PERSONALIASID> <![CDATA[${doc.get("PERSON_ALIAS_ID")}]]> </PERSONALIASID>
+
+
+<#assign FIRSTNAME = doc.getValues("FIRSTNAME")>
+<#assign MIDDLENAME = doc.getValues("MIDDLENAME")>
+<#assign LASTNAME = doc.getValues("LASTNAME")>
+<#assign LASTNAMELIKE = doc.getValues("LASTNAMELIKE")>
+<#assign LASTNAMESOUNDEX = doc.getValues("LASTNAMESOUNDEX")>
+<#assign SUFFIXNAME = doc.getValues("SUFFIXNAME")>
+<#assign PERSONHIGHLIGHTER = "">
+<#assign loopCounter = 0>
+
+<PERSONS>
+     <#foreach PERSONID in doc.getValues("PERSONID")>
+
+<PERSON>
+
+<#if FIRSTNAME[loopCounter]?replace('|','')?replace(' ', '')?contains(firstnameQuery)
+ && MIDDLENAME[loopCounter]?replace('|','')?replace(' ', '')?contains(middlenameQuery)
+ && LASTNAME[loopCounter]?replace('|','')?replace(' ', '')?contains(lastnameQuery)
+ && LASTNAMELIKE[loopCounter]?replace('|','')?replace(' ', '')?contains(lastnamelikeQuery)
+ && LASTNAMESOUNDEX[loopCounter]?replace('|','')?replace(' ', '')?contains(lastnamesoundexQuery)
+ && SUFFIXNAME[loopCounter]?replace('|','')?replace(' ', '')?contains(suffixnameQuery)>
+<#assign HIGHLIGHT = "true">
+<#else>
+<#assign HIGHLIGHT = "false">
+</#if>
+
+               <SEARCHTERM><#if HIGHLIGHT = "true">TRUE<#else>FALSE</#if></SEARCHTERM>
+               <PERSONID>  <![CDATA[${PERSONID?replace('|', '')}]]> </PERSONID>
+               <FIRSTNAME ><![CDATA[${FIRSTNAME[loopCounter]?replace('|', '')}]]></FIRSTNAME>
+               <MIDDLENAME><![CDATA[${MIDDLENAME[loopCounter]?replace('|', '')}]]></MIDDLENAME>
+               <LASTNAME><![CDATA[${LASTNAME[loopCounter]?replace('|', '')}]]></LASTNAME>
+               <LASTNAMELIKE><![CDATA[${LASTNAMELIKE[loopCounter]?replace('|', '')}]]></LASTNAMELIKE>
+               <LASTNAMESOUNDEX><![CDATA[${LASTNAMESOUNDEX[loopCounter]?replace('|', '')}]]></LASTNAMESOUNDEX>
+               <SUFFIXNAME><![CDATA[${SUFFIXNAME[loopCounter]?replace('|', '')}]]></SUFFIXNAME>
+
+                 
+</PERSON>
+               <#assign loopCounter = loopCounter + 1>
+     </#foreach>
+</PERSONS>
+
+   
+<#assign DLNUMBER = doc.getValues("DLNUMBER")>
+<#assign DLSTATE = doc.getValues("DLSTATE")>
+<#assign loopCounter = 0>
+
+<DRIVERSLICENSES>
+     <#foreach DRIVERS_LICENSEID in doc.getValues("DRIVERS_LICENSEID")>
+<DRIVERSLICENSE>
+
+<#if DLNUMBER[loopCounter]?replace('|','')?replace(' ', '')?matches(dlnumberQuery) 
+&& DLSTATE[loopCounter]?replace('|','')?replace(' ', '')?matches(dlstateQuery)>
+<#assign HIGHLIGHT = "true">
+<#else>
+<#assign HIGHLIGHT = "false">
+</#if>
+
+               <SEARCHTERM><#if HIGHLIGHT = "true">TRUE<#else>FALSE</#if></SEARCHTERM>               
+               <DRIVERS_LICENSEID> <![CDATA[${DRIVERS_LICENSEID?replace('|', '')}]]> </DRIVERS_LICENSEID>
+               <DLNUMBER><![CDATA[${DLNUMBER[loopCounter]?replace('|', '')}]]></DLNUMBER>
+               <DLSTATE><![CDATA[${DLSTATE[loopCounter]?replace('|', '')}]]></DLSTATE>
+</DRIVERSLICENSE>
+               <#assign loopCounter = loopCounter + 1>
+     </#foreach>
+</DRIVERSLICENSES>
+
+   
+<#assign DOB = doc.getValues("DOB")>
+<#assign GENDER = doc.getValues("GENDER")>
+<#assign loopCounter = 0>
+
+<PHYSICALCHARACTERISTICS>
+     <#foreach PHYSICALID in doc.getValues("PHYSICALID")>
+<PHYSICALCHARACTERISITIC>
+
+<#if DOB[loopCounter]?replace('|','')?replace(' ', '')?matches(dobQuery) && GENDER[loopCounter]?replace('|','')?replace(' ', '')?matches(genderQuery)>
+<#assign HIGHLIGHT = "true">
+<#else>
+<#assign HIGHLIGHT = "false">
+</#if>
+               <SEARCHTERM><#if HIGHLIGHT = "true">TRUE<#else>FALSE</#if></SEARCHTERM>  
+               <PHYSICALID> <![CDATA[${PHYSICALID?replace('|', '')}]]> </PHYSICALID>
+               <DOB><![CDATA[${DOB[loopCounter]?replace('|', '')}]]></DOB>
+               <GENDER><![CDATA[${GENDER[loopCounter]?replace('|', '')}]]></GENDER>
+</PHYSICALCHARACTERISITIC>
+               <#assign loopCounter = loopCounter + 1>
+     </#foreach>
+</PHYSICALCHARACTERISTICS>
+
+
+
+<#assign SSN = doc.getValues("SSN")>
+<#assign loopCounter = 0>
+
+<IDENTITIES>
+     <#foreach IDENTITYID in doc.getValues("IDENTITYID")>
+<IDENTITY>
+
+<#if SSN[loopCounter]?replace('|','')?replace(' ', '')?matches(ssnQuery)>
+<#assign HIGHLIGHT = "true">
+<#else>
+<#assign HIGHLIGHT = "false">
+</#if>
+                <SEARCHTERM><#if HIGHLIGHT = "true">TRUE<#else>FALSE</#if></SEARCHTERM>   
+               <IDENTITYID> <![CDATA[${IDENTITYID?replace('|', '')}]]>  </IDENTITYID>
+               <SSN><![CDATA[${SSN[loopCounter]?replace('|', '')}]]></SSN>
+</IDENTITY>
+               <#assign loopCounter = loopCounter + 1>
+     </#foreach>
+</IDENTITIES>
+
+
+<#assign ADDRESS = doc.getValues("ADDRESS")>
+<#assign loopCounter = 0>
+
+<ADDRESSES>
+     <#foreach ADDRESSID in doc.getValues("ADDRESSID")>
+<ADDRESS>
+
+<#if ADDRESS[loopCounter]?replace('|','')?replace(' ', '')?matches(addressQuery)>
+<#assign HIGHLIGHT = "true">
+<#else>
+<#assign HIGHLIGHT = "false">
+</#if>
+
+
+               <SEARCHTERM><#if HIGHLIGHT = "true">TRUE<#else>FALSE</#if></SEARCHTERM>   
+               <ADDRESSID> <![CDATA[${ADDRESSID?replace('|', '')}]]> </ADDRESSID>
+               <STREETADDRESS><![CDATA[${ADDRESS[loopCounter]?replace('|', '')}]]></STREETADDRESS>
+</ADDRESS>
+               <#assign loopCounter = loopCounter + 1>
+     </#foreach>
+</ADDRESSES>
+
+
+
+
+<#assign DLPLATE = doc.getValues("DLPLATE")>
+<#assign DLPLATESTATE = doc.getValues("DLPLATESTATE")>
+<#assign loopCounter = 0>
+
+<PLATES>
+     <#foreach PLATEID in doc.getValues("PLATEID")>
+<PLATE>
+
+<#if DLPLATE[loopCounter]?replace('|','')?replace(' ', '')?matches(dlplateQuery) 
+&& DLPLATESTATE[loopCounter]?replace('|','')?replace(' ', '')?matches(dlplatestateQuery)>
+<#assign HIGHLIGHT = "true">
+<#else>
+<#assign HIGHLIGHT = "false">
+</#if>
+               <SEARCHTERM><#if HIGHLIGHT = "true">TRUE<#else>FALSE</#if></SEARCHTERM>   
+               <PLATEID> <![CDATA[${PLATEID?replace('|', '')}]]> </PLATEID>
+               <DLPLATE><![CDATA[${DLPLATE[loopCounter]?replace('|', '')}]]></DLPLATE>
+               <DLPLATESTATE><![CDATA[${DLPLATESTATE[loopCounter]?replace('|', '')}]]></DLPLATESTATE>
+</PLATE>
+               <#assign loopCounter = loopCounter + 1>
+     </#foreach>
+</PLATES>
+
+</PERSONALIASIDS>
+  </Item>
+  </#foreach>
+  </#if>
+</Items>

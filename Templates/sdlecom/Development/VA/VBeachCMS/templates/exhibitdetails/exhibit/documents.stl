@@ -1,0 +1,72 @@
+<b>Exhibit Information</b>
+<#if searchResult.docs?has_content>
+	<table id="exhibit" class="tablesorter">
+		<thead>
+			<tr>
+				<th>${searchResult.datasetConfiguration.getColumn("EvidenceDate").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("IDDate").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("IDNumber").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("ObjectDesc").displayName}</th>			
+			</tr>
+		</thead>
+		<tbody>
+		<#assign ResultId =0>
+		<#foreach doc in searchResult.docs>  
+				 <#assign EvidenceDate = doc.getValues("EvidenceDate")>
+				 <#assign IDDates = doc.getValues("IDDate")> 				
+				 <#assign IDNumber = doc.getValues("IDNumber")>
+			     <#assign ObjectDesc = doc.getValues("ObjectDesc")>   	
+				 
+				 <#assign loopCounter = 0>	
+				 
+				 
+			<tr>
+				  <td>${IDDates[loopCounter]?replace('|', '&nbsp;')}</td>
+				  <td>${EvidenceDate[loopCounter]?replace('|', '&nbsp;')}</td>
+				  <td>${IDNumber[loopCounter]?replace('|', '&nbsp;')}</td>
+				  <td>${ObjectDesc[loopCounter]?replace('|', '&nbsp;')}</td>		
+				  <#assign loopCounter = loopCounter + 1>
+			</tr>
+
+		</#foreach>
+		</tbody>
+	</table>
+<#else>
+	<table id="exhibit" class="tablesorter">
+		<thead>
+			<tr>
+				<th>${searchResult.datasetConfiguration.getColumn("EvidenceDate").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("IDDate").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("IDNumber").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("ObjectDesc").displayName}</th>			
+			</tr>
+		</thead>
+		<tbody>
+	    <#assign ResultId =0>
+	    <#foreach doc in searchResult.docs>
+			<tr>
+			    <td></td>
+			    <td></td>
+			    <td></td>
+			    <td></td>		          				  
+		    </tr>
+			</#foreach>
+		</tbody>
+	</table>	
+</#if>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	oTable = $('#exhibit').dataTable({
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bSort": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		"aaSorting": []
+	});
+} );
+</script>

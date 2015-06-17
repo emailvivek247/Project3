@@ -1,0 +1,30 @@
+<@com.useHighlightTag '<span style="background-color:#00ff00">', '</span>' />
+<#include "layout.stl">
+<@layout title="Details" encoding="${searchResult.encoding}">
+
+<#include "/templates/globalNav_Suffolk.stl">
+<br />
+<a id="backLink" href = "">« Back to search results</a> &nbsp; &nbsp;
+</br>
+</br>
+</br>
+
+<#include "/templates/globalBriefCase-Suffolk.stl">
+
+ <@com.errorMarkup/>
+ 
+<#include "searchResultHeader.stl">
+ 
+ <br>
+
+<table class="main"> 
+    <tr valign="top" width="30%">   
+        <td class="mainLeft">
+            <div id="documents"><#include "documents.stl"></div>
+        </td>
+
+    </tr>
+</table>
+ 
+ 
+</@layout>

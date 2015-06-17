@@ -1,0 +1,85 @@
+<#-- *Assign variables for Phonetic Search -->
+<#assign search = "Name,LicenseNum,Instrument,RECDATE1DISPLAY,RECDATE1SEARCH,RECDATE2,PartyRole,DocType,Location">
+
+
+<#assign columns = dc.getColumns()><script type="text/javascript">
+var cc = "${indexName}"+'recentQueries';
+var cq = "${indexName}"+'recentQuery';
+<#if columns?has_content>
+	var columns= new Array(${columns.size()});
+	<#assign columnCount = 0>
+	<#foreach column in columns>
+		columns[${columnCount}] = "${column.getColumnName()}";
+		<#assign columnCount = columnCount + 1>
+	</#foreach>
+</#if>
+function replaceField(query){
+	var i=0;
+	var q=decodeURIComponent(query.replace(/\+/g, ' '));
+	for (i=0; i<columns.length; i++)
+	{
+	    myRE = new RegExp(columns[i]+':', "i")
+		q=q.replace(myRE, '');
+	}
+	return q;
+}
+function displayRecentQueries() {
+  var count = getCookie(cc);
+  if (count == 0) {
+    delCookie(cc);
+    return;
+  }
+  if (count == null) count = 0;
+  var isNew = ("${URLEncodedQuery?if_exists}" != "");
+  var query;
+  var i, j;
+  for (i = count-1; i >= 0 && isNew; i--) {
+    query = getCookie(cq+i);
+    if (query == "${URLEncodedQuery?if_exists}") {
+      isNew = false;
+      for (j = i; j < count-1; j++) {
+        setCookie(cq+j, getCookie(cq+(j+1)));
+      }
+      if (i < count-1) setCookie(cq+(count-1), query);
+    }
+  }
+  if (isNew) {
+    // limit the number of stored recent queries to 10
+    if (count >= 10) {
+      count = 9;
+      for (j = 0; j < count; j++) {
+        setCookie(cq+j, getCookie(cq+(j+1)));
+      }
+    }
+    setCookie(cq+count, "${URLEncodedQuery?if_exists}");
+    setCookie(cc, ++count);
+  }
+  document.write('<span style="font-size:10pt;">');
+  var url = "?indexName=${indexName?if_exists}&templateName=${templateName?if_exists}&q=";
+  for (i = count-1; i >= 0; i--) {
+    query = getCookie(cq+i);
+    //if (query.length > 30) query = query.substring(0, 30)+'...';
+    document.write((count-i)+'. <a href="'+url+query+'">'+replaceField(query)+'</a><br />');
+  }
+  document.write('</span>');
+}
+function clearRecentQueries() {
+  var count = getCookie(cc);
+  setCookie(cc, 0);
+  for (var i = 0; i < count; i++) {
+    delCookie(cq+i);
+  }
+  window.location.reload(true);
+}
+</script>
+
+<div class="filter_list">
+    <p class="filter_head"><span class="active"></span>Recent Searches</p> 
+  <div class="filter_body" id="filter_recentSearches" style="display: none; ">
+   <script type="text/javascript">
+    displayRecentQueries();
+   </script>
+   [<a href="javascript:clearRecentQueries()">Clear</a>]
+  </div>
+</div>
+<br />

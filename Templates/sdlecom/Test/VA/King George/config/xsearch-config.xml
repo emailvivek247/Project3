@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="0A77606EEBF67CC459130ED74DA221A42F1F5E0445A3472E" adminuser="D25F148A33663132C387F05640CA70B85F7263EC9383AEE6">
+  <index-root-directory><![CDATA[E:\index\kinggeorge\]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[12E05A37F56E51F5D67408B085D5FD43D6A40EC2215734A243870E0327A4948F9DCBDE752655D7BF3493DC3160251FBE4B509B89F8FB0FDC32B541E3338BD1CFD9AF77D6F37D4F765E7BD0CEB71D588A541B22333C92628D]]></db-url>
+      <db-username><![CDATA[00DCA863F4FD183B6AEAE9BCE55DC0C0F67592B801E012A7]]></db-username>
+      <db-password><![CDATA[77966B80D2B3962DFC1D0038756E5C9AB4F42A7A38458291]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

@@ -1,0 +1,6 @@
+<@com.useHighlightTag '<span style="background-color:#00ff00">', '</span>' />
+
+<#include "layout.stl">
+<@layout title="se">
+<#include "documents.stl">
+</@layout>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="2B8F772BE4948F1A4F5CCF571FE2E354D6B13A0742B78313" adminuser="4509A773D406819FC2E2221BD84B8F2F864092CB009D7969">
+  <index-root-directory><![CDATA[E:\index\arlington\]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[9358F8B40AD91B8BD24831B9236772E1E14C9FCA12174AD04C017F5F7B0AA4A3BF0546F5108E4BFF662D253877AD2B97E598FFA8A2A6982F62AFAA3668BA628A5CE7CA08907F62CF4A1607B0CC8F28B7181CF56A4C97E951]]></db-url>
+      <db-username><![CDATA[F5E857C1E998EDA028658796DCFEACD096277059F544AC19]]></db-username>
+      <db-password><![CDATA[A34A731C0CAEE99337759281F04E34A1423E593E90F4057C]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

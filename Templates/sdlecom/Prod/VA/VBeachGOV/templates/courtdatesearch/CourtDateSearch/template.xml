@@ -1,0 +1,4 @@
+<template>
+  <longname>Charts</longname>
+  <description> Select chart values for a field. It generates a new file &quot;chart&amp;lt;column name&amp;gt;.stl&quot;, and applicable to page styles with &quot;narrowBy_extra.stl&quot;.</description>
+</template>

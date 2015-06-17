@@ -1,0 +1,6 @@
+<#if !searchResult.docs?has_content || searchResult.docs.size() <= 0>
+	<h4 class="noResults" style="text-align:center;margin-right:250px;">
+	No Results Found!
+
+	</h4>
+</#if>

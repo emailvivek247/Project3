@@ -1,0 +1,69 @@
+<#macro layout(title="", encoding="utf-8")>
+<html><head><title>ROAM Details</title>
+<meta http-equiv="content-type" content="text/html; charset=${encoding}">
+
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/prompt.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/jquery-ui-1.8.19.base.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/jquery-ui-1.8.19.glossy-classic.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/theme-base.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/theme-glossy-classic.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/demo_table_jui.css" type="text/css"  />
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/prompt.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/sdl-min.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/filterControl.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery-ui-1.8.19.custom.min.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.tabSlideOut.js"></script> 
+<#-- *Add js file for SmartNav -->
+<script type="text/javascript" src="templates/smithdetails/defaultml/resource/jquery.tabSlideOut.js"></script> 
+<link rel="shortcut icon" href="favicon.ico"/>
+
+<#-- ADD GOOGLE ANALYTICS -->
+<#include "/templates/googleAnalytics-Smith.stl">
+
+<script type="text/javascript">
+function initialize() {
+
+<#assign q = pageStyleUtil.encodeURL(searchResult.request.getParameter("q")) lq = pageStyleUtil.encodeURL(searchResult.request.getParameter("lq"))
+	 start = searchResult.request.getParameter("start") searchable = pageStyleUtil.encodeURL(searchResult.request.getParameter("searchable"))
+     searchType = searchResult.request.getParameter("searchType") isPhoneticSearch = request.getParameter("isPhoneticSearch")
+     searchQuery = pageStyleUtil.encodeURL(searchResult.request.getParameter("searchQuery")) sortBy = pageStyleUtil.encodeURL(searchResult.request.getParameter("sortBy")) 
+     desc = pageStyleUtil.encodeURL(searchResult.request.getParameter("desc")) asc = pageStyleUtil.encodeURL(searchResult.request.getParameter("asc"))>
+<#if !searchType?has_content>
+	searchType = 1	
+</#if>
+
+
+}
+
+</script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+<#assign mode = request.getParameter("mode")>
+<#if mode= "Tablet">    
+    $('#backLink').attr('href', 'search.do?indexName=smithml&templateName=Tablet&' + getCookie('searchstring'));
+<#else>
+    $('#backLink').attr('href', 'search.do?indexName=smithml&templateName=Main&' + getCookie('searchstring'));
+</#if>      
+    }); 
+</script>
+</head>
+
+<#-- *Include file for SmartNav -->
+<#include "slideOutDiv.stl">
+
+<#-- *Add onload function -->
+<body onKeyPress="trapKeyBoardEvents(event)">
+<#compress>
+<#nested>
+</#compress>
+<#-- *Add div for SmartNav -->
+<script language="javascript">
+          if (getCookie('searchstring') != null) {          
+      document.write('<div class="slide-out-div"><a class="handle" href="">Smart Nav</a> <label><div style="padding-bottom:15px; padding-left:10px; padding-top:10px; color:#2E7EE4;"><b>Recent Search</b></div></label><div class="slide-out-div-content" width="100%" height="100%"><iframe id="SmartNavFrame"  width="100%" height="97%" frameborder="0" src="" filter="alpha(opacity=20)"></iframe></div></div>');
+    }
+</script>
+</body></html>
+</#macro>

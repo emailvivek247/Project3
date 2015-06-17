@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="jdsAFGS7YSu/Vxt3nDkD0g==" adminuser="admin1234">
+  <search-log-size-in-MB>10</search-log-size-in-MB>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+  </logging-configuration>
+</xsearch>

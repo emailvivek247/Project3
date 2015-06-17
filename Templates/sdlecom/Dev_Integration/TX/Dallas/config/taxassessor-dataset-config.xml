@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset name="Appraisal" exportedBy="null" createdAt="Fri Sep 28 14:41:55 EDT 2012">
+  <display-order>-1</display-order>
+  <description><![CDATA[Dallas Central Appraisal District]]></description>
+  <index-dir>taxassessor1</index-dir>
+  <is-prefix-root-index-directory>true</is-prefix-root-index-directory>
+  <use-server-db-connection>true</use-server-db-connection>
+  <work-directory>_work</work-directory>
+  <temporary-index-minimal-merge-percentage>0.0</temporary-index-minimal-merge-percentage>
+  <merge-hours enabled="true" begin="19" end="20"/>
+  <fetcher-threads>1</fetcher-threads>
+  <writer-threads>1</writer-threads>
+  <index-max-size>100000.0</index-max-size>
+  <list-fetch-size>10000</list-fetch-size>
+  <schedules>
+   <schedule id="0">
+    <is-enabled>false</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>1</interval>
+    <cron-setting>0,10,20,30,40,50 7,8,9,10,11,12,13,14,15,16,17,20,21 * * ?</cron-setting>
+    <indexing-mode>Incremental Indexing with Thorough Deletion Detection</indexing-mode>
+   </schedule>
+   <schedule id="1">
+    <is-enabled>false</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>1</interval>
+    <cron-setting>0 19 * * ?</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+  </schedules>
+  <language>Any</language>
+  <analyzer-name>com.fdt.sdl.core.analyzer.NumberLowerCaseAnalyzer</analyzer-name>
+  <data-source-type>0</data-source-type>
+  <fetcher-configuration dir="null">
+  </fetcher-configuration>
+  <data-sources>
+    <data-source>
+      <name>default</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-password>$enc$null</db-password>
+    </data-source>
+  </data-sources>
+  <dataquery name="WorkingQueue" batch-size="128" is-skipping-null-parameters="false">
+    <sql><![CDATA[
+SELECT         TS.ACCOUNT_NUM, 
+               CASE WHEN TS.OWNER_NAME1 LIKE '%&' THEN TS.OWNER_NAME1 + ' ' + OWNER_ADDRESS_LINE1 ELSE TS.OWNER_NAME1 END AS OWNER_NAME1, 
+               CASE WHEN TS.OWNER_NAME1 LIKE '%&' THEN TS.OWNER_NAME1 + ' ' + OWNER_ADDRESS_LINE1 ELSE TS.OWNER_NAME1 END AS 'PHONETICNAME',
+               --OWNER_ADDRESS, 
+               --OWNER_CITY,
+               --OWNER_STATE, 
+               --SUBSTRING(OWNER_ZIPCODE,1,5) + '-' + SUBSTRING(OWNER_ZIPCODE,6,LEN(OWNER_ZIPCODE)) AS OWNER_ZIPCODE,
+               CAST(TOT_VAL AS FLOAT) AS TOT_VAL,
+               TS.STREET_NUM + ' ' + TS.FULL_STREET_NAME AS OWNER_ADDRESS,
+               TS.STREET_NUM + ' ' + FULL_STREET_NAME + ' ' + BLDG_ID + ' ' + UNIT_ID AS DISPLAY_ADDRESS,
+               TS.LEGAL1, 
+               TS.LEGAL2,
+               TS.LEGAL3, 
+               TS.LEGAL4,
+               TS.LEGAL5, 
+               TE.CITY_JURIS_DESC AS OWNER_CITY,
+               TE.CITY_JURIS_DESC AS FILTEROWNER_CITY,
+               'TEXAS' AS OWNER_STATE,
+               ' ' AS OWNER_ZIPCODE
+FROM V_TAXSUMMARY TS
+INNER JOIN V_TAXEXEMPTION TE ON TE.ACCOUNT_NUM=TS.ACCOUNT_NUM
+    ]]></sql>
+    <column>
+      <column-name>ACCOUNT_NUM</column-name>
+      <display-name><![CDATA[Account Number]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <primary-key>true</primary-key>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="100.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>OWNER_NAME1</column-name>
+      <display-name><![CDATA[Owner]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="1000.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PHONETICNAME</column-name>
+      <display-name><![CDATA[Owner]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <analyzer-name>com.fdt.sdl.core.analyzer.DoubleMetaphoneAnalyzer</analyzer-name>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>TOT_VAL</column-name>
+      <display-name><![CDATA[Property Value]]></display-name>
+      <column-index>4</column-index>
+      <column-type precision="15" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <is-filterable sort-filter-counts-by="1" filter-facet-type-name="price list">true</is-filterable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>OWNER_ADDRESS</column-name>
+      <display-name><![CDATA[Address]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="100.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DISPLAY_ADDRESS</column-name>
+      <display-name><![CDATA[Address]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="100.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>LEGAL1</column-name>
+      <display-name><![CDATA[Legal 1]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>LEGAL2</column-name>
+      <display-name><![CDATA[Legal 2]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>LEGAL3</column-name>
+      <display-name><![CDATA[Legal 3]]></display-name>
+      <column-index>9</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>LEGAL4</column-name>
+      <display-name><![CDATA[Legal 4]]></display-name>
+      <column-index>10</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>LEGAL5</column-name>
+      <display-name><![CDATA[Legal 5]]></display-name>
+      <column-index>11</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>OWNER_CITY</column-name>
+      <display-name><![CDATA[City]]></display-name>
+      <column-index>12</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="100.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>FILTEROWNER_CITY</column-name>
+      <display-name><![CDATA[City]]></display-name>
+      <column-index>13</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <is-filterable>true</is-filterable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>OWNER_STATE</column-name>
+      <display-name><![CDATA[State]]></display-name>
+      <column-index>14</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>OWNER_ZIPCODE</column-name>
+      <display-name><![CDATA[Zipcode]]></display-name>
+      <column-index>15</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Content" is-batch-needed="true" batch-size="500">
+    <sql><![CDATA[
+SELECT                  NUM_BEDROOMS,
+		NUM_FULL_BATHS,
+		NUM_HALF_BATHS,
+		NUM_KITCHENS,
+		NUM_FIREPLACES,
+                                ACCOUNT_NUM
+FROM V_MAINIMPROVEMENTS
+WHERE ACCOUNT_NUM IN (?)
+    ]]></sql>
+    <parameter>
+      <name>ACCOUNT_NUM</name>
+      <index>1</index>
+      <type>java.lang.String</type>
+      <value></value>
+    </parameter>
+    <column>
+      <column-name>NUM_BEDROOMS</column-name>
+      <display-name><![CDATA[Number of Bedrooms]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <is-filterable>true</is-filterable>
+    </column>
+    <column>
+      <column-name>NUM_FULL_BATHS</column-name>
+      <display-name><![CDATA[Number of Full Bathrooms]]></display-name>
+      <column-index>2</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <is-filterable>true</is-filterable>
+    </column>
+    <column>
+      <column-name>NUM_HALF_BATHS</column-name>
+      <display-name><![CDATA[Number of Half Bathrooms]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <is-filterable>true</is-filterable>
+    </column>
+    <column>
+      <column-name>NUM_KITCHENS</column-name>
+      <display-name><![CDATA[Number of Kitchens]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <is-filterable>true</is-filterable>
+    </column>
+    <column>
+      <column-name>NUM_FIREPLACES</column-name>
+      <display-name><![CDATA[Number of Fireplaces]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <is-filterable>true</is-filterable>
+    </column>
+    <column>
+      <column-name>ACCOUNT_NUM</column-name>
+      <display-name><![CDATA[Account Number]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type></index-field-type>
+      <is-searchable search-weight="100.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Deletion" is-delete-only="true">
+    <sql><![CDATA[
+{call sp_roam_track_delete}
+    ]]></sql>
+  </dataquery>
+  <dataquery name="Incremental">
+    <sql><![CDATA[
+Select DISTINCT cast(a.id as varchar)+ '-' + cast(isnull(b.seq, 0) as varchar) as pk_key, a.SEQ_KEY "Instrument", CONVERT(VARCHAR(10), RECDATE1, 112) AS RECDATE, RECDATE1 AS RECDATEFILTER, 
+CONVERT(VARCHAR(30), RECDATE1, 120) AS RECDATEDISPLAY, LNAME+' '+ISNULL(FNAME,'')+' '+ ISNULL(MNAME,'') as Name, DESIGSTATUS, ROLENAME PartyRole, case when role=1 then 'Direct Party' when role=2 then 'Reverse Party' when role not in (1,2) then 'No Party' end as Role,
+OTHERNAME "OtherName",OTHERDESIGSTATUS, OTHERROLE "OtherRole",OTHERROLENAME, 
+(SELECT descr FROM Doctype2lov WHERE type2 = a.indextype) as IndexType, 
+a.code as DocType, 
+Book,Page,LOTNUM as Lot,BLOCKNUM as Block,SECTIONNUM as CityBlock,MAPBOOK as MapBook,
+MAPPAGE as MapPage,LEGAL2 as MapInstrumentNumber,SUBDIVISION as Subdivision,CITY as CityTown,LDESC as Freeform, LegalDescription, MULTIPLE_LEGAL, FirstReference, MULTIPLE_REFREENCE, RT.date_time_mod, b.seq,offlinerecord,offlineimage
+,'Dallas' as Location
+      from PUBLICSEARCH a left outer join LEGAL b on
+      a.SEQ_KEY = b.SEQ_KEY 
+      INNER JOIN ROAM_TRACK RT ON RT.PK_KEY = A.ID
+      AND RT.TAB_NAME = 'PUBLICSEARCH' 
+      LEFT OUTER JOIN ROAM_TRACK RT1 ON RT1.PK_KEY = B.SEQ_KEY
+      AND RT1.TAB_NAME = 'LEGAL' 
+      where OFFLINERECORD ='N' 
+      AND a.indextype in (1,2,4,11,12,22,53,56,59,60)
+      AND a.doctype not in (291,607)
+    AND (RT.DATE_TIME_MOD > ? OR RT1.DATE_TIME_MOD > ?)
+order by RT.date_time_mod desc
+    ]]></sql>
+  </dataquery>
+  <default-template>Main</default-template>
+  <searcher-max-active>8</searcher-max-active>
+  <searcher-when-exhausted>1</searcher-when-exhausted>
+  <searcher-max-wait>10000</searcher-max-wait>
+  <searcher-max-idle>7</searcher-max-idle>
+  <is-in-memory-search>false</is-in-memory-search>
+  <jvm-max-heap-size>14336</jvm-max-heap-size>
+  <document-buffer-size-mb>8192</document-buffer-size-mb>
+  <is-wildcard-allowed>true</is-wildcard-allowed>
+  <min-wildcard-prefix-length>2</min-wildcard-prefix-length>
+  <allowed-ip-list>localhost</allowed-ip-list>
+  <is-empty-query-match-all>false</is-empty-query-match-all>
+  <date-weight-formula>
+    <time-weight time="600" weight="12.0"/>
+    <time-weight time="1800" weight="11.0"/>
+    <time-weight time="3600" weight="10.0"/>
+    <time-weight time="21600" weight="9.0"/>
+    <time-weight time="43200" weight="8.0"/>
+    <time-weight time="86400" weight="7.0"/>
+    <time-weight time="1296000" weight="6.0"/>
+    <time-weight time="2678400" weight="5.0"/>
+    <time-weight time="5356800" weight="4.0"/>
+    <time-weight time="8035200" weight="3.0"/>
+    <time-weight time="16070400" weight="2.0"/>
+    <time-weight time="32140800" weight="1.3"/>
+    <time-weight time="64281600" weight="1.2"/>
+    <time-weight time="96422400" weight="1.1"/>
+    <time-weight time="128563200" weight="1.05"/>
+    <time-weight time="160704000" weight="1.04"/>
+    <time-weight time="192844800" weight="1.03"/>
+    <time-weight time="224985600" weight="1.02"/>
+    <time-weight time="321408000" weight="1.01"/>
+  </date-weight-formula>
+  <spell-checking enabled="true"></spell-checking>
+</dataset>

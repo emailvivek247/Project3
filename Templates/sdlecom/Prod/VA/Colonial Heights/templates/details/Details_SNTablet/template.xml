@@ -1,0 +1,5 @@
+<template>
+  <longname>Colonial Heights Details Template</longname>
+  <description>Client Side Sortable Template with Smart Navigation used for Colonial Heights Details for tablet devices</description>
+  <defaultLength>30</defaultLength>
+</template>

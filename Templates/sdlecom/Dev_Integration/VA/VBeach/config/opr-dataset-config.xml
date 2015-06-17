@@ -1,0 +1,679 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset name="Public Records" exportedBy="null" createdAt="Mon Sep 24 11:46:50 EDT 2012">
+  <display-order>1</display-order>
+  <description><![CDATA[VA Beach Public Records]]></description>
+  <index-dir>opr</index-dir>
+  <is-prefix-root-index-directory>true</is-prefix-root-index-directory>
+  <use-server-db-connection>true</use-server-db-connection>
+  <work-directory>_work</work-directory>
+  <temporary-index-minimal-merge-percentage>0.0</temporary-index-minimal-merge-percentage>
+  <merge-hours enabled="true" begin="19" end="20"/>
+  <fetcher-threads>3</fetcher-threads>
+  <writer-threads>5</writer-threads>
+  <index-max-size>100000.0</index-max-size>
+  <list-fetch-size>10000</list-fetch-size>
+  <schedules>
+   <schedule id="0">
+    <is-enabled>false</is-enabled>
+    <is-interval>true</is-interval>
+    <interval>1</interval>
+    <cron-setting>* * * * ?</cron-setting>
+    <indexing-mode>Incremental Indexing with Thorough Deletion Detection</indexing-mode>
+   </schedule>
+  </schedules>
+  <language>Any</language>
+  <analyzer-name>com.fdt.sdl.core.analyzer.NumberLowerCaseAnalyzer</analyzer-name>
+  <data-source-type>0</data-source-type>
+  <fetcher-configuration dir="null">
+  </fetcher-configuration>
+  <data-sources>
+    <data-source>
+      <name>default</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-password>$enc$null</db-password>
+    </data-source>
+  </data-sources>
+  <dataquery name="WorkingQueue" batch-size="128" is-skipping-null-parameters="false">
+    <sql><![CDATA[
+Select top 1000000
+cast(a.id as varchar)+ '-' + cast(isnull(b.seq, 0) as varchar) as pk_key
+,a.SEQ_KEY AS 'Instrument'
+,CONVERT(VARCHAR(10), RECDATE1, 112) AS RecDate
+,RECDATE1 AS RecDateFilter
+,CONVERT(VARCHAR(30), RECDATE1, 120) AS RecDateDisplay
+,LNAME+' '+ISNULL(FNAME,'')+' '+ ISNULL(MNAME,'') as Name
+,LNAME+' '+ISNULL(FNAME,'')+' '+ ISNULL(MNAME,'') as PhoneticName
+,DESIGSTATUS AS DesigStatus
+,LTRIM(RTRIM(UPPER(SUBSTRING(ROLENAME,1,1)) + LOWER(SUBSTRING(ROLENAME,2,50)))) AS PartyRole
+,case when role=1 then 'Direct Party' when role=2 then 'Reverse Party' when role not in (1,2) then 'No Party' end as Role
+,case when a.role is null then '0' when a.role = '' then '0' else LTRIM(RTRIM(a.role)) end as RoleFilter
+,OTHERNAME AS 'OtherName'
+,OTHERDESIGSTATUS AS 'OtherDesigStatus'
+,OTHERROLE AS 'OtherRole'
+,OTHERROLENAME as OtherRoleName
+,(SELECT LTRIM(RTRIM(descr)) FROM Doctype2lov WHERE type2 = a.indextype) as 'IndexType'
+,LTRIM(RTRIM(a.code)) as DocType
+,c.DESCR AS 'DocTypeDesc'
+,Book
+,Page
+,LOTNUM as 'Lot'
+,UNIT AS 'Unit'
+,SECTIONNUM as 'SectionNum'
+,PHASE AS 'Phase'
+,BUILDING AS 'Building'
+,ACREAGE AS 'Acreage'
+,BLOCKNUM as 'Block'
+,SUBDIVISION as 'Subdivision'
+,TOWNSHIP AS 'Township'
+,LDESC as 'Other'
+,LEGAL1 as 'ProjectNum'
+,LEGAL2 as 'RdNum'
+,LEGAL3 as 'Tr'
+,LDESC2 as 'Desc2'
+,LDESC3 as 'Desc3'
+,GPIN
+,'' AS 'Status'
+,LegalDescription
+,LEGAL_TYPE as 'LegalType'
+,MULTIPLE_LEGAL as 'MultipleLegal'
+,FirstReference
+,MULTIPLE_REFERENCE as 'MultipleReference'
+,case when b.seq is null then 0 else b.seq end as 'seq'
+,offlinerecord
+,'VABeach' as Location
+, a.indextype as IndexCode
+, a.seq as PartySeq
+, a.doctype as DocCode
+,CASE 
+      WHEN a.CORP = 'N' THEN 'Human'
+      WHEN a.CORP = 'Y' THEN 'Non-Human'
+END AS 'Corp'
+,a.backfilenum AS 'LegacyNumber'
+,a.date_time_mod
+    from PUBLICSEARCH a left outer join LEGAL b on
+    a.SEQ_KEY = b.SEQ_KEY 
+    inner join DOCTYPE1LOV c
+    on a.CODE = c.CODE
+    where OFFLINERECORD ='N' 
+    AND a.indextype not in (6,8,12,13,14)
+    AND a.doctype not in (168,169,170,171,172,173,174)
+order by a.date_time_mod desc
+    ]]></sql>
+    <column>
+      <column-name>pk_key</column-name>
+      <display-name><![CDATA[pk_key]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <primary-key>true</primary-key>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="1000.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Instrument</column-name>
+      <display-name><![CDATA[Instrument]]></display-name>
+      <column-index>2</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>RecDate</column-name>
+      <display-name><![CDATA[Recorded Date]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>RecDateFilter</column-name>
+      <display-name><![CDATA[Recorded Date]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.sql.Timestamp</column-type>
+      <index-field-type>KeywordDateHierarchical</index-field-type>
+      <is-sortable descending="false">false</is-sortable>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <is-filterable sort-filter-counts-by="1">true</is-filterable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>RecDateDisplay</column-name>
+      <display-name><![CDATA[Recorded Date]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable>false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Name</column-name>
+      <display-name><![CDATA[Name]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="100.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PhoneticName</column-name>
+      <display-name><![CDATA[Phonetic Name]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="100.0">true</is-searchable>
+      <analyzer-name>com.fdt.sdl.core.analyzer.DoubleMetaphoneAnalyzer</analyzer-name>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DesigStatus</column-name>
+      <display-name><![CDATA[Desig Status]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable>false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PartyRole</column-name>
+      <display-name><![CDATA[Party Role]]></display-name>
+      <column-index>9</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <is-filterable filter-display-order="2" sort-filter-counts-by="2">true</is-filterable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Role</column-name>
+      <display-name><![CDATA[Role]]></display-name>
+      <column-index>10</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>RoleFilter</column-name>
+      <display-name><![CDATA[Role]]></display-name>
+      <column-index>11</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <is-filterable>true</is-filterable>
+      <tag><![CDATA[Hide]]></tag>
+    </column>
+    <column>
+      <column-name>OtherName</column-name>
+      <display-name><![CDATA[Other Name]]></display-name>
+      <column-index>12</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable>false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>OtherDesigStatus</column-name>
+      <display-name><![CDATA[Other Desig Status]]></display-name>
+      <column-index>13</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable>false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>OtherRole</column-name>
+      <display-name><![CDATA[Other Role]]></display-name>
+      <column-index>14</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable>false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>OtherRoleName</column-name>
+      <display-name><![CDATA[Other Role Name]]></display-name>
+      <column-index>15</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable>false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>IndexType</column-name>
+      <display-name><![CDATA[Index Type]]></display-name>
+      <column-index>16</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <is-filterable filter-display-order="1" sort-filter-counts-by="2">true</is-filterable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DocType</column-name>
+      <display-name><![CDATA[Doc Type]]></display-name>
+      <column-index>17</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <is-filterable filter-parent-column-name="IndexType" sort-filter-counts-by="2">false</is-filterable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DocTypeDesc</column-name>
+      <display-name><![CDATA[Doc Type]]></display-name>
+      <column-index>18</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="100.0">true</is-searchable>
+      <is-filterable filter-parent-column-name="IndexType">true</is-filterable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Book</column-name>
+      <display-name><![CDATA[Book]]></display-name>
+      <column-index>19</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="2.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Page</column-name>
+      <display-name><![CDATA[Page]]></display-name>
+      <column-index>20</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="2.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Lot</column-name>
+      <display-name><![CDATA[Lot]]></display-name>
+      <column-index>21</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Unit</column-name>
+      <display-name><![CDATA[Unit]]></display-name>
+      <column-index>22</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>SectionNum</column-name>
+      <display-name><![CDATA[Section Num]]></display-name>
+      <column-index>23</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Phase</column-name>
+      <display-name><![CDATA[Phase]]></display-name>
+      <column-index>24</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Building</column-name>
+      <display-name><![CDATA[Building]]></display-name>
+      <column-index>25</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Acreage</column-name>
+      <display-name><![CDATA[Acreage]]></display-name>
+      <column-index>26</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Block</column-name>
+      <display-name><![CDATA[Block]]></display-name>
+      <column-index>27</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Subdivision</column-name>
+      <display-name><![CDATA[Subdivision]]></display-name>
+      <column-index>28</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Township</column-name>
+      <display-name><![CDATA[Township]]></display-name>
+      <column-index>29</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Other</column-name>
+      <display-name><![CDATA[Other]]></display-name>
+      <column-index>30</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>ProjectNum</column-name>
+      <display-name><![CDATA[Project Num]]></display-name>
+      <column-index>31</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable>false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>RdNum</column-name>
+      <display-name><![CDATA[Rd Num]]></display-name>
+      <column-index>32</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable>false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Tr</column-name>
+      <display-name><![CDATA[Tr]]></display-name>
+      <column-index>33</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable>false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Desc2</column-name>
+      <display-name><![CDATA[Desc2]]></display-name>
+      <column-index>34</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable>false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Desc3</column-name>
+      <display-name><![CDATA[Desc3]]></display-name>
+      <column-index>35</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable>false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>GPIN</column-name>
+      <display-name><![CDATA[GPIN]]></display-name>
+      <column-index>36</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Status</column-name>
+      <display-name><![CDATA[Status]]></display-name>
+      <column-index>37</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable>false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>LegalDescription</column-name>
+      <display-name><![CDATA[Legal Description]]></display-name>
+      <column-index>38</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable>false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>LegalType</column-name>
+      <display-name><![CDATA[Legal Type]]></display-name>
+      <column-index>39</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable>false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>MultipleLegal</column-name>
+      <display-name><![CDATA[Multiple Legal]]></display-name>
+      <column-index>40</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable>false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>FirstReference</column-name>
+      <display-name><![CDATA[First Reference]]></display-name>
+      <column-index>41</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable>false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>MultipleReference</column-name>
+      <display-name><![CDATA[Multiple Reference]]></display-name>
+      <column-index>42</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>UnIndexed</index-field-type>
+      <is-searchable>false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>seq</column-name>
+      <display-name><![CDATA[Legal Sequence]]></display-name>
+      <column-index>43</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <is-filterable filter-display-order="5">true</is-filterable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>offlinerecord</column-name>
+      <display-name><![CDATA[Offline Record]]></display-name>
+      <column-index>44</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Location</column-name>
+      <display-name><![CDATA[Location]]></display-name>
+      <column-index>45</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>IndexCode</column-name>
+      <display-name><![CDATA[Index Code]]></display-name>
+      <column-index>46</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>PartySeq</column-name>
+      <display-name><![CDATA[Party Sequence]]></display-name>
+      <column-index>47</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <is-filterable filter-display-order="4">true</is-filterable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>DocCode</column-name>
+      <display-name><![CDATA[Doc Code]]></display-name>
+      <column-index>48</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>Corp</column-name>
+      <display-name><![CDATA[Human/Non-Human Names]]></display-name>
+      <column-index>49</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <is-filterable>true</is-filterable>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>LegacyNumber</column-name>
+      <display-name><![CDATA[Legacy Number]]></display-name>
+      <column-index>50</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <tag><![CDATA[]]></tag>
+    </column>
+    <column>
+      <column-name>date_time_mod</column-name>
+      <display-name><![CDATA[date_time_mod]]></display-name>
+      <column-index>51</column-index>
+      <column-type>java.sql.Timestamp</column-type>
+      <modified-date>true</modified-date>
+      <index-field-type>KeywordDateHierarchical</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+      <tag><![CDATA[]]></tag>
+    </column>
+  </dataquery>
+  <dataquery name="Deletion" is-delete-only="true">
+    <sql><![CDATA[
+{call sp_roam_track_delete(?)}
+    ]]></sql>
+  </dataquery>
+  <dataquery name="Incremental">
+    <sql><![CDATA[
+Select DISTINCT
+cast(a.id as varchar)+ '-' + cast(isnull(b.seq, 0) as varchar) as pk_key
+,a.SEQ_KEY AS 'Instrument'
+,CONVERT(VARCHAR(10), RECDATE1, 112) AS RecDate
+,RECDATE1 AS RecDateFilter
+,CONVERT(VARCHAR(30), RECDATE1, 120) AS RecDateDisplay
+,LNAME+' '+ISNULL(FNAME,'')+' '+ ISNULL(MNAME,'') as Name
+,LNAME+' '+ISNULL(FNAME,'')+' '+ ISNULL(MNAME,'') as PhoneticName
+,DESIGSTATUS AS DesigStatus
+,LTRIM(RTRIM(UPPER(SUBSTRING(ROLENAME,1,1)) + LOWER(SUBSTRING(ROLENAME,2,50)))) AS PartyRole
+,case when role=1 then 'Direct Party' when role=2 then 'Reverse Party' when role not in (1,2) then 'No Party' end as Role
+,case when a.role is null then '0' when a.role = '' then '0' else LTRIM(RTRIM(a.role)) end as RoleFilter
+,OTHERNAME AS 'OtherName'
+,OTHERDESIGSTATUS AS 'OtherDesigStatus'
+,OTHERROLE AS 'OtherRole'
+,OTHERROLENAME as OtherRoleName
+,(SELECT LTRIM(RTRIM(descr)) FROM Doctype2lov WHERE type2 = a.indextype) as 'IndexType'
+,LTRIM(RTRIM(a.code)) as DocType
+,c.DESCR AS 'DocTypeDesc'
+,Book
+,Page
+,LOTNUM as 'Lot'
+,UNIT AS 'Unit'
+,SECTIONNUM as 'SectionNum'
+,PHASE AS 'Phase'
+,BUILDING AS 'Building'
+,ACREAGE AS 'Acreage'
+,BLOCKNUM as 'Block'
+,SUBDIVISION as 'Subdivision'
+,TOWNSHIP AS 'Township'
+,LDESC as 'Other'
+,LEGAL1 as 'ProjectNum'
+,LEGAL2 as 'RdNum'
+,LEGAL3 as 'Tr'
+,LDESC2 as 'Desc2'
+,LDESC3 as 'Desc3'
+,GPIN
+,'' AS 'Status'
+,LegalDescription
+,LEGAL_TYPE as 'LegalType'
+,MULTIPLE_LEGAL as 'MultipleLegal'
+,FirstReference
+,MULTIPLE_REFERENCE as 'MultipleReference'
+,case when b.seq is null then 0 else b.seq end as 'seq'
+,offlinerecord
+,'VABeach' as Location
+, a.indextype as IndexCode
+, a.seq as PartySeq
+, a.doctype as DocCode
+,CASE 
+      WHEN a.CORP = 'N' THEN 'Human'
+      WHEN a.CORP = 'Y' THEN 'Non-Human'
+END AS 'Corp'
+,a.backfilenum AS 'LegacyNumber'
+,RT.date_time_mod
+      from PUBLICSEARCH a with (nolock) left outer join LEGAL b with (nolock) on
+      a.SEQ_KEY = b.SEQ_KEY 
+      inner join DOCTYPE1LOV c with (nolock)
+      on a.CODE = c.CODE
+      INNER JOIN ROAM_TRACK RT with (nolock) ON RT.PK_KEY = A.ID
+      AND RT.TAB_NAME = 'PUBLICSEARCH' 
+      LEFT OUTER JOIN ROAM_TRACK RT1 with (nolock) ON RT1.PK_KEY = B.SEQ_KEY
+      AND RT1.TAB_NAME = 'LEGAL' 
+      where OFFLINERECORD ='N' 
+     AND a.indextype not in (6,8,12,13,14)
+     AND a.doctype not in (168,169,170,171,172,173,174)
+     AND RT.DATE_TIME_MOD > ? 
+order by RT.date_time_mod desc
+    ]]></sql>
+  </dataquery>
+  <default-template>Main</default-template>
+  <tablet-template>Tablet</tablet-template>
+  <mobile-template>Mobile</mobile-template>
+  <searcher-max-active>8</searcher-max-active>
+  <searcher-when-exhausted>1</searcher-when-exhausted>
+  <searcher-max-wait>10000</searcher-max-wait>
+  <searcher-max-idle>7</searcher-max-idle>
+  <is-in-memory-search>false</is-in-memory-search>
+  <jvm-max-heap-size>14336</jvm-max-heap-size>
+  <document-buffer-size-mb>8192</document-buffer-size-mb>
+  <is-wildcard-allowed>true</is-wildcard-allowed>
+  <min-wildcard-prefix-length>2</min-wildcard-prefix-length>
+  <allowed-ip-list>*</allowed-ip-list>
+  <is-empty-query-match-all>false</is-empty-query-match-all>
+  <date-weight-formula>
+    <time-weight time="600" weight="12.0"/>
+    <time-weight time="1800" weight="11.0"/>
+    <time-weight time="3600" weight="10.0"/>
+    <time-weight time="21600" weight="9.0"/>
+    <time-weight time="43200" weight="8.0"/>
+    <time-weight time="86400" weight="7.0"/>
+    <time-weight time="1296000" weight="6.0"/>
+    <time-weight time="2678400" weight="5.0"/>
+    <time-weight time="5356800" weight="4.0"/>
+    <time-weight time="8035200" weight="3.0"/>
+    <time-weight time="16070400" weight="2.0"/>
+    <time-weight time="32140800" weight="1.3"/>
+    <time-weight time="64281600" weight="1.2"/>
+    <time-weight time="96422400" weight="1.1"/>
+    <time-weight time="128563200" weight="1.05"/>
+    <time-weight time="160704000" weight="1.04"/>
+    <time-weight time="192844800" weight="1.03"/>
+    <time-weight time="224985600" weight="1.02"/>
+    <time-weight time="321408000" weight="1.01"/>
+  </date-weight-formula>
+  <spell-checking enabled="true"></spell-checking>
+</dataset>

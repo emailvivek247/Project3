@@ -1,0 +1,43 @@
+<#--GOOGLE ANALYTICS TRACKING CODE-->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-51964719-1', 'mobileImages');
+  ga('send', 'pageview');
+
+</script>
+
+<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (request.isUserInRole('ROAM_ADMIN') || request.isUserInRole('MOBILECMS_FREE_ACCESS') || request.isUserInRole('MOBILECMS_ATTORNEY_ACCESS') || request.isUserInRole('MOBILECMS_EMPLOYEE_ACCESS') || request.isUserInRole('MOBILECMS_ADMIN'))>
+
+<#if searchResult.docs?has_content>
+    <#foreach doc in searchResult.docs>
+        <#assign imagelocation = doc.get("Path")>
+		${imagelocation}
+        <#assign baos  = pageStyleUtil.getByteArrayOutputStream(imagelocation) >
+		<#if imagelocation?has_content> 			
+            ${response.reset()}
+            ${response.resetBuffer()}
+            ${response.setContentType("application/pdf")}
+            ${response.setHeader("Content-Disposition",  " inline; filename=document.pdf" )}
+            ${response.setHeader("Expires", " 0")}
+            ${response.setHeader("Cache-Control", " must-revalidate, post-check=0, pre-check=0" )} 
+            ${response.setHeader("Pragma" , "public")}      
+            ${baos.writeTo(response.getOutputStream())}
+            ${response.getOutputStream().flush()}       
+        <#else>
+            <br>
+            <br>
+	    <center><b>Image is Unavailable.</b></center>
+            <center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>
+        </#if>
+    </#foreach>
+<#else>
+
+    <#include "NoImage.html">
+</#if>
+<#else>
+You are not authorized to view this content.
+</#if>

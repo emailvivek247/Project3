@@ -1,0 +1,65 @@
+<#if searchResult.docs?has_content>
+<table id="casedetails2" class="tablesorter">
+ <thead>
+    <tr>
+  	<th>${searchResult.datasetConfiguration.getColumn("PartyName").displayName}</th>
+  	<th>${searchResult.datasetConfiguration.getColumn("PartyRole").displayName}</th>
+  	<th>${searchResult.datasetConfiguration.getColumn("DOD").displayName}</th>
+  	<th>${searchResult.datasetConfiguration.getColumn("BondAmount").displayName}</th>
+  </tr>
+ </thead>
+ <tbody>
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+  <#assign VoidFlags = doc.getValues("VoidFlag")>
+   <tr>
+	<td>${searchResult.highlight(doc, "PartyName")}</td>
+	<td>${searchResult.highlight(doc, "PartyRole")}</td>
+	<td>${pageStyleUtil.format(date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("DOD")), "yyyy/MM/dd HH:mm:ss z", "MM/dd/yyyy")}</td>
+	<#list VoidFlags as VF>
+	<#if VF = "Y">
+	<td>&nbsp;</td>
+	<#else>
+	<td>${pageStyleUtil.formatCurrency(doc.get("BondAmount"))}</td>
+	</#if>
+	</#list>
+   </tr>
+
+ </#foreach>
+<#else>
+<table id="casedetails2" class="tablesorter">
+ <thead>
+    <tr>
+  	<th>${searchResult.datasetConfiguration.getColumn("PartyName").displayName}</th>
+  	<th>${searchResult.datasetConfiguration.getColumn("PartyRole").displayName}</th>
+  	<th>${searchResult.datasetConfiguration.getColumn("DOD").displayName}</th>
+  	<th>${searchResult.datasetConfiguration.getColumn("BondAmount").displayName}</th>
+  </tr>
+ </thead>
+ <tbody>
+
+   <tr>
+	<td><b><i>No Party Information Available.</i></b></td>
+	<td></td>
+	<td></td>
+	<td></td>
+  </tr>
+
+</#if>
+ </tbody>
+</table>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	oTable = $('#casedetails2').dataTable({
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bSort": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		"aaSorting": []
+	});
+} );
+</script>

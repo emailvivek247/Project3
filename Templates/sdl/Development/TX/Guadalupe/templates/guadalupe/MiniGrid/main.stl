@@ -1,0 +1,49 @@
+<!--  -->
+<#-- *Modified highlighting color -->
+<@com.useHighlightTag '<span style="background-color:#B2C9FA">', '</span>' />
+<#include "layout.stl">
+<@layout title="ROAM" encoding="${searchResult.encoding}">
+
+<#-- *Hide for MiniGrid
+<#include "/templates/globalNav.stl">
+
+ <#include "searchBox.stl"> -->
+ <@com.errorMarkup/>
+
+<#-- *Hide for MiniGrid
+ <#include "map.stl"> 
+<#include "spellingCheck.stl"> -->
+ <#include "searchResultHeader.stl">
+
+<#-- *Hide for MiniGrid
+ <center><img src="templates/guadalupe/Main/resource/spacer.png"></center>
+
+<#include "displayPagination.stl"> -->
+ <table class="main"><tr valign="top">
+
+<#-- *Hide for MiniGrid
+<td class="mainLeft">
+  <div id="narrowBy"><#include "narrowBy.stl"></div>
+  <#include "recentSearches.stl"> -->
+  <!--  -->
+<#-- *Hide for MiniGrid
+ </td><td class="mainRight"> -->
+  <div id="documents"><#include "documents.stl"></div>
+ </td></tr></table>
+<br>
+ <#include "displayPagination.stl">
+
+<#-- *Add table for footer with AMCAD logo 
+
+ <BR>
+ <BR>
+
+<table width="100%" border="0">
+ <tr>
+  <td width=15%><a href = "http://www.amcad.com"> <img src="templates/guadalupe/Main/resource/AmCad-Small-New-Logo.png"  border = "0"></a></td>
+  <td width="70%" align="center"><font color=#696969>Copyright &copy; 1986 - 2011 American Cadastre LLC (dba AmCad & AmCad Digital Conversions)</font></td>
+  <td width="15%"><#include "resultsPerPage.stl"></td>
+ </tr>
+</table>
+-->
+</@layout>

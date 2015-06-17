@@ -1,0 +1,85 @@
+<#macro layout(title="", encoding="utf-8")>
+<html><head><title>ROAM Details</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1; charset="utf-8">
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/prompt.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/jquery-ui-1.8.19.base.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/jquery-ui-1.8.19.glossy-classic.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/theme-base.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/theme-glossy-classic.css" type="text/css"  />
+<link rel="stylesheet" href="<@com.currentUrlPrefix/>/resource/demo_table_jui.css" type="text/css"  />
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/prompt.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/sdl-min.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/filterControl.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery-ui-1.8.19.custom.min.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.tabSlideOut.js"></script> 
+<link rel="shortcut icon" href="favicon.ico"/>
+
+<#-- ADD GOOGLE ANALYTICS -->
+
+
+<script type="text/javascript">
+function initialize() {
+
+<#assign q = pageStyleUtil.encodeURL(searchResult.request.getParameter("q")) lq = pageStyleUtil.encodeURL(searchResult.request.getParameter("lq"))
+	 start = searchResult.request.getParameter("start") searchable = pageStyleUtil.encodeURL(searchResult.request.getParameter("searchable"))
+     searchType = searchResult.request.getParameter("searchType") isPhoneticSearch = request.getParameter("isPhoneticSearch")
+     searchQuery = pageStyleUtil.encodeURL(searchResult.request.getParameter("searchQuery")) sortBy = pageStyleUtil.encodeURL(searchResult.request.getParameter("sortBy")) 
+     desc = pageStyleUtil.encodeURL(searchResult.request.getParameter("desc")) asc = pageStyleUtil.encodeURL(searchResult.request.getParameter("asc"))>
+<#if !searchType?has_content>
+	searchType = 1	
+</#if>
+
+
+}
+
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#backLink').attr('href', 'search.do?indexName=opr&templateName=Mobile&' + getCookie('searchstring'));
+    }); 
+</script>
+
+
+
+<#-- *Loading -->
+<style type="text/css">
+#loading {
+padding:1ex;
+position:absolute;
+top:50%;
+left:70%;
+display:none;
+border:0px;
+background-color:#ffffff;
+color:#000000;
+}
+
+.basket table { 
+    font-size: 13px;
+}
+</style>
+
+<script type="text/javascript">
+var loadit=function(){
+var f=document.getElementById('image'), l=document.getElementById('loading').style;
+l.display='block';
+if(f.onload==null){
+    f.onload=function(){l.display='none'};
+    if(window.attachEvent)
+    f.attachEvent('onload', f.onload);
+}
+return true;
+}
+</script>
+</head>
+
+<#-- *Add onload function -->
+<body onKeyPress="trapKeyBoardEvents(event)" onLoad="initialize()">
+<#compress>
+<#nested>
+</#compress>
+</body></html>
+</#macro>

@@ -1,0 +1,5 @@
+<template>
+  <longname>Guadalupe Marriage Main Template</longname>
+  <description>Client Side Sortable Template with Export Options used in the Main Search</description>
+  <defaultLength>25</defaultLength>
+</template>

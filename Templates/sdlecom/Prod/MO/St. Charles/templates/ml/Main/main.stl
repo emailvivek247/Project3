@@ -1,0 +1,67 @@
+<#-- *Modified highlighting color -->
+<@com.useHighlightTag '<span style="background-color:#B2C9FA">', '</span>' />
+<#include "layout.stl">
+<@layout title="ROAM" encoding="${searchResult.encoding}">
+
+<#include "/templates/globalNav.stl">
+
+<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (pageStyleUtil.isUserInRoleGroup('ALL_ROLE', request))>
+
+<#include "searchBox.stl">
+<@com.errorMarkup/>
+<#-- *Add for PC/Mobile Mode -->
+
+<table width="100%" margin="0" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+  <td style="width:25%;">
+  
+<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (pageStyleUtil.isUserInRoleGroup('OFFICIAL_ROLE', request))>
+	<table border=0 cellpadding=0 cellspacing=0 ><tr>
+
+	<td>
+	    <font size="2">Mode: <a href="${request.getContextPath()}/search.do?indexName=ml<#if isPhoneticSearch?has_content>&isPhoneticSearch=${isPhoneticSearch}</#if>&templateName=Main&q=${q}&searchable=${searchable}<#if searchQuery?has_content>&searchQuery=${searchQuery}</#if><#if searchType?has_content>&searchType=${searchType}</#if><#if sortBy?has_content>&sortBy=${sortBy}</#if><#if desc?has_content>&desc=${desc}</#if><#if asc?has_content>&asc=${asc}</#if>">PC</a></font>|<font size="2"><a href="${request.getContextPath()}/search.do?indexName=ml<#if isPhoneticSearch?has_content>&isPhoneticSearch=${isPhoneticSearch}</#if>&templateName=Mobile&q=${q}&searchable=${searchable}<#if searchQuery?has_content>&searchQuery=${searchQuery}</#if><#if searchType?has_content>&searchType=${searchType}</#if><#if sortBy?has_content>&sortBy=${sortBy}</#if><#if desc?has_content>&desc=${desc}</#if><#if asc?has_content>&asc=${asc}</#if>">Mobile</a></font>|<font size="2"><a href="${request.getContextPath()}/search.do?indexName=ml<#if isPhoneticSearch?has_content>&isPhoneticSearch=${isPhoneticSearch}</#if>&templateName=Tablet&q=${q}&searchable=${searchable}<#if searchQuery?has_content>&searchQuery=${searchQuery}</#if><#if searchType?has_content>&searchType=${searchType}</#if><#if sortBy?has_content>&sortBy=${sortBy}</#if><#if desc?has_content>&desc=${desc}</#if><#if asc?has_content>&asc=${asc}</#if>">Tablet</a></font>    
+	</tr>
+	  </table>
+</#if>  
+</td>
+
+
+<td style="width:50%;"><#include "displayPagination.stl"></td>
+
+
+
+<td style="width:25%;">
+</td>
+</tr>
+</table>
+
+
+ <#include "searchResultHeader.stl">
+ <#include "spellingCheck.stl">
+<br>
+
+ <table class="main"><tr valign="top"><td class="mainLeft">
+  <div id="narrowBy"><#include "narrowBy.stl"></div>
+  <#include "recentSearches.stl">
+  <!--  -->
+ </td><td class="mainRight">
+  <div id="documents"><#include "documents.stl"></div>
+ </td></tr></table>
+
+ <#include "displayPagination.stl">
+
+<#-- *Add table for footer with Grancius logo -->
+
+ <BR>
+ <BR>
+
+<table width="100%" border="0">
+ <tr>
+  <td width="70%" align="center"><font color=#696969>Copyright &copy; <script>document.write(new Date().getFullYear())</script> Granicus, INC.</font></td>
+  <td width="15%"><#include "resultsPerPage.stl"></td>
+ </tr>
+</table>
+<#else>
+   You are not authorized to access this information.
+</#if>
+</@layout>

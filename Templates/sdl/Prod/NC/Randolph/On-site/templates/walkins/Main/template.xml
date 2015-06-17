@@ -1,0 +1,8 @@
+<template>
+  <longname>Multi-Selection</longname>
+  <description>
+  Select multiple values for a field. It generates a new file &quot;multiSelect_&amp;lt;column name&amp;gt;.stl&quot;, 
+  and applicable to templates with &quot;narrowBy_extra.stl&quot;.
+  </description>
+  <defaultLength>1000</defaultLength>
+</template>

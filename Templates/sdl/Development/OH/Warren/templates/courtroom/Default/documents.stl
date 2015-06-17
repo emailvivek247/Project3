@@ -1,0 +1,14 @@
+<#if (searchResult.docs?has_content && searchResult.docs.size() > 0) >
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+  <p class="result">
+     <br/><b>${searchResult.datasetConfiguration.getColumn("CourtRoomDesc").displayName}</b>:
+${searchResult.highlight(doc, "CourtRoomDesc")}
+     <br/><b>${searchResult.datasetConfiguration.getColumn("CourtRoomId").displayName}</b>:
+${number.format("###0.##",doc.get("CourtRoomId"))}
+      <br/>&nbsp;
+ </#foreach>
+<#else>
+ <#include "noResults.stl"> 
+</#if>
+

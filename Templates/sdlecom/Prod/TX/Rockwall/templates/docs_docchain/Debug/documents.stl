@@ -1,0 +1,26 @@
+
+<#if searchResult.docs?has_content>
+<table id="searchResult" class="tablesorter">
+ <thead><tr>
+  <th>${searchResult.datasetConfiguration.getColumn("REFNUM").displayName}</th><th>${searchResult.datasetConfiguration.getColumn("LEGACYREFNNUM").displayName}</th><th>${searchResult.datasetConfiguration.getColumn("SEQKEY").displayName}</th>
+  
+  
+  
+ </tr></thead>
+ <tbody>
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+  <#include "document.stl">
+ </#foreach>
+<#else>
+ <#include "noResults.stl"> 
+</#if>
+ </tbody>
+</table>
+
+
+<script type="text/javascript">
+$(function() {      
+    $("#searchResult").tablesorter({widgets: ['zebra']});
+}); 
+</script>

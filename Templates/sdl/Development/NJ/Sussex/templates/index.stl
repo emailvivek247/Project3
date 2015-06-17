@@ -1,0 +1,168 @@
+<#include "/WEB-INF/view/admin/layout/OtherBasic.stl">
+<@indexLayout title="Sussex County Land Records" encoding="utf-8">
+<head>
+<!-- Template stylesheet -->
+<link rel="stylesheet" href="${request.getContextPath()}/templates/resources/styles/jqueryui/custom-min.css" type="text/css" media="all"/>
+<link rel="stylesheet" href="${request.getContextPath()}/templates/resources/styles/screen-min.css" type="text/css" media="all"/>
+
+<!-- Skin stylesheet -->
+<link class="skins" rel="stylesheet" href="${request.getContextPath()}/templates/resources/styles/skins/silver.css" type="text/css" media="all"/>
+<link rel="stylesheet" type="text/css" href="${request.getContextPath()}/templates/resources/javascripts/fancybox/jquery.fancybox-1.3.0-min.css" media="screen"/>
+
+<!--[if IE 7]>
+<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/ie7.css" type="text/css" media="all"/>
+<![endif]-->
+<link rel="shortcut icon" href="favicon.ico"/>
+<!-- Jquery and plugins -->
+<script type="text/javascript" src="${request.getContextPath()}/templates/resources/javascripts/jquery-min.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/templates/resources/javascripts/jquery-ui-min.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/templates/resources/javascripts/fancybox/jquery.fancybox-1.3.0-min.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/templates/resources/javascripts/jquery.easing-min.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/templates/resources/javascripts/anythingSlider-min.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/templates/resources/javascripts/jquery.validate-min.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/templates/resources/javascripts/hint-min.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/templates/resources/javascripts/cufon-min.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/templates/resources/fonts/Colaborate_Thin.font.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/templates/resources/javascripts/browser-min.js"></script>
+<script type="text/javascript" src="${request.getContextPath()}/templates/resources/javascripts/custom-min.js"></script>
+</head>
+
+
+<body class="home">
+
+	<!-- Begin template wrapper -->
+	<div id="wrapper">
+
+		<input type="hidden" id="nm_portfolio_auto_scroll" name="nm_portfolio_auto_scroll" value="1" />
+		<input type="hidden" id="nm_color" name="nm_color" value="light" />
+
+		<!-- Begin header -->
+		<div id="header_wrapper">
+			<div id="top_bar">
+					<div class="logo">
+						<!-- Begin logo -->
+						<img id="custom_logo" src="${request.getContextPath()}/templates/resources/images/sussex_seal_web.png" alt="Sussex County Seal"/>
+						<!-- End logo -->
+
+					</div>
+
+					<!-- Begin main nav -->
+					<div class="right_nav"></div>
+
+						<div id="menu_wrapper">
+							<!-- Begin main nav -->
+							<div class="menu-main-menu-container">
+
+							<ul id="main_menu" class="nav">
+								<li>
+									<a href="templates/disclaimer.html">Search Records</a>
+								</li>
+								<li>
+									<a href="templates/erecording.html">E-Recording</a>
+								</li>
+								<li>
+									<a href="templates/about.html">Meet the Official</a>
+								</li>
+								<li>
+									<a href="templates/sites.html">ROAM Sites</a>
+								</li>
+							</ul>
+
+						</div>
+						<!-- End main nav -->
+						</div>
+					<div class="left_nav"></div>
+					<!-- End main nav -->
+			</div>
+		</div>
+		<!-- End header -->
+
+
+
+		<br class="clear"/>
+
+		<input type="hidden" id="slider_timer" name="slider_timer" value="5"/>
+		<input type="hidden" id="nm_portfolio_auto_scroll" name="nm_portfolio_auto_scroll" value="1"/>
+		<input type="hidden" id="nm_color" name="nm_color" value="light"/>
+		<input type="hidden" id="slider_speed" name="slider_speed" value="5"/>
+				<div id="slider">
+					<div class="wrapper">
+						<ul>
+							<li>
+								<img src="${request.getContextPath()}/templates/resources/images/1.jpg" alt=""/>
+							</li>
+							<li>
+								<img src="${request.getContextPath()}/templates/resources/images/2.jpg" alt=""/>
+							</li>
+							<li>
+								<img src="${request.getContextPath()}/templates/resources/images/3.jpg" alt=""/>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+
+		<!-- Begin content -->
+		<div id="content_wrapper">
+			<div>
+            	<table id="decoration"></table>
+            </div>
+		</div>
+
+				<!-- Begin main content -->
+				<!--<div class="home_wrapper">&nbsp;-->
+
+					<div class="home_box_wrapper">
+                  <!--Message Center-->
+                        <div id="messageCenter" style="width:100%;">
+							<div style="width:500px;margin:0 auto;">
+								<span>For assistance with ROAM, please contact Granicus at 703-787-7775.</span>
+							</div>
+					    </div>
+
+						<div class="one_third ">
+							<div class="home_thumb picture">
+								<a href="about.html"><img src="${request.getContextPath()}/templates/resources/images/user.png" alt="Jeffrey Parrott" class="image-align" id="user"/></a>
+							</div>
+							<div class="home_box" id="meet-official">
+								<h4 class="cufon heading"><a href="about.html">Meet the Official</a></h4>
+								<p><a href="about.html">Click here to meet Jeffrey M. Parrott, Sussex County Clerk.</a></p>
+							</div>
+						</div>
+						<div class="one_third ">
+							<div class="home_thumb picture">
+								<a href="erecording.html"><img src="${request.getContextPath()}/templates/resources/images/file.png" alt="eRecording" class="image-align" id="file"/></a>
+ 							</div>
+							<div class="home_box">
+							<a href="erecording.html"><h4 class="cufon heading" >eRecording</h4></a>
+								<p><a href="erecording.html">Click here to find out more about eRecording.</a></p>
+							</div>
+						</div>
+						<div class="one_third ">
+							<div class="home_thumb picture">
+	                           <a href="sites.html"><img src="${request.getContextPath()}/templates/resources/images/radar.png" alt="ROAM Sites" class="image-align" id="radar"/></a>
+ 							</div>
+							<div class="home_box">
+								<h4 class="cufon heading"><a href="sites.html">ROAM Sites</a></h4>
+								<p><a href="sites.html">Click here to explore our other ROAM Sites.</a></p>
+							</div>
+						</div>
+					</div>
+
+
+
+				<!--</div>-->
+				<!-- End main content -->
+
+				<input type="hidden" id="slider_speed" name="slider_speed" value="4"/>
+
+	</div>
+	<!-- End footer -->
+
+</div>
+<!-- End template wrapper -->
+
+</body>
+</@indexLayout>
+
+

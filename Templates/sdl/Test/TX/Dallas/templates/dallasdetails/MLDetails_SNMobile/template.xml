@@ -1,0 +1,5 @@
+<template>
+  <longname>Dallas Marriage Main Details Template</longname>
+  <description>Client Side Sortable Template with Smart Navigation used for Dallas Marriage Details</description>
+  <defaultLength>30</defaultLength>
+</template>

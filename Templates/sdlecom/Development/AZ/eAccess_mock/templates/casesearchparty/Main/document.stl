@@ -1,0 +1,54 @@
+		<@display.column media="html" indexColumnName="DisplayCaseNumber" title="${searchResult.datasetConfiguration.getColumn(\"DisplayCaseNumber\").displayName}">
+		   	<a href="${request.getContextPath()}/search.do?indexName=casedetails&templateName=Main&lq=${pageStyleUtil.encodeURL("CaseID:\"" + doc.get("CaseID") + "\"")}">${searchResult.highlight(doc, "DisplayCaseNumber")}</a>
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DisplayCaseNumber" title="${searchResult.datasetConfiguration.getColumn(\"DisplayCaseNumber\").displayName}">
+		   	${doc.get("DisplayCaseNumber")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="FirstName" title="${searchResult.datasetConfiguration.getColumn(\"FirstName\").displayName}">
+		   	${searchResult.highlight(doc, "FirstName")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="FirstName" title="${searchResult.datasetConfiguration.getColumn(\"FirstName\").displayName}">
+		   	${doc.get("FirstName")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="MiddleName" title="${searchResult.datasetConfiguration.getColumn(\"MiddleName\").displayName}">
+		   	${searchResult.highlight(doc, "MiddleName")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="MiddleName" title="${searchResult.datasetConfiguration.getColumn(\"MiddleName\").displayName}">
+		   	${doc.get("MiddleName")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="LastName" title="${searchResult.datasetConfiguration.getColumn(\"LastName\").displayName}">
+		   	${searchResult.highlight(doc, "LastName")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="LastName" title="${searchResult.datasetConfiguration.getColumn(\"LastName\").displayName}">
+		   	${doc.get("LastName")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="SuffixName" title="${searchResult.datasetConfiguration.getColumn(\"SuffixName\").displayName}">
+		   	${searchResult.highlight(doc, "SuffixName")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="SuffixName" title="${searchResult.datasetConfiguration.getColumn(\"SuffixName\").displayName}">
+		   	${doc.get("SuffixName")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="DateOfBirth" title="${searchResult.datasetConfiguration.getColumn(\"DateOfBirth\").displayName}">
+		   	${searchResult.highlight(doc, "DateOfBirth")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DateOfBirth" title="${searchResult.datasetConfiguration.getColumn(\"DateOfBirth\").displayName}">
+		   	${doc.get("DateOfBirth")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="RoleTypeLongDescription" title="${searchResult.datasetConfiguration.getColumn(\"RoleTypeLongDescription\").displayName}">
+		   	${searchResult.highlight(doc, "RoleTypeLongDescription")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="RoleTypeLongDescription" title="${searchResult.datasetConfiguration.getColumn(\"RoleTypeLongDescription\").displayName}">
+		   	${doc.get("RoleTypeLongDescription")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="CaseTitle" title="${searchResult.datasetConfiguration.getColumn(\"CaseTitle\").displayName}">
+		   	${searchResult.highlight(doc, "CaseTitle")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseTitle" title="${searchResult.datasetConfiguration.getColumn(\"CaseTitle\").displayName}">
+		   	${doc.get("CaseTitle")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="CountyName" title="${searchResult.datasetConfiguration.getColumn(\"CountyName\").displayName}">
+		   	${searchResult.highlight(doc, "CountyName")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CountyName" title="${searchResult.datasetConfiguration.getColumn(\"CountyName\").displayName}">
+		   	${doc.get("CountyName")}
+		  </@display.column>

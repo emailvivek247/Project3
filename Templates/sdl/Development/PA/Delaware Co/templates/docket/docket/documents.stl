@@ -1,0 +1,80 @@
+<#if searchResult.docs?has_content>
+<br/>
+<b>Docket Information</b>
+<table  id="searchResult" class="tablesorter">
+ <thead>
+	 <tr>
+	    <th>${searchResult.datasetConfiguration.getColumn("Description").displayName}</th>
+	    <th>${searchResult.datasetConfiguration.getColumn("Comments").displayName}</th>
+	    <th>${searchResult.datasetConfiguration.getColumn("FilingAttorney").displayName}</th>
+	    <th>${searchResult.datasetConfiguration.getColumn("DateStamped").displayName}</th>
+	    <th>${searchResult.datasetConfiguration.getColumn("TimeStamped").displayName}</th>
+	    <th>View Image</th>
+	    
+  	    
+	</tr>
+</thead>
+
+
+ <tbody>
+
+<#foreach doc in searchResult.docs>
+    
+	    <#assign CASE_NUMBER = doc.getValues("CASE_NUMBER")>
+	    <#assign Description = doc.getValues("Description")>
+	    <#assign Comments = doc.getValues("Comments")>
+	    <#assign FilingAttorney = doc.getValues("FilingAttorney")>
+	    <#assign DateStamped = doc.getValues("DateStamped")>
+	    <#assign TimeStamped = doc.getValues("TimeStamped")>
+	    <#assign IDFlag = doc.getValues("IDFlag")>
+	    <#assign loopCounter = 0>
+	    
+    <tr>
+            <td>${doc.get("Description")}</td>
+            <td>${doc.get("Comments")}</td>
+            <td>${doc.get("FilingAttorney")}</td>
+            <td>${doc.get("DateStamped")}</td>
+            <td>${pageStyleUtil.format(doc.get("TimeStamped"), "hh:mm:ss", "hh:mm:ss a")}</td>
+   
+   <#assign IDs =  doc.getValues("IDFlag")>
+   <#list IDs as IDFlags>
+    <#if IDFlags = "Y">    
+            <td align="center"><a href="${request.getContextPath()}/search.do?indexName=delcoimages&lq=${pageStyleUtil.encodeURL("EventEntryID:" + doc.get("EventEntryID"))}" target="_new"><img border="0" title="Preview" src="<@com.currentUrlPrefix/>/resource/preview.png" width="20px"><br/>View Image</a></td> 
+        <#else>
+            <td>&nbsp;</td>
+        </#if>
+        <#assign loopCounter = loopCounter + 1>
+   </#list> 
+   </tr>
+   
+ 
+</#foreach>
+
+
+ </tbody>
+</table>
+<br />
+ <br />
+ 
+<#else>
+<center><b>No Docket Information Available</b></center>
+
+</#if>
+
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	oTable = $('#searchResult').dataTable({
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bSort": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		"aaSorting": []
+	});
+	
+} );
+</script>

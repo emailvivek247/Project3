@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="2B8F772BE4948F1A4F5CCF571FE2E354D6B13A0742B78313" adminuser="4509A773D406819FC2E2221BD84B8F2F864092CB009D7969">
+  <index-root-directory><![CDATA[E:\index\mobileailis\]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[6275588B144404ACC45665863038C248394287E4DA769C047933E13FB702D64DA5646B9578C7E8B41D450A4EC12AECCB952221A0D8890B8A3BFD08E48EAF045A9DDD4D62D46E03B8F87BAF3C33EA4EB7AE88B7E99E3F131A]]></db-url>
+      <db-username><![CDATA[4D27FE43F75786138990D1F33950FA669ADCC980D3B1F841]]></db-username>
+      <db-password><![CDATA[2B5983E34B03DF05D3DE74A9CD71FC4385E6ECA77E5C17C9]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

@@ -1,0 +1,157 @@
+<#assign form  =JspTaglibs["http://www.springframework.org/tags/form"]>
+<#assign spring=JspTaglibs["http://www.springframework.org/tags"]>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><title><@spring.message code="client.site.title.name" /></title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />		
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link rel="stylesheet" href="resources/styles/validationEngine.jquery.css" type="text/css" />
+<link rel="stylesheet" href="resources/styles/login.css" />
+<link rel="stylesheet" href="resources/styles/jquery-ui-1.8.11.base.css" />
+<link rel="stylesheet" href="resources/styles/jquery-ui-custom-ext.css" />
+
+<link rel="stylesheet" href="resources/custom_resources/styles/jqueryui/custom.css" type="text/css" media="all"/>
+<link rel="stylesheet" href="resources/custom_resources/styles/screen.css" type="text/css" media="all"/>
+<!-- Skin stylesheet -->
+<link class="skins" rel="stylesheet" href="resources/custom_resources/styles/skins/silver.css" type="text/css" media="all"/>
+<link rel="stylesheet" type="text/css" href="resources/custom_resources/javascripts/fancybox/jquery.fancybox-1.3.0.css" media="screen"/>
+<!--[if IE 7]>
+<link rel="stylesheet" href="resources/custom_resources/styles/ie7.css" type="text/css" media="all"/>
+<![endif]-->
+
+<script type="text/javascript" src="resources/javascripts/jquery.min.js"/></script>
+<script type="text/javascript" src="resources/javascripts/jquery-ui.min.js"/></script>
+<script type="text/javascript" src="resources/javascripts/jquery.validationEngine-en.js"></script>
+<script type="text/javascript" src="resources/javascripts/jquery.validationEngine.js"></script>
+<script type="text/javascript" src="resources/javascripts/jquery.cookie.js"></script>
+
+
+
+<!-- Jquery and plugins -->
+<script type="text/javascript" src="resources/custom_resources/javascripts/fancybox/jquery.fancybox-1.3.0.js"></script>
+<script type="text/javascript" src="resources/custom_resources/javascripts/jquery.easing.js"></script>
+<script type="text/javascript" src="resources/custom_resources/javascripts/anythingSlider.js"></script>
+<script type="text/javascript" src="resources/custom_resources/javascripts/jquery.validate.js"></script>
+<script type="text/javascript" src="resources/custom_resources/javascripts/hint.js"></script>
+<script type="text/javascript" src="resources/custom_resources/javascripts/cufon.js"></script>
+<script type="text/javascript" src="resources/custom_resources/fonts/Colaborate_Thin.font.js"></script>
+<script type="text/javascript" src="resources/custom_resources/javascripts/browser.js"></script>
+<script type="text/javascript" src="resources/custom_resources/javascripts/custom.js"></script>
+
+<style>
+div.ADCSI {
+	width: 550px;
+}
+span.ADCSI_leftcol {
+	width: 150px;
+	text-align:right;
+	display: inline-block;
+}
+</style>
+
+</head>
+<body class="page">
+
+	<!-- Begin template wrapper -->
+	<div id="wrapper">
+	<#include "nav.stl" />
+<!-- Begin content -->
+<div id="content_wrapper">
+	<br class="clear" id="logo-break"/>
+	<div class="inner">
+		<div class="inner_wrapper">
+
+	<div class="content">
+		<div style="width: 500px; margin-left: auto;margin-right:auto;margin-top:100px;">
+			<div id="ADCSI" class="ADCSI" style="margin-top: 0px; margin-bottom: 12px;">
+			    <#if AUTHENTICATION_ERROR_MESSAGE?has_content>
+			    <div style="margin-bottom: 20px; overflow-x: hidden; overflow-y: hidden; ">
+			    	<div class="ADCSI_error">			    		
+			    			${AUTHENTICATION_ERROR_MESSAGE}			    		
+			    	</div>			    	
+			    </div>
+			    </#if>
+			    <br /><br />			    
+				<form id="login-form" action="j_spring_security_check" method="post" autocomplete="off">			
+				<div class="ADCSI_row">
+				<span class="ADCSI_leftcol" id="ADCSI_EMAIL_PROMPT" ><@spring.message code="security.authentication.username" /></span>
+				<span class="ADCSI_rightcol" style="width: 330px; display: inline-block; ">
+					<span>
+						<input class="validate[required,custom[email],minSize[6],maxSize[50]] ADCSI_Input" id="j_username" name="j_username" spellcheck="false" tabindex="1" maxlength="50" autocomplete="on">						
+					</span>
+				</span>
+				</div>			
+				<div class="ADCSI_row">
+				<span class="ADCSI_leftcol"><@spring.message code="security.authentication.password" /></span>
+				<span class="ADCSI_rightcol" style="width: 330px; display: inline-block; ">
+					<span>
+						<input class="validate[required] ADCSI_Input" type="password" style="font-family: Arial, Helvetica, sans;" id="j_password" name="j_password" tabindex="2" maxlength="20" autocomplete="off">						
+					</span>
+				</span>
+				</div>			
+						
+				<div class="ADCSI_row" style="width: auto; padding-top: 5px;">
+					<span class="ADCSI_leftcol" style="width: 115px; display: inline-block; "></span>
+					<span class="ADCSI_checkcol">
+						<input class="ADCSI_Checkbox" id="rememberme" name="rememberme" type="checkbox" tabindex="3">
+						<label for="ADCSI_rememberme" style="margin-left: 5px; "><@spring.message code="security.authentication.remember" /></label>
+					</span>
+				</div>
+				<div class="ADCSI_row" style="width: auto; padding-top: 5px;">
+					<span class="ADCSI_leftcol" ></span>
+					<span class="ADCSI_checkcol">
+						<span class="ADCSI_link" id="ADCSI_fp">
+							<a href="publicViewResetPasswordRequest.admin" class="noDecoration"><@spring.message code="security.authentication.resetpasswordPrompt" /></a>
+							</span>	
+					</span>
+				</div>
+				<div class="ADCSI_row" style="width: auto; padding-top: 5px;">
+					<span class="ADCSI_leftcol" ></span>
+					<span class="ADCSI_checkcol">
+						<span class="ADCSI_link" id="ADCSI_fp">
+							<a href="publicViewResendActivation.admin" class="noDecoration"><@spring.message code="security.authentication.resendActivationText" /></a>
+							</span>	
+					</span>
+				</div>			
+				<div style="text-align: center;padding-top: 30px;padding-bottom: 10px;">
+					<span style="display:none;"></span>						
+						<input class="button" type="submit" name="login" id="btnLogin" tabindex="4" value='<@spring.message code="security.authentication.login" />' />						
+				</div>		    		
+		   		</form>			
+		</div>
+	</div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+	    $("input:submit").button(); 
+		$(':input:visible:enabled:first').focus();
+		$("#j_username").val($.cookie("username"));
+		if ($.cookie("username") != "") {
+			$('#rememberme').attr('checked', true);
+		}		
+        $('#login-form').validationEngine();
+        $('#login-form').validationEngine('hide');		
+		$('#btnLogin').click(function() {
+			if ($('#rememberme').is(':checked')) {
+				$.cookie("username", $("#j_username").val(), { expires : 10 });				
+			}
+			else {
+				$.cookie("username", "", { expires : 10 });
+			}
+		});	
+		$('#btnReset').click(function() {		 
+			$('#login-form').validationEngine('hide');	
+		});
+		jQuery('.sverror').each(function() {
+		    var currentElement = '#' + $(this).attr('id').split('.')[0];	     
+	        $(currentElement).validationEngine('showPrompt', $(this).html(), 'fail', 'topRight', true);
+		});	
+	});
+</script>
+
+		</div>
+	</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!--  -->
+<@com.useHighlightTag '<span class="highlight">', '</span>' />
+<#include "layout.stl">
+<@layout title="Case Details" encoding="${searchResult.encoding}">
+
+
+
+ <@com.errorMarkup/>
+ 
+ 
+ <#include "searchResultHeader.stl">
+ 
+ <br>
+ <table class="main">
+ 	<tr valign="top">
+ 		<td class="mainRight">
+  			<div id="documents"><#include "documents.stl"></div>
+ 		</td>
+ 	</tr>
+ </table>
+ 
+ 
+</@layout>

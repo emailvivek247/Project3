@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="2B8F772BE4948F1A4F5CCF571FE2E354D6B13A0742B78313" adminuser="4509A773D406819FC2E2221BD84B8F2F864092CB009D7969">
+  <index-root-directory><![CDATA[E:\index\columbiana\]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[226695A4EB3409F7875E04729350ADFF4AABE2D1BDEABA865A4D65EEC59B09D58D3EDE051C9B1382275C36329BD757BA5BF8CB8DD10A80FFAFC770B65545427DC1DBFED70517FAE0A1DE79EF76F2D027A8CE15DE5954709F46A80DD6915BEF5D]]></db-url>
+      <db-username><![CDATA[B7631DECF7A3246D02F07E9F4DDED6553AC138FE38C30431]]></db-username>
+      <db-password><![CDATA[5CEF643AAD130B0101FE7B29533A77BD2E259CD509CA529C]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

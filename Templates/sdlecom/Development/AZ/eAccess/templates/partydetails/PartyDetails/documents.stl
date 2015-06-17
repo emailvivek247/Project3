@@ -1,0 +1,88 @@
+<b>Party Information</b>
+<#if searchResult.docs?has_content>
+	<table id="party" class="tablesorter">
+	 <thead>
+		<tr>
+			<th>${searchResult.datasetConfiguration.getColumn("Name").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("DateofBirth").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("CasePartyRoleDesc").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("City").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("StateCode").displayName}</th>
+		        <th>${searchResult.datasetConfiguration.getColumn("TTEAPFlag").displayName}</th>
+ 		</tr>
+	 </thead>
+	 <tbody>
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+      <#assign Name = doc.getValues("Name")>
+      <#assign DateofBirth = doc.getValues("DateofBirth")>
+      <#assign CasePartyRoleDesc = doc.getValues("CasePartyRoleDesc")>
+      <#assign City = doc.getValues("City")>
+      <#assign StateCode = doc.getValues("StateCode")>
+      <#assign TTEAPFlag = doc.getValues("TTEAPFlag")>
+      
+
+      
+      <#assign loopCounter = 0>
+
+		<tr>
+			<td>${doc.get("Name")}</td>
+			<td>${doc.get("DateofBirth")}</td>
+			<td>${doc.get("CasePartyRoleDesc")}</td>
+			<td>${doc.get("City")}</td>
+			<td>${doc.get("StateCode")}</td>
+			<td>${doc.get("TTEAPFlag")}</td>
+			
+			<#assign loopCounter = loopCounter + 1>
+		</tr>
+	  
+      </#foreach>
+   </tbody>
+</table>
+<#else>
+	 <table id="party" class="tablesorter">
+	  <thead>
+		<tr>
+			<th>${searchResult.datasetConfiguration.getColumn("Name").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("DateofBirth").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("CasePartyRoleDesc").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("City").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("StateCode").displayName}</th>
+		        <th>${searchResult.datasetConfiguration.getColumn("TTEAPFlag").displayName}</th>
+		</tr>
+	  </thead>
+	  <tbody>
+	 <#assign ResultId =0>
+	  <#foreach doc in searchResult.docs>
+
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+	  </#foreach>
+	  </tbody>
+	</table>
+          
+	
+</#if>
+
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	oTable = $('#party').dataTable({
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bSort": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		"aaSorting": []
+	});
+} );
+</script>

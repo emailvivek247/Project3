@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset name="Dallas Clerk OPR" exportedBy="null" createdAt="Fri Sep 28 14:41:55 EDT 2012">
+  <display-order>1</display-order>
+  <description><![CDATA[Dallas County Clerk Official Public Records - 2.7]]></description>
+  <index-dir>dallasclerkopr</index-dir>
+  <is-prefix-root-index-directory>true</is-prefix-root-index-directory>
+  <use-server-db-connection>true</use-server-db-connection>
+  <work-directory>_work</work-directory>
+  <temporary-index-minimal-merge-percentage>0.0</temporary-index-minimal-merge-percentage>
+  <merge-hours enabled="true" begin="16" end="17"/>
+  <fetcher-threads>5</fetcher-threads>
+  <writer-threads>5</writer-threads>
+  <index-max-size>100000.0</index-max-size>
+  <list-fetch-size>10000</list-fetch-size>
+  <schedules>
+   <schedule id="0">
+    <is-enabled>true</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>0,10,20,30,40,50 7,8,9,10,11,13,14,15,18 ? * 2,3,4,5,6</cron-setting>
+    <indexing-mode>Incremental Indexing with Thorough Deletion Detection</indexing-mode>
+   </schedule>
+   <schedule id="1">
+    <is-enabled>false</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>0 0 ? * 7</cron-setting>
+    <indexing-mode>Re-create Index</indexing-mode>
+   </schedule>
+   <schedule id="2">
+    <is-enabled>false</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>5 16 ? * 2,3,4,5,6</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+  </schedules>
+  <language>Any</language>
+  <analyzer-name>com.fdt.sdl.core.analyzer.NumberLowerCaseAnalyzer</analyzer-name>
+  <data-source-type>0</data-source-type>
+  <fetcher-configuration dir="null">
+  </fetcher-configuration>
+  <data-sources>
+    <data-source>
+      <name>default</name>
+      <jdbcdriver>oracle.jdbc.driver.OracleDriver</jdbcdriver>
+    </data-source>
+  </data-sources>
+  <dataquery name="WorkingQueue" batch-size="128" is-skipping-null-parameters="false">
+    <sql><![CDATA[
+Select top 1000000
+cast(a.id as varchar)+ '-' + cast(isnull(b.seq, 0) as varchar) as pk_key
+,a.SEQ_KEY "Instrument"
+,CONVERT(VARCHAR(10), RECDATE1, 112) AS RECDATE
+,RECDATE1 AS RECDATEFILTER
+,CONVERT(VARCHAR(30), RECDATE1, 120) AS RECDATEDISPLAY
+,LNAME+' '+ISNULL(FNAME,'')+' '+ ISNULL(MNAME,'') as Name
+,LNAME+' '+ISNULL(FNAME,'')+' '+ ISNULL(MNAME,'') as PhoneticName
+,DESIGSTATUS
+,UPPER(SUBSTRING(ROLENAME,1,1)) + LOWER(SUBSTRING(ROLENAME,2,50)) AS PartyRole
+,case when role=1 then 'Direct Party' when role=2 then 'Reverse Party' when role not in (1,2) then 'No Party' end as Role
+,OTHERNAME "OtherName"
+,OTHERDESIGSTATUS
+,OTHERROLE "OtherRole"
+,OTHERROLENAME
+,(SELECT descr FROM Doctype2lov WHERE type2 = a.indextype) as IndexType
+,LTRIM(RTRIM(a.code)) as DocType
+,Book
+,Page
+,LOTNUM as Lot
+,BLOCKNUM as Block
+,SECTIONNUM as CityBlock
+,MAPBOOK as MapBook
+,MAPPAGE as MapPage
+,LEGAL2 as MapInstrumentNumber
+,SUBDIVISION as Subdivision
+,CITY as CityTown
+,LDESC as Freeform
+,LegalDescription
+,MULTIPLE_LEGAL
+,FirstReference
+,MULTIPLE_REFERENCE AS 'MULTIPLE_REFERENCE'
+,a.date_time_mod
+,b.seq
+,offlinerecord
+,'Dallas' as Location
+,a.indextype as IndexCode
+,a.seq as PartySeq
+,a.doctype as DocCode
+    from PUBLICSEARCH a left outer join LEGAL b on
+    a.SEQ_KEY = b.SEQ_KEY 
+    where OFFLINERECORD ='N' 
+    AND a.indextype not in (13,14,6)
+order by a.date_time_mod desc
+    ]]></sql>
+    <column>
+      <column-name>pk_key</column-name>
+      <display-name><![CDATA[pk_key]]></display-name>
+      <column-index>1</column-index>
+      <column-type>java.lang.String</column-type>
+      <primary-key>true</primary-key>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="1000.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>Instrument</column-name>
+      <display-name><![CDATA[Instrument]]></display-name>
+      <column-index>2</column-index>
+      <column-type precision="19" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+    </column>
+    <column>
+      <column-name>RECDATE</column-name>
+      <display-name><![CDATA[Recorded Date]]></display-name>
+      <column-index>3</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <analyzer-name>com.fdt.sdl.core.analyzer.DateAnalyzer</analyzer-name>
+    </column>
+    <column>
+      <column-name>RECDATEFILTER</column-name>
+      <display-name><![CDATA[Recorded Date]]></display-name>
+      <column-index>4</column-index>
+      <column-type>java.sql.Timestamp</column-type>
+      <index-field-type>KeywordDateHierarchical</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <is-filterable filter-display-order="4">true</is-filterable>
+    </column>
+    <column>
+      <column-name>RECDATEDISPLAY</column-name>
+      <display-name><![CDATA[Recorded Date]]></display-name>
+      <column-index>5</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>Name</column-name>
+      <display-name><![CDATA[Name]]></display-name>
+      <column-index>6</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>PhoneticName</column-name>
+      <display-name><![CDATA[Phonetic Name]]></display-name>
+      <column-index>7</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <analyzer-name>com.fdt.sdl.core.analyzer.DoubleMetaphoneAnalyzer</analyzer-name>
+    </column>
+    <column>
+      <column-name>DESIGSTATUS</column-name>
+      <display-name><![CDATA[Desig Status]]></display-name>
+      <column-index>8</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>PartyRole</column-name>
+      <display-name><![CDATA[Party Role]]></display-name>
+      <column-index>9</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <is-filterable filter-display-order="3">true</is-filterable>
+    </column>
+    <column>
+      <column-name>Role</column-name>
+      <display-name><![CDATA[Role]]></display-name>
+      <column-index>10</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+    </column>
+    <column>
+      <column-name>OtherName</column-name>
+      <display-name><![CDATA[Other Name]]></display-name>
+      <column-index>11</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>OTHERDESIGSTATUS</column-name>
+      <display-name><![CDATA[Other Desig Status]]></display-name>
+      <column-index>12</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>OtherRole</column-name>
+      <display-name><![CDATA[Other Role]]></display-name>
+      <column-index>13</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>OTHERROLENAME</column-name>
+      <display-name><![CDATA[Other Role Name]]></display-name>
+      <column-index>14</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>IndexType</column-name>
+      <display-name><![CDATA[Index Type]]></display-name>
+      <column-index>15</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <is-filterable filter-display-order="1">true</is-filterable>
+    </column>
+    <column>
+      <column-name>DocType</column-name>
+      <display-name><![CDATA[Doc Type]]></display-name>
+      <column-index>16</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <is-filterable filter-display-order="2" filter-parent-column-name="IndexType">true</is-filterable>
+    </column>
+    <column>
+      <column-name>Book</column-name>
+      <display-name><![CDATA[Book]]></display-name>
+      <column-index>17</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>Page</column-name>
+      <display-name><![CDATA[Page]]></display-name>
+      <column-index>18</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>Lot</column-name>
+      <display-name><![CDATA[Lot]]></display-name>
+      <column-index>19</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>Block</column-name>
+      <display-name><![CDATA[Block]]></display-name>
+      <column-index>20</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>CityBlock</column-name>
+      <display-name><![CDATA[City Block]]></display-name>
+      <column-index>21</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>MapBook</column-name>
+      <display-name><![CDATA[Map Book]]></display-name>
+      <column-index>22</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>MapPage</column-name>
+      <display-name><![CDATA[Map Page]]></display-name>
+      <column-index>23</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>MapInstrumentNumber</column-name>
+      <display-name><![CDATA[Map Instrument Number]]></display-name>
+      <column-index>24</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>Subdivision</column-name>
+      <display-name><![CDATA[Subdivision]]></display-name>
+      <column-index>25</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>CityTown</column-name>
+      <display-name><![CDATA[City/Town]]></display-name>
+      <column-index>26</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>Freeform</column-name>
+      <display-name><![CDATA[Freeform]]></display-name>
+      <column-index>27</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>LegalDescription</column-name>
+      <display-name><![CDATA[Legal Description]]></display-name>
+      <column-index>28</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>MULTIPLE_LEGAL</column-name>
+      <display-name><![CDATA[MULTIPLE_LEGAL]]></display-name>
+      <column-index>29</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>FirstReference</column-name>
+      <display-name><![CDATA[First Reference]]></display-name>
+      <column-index>30</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>MULTIPLE_REFERENCE</column-name>
+      <display-name><![CDATA[MULTIPLE_REFERENCE]]></display-name>
+      <column-index>31</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+      <is-searchable search-weight="-1.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>date_time_mod</column-name>
+      <display-name><![CDATA[date_time_mod]]></display-name>
+      <column-index>32</column-index>
+      <column-type>java.sql.Timestamp</column-type>
+      <modified-date>true</modified-date>
+      <index-field-type>KeywordDateHierarchical</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>seq</column-name>
+      <display-name><![CDATA[Legal Sequence]]></display-name>
+      <column-index>33</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <is-filterable filter-display-order="5">true</is-filterable>
+    </column>
+    <column>
+      <column-name>offlinerecord</column-name>
+      <display-name><![CDATA[offlinerecord]]></display-name>
+      <column-index>34</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>Location</column-name>
+      <display-name><![CDATA[Location]]></display-name>
+      <column-index>35</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+    </column>
+    <column>
+      <column-name>IndexCode</column-name>
+      <display-name><![CDATA[Index Code]]></display-name>
+      <column-index>36</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+    </column>
+    <column>
+      <column-name>PartySeq</column-name>
+      <display-name><![CDATA[Party Sequence]]></display-name>
+      <column-index>37</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">true</is-searchable>
+      <is-filterable filter-display-order="6">true</is-filterable>
+    </column>
+    <column>
+      <column-name>DocCode</column-name>
+      <display-name><![CDATA[Doc Code]]></display-name>
+      <column-index>38</column-index>
+      <column-type precision="10" scale="0">java.math.BigDecimal</column-type>
+      <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="3.0">false</is-searchable>
+    </column>
+  </dataquery>
+  <dataquery name="Deletion" is-delete-only="true">
+    <sql><![CDATA[
+{call sp_roam_track_delete}
+    ]]></sql>
+  </dataquery>
+  <dataquery name="Incremental">
+    <sql><![CDATA[
+Select DISTINCT
+cast(a.id as varchar)+ '-' + cast(isnull(b.seq, 0) as varchar) as pk_key
+,a.SEQ_KEY "Instrument"
+,CONVERT(VARCHAR(10), RECDATE1, 112) AS RECDATE
+,RECDATE1 AS RECDATEFILTER
+,CONVERT(VARCHAR(30), RECDATE1, 120) AS RECDATEDISPLAY
+,LNAME+' '+ISNULL(FNAME,'')+' '+ ISNULL(MNAME,'') as Name
+,LNAME+' '+ISNULL(FNAME,'')+' '+ ISNULL(MNAME,'') as PhoneticName
+,DESIGSTATUS
+,UPPER(SUBSTRING(ROLENAME,1,1)) + LOWER(SUBSTRING(ROLENAME,2,50)) AS PartyRole
+,case when role=1 then 'Direct Party' when role=2 then 'Reverse Party' when role not in (1,2) then 'No Party' end as Role
+,OTHERNAME "OtherName"
+,OTHERDESIGSTATUS
+,OTHERROLE "OtherRole"
+,OTHERROLENAME
+,(SELECT descr FROM Doctype2lov WHERE type2 = a.indextype) as IndexType
+,LTRIM(RTRIM(a.code)) as DocType
+,Book
+,Page
+,LOTNUM as Lot
+,BLOCKNUM as Block
+,SECTIONNUM as CityBlock
+,MAPBOOK as MapBook
+,MAPPAGE as MapPage
+,LEGAL2 as MapInstrumentNumber
+,SUBDIVISION as Subdivision
+,CITY as CityTown
+,LDESC as Freeform
+,LegalDescription
+,MULTIPLE_LEGAL
+,FirstReference
+,MULTIPLE_REFERENCE AS 'MULTIPLE_REFERENCE'
+,RT.date_time_mod
+,b.seq
+,offlinerecord
+,'Dallas' as Location
+,a.indextype as IndexCode
+,a.seq as PartySeq
+,a.doctype as DocCode
+      from PUBLICSEARCH a with (nolock) left outer join LEGAL b with (nolock) on
+      a.SEQ_KEY = b.SEQ_KEY 
+      INNER JOIN ROAM_TRACK RT with (nolock) ON RT.PK_KEY = A.ID
+      AND RT.TAB_NAME = 'PUBLICSEARCH' 
+      LEFT OUTER JOIN ROAM_TRACK RT1 with (nolock) ON RT1.PK_KEY = B.SEQ_KEY
+      AND RT1.TAB_NAME = 'LEGAL' 
+      where OFFLINERECORD ='N' 
+      AND a.indextype not in (13,14,6)
+      AND  RT.DATE_TIME_MOD > ?
+order by RT.date_time_mod desc
+    ]]></sql>
+  </dataquery>
+  <default-template>Main</default-template>
+  <tablet-template>Tablet</tablet-template>
+  <mobile-template>Mobile</mobile-template>
+  <searcher-max-active>8</searcher-max-active>
+  <searcher-when-exhausted>1</searcher-when-exhausted>
+  <searcher-max-wait>10000</searcher-max-wait>
+  <searcher-max-idle>7</searcher-max-idle>
+  <is-in-memory-search>false</is-in-memory-search>
+  <jvm-max-heap-size>8192</jvm-max-heap-size>
+  <document-buffer-size-mb>4096</document-buffer-size-mb>
+  <is-wildcard-allowed>true</is-wildcard-allowed>
+  <min-wildcard-prefix-length>2</min-wildcard-prefix-length>
+  <allowed-ip-list>*</allowed-ip-list>
+  <is-empty-query-match-all>false</is-empty-query-match-all>
+  <date-weight-formula>
+    <time-weight time="600" weight="12.0"/>
+    <time-weight time="1800" weight="11.0"/>
+    <time-weight time="3600" weight="10.0"/>
+    <time-weight time="21600" weight="9.0"/>
+    <time-weight time="43200" weight="8.0"/>
+    <time-weight time="86400" weight="7.0"/>
+    <time-weight time="1296000" weight="6.0"/>
+    <time-weight time="2678400" weight="5.0"/>
+    <time-weight time="5356800" weight="4.0"/>
+    <time-weight time="8035200" weight="3.0"/>
+    <time-weight time="16070400" weight="2.0"/>
+    <time-weight time="32140800" weight="1.3"/>
+    <time-weight time="64281600" weight="1.2"/>
+    <time-weight time="96422400" weight="1.1"/>
+    <time-weight time="128563200" weight="1.05"/>
+    <time-weight time="160704000" weight="1.04"/>
+    <time-weight time="192844800" weight="1.03"/>
+    <time-weight time="224985600" weight="1.02"/>
+    <time-weight time="321408000" weight="1.01"/>
+  </date-weight-formula>
+  <spell-checking enabled="true"></spell-checking>
+</dataset>

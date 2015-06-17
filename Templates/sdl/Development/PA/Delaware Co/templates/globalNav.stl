@@ -1,0 +1,307 @@
+<html><head><title>Delaware County Public Search</title>
+<meta http-equiv="content-type" content="text/html; charset=${encoding}">
+<link rel="stylesheet" href="${request.getContextPath()}/templates/resources/styles/nav.css" type="text/css"  />
+<link rel="shortcut icon" href="favicon.ico"/>
+</head>
+<body>
+
+
+<script type="text/javascript">
+var timeout         = 500;
+var closetimer      = 0;
+var ddmenuitem      = 0;
+function mopen(id)
+{
+    mcancelclosetime();
+    if(ddmenuitem) ddmenuitem.style.visibility = 'hidden';
+    ddmenuitem = document.getElementById(id);
+    ddmenuitem.style.visibility = 'visible';
+}
+function mclose()
+{
+    if(ddmenuitem) ddmenuitem.style.visibility = 'hidden';
+}
+function mclosetime()
+{
+    closetimer = window.setTimeout(mclose, timeout);
+}
+function mcancelclosetime()
+{
+    if(closetimer)
+    {
+        window.clearTimeout(closetimer);
+        closetimer = null;
+    }
+}document.onclick = mclose;
+
+</script>
+
+
+<style>
+.ui-icon {
+width: 16px;
+height: 16px;
+background-image: url(resources/styles/images/ui-icons_222222_256x240.png);
+}
+.ui-icon-triangle-1-s {
+background-position: -64px -16px;
+}
+.ui-widget-content {
+border: 1px solid #7E7783;
+background: white;
+color: #100F0F;
+}
+.jumpmenu {
+    width:200px;
+}
+
+/* General */
+    #cssdropdown, #cssdropdown ul { list-style: none; }
+    #cssdropdown, #cssdropdown * { padding: 0; margin: 0; }
+    
+    /* Head links */
+    
+#cssdropdown {
+    background: #0078AE url(resources/styles/images/ui-bg_highlight-soft_25_30273a_1x100.png) 50% 50% repeat-x;  
+    width:100%;
+    height:35px;
+}
+#cssdropdown li.headlink {
+    vertical-align: middle;
+    text-align: center;
+    float: left;    
+    border-right: 1px solid white;   
+}
+#cssdropdown li.headlink a {display: block; padding: 10px; font-size: 0.9em; color: #EDF7F7;}
+.headerList{margin: 0;padding: 0; z-index: 30; float:right}
+.headerList li{margin: 0;padding: 0;list-style: none; float: left;}
+.headerList li a{display: block;margin: 0 1px 0 0;padding: 4px 13px;text-align: center;text-decoration: none;font-size: 90%; color: #2E7EE4;}
+.headerList div{position: absolute;visibility: hidden;margin: 0;padding: 0;}
+.headerList div a{position: relative;display: block;margin: 0;padding: 5px 10px;width: auto;white-space: nowrap;text-align: left;text-decoration: none;border-bottom:1px solid #CCC; color: #2E7EE4;}
+.headerList li a span.ui-icon{display:inline}
+/*
+
+</style>
+
+<style type="text/css">
+<!--
+.active, .inactive {text-align: center; padding-top:0px; padding-bottom:5px; margin:0px}
+.active   {color: #2265f0; font-weight:bold; font-size: 95%;}
+.inactive {text-decoration: underline; color: #2E7EE4;}
+//-->
+</style>
+
+<#-- Adding Delaware banners as requested-->
+
+<#assign searchablejudge = "CASE_NUMBER,JUDGEMENT_FOR,JUDGEMENT_FOR_EXACT,JUDGEMENT_FOR_START,JUDGEMENT_AGAINST,JUDGEMENT_AGAINST_EXACT,JUDGEMENT_AGAINST_START,JUDGEMENT_ISSUED_TYP,DISPOSITION_DATE,JUDGMENT_AMOUNT,CATEGORY_DESC">
+<#assign searchablecase = "DisplayName,CASE_NUMBER,CaseType,DOB,LicenseNumber,PartyRole,StatuteNumber,StatuteDescription,ActiveWarrantFlag,CaseFilingDate">
+
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" style="background-color:#0d2b8d;">
+  <tr>
+    <td height="114" colspan="7" align="center" valign="top" bgcolor="#003399">
+    	<div align="center">
+    		<img src="${request.getContextPath()}/templates/resources/images/newnavbarnew.jpg" alt="Mast Head Graphic" width="917" height="112" />
+    	</div>
+    </td>
+    <td width="5"></td>
+    <td width="1"></td>
+  </tr>
+  <tr class="bur-bg">
+    <td width="190" height="25" valign="top" class="bur-bg">
+   		 <div align="left">
+			 <a href="http://www.co.delaware.pa.us" alt="Main Web Page - Home" class="links" style="color:white;"> Home </a> |
+			 <a href="http://www.co.delaware.pa.us/search.html" alt="Search Our Site" class="links" style="color:white;">Search </a>|
+			 <a href="http://www.co.delaware.pa.us/email.html" alt="Contact Us" class="links" style="color:white;"> Contact Us </a>
+   		 </div>
+    </td>
+    <td colspan="6" align="right" valign="middle" bgcolor="#660032">
+     <div align="center"><span class="text-10px text-10px">
+      <select name="departments" class="stdfontsmaller" id="departments" onchange="MM_jumpMenu('parent',this,0)">
+        <option>Departments...</option>
+        <option value="http://www.co.delaware.pa.us/depts/admserv.html">Administrative Services</option>
+        <option value="http://www.co.delaware.pa.us/depts/archives.html">Archives and Records Mgt</option>
+        <option value="http://www.co.delaware.pa.us/treasurer/assessappeal.html">Assessment Appeals</option>
+        <option value="http://www.co.delaware.pa.us/courts/pretrailbail.html">Bail</option>
+        <option value="http://www.co.delaware.pa.us/treasurer/boa.html">Board of Assessments</option>
+        <option value="http://www.co.delaware.pa.us/depts/budget.html">Budget Management</option>
+        <option value="http://www.co.delaware.pa.us/depts/election.html">Bureau of Elections</option>
+        <option value="http://www.co.delaware.pa.us/purchasing/index.html">Central Purchasing</option>
+        <option value="http://www.co.delaware.pa.us/humanservices/childyouth.html">Children and Youth Services</option>
+        <option value="http://www.co.delaware.pa.us/courts/commcorrections.html">Community Corrections</option>
+        <option value="http://www.co.delaware.pa.us/consumeraffairs/index.html">Consumer Affairs</option>
+        <option value="http://www.co.delaware.pa.us/conservation/index.html">Conservation District</option>
+        <option value="http://www.co.delaware.pa.us/depts/controller.html">Controller</option>
+        <option value="http://www.co.delaware.pa.us/depts/cosa.html">COSA</option>
+        <option value="http://www.co.delaware.pa.us/depts/clerk.html">County Clerk</option>
+        <option value="http://www.co.delaware.pa.us/depts/buildings.html">County Facilities Management</option>
+        <option value="http://www.co.delaware.pa.us/courts/cjrelateddepts.html">Court Related Departments</option>
+        <option value="http://www.delcoda.com/">Criminal Investigation Division</option>
+        <option value="http://www.co.delaware.pa.us/depts/data.html">Data Processing</option>
+        <option value="http://www.co.delaware.pa.us/districtattorney/index.html">District Attorney</option>
+        <option value="http://www.co.delaware.pa.us/domesticrelations/index.html">Domestic Relations</option>
+        <option value="http://www.co.delaware.pa.us/depts/election.html">Election Bureau</option>
+        <option value="http://www.co.delaware.pa.us/delcoready/emergency.html">Emergency Services</option>
+        <option value="http://www.co.delaware.pa.us/depts/oet.html">Employment Training</option>
+        <option value="http://www.co.delaware.pa.us/intercommunity/ems.html">EMS</option>
+        <option value="http://www.co.delaware.pa.us/depts/publicworks.html">Engineer, Public Works</option>
+        <option value="http://www.co.delaware.pa.us/director.html">Executive Director</option>
+        <option value="http://www.fairacres.org/">Fair Acres Geriatric</option>
+        <option value="http://www.co.delaware.pa.us/intercommunity/index.html">Health, Intercommunity</option>
+        <option value="http://www.co.delaware.pa.us/hcd/index.html">Housing &amp; Community Development</option>
+        <option value="http://www.co.delaware.pa.us/humanservices/index.html">Human Services</option>
+        <option value="http://www.co.delaware.pa.us/intercommunity/index.html">Intercommunity Health</option>
+        <option value="http://www.co.delaware.pa.us/ojs/index.html">Judicial Support</option>
+        <option value="http://www.co.delaware.pa.us/courts/jurorguide/index.html">Jury Information</option>
+        <option value="http://www.co.delaware.pa.us/courts/juveniledetention.html">Juvenile Detention Center</option>
+        <option value="http://www.co.delaware.pa.us/courts/audiovisual.html">Legal Audio Visual</option>
+        <option value="http://www.delcolibraries.org/">Library Services</option>
+        <option value="http://www.co.delaware.pa.us/depts/buildings.html">Maintenance (Building)</option>
+        <option value="http://www.co.delaware.pa.us/ome/index.html">Medical Examiner</option>
+        <option value="http://www.co.delaware.pa.us/humanservices/obh/behavhealth.html">Mental Health</option>
+        <option value="http://www.co.delaware.pa.us/depts/mvm.html">Motor Vehicle Management</option>
+        <option value="http://www.co.delaware.pa.us/newsreleases/index.html">News Releases</option>
+        <option value="http://www.co.delaware.pa.us/registerofwills/index.html">Orphans Court</option>
+        <option value="http://www.co.delaware.pa.us/openrecords/index.html">Open Records</option>
+        <option value="http://www.co.delaware.pa.us/parkpolice/index.html">Park Police</option>
+        <option value="http://www.co.delaware.pa.us/depts/parks.html">Parks &amp; Recreation</option>
+        <option value="http://www.co.delaware.pa.us/depts/personnel.html">Personnel and Employee Benefits</option>
+        <option value="http://www.co.delaware.pa.us/planning/">Planning</option>
+        <option value="http://www.co.delaware.pa.us/depts/prison/prison.html">Prison</option>
+        <option value="http://www.co.delaware.pa.us/newsreleases/index.html">Press Releases</option>
+        <option value="http://www.co.delaware.pa.us/depts/defender.html">Public Defender</option>
+        <option value="http://www.co.delaware.pa.us/newsreleases/index.html">Public Relations</option>
+        <option value="http://www.co.delaware.pa.us/purchasing/index.html">Purchasing, Central</option>
+        <option value="http://www.co.delaware.pa.us/depts/recorder.html">Recorder of Deeds</option>
+        <option value="http://www.co.delaware.pa.us/depts/archives.html">Records Mgnt, Achieves</option>
+        <option value="http://www.co.delaware.pa.us/recycle/index.html">Recycling</option>
+        <option value="http://www.co.delaware.pa.us/intercommunity/index.html">Regional Emergency Medical</option>
+        <option value="http://www.co.delaware.pa.us/registerofwills/index.html">Register of Wills</option>
+        <option value="http://www.co.delaware.pa.us/depts/se.html">Rose Tree Park Summer Fest</option>
+        <option value="http://www.co.delaware.pa.us/sheriff/index.html">Sheriff</option>
+        <option value="http://www.co.delaware.pa.us/depts/solicitor.html">Solicitor</option>
+        <option value="http://www.co.delaware.pa.us/SWA/index.html">Solid Waste Authority</option>
+        <option value="http://www.co.delaware.pa.us/depts/se.html">Special Events</option>
+        <option value="http://www.co.delaware.pa.us/treasurer/index.html">Taxes</option>
+        <option value="http://www.co.delaware.pa.us/depts/telecom.html">Telecommunications</option>
+        <option value="http://www.co.delaware.pa.us/treasurer/index.html">Treasurer</option>
+        <option value="http://www.co.delaware.pa.us/vet_affairs/">Veterans Affairs</option>
+        <option value="http://www.co.delaware.pa.us/depts/voterregis.html">Voter Registration</option>
+        <option value="http://www.co.delaware.pa.us/depts/voting.html">Voting Machines</option>
+        <option value="http://www.co.delaware.pa.us/depts/weatherization.html">Weatherization Program</option>
+        <option value="http://www.co.delaware.pa.us/depts/oet.html">Workforce Development</option>
+        </select>
+      <select name="services" class="stdfontsmaller" id="services" onchange="MM_jumpMenu('parent',this,0)">
+        <option>Services...</option>
+        <option value="http://www.co.delaware.pa.us/humanservices/index.html">Behavioral Health</option>
+        <option value="http://www.co.delaware.pa.us/planning/gisinfoservices/census.html">Census Data - 2010</option>
+        <option value="http://www.co.delaware.pa.us/humanservices/childcare.html">Child Care Information</option>
+        <option value="http://www.co.delaware.pa.us/humanservices/childyouth.html">Children &amp; Youth Services</option>
+        <option value="http://www.co.delaware.pa.us/depts/community.html">Community Action Agency</option>
+        <option value="http://www.co.delaware.pa.us/depts/cert.html">CERT</option>
+        <option value="http://www.delcopa.org/">Commerce Center</option>
+        <option value="http://www.co.delaware.pa.us/depts/cosa.html">COSA</option>
+        <option value="http://www.co.delaware.pa.us/depts/recorder.html">Deeds, Recorder of</option>
+        <option value="http://www.co.delaware.pa.us/treasurer/dog.html">Dog License</option>
+        <option value="http://www.co.delaware.pa.us/intercommunity/classes.html">EMS Classes</option>
+        <option value="http://www.co.delaware.pa.us/depts/oet.html">Employment and Training</option>
+        <option value="http://www.co.delaware.pa.us/green/">Energy &ndash; Environmental</option>
+        <option value="http://www.co.delaware.pa.us/ezpay/index.html">E-Z Pay</option>
+        <option value="http://www.co.delaware.pa.us/treasurer/license.html">Fishing License</option>
+        <option value="http://www.co.delaware.pa.us/green/">Green Pages</option>
+        <option value="http://www.co.delaware.pa.us/depts/weatherization.html">Home Weatherization</option>
+        <option value="http://www.co.delaware.pa.us/recycle/index.html">Household Hazardous Waste</option>
+        <option value="http://www.co.delaware.pa.us/hcd/index.html">Housing Rehabilitation </option>
+        <option value="http://www.co.delaware.pa.us/treasurer/license.html">Hunting License</option>
+        <option value="http://www.co.delaware.pa.us/ojs/index.html">Judicial Support</option>
+        <option value="http://www.co.delaware.pa.us/judicalsale/index.html">Judicial Sale</option>
+        <option value="http://www.co.delaware.pa.us/courts/lawlibrary.html">Law Library</option>
+        <option value="http://www.co.delaware.pa.us/treasurer/license.html">Licenses</option>
+        <option value="http://www.co.delaware.pa.us/registerofwills/marriage.html">Marriage Licenses</option>
+        <option value="http://www.co.delaware.pa.us/map.html">Maps</option>
+        <option value="http://www.co.delaware.pa.us/humanservices/inteldis.html">Office of Intellectual Disabilities</option>
+        <option value="http://www.co.delaware.pa.us/openrecords/">Open Records Request</option>
+        <option value="http://www.co.delaware.pa.us/ojs/index.html">Passports</option>
+        <option value="http://www.co.delaware.pa.us/judicalsale/upsetpricesale.html">Property Upset Sale</option>
+        <option value="http://www.co.delaware.pa.us/sheriff/realestate.html">Property Sheriff Sale</option>
+        <option value="http://www.co.delaware.pa.us/pfa/index.html">Protection from Abuse</option>
+        <option value="http://w01.co.delaware.pa.us/pa/publicaccess.asp">Public Access</option>
+        <option value="http://www.co.delaware.pa.us/recycle/index.html">Recycling</option>
+        <option value="http://www.co.delaware.pa.us/registerofwills/index.html">Register of Wills</option>
+        <option value="http://www.co.delaware.pa.us/judicalsale/repossale.html">Repository Sale Info</option>
+        <option value="http://www.co.delaware.pa.us/openrecords/">Right to Know Request</option>
+        <option value="http://www.co.delaware.pa.us/depts/rosetree.html">Rose Tree Park</option>
+        <option value="http://www.co.delaware.pa.us/depts/cosa.html">Services for the Aging</option>
+        <option value="http://www.co.delaware.pa.us/sheriff/realestate.html">Sheriff Sale</option>
+        <option value="http://www.co.delaware.pa.us/summer/index.html">Summer Festival</option>
+        <option value="http://www.co.delaware.pa.us/domesticrelations/index.html">Support Enforcement</option>
+        <option value="http://www.tobaccofreedelco.com/">Tobacco Free</option>
+        <option value="http://www.co.delaware.pa.us/judicalsale/upsetpricesale.html">Upset Sale</option>
+        <option value="http://www.co.delaware.pa.us/registerofwills/index.html">Wills, Register of </option>
+        <option value="http://www.co.delaware.pa.us/womencom/index.html">Women's Commission</option>
+        <option value="http://www.co.delaware.pa.us/depts/oet.html">Workforce Development</option>
+        </select>
+    </span></div></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
+<table style="border-spacing:0px;border:0;" cellpadding="0" cellspacing="0" margin-bottom>
+  <tr>
+  	<td class="nav-tabs">
+  		<a href="${request.getContextPath()}/search.do?indexName=legacyjudgement%2Cjudgement&templateName=all&q=${searchResult.getURLEncodedClearQuery()}&searchable=${searchablejudge}" style="color:black;text-decoration:none;">Judgment Index Search</a>
+  	</td>
+  <td width="10%">&nbsp;</td>
+  	<td class="nav-tabs">
+	  	<a href="${request.getContextPath()}/search.do?indexName=casesearch&templateName=Main&q=${searchResult.getURLEncodedClearQuery()}&searchable=${searchablecase}" style="color:black;text-decoration:none;">Case Search</a>
+  	</td>
+   </tr>
+</table>
+</body>
+</html>
+
+
+
+
+
+<#--**OLD GLOBAL NAV. KEEP UNTIL NEW APPROVED
+<#assign indexCount = 0>
+<#foreach dc in dcs>
+      <#if dc.isValid() && (dc.displayOrder>=0) && dc.getDefaultTemplateName()?has_content>
+        <#assign indexCount = indexCount + 1>
+      </#if>    
+</#foreach>
+
+<table border=0 cellpadding=0 cellspacing=0>
+<tr>
+<#foreach dc in dcs>
+  <#if dc.isValid() && (dc.displayOrder>=0) && dc.getDefaultTemplateName()?has_content>
+    <td style="padding:0px 5px 0px;" class=<#if indexName == dc.name>"active"<#else>"inactive"</#if>>
+    <#if dc.name="legacyjudgement">
+      <a class=<#if indexName == dc.name>"active"<#else>"inactive"</#if> href="search.do?indexName=legacyjudgement,judgement&q=${searchResult.getURLEncodedClearQuery()}">${dc.displayName}</a>
+    </#if>
+    <#if dc.name="casesearch" || dc.name="casesearchprivate" >
+      <a class=<#if indexName == dc.name>"active"<#else>"inactive"</#if> href="search.do?indexName=${dc.name}&q=${searchResult.getURLEncodedClearQuery()}">${dc.displayName}</a>    
+    </#if>
+    </td>
+  </#if>
+</#foreach>
+</tr>
+</table>
+<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "true">
+<div style="width:100%;text-align:right;" >
+</div>
+</#if> 
+
+
+<table align="center">
+   <tr>
+	<td><img src="templates/legacyjudgement/all/resource/Delaware.jpg"></TD>
+   </tr>
+   <tr>
+	<td style="background-color:#660032;color:white;padding-left:5px;">
+		<a href="${request.getContextPath()}/search.do?indexName=legacyjudgement%2Cjudgement&templateName=all&q=${searchResult.getURLEncodedClearQuery()}" style="color:white;font-size:15px;">Judgment Index Search</a> |
+		<a href="${request.getContextPath()}/search.do?indexName=casesearch&templateName=Main&q=${searchResult.getURLEncodedClearQuery()}" style="color:white;font-size:15px;">Case Search</a>
+	</td>
+   </tr>
+</table> **-->
+

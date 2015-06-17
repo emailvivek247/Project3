@@ -1,0 +1,93 @@
+<@display.column media="html" title="${searchResult.datasetConfiguration.getColumn(\"CaseNumber\").displayName}">
+	<#if doc.get("CourtType") = "CIVIL">
+		<a href="${request.getContextPath()}/search.do?indexName=detail&templateName=civildetail&lq=${pageStyleUtil.encodeURL("CaseID:\"" + doc.get("CaseID") + "\"")}">${searchResult.highlight(doc, "CaseNumber")}</a>             
+	<#else>
+		<a href="${request.getContextPath()}/search.do?indexName=detail&templateName=criminaldetail&lq=${pageStyleUtil.encodeURL("CaseID:\"" + doc.get("CaseID") + "\"")}">${searchResult.highlight(doc, "CaseNumber")}</a> 
+	</#if>
+</@display.column>
+
+
+<@display.column media="rtf excel pdf" title="${searchResult.datasetConfiguration.getColumn(\"CaseNumber\").displayName}">
+	${doc.get("CaseNumber")}
+</@display.column>
+
+
+
+<@display.column media= "html" title="${searchResult.datasetConfiguration.getColumn(\"CaseType\").displayName}">
+	${searchResult.highlight(doc, "CaseType")}
+</@display.column>
+
+
+<@display.column  media="rtf excel pdf"  title="${searchResult.datasetConfiguration.getColumn(\"CaseType\").displayName}">
+	${doc.get("CaseType")}
+</@display.column>
+
+<@display.column media= "html" title="${searchResult.datasetConfiguration.getColumn(\"CaseStyle\").displayName}">
+	${searchResult.highlight(doc, "CaseStyle")}
+</@display.column>
+
+
+<@display.column  media="rtf excel pdf"  title="${searchResult.datasetConfiguration.getColumn(\"CaseStyle\").displayName}">
+	${doc.get("CaseStyle")}
+</@display.column>
+
+<@display.column media= "html" title="${searchResult.datasetConfiguration.getColumn(\"Party\").displayName}">
+	${searchResult.highlight(doc, "Party")}
+</@display.column>
+
+
+<@display.column  media="rtf excel pdf"  title="${searchResult.datasetConfiguration.getColumn(\"Party\").displayName}">
+	${doc.get("Party")}
+</@display.column>
+
+<@display.column media= "html" title="${searchResult.datasetConfiguration.getColumn(\"PartyType\").displayName}">
+	${searchResult.highlight(doc, "PartyType")}
+</@display.column>
+
+
+<@display.column  media="rtf excel pdf"  title="${searchResult.datasetConfiguration.getColumn(\"PartyType\").displayName}">
+	${doc.get("PartyType")}
+</@display.column>
+
+<@display.column media= "html" title="${searchResult.datasetConfiguration.getColumn(\"CaseStatus\").displayName}">
+	${searchResult.highlight(doc, "CaseStatus")}
+</@display.column>
+
+<@display.column  media="rtf excel pdf"  title="${searchResult.datasetConfiguration.getColumn(\"CaseStatus\").displayName}">
+	${doc.get("CaseStatus")}
+</@display.column>
+
+<@display.column media= "html" title="Security Status">
+	<#if doc.get("CaseSealed") = "Y">
+		<font color = "red"><b>SEALED CASE</b></font>
+	</#if>
+	<#if doc.get("CaseRestricted") = "Y">
+		<font color = "blue"><b>CONFIDENTIAL CASE</b></font>
+	</#if>
+	<#if doc.get("PersonSealed") = "Y">
+		<font color = "red"><b>SEALED PERSON</b></font>
+	</#if>
+	<#if doc.get("PartyRestricted") = "Y">
+		<font color = "blue"><b>CONFIDENTIAL PARTY</b></font>
+	</#if>
+</@display.column>
+
+
+<@display.column  media="rtf excel pdf"  title="Security Status">
+                                     
+	<#if doc.get("CaseSealed") = "Y">
+		SEALED CASE
+	</#if>
+	<#if doc.get("CaseRestricted") = "Y">
+		CONFIDENTIAL CASE
+	</#if>
+	<#if doc.get("PersonSealed") = "Y">
+		SEALED PERSON
+	</#if>
+	<#if doc.get("PartyRestricted") = "Y">
+		CONFIDENTIAL PARTY
+</#if>
+</@display.column>
+
+
+

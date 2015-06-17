@@ -1,0 +1,541 @@
+<script type="text/javascript">
+    var searchfields   = "Name,LastName,FirstName,MiddleName,CaseNumber,DOB,SSN,LicenseNumber,AddressLine1,AddressLine2,Zip,State,City";
+    var phoneticfields = "PhoneticName,PhoneticLastName,PhoneticFirstName,PhoneticMiddleName,CaseNumber,DOB,SSN,LicenseNumber,AddressLine1,AddressLine2,Zip,State,City";
+    
+    function unique(arrayName) {
+        var newArray=new Array();
+        label:for(var i=0; i<arrayName.length;i++ )
+        {  
+            for(var j=0; j<newArray.length;j++ ) {
+                if(newArray[j].name == arrayName[i].name) 
+                 continue label;
+            }
+            setCookie('WarrantSearch' + arrayName[i].name, jQuery.trim(arrayName[i].value), 0);
+            if (arrayName[i].type == 'text' && jQuery.trim(arrayName[i].value).length != 0) {
+                newArray[newArray.length] = arrayName[i];
+            }
+        }
+            setCookie('WarrantSearchfrmDOB', document.getElementById('frmDOB').value, 0);
+            setCookie('WarrantSearchtoDOB',  document.getElementById('toDOB').value, 0);
+        return newArray;
+    }   
+    function postAdvancedSearch() {
+        try {
+            if (!doDateCheck('frmDOB','toDOB'))return;          
+            document.getElementById("q").value = '';
+            var inputElemenets =  $('input[type="text"]');
+            var elem = unique(inputElemenets);
+            var searchString = '';
+            var searchQuery = '';
+            var andOrClause ='';
+            var doubleQuotes = '"';
+            var counter = 0;
+            var textcounter = 0;
+            var searchValue = '';
+            var searchValueQuery = '';
+            for(var i = 0; i < elem.length; i++) {
+                if (document.getElementById(elem[i].name + '_select') != null) {
+                    counter++;  
+                }                   
+            }
+            for(var i = 0; i < elem.length; i++) {
+                if (document.getElementById(elem[i].name + '_select') != null) {
+                    setCookie('WarrantSearch' + elem[i].name + '_select', document.getElementById(elem[i].name + '_select').selectedIndex, 0);
+                    textcounter++
+                    if (textcounter == counter) {
+                        andOrClause = '';
+                    } else {
+                        andOrClause = ' ' + document.getElementById(elem[i].name + '_select').value + '  ';
+                    }
+                    if (elem[i].name == 'DOB') {
+                        searchValue = getDateQuery(elem[i].name);
+                        searchValueQuery = getDateSearchQuery(elem[i].name);
+                    } 
+                    else {
+                        searchValue = elem[i].name + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes + '~5';
+                        searchValue = '#' + searchValue + '#';
+                        searchValueQuery = elem[i].name + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes;
+                    }
+                    searchString = searchString + searchValue + andOrClause;
+                    searchQuery = searchQuery  + searchValueQuery + andOrClause;
+                }
+            }
+            document.getElementById("lq").value = searchString;
+            document.getElementById("searchQuery").value = searchQuery;
+            document.search_${searchResult.indexName}.method = "get";
+            document.search_${searchResult.indexName}.action = "search.do";
+            document.search_${searchResult.indexName}.searchType.value = "2";           
+            document.getElementById("searchable").value = searchfields; 
+            document.search_${searchResult.indexName}.submit();
+        } catch (err) {
+            $.prompt(err.message,{buttons:{Ok:true},	prefix:'extblue'});
+        }
+    }   
+    function postBasicSearch() {
+        try {   
+            setCookie('WarrantSearch' + document.getElementById("q").name, document.getElementById("q").value, 0);
+            document.getElementById("lq").value = '';
+            document.search_${searchResult.indexName}.method = "get";
+            document.getElementById('searchQuery').value = document.getElementById('q').value
+            document.search_${searchResult.indexName}.action = "search.do";
+            document.search_${searchResult.indexName}.searchType.value = "1";
+            document.getElementById("searchable").value = searchfields;
+            document.search_${searchResult.indexName}.submit();
+        } catch (err) {
+            $.prompt(err.message,{buttons:{Ok:true},	prefix:'extblue'});
+        }
+    }
+// *Add function for basic Phonetic Search 
+function postBasicPhoneticSearch() {
+    try {   
+        document.getElementById("lq").value = '';
+        document.search_${searchResult.indexName}.method = "get";
+        document.getElementById('searchQuery').value = document.getElementById('q').value
+        document.search_${searchResult.indexName}.action = "search.do";
+        document.search_${searchResult.indexName}.searchType.value = "1";
+        document.getElementById("searchable").value = phoneticfields;
+        document.getElementById("isPhoneticSearch").value = "1";
+        document.search_${searchResult.indexName}.submit();
+    } catch (err) {
+        alert(err.message);
+    }
+} 
+
+// *Add function for advanced Phonetic Search 
+function postAdvancedPhoneticSearch() {
+        try {
+        if (!doDateCheck('frmDOB','toDOB'))return;
+        document.getElementById("q").value = '';
+        var inputElemenets =  $('input[type="text"]');
+        var elem = unique(inputElemenets);
+        var searchString = '';
+        var searchQuery = '';
+        var andOrClause ='';
+        var doubleQuotes = '"';
+        var counter = 0;
+        var textcounter = 0;
+        var searchValue = '';
+        var searchValueQuery = '';
+
+        for(var i = 0; i < elem.length; i++) {
+            if (document.getElementById(elem[i].name + '_select') != null) {
+                counter++;  
+            }                   
+        }
+        for(var i = 0; i < elem.length; i++) {
+            if (document.getElementById(elem[i].name + '_select') != null) {
+                setCookie('WarrantSearch' + elem[i].name + '_select', document.getElementById(elem[i].name + '_select').selectedIndex, 0);
+                textcounter++
+                if (textcounter == counter) {
+                    andOrClause = '';
+                } else {
+                    andOrClause = ' ' + document.getElementById(elem[i].name + '_select').value + '  ';
+                }
+                if (elem[i].name == 'DOB') {
+                    searchValue = getDateQuery(elem[i].name);
+                    searchValueQuery = getDateSearchQuery(elem[i].name);
+                } else {
+                    searchValue = elem[i].name + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes + '~5';
+                    searchValue = '#' + searchValue + '#';
+                    searchValueQuery = elem[i].name + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes;
+                } 
+                if (elem[i].name == 'LastName') {
+                    searchValue = 'PhoneticName' + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes + '~5';
+                    searchValue = '#' + searchValue + '#';
+                    searchValueQuery = 'PhoneticName' + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes;
+                }
+                if (elem[i].name == 'MiddleName') {
+		    searchValue = 'PhoneticName' + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes + '~5';
+		    searchValue = '#' + searchValue + '#';
+		    searchValueQuery = 'PhoneticName' + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes;
+                }
+                if (elem[i].name == 'FirstName') {
+		    searchValue = 'PhoneticName' + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes + '~5';
+		    searchValue = '#' + searchValue + '#';
+		    searchValueQuery = 'PhoneticName' + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes;
+                }
+                searchString = searchString + searchValue + andOrClause;
+                searchQuery = searchQuery  + searchValueQuery + andOrClause;
+            }
+        }
+        document.getElementById("lq").value = searchString;
+        document.getElementById("searchQuery").value = searchQuery;
+        document.search_${searchResult.indexName}.method = "get";
+        document.search_${searchResult.indexName}.action = "search.do";
+        document.search_${searchResult.indexName}.searchType.value = "2";
+        document.getElementById("searchable").value = phoneticfields;
+        document.getElementById("isPhoneticSearch").value = "1";                        
+        document.search_${searchResult.indexName}.submit();
+        } catch (err) {
+            alert(err.message);
+        }
+    } 
+
+//* Add to clear search results
+function clearSearchResults() { 
+    document.getElementById("q").value = ""; 
+}
+</script>
+<form name="search_${searchResult.indexName}" id="search_${searchResult.indexName}">
+    <input type="hidden" name="indexName" value="${searchResult.indexName}">
+    <input type="hidden" name="templateName" value="${searchResult.templateName}">
+    <input type="hidden" name="searchQuery" id="searchQuery">
+    <input type="hidden" name="lq" id="lq">
+    <input type="hidden" name="searchType" id="searchType" value="${Request.searchForm.searchType}">
+    <input type="hidden" name="searchable" id="searchable">
+    <input type="hidden" name="isPhoneticSearch" id="isPhoneticSearch">    
+
+    
+        <#if Request.searchForm.searchType = "1">
+            <div id="basicSearch">
+        <#else>
+            <div id="basicSearch" style="display:none">
+        </#if>
+            
+            <table  align="center" >
+                <tr>
+			<td rowspan="2" width="33%" align="center"></TD>
+			<td width="1%" align="center"></TD>
+			<td rowspan="2" width="33%" align="left">&nbsp<a onClick="toggleDiv('advancedSearch');return false" href="#"><font size="1">Advanced Search</font></a>
+			    <br>&nbsp<a href="${request.getContextPath()}/search.do?indexName=jeffdoctypes&templateName=ROAMHelp&q=&length=300#PHONETIC"><font size="1">What is Phonetic Search?</font></a>
+			 </td>
+                </tr>
+                <tr>
+                       <td width="1%" align="right">
+                            <input type="text" class="text" name="q" id="q" size="41" maxlength="2048" value="${searchResult.userInput?html}">
+                                <#if Request.searchForm.searchType = "1">
+                                    <script language="javascript">  
+                                          document.getElementById('q').focus();
+                                    </script>
+                                </#if>
+                        </td>
+                       
+                </tr>
+            </table>
+            <table border="0" align = "center">
+	                <tr>
+	                    <td align="left">   
+	                        <button type="button" class="search" onclick="javascript:postBasicSearch()">Search</button>
+	                    </td>
+	                    <td align="left"> 
+	                        <#-- *Add Phonetic Search button -->
+	                        <button type="button" class="search" onclick="javascript:postBasicPhoneticSearch()">Phonetic Search</button>  
+	                    </td>
+	                </tr> 
+            </table>
+                        
+                
+        </div>
+
+            <#if Request.searchForm.searchType = "2">
+                <div id="advancedSearch">
+            <#else>
+                <div id="advancedSearch" style="display:none">
+            </#if>
+
+        <table align="center" border="0" cellspacing="1" cellpadding="1">
+                                <tr>                                
+                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("LastName").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td colspan="2">
+                                            <input type="text" id="LastName"  name="LastName" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('WarrantSearchLastName') != null) {
+                                                    document.getElementById("LastName").value = getCookie('WarrantSearchLastName');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td align="left">
+                                            <select name="LastName_select" id="LastName_select" >
+                                                <option value="OR" >OR</option>
+                                                <option value="AND" >AND</option>
+                                                <option value="NOT" >NOT</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('WarrantSearchLastName_select') != null) {
+                                                    document.getElementById("LastName_select").options[getCookie('WarrantSearchLastName_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+                                <tr>                                
+                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("FirstName").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td colspan="2">
+                                            <input type="text" id="FirstName"  name="FirstName" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('WarrantSearchFirstName') != null) {
+                                                    document.getElementById("FirstName").value = getCookie('WarrantSearchFirstName');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td align="left">
+                                            <select name="FirstName_select" id="FirstName_select" >
+                                                <option value="OR" >OR</option>
+						<option value="AND" >AND</option>
+                                                <option value="NOT" >NOT</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('WarrantSearchFirstName_select') != null) {
+                                                    document.getElementById("FirstName_select").options[getCookie('WarrantSearchFirstName_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+                                <tr>                                
+                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("MiddleName").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td colspan="2">
+                                            <input type="text" id="MiddleName"  name="MiddleName" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('WarrantSearchMiddleName') != null) {
+                                                    document.getElementById("MiddleName").value = getCookie('WarrantSearchMiddleName');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td align="left">
+                                            <select name="MiddleName_select" id="MiddleName_select" >
+                                                <option value="OR" >OR</option>
+						<option value="AND" >AND</option>
+                                                <option value="NOT" >NOT</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('WarrantSearchMiddleName_select') != null) {
+                                                    document.getElementById("MiddleName_select").options[getCookie('WarrantSearchMiddleName_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+                                <tr>                                
+                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("CaseNumber").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td colspan="2">
+                                            <input type="text" id="CaseNumber"  name="CaseNumber" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('WarrantSearchCaseNumber') != null) {
+                                                    document.getElementById("CaseNumber").value = getCookie('WarrantSearchCaseNumber');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td align="left">
+                                            <select name="CaseNumber_select" id="CaseNumber_select" >
+                                                <option value="OR" >OR</option>
+						<option value="AND" >AND</option>
+                                                <option value="NOT" >NOT</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('WarrantSearchCaseNumber_select') != null) {
+                                                    document.getElementById("CaseNumber_select").options[getCookie('WarrantSearchCaseNumber_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+                                <tr>                                
+                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("DOB").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td><b><font class="label">From&nbsp;:&nbsp;</font></b>
+                                            <input type="text" id="frmDOB" name="DOB" size="10" maxlength="10" onBlur="javascript:f_tcalParseDate('frmDOB')">
+                                            <script language="javascript">
+                                                new tcal ({
+                                                    'formname': 'search_${searchResult.indexName}',
+                                                    'controlname': 'frmDOB'
+                                                });
+                                                if (getCookie('WarrantSearchfrmDOB') != null) {
+                                                    document.getElementById("frmDOB").value = getCookie('WarrantSearchfrmDOB');
+                                                }
+                                            </script>
+                                        </td>    
+                                        <td><b><font class="label">To&nbsp;:&nbsp;</font></b>
+                                            <input type="text" id="toDOB" name="DOB" size="10" maxlength="10" onBlur="javascript:f_tcalParseDate('toDOB')">
+                                            <script language="javascript">
+                                                new tcal ({
+                                                    'formname': 'search_${searchResult.indexName}',
+                                                    'controlname': 'toDOB'
+                                                });
+                                                if (getCookie('WarrantSearchtoDOB') != null) {
+                                                    document.getElementById("toDOB").value = getCookie('WarrantSearchtoDOB');
+                                                }
+                                            </script>
+                                        </td>    
+                                        <td align="left">
+                                            <select name="DOB_select" id="DOB_select" >
+                                                <option value="OR" >OR</option>
+						<option value="AND" >AND</option>
+                                                <option value="NOT" >NOT</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('WarrantSearchDOB_select') != null) {
+                                                    document.getElementById("DOB_select").options[getCookie('WarrantSearchDOB_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+                                <tr>                                
+                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("SSN").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td colspan="2">
+                                            <input type="text" id="SSN"  name="SSN" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('WarrantSearchSSN') != null) {
+                                                    document.getElementById("SSN").value = getCookie('WarrantSearchSSN');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td align="left">
+                                            <select name="SSN_select" id="SSN_select" >
+                                                <option value="OR" >OR</option>
+						<option value="AND" >AND</option>
+                                                <option value="NOT" >NOT</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('WarrantSearchSSN_select') != null) {
+                                                    document.getElementById("SSN_select").options[getCookie('WarrantSearchSSN_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+                                <tr>                                
+                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("LicenseNumber").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td colspan="2">
+                                            <input type="text" id="LicenseNumber"  name="LicenseNumber" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('WarrantSearchLicenseNumber') != null) {
+                                                    document.getElementById("LicenseNumber").value = getCookie('WarrantSearchLicenseNumber');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td align="left">
+                                            <select name="LicenseNumber_select" id="LicenseNumber_select" >
+                                                <option value="OR" >OR</option>
+						<option value="AND" >AND</option>
+                                                <option value="NOT" >NOT</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('WarrantSearchLicenseNumber_select') != null) {
+                                                    document.getElementById("LicenseNumber_select").options[getCookie('WarrantSearchLicenseNumber_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+                                <tr>                                
+					    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("AddressLine1").displayName}&nbsp;:&nbsp;</font></b></td>
+						<td colspan="2">
+						    <input type="text" id="AddressLine1"  name="AddressLine1" size="70" maxlength="2048">
+						    <script language="javascript">                                          
+							if (getCookie('WarrantSearchAddressLine1') != null) {
+							    document.getElementById("AddressLine1").value = getCookie('WarrantSearchAddressLine1');
+							}
+						    </script>
+						</td>                                           
+						<td align="left">
+						    <select name="AddressLine1_select" id="AddressLine1_select" >
+							<option value="OR" >OR</option>
+						        <option value="AND" >AND</option>
+                                                        <option value="NOT" >NOT</option>
+						    </select>
+						    <script language="javascript">                                          
+							if (getCookie('WarrantSearchAddressLine1_select') != null) {
+							    document.getElementById("AddressLine1_select").options[getCookie('WarrantSearchAddressLine1_select')].selected = true;
+							}
+						    </script>                                           
+						</td>
+                                </tr>
+                                <tr>                                
+					    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("AddressLine2").displayName}&nbsp;:&nbsp;</font></b></td>
+						<td colspan="2">
+						    <input type="text" id="AddressLine2"  name="AddressLine2" size="70" maxlength="2048">
+						    <script language="javascript">                                          
+							if (getCookie('WarrantSearchAddressLine2') != null) {
+							    document.getElementById("AddressLine2").value = getCookie('WarrantSearchAddressLine2');
+							}
+						    </script>
+						</td>                                           
+						<td align="left">
+						    <select name="AddressLine2_select" id="AddressLine2_select" >
+							<option value="OR" >OR</option>
+						        <option value="AND" >AND</option>
+                                                        <option value="NOT" >NOT</option>
+						    </select>
+						    <script language="javascript">                                          
+							if (getCookie('WarrantSearchAddressLine2_select') != null) {
+							    document.getElementById("AddressLine2_select").options[getCookie('WarrantSearchAddressLine2_select')].selected = true;
+							}
+						    </script>                                           
+					    </td>
+                                </tr>
+                                <tr>                                
+					    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("City").displayName}&nbsp;:&nbsp;</font></b></td>
+						<td colspan="2">
+						    <input type="text" id="City"  name="City" size="70" maxlength="2048">
+						    <script language="javascript">                                          
+							if (getCookie('WarrantSearchCity') != null) {
+							    document.getElementById("City").value = getCookie('WarrantSearchCity');
+							}
+						    </script>
+						</td>                                           
+						<td align="left">
+						    <select name="City_select" id="City_select" >
+							<option value="OR" >OR</option>
+							<option value="AND" >AND</option>
+							<option value="NOT" >NOT</option>
+                                                </select>
+						    <script language="javascript">                                          
+							if (getCookie('WarrantSearchCity_select') != null) {
+							    document.getElementById("City_select").options[getCookie('WarrantSearchCity_select')].selected = true;
+							}
+						    </script>                                           
+					    </td>
+                                </tr>
+                                <tr>                                
+					    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("State").displayName}&nbsp;:&nbsp;</font></b></td>
+						<td colspan="2">
+						    <input type="text" id="State"  name="State" size="70" maxlength="2048">
+						    <script language="javascript">                                          
+							if (getCookie('WarrantSearchState') != null) {
+							    document.getElementById("State").value = getCookie('WarrantSearchState');
+							}
+						    </script>
+						</td>                                           
+						<td align="left">
+						    <select name="State_select" id="State_select" >
+							<option value="OR" >OR</option>
+						        <option value="AND" >AND</option>
+                                                        <option value="NOT" >NOT</option>
+						    </select>
+						    <script language="javascript">                                          
+							if (getCookie('WarrantSearchState_select') != null) {
+							    document.getElementById("State_select").options[getCookie('WarrantSearchState_select')].selected = true;
+							}
+						    </script>                                           
+					    </td>
+                                </tr>
+                                <tr>                                
+					    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("Zip").displayName}&nbsp;:&nbsp;</font></b></td>
+						<td colspan="2">
+						    <input type="text" id="Zip"  name="Zip" size="70" maxlength="2048">
+						    <script language="javascript">                                          
+							if (getCookie('WarrantSearchZip') != null) {
+							    document.getElementById("Zip").value = getCookie('WarrantSearchZip');
+							}
+						    </script>
+						</td>                                           
+						<td align="left">
+						    <select style="display:none" name="Zip_select" id="Zip_select" >
+							<option value="OR" >OR</option>
+						        <option value="AND" >AND</option>
+                                                        <option value="NOT" >NOT</option>
+						    </select>
+						    <script language="javascript">                                          
+							if (getCookie('WarrantSearchZip_select') != null) {
+							    document.getElementById("Zip_select").options[getCookie('WarrantSearchZip_select')].selected = true;
+							}
+						    </script>                                           
+					    </td>
+                                </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td align="right"><button type="button" class="search" onclick="javascript:postAdvancedSearch()">Search</button></td>
+                            <td align="left"><button type="button" class="search" onclick="javascript:postAdvancedPhoneticSearch()">Phonetic Search</button></td>
+                            <td align="left"><a onClick="javascript:toggleDiv('basicSearch');return false;" href="#"><font size="1">Basic Search</font></a><br>
+                            <a onClick="javascript:clearFormElements();return false;" href="#"><font size="1">Clear</font></a></td>
+                            <td>&nbsp;</td>
+                        </tr>
+            </table>
+        
+        </div>
+</form>
+<#include "searchBox_extra.stl">

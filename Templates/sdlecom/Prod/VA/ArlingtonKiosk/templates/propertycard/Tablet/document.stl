@@ -1,0 +1,31 @@
+
+  		  <@display.column media="html" indexColumnName="RPCNum" title="${searchResult.datasetConfiguration.getColumn(\"RPCNum\").displayName}">
+		   	${searchResult.highlight(doc, "RPCNum")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="RPCNum" title="${searchResult.datasetConfiguration.getColumn(\"RPCNum\").displayName}">
+		   	${doc.get("RPCNum")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="Address" title="${searchResult.datasetConfiguration.getColumn(\"Address\").displayName}">
+		   	${searchResult.highlight(doc, "Address")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="Address" title="${searchResult.datasetConfiguration.getColumn(\"Address\").displayName}">
+		   	${doc.get("Address")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="LegalDesc" title="${searchResult.datasetConfiguration.getColumn(\"LegalDesc\").displayName}">
+		   	${searchResult.highlight(doc, "LegalDesc")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="LegalDesc" title="${searchResult.datasetConfiguration.getColumn(\"LegalDesc\").displayName}">
+		   	${doc.get("LegalDesc")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="Status" title="${searchResult.datasetConfiguration.getColumn(\"Status\").displayName}">
+		   	${searchResult.highlight(doc, "Status")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="Status" title="${searchResult.datasetConfiguration.getColumn(\"Status\").displayName}">
+		   	${doc.get("Status")}
+		  </@display.column>
+          
+ 
+          <@display.column  media="html" title="View Image">
+             <div style="text-align:center"><a class="nocolor" href="search.do?indexName=arlimages&lq=${pageStyleUtil.encodeURL("PKKEY:" + doc.get("PKKEY"))}" target="_blank">View Image</a></div>
+          </@display.column>
+

@@ -1,0 +1,76 @@
+<style type="text/css">
+font.label{
+	font-family:verdana,sans-serif;
+	font-size:90%;
+} 
+input.text {
+	background-image:url('images/search-header-input.png');
+	border-width:0;
+	clear:none;
+	display:block;
+	float:left;
+	font-size:103%;
+	height:35px;
+	margin:0;
+	padding:7px 0 0 35px;
+	width:424px;
+}	
+button.search {
+    background:#2191C0 url(styles/images/ui-bg_gloss-wave_50_6eac2c_500x100.png) repeat-x scroll 50% 50%;border:1px solid #4297D7;color:#EAF5F7;
+	padding:9px 9px 9px 9px;
+	width:100px;
+	font-weight:bold;    
+	border-width:0;
+	clear:none;
+	cursor:pointer;
+	display:block;
+	line-height:1.2em;
+}	
+</style>
+<script type="text/javascript">
+<!--
+	
+		function trapKeyBoardEvents(event) {
+			postBasicSearch();
+		}
+	
+	function postBasicSearch() {
+		try {	
+			setCookie('CriminalDetail' + $('#q').name, $('#q').val(), 0);
+			$('#lq').val('');
+			document.search_${searchResult.indexName}.method = "get";
+			$('#searchQuery').val($('#q').val());
+			document.search_${searchResult.indexName}.action = "search.do";
+			document.search_${searchResult.indexName}.searchType.value = "1";
+			document.search_${searchResult.indexName}.submit();
+		} catch (err) {
+			alert(err.message);
+		}
+  	} 
+
+//-->
+</script>
+<form name="search_${searchResult.indexName}" id="search_${searchResult.indexName}">
+	<input type="hidden" name="indexName" value="${searchResult.indexName}">
+	<input type="hidden" name="templateName" value="${searchResult.templateName}">
+	<input type="hidden" name="searchQuery" id="searchQuery">
+	<input type="hidden" name="lq" id="lq">
+	<input type="hidden" name="searchType" id="searchType" value="${Request.searchForm.searchType}">
+	
+			
+			<table  align="center" >
+				<tr >
+						<td align="right">
+							<input type="text" class="text" name="q" id="q" size="41" maxlength="2048" value="${searchResult.userInput?html}">
+						</td>
+						<td align="left">	
+							<button type="button" class="search" onclick="javascript:postBasicSearch()">Search</button>
+						</td>
+				</tr>		
+			</table>
+			
+				
+	
+		
+</form>
+<#include "searchBox_extra.stl">

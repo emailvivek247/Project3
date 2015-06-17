@@ -1,0 +1,101 @@
+<#if searchResult.docs?has_content>
+	<table id="hearings" class="tablesorter">
+		<thead>
+			<tr>
+				<th>${searchResult.datasetConfiguration.getColumn("CourtRoomDescription").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("HearingStartDateTime").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("HearingEndDateTime").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("HearingTypeDescription").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("ScheduledBeforeJudgeName").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("HeardByJudgeName").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("HearingResultTypeDescription").displayName}</th>
+			</tr>
+		</thead>
+		<tbody>
+		<#assign ResultId =0>
+		<#foreach doc in searchResult.docs>
+			<tr>
+				<td>${searchResult.highlight(doc, "CourtRoomDescription")}</td>
+				<td>${searchResult.highlight(doc, "HearingStartDateTime")}</td>
+				<td>${searchResult.highlight(doc, "HearingEndDateTime")}</td>
+				<td>${searchResult.highlight(doc, "HearingTypeDescription")}</td>
+				<td>${searchResult.highlight(doc, "ScheduledBeforeJudgeName")}</td>
+				<td>${searchResult.highlight(doc, "HeardByJudgeName")}</td>
+				<td>${searchResult.highlight(doc, "HearingResultTypeDescription")}</td>
+			</tr>
+		</#foreach>
+		</tbody>
+	</table>
+
+<#elseif searchResult.xstreamdocs?has_content>
+	<table id="hearings" class="tablesorter">
+		<thead>
+			<tr>
+				<th>${searchResult.datasetConfiguration.getColumn("CourtRoomDescription").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("HearingStartDateTime").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("HearingEndDateTime").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("HearingTypeDescription").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("ScheduledBeforeJudgeName").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("HeardByJudgeName").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("HearingResultTypeDescription").displayName}</th>
+			</tr>
+			</thead>
+			<tbody>
+			<#assign ResultId =0>
+			<#foreach doc in searchResult.xstreamdocs>
+			<tr>
+				<td>${searchResult.highlight(doc, "CourtRoomDescription")}</td>
+				<td>${searchResult.highlight(doc, "HearingStartDateTime")}</td>
+				<td>${searchResult.highlight(doc, "HearingEndDateTime")}</td>
+				<td>${searchResult.highlight(doc, "HearingTypeDescription")}</td>
+				<td>${searchResult.highlight(doc, "ScheduledBeforeJudgeName")}</td>
+				<td>${searchResult.highlight(doc, "HeardByJudgeName")}</td>
+				<td>${searchResult.highlight(doc, "HearingResultTypeDescription")}</td>
+			</tr>
+		</#foreach>
+		</tbody>
+	</table>
+<#else>
+	<table id="hearings" class="tablesorter">
+		<thead>
+			<tr>
+				<th>${searchResult.datasetConfiguration.getColumn("CourtRoomDescription").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("HearingStartDateTime").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("HearingEndDateTime").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("HearingTypeDescription").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("ScheduledBeforeJudgeName").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("HeardByJudgeName").displayName}</th>
+				<th>${searchResult.datasetConfiguration.getColumn("HearingResultTypeDescription").displayName}</th>
+			</tr>
+		</thead>
+		<tbody>
+		<#assign ResultId =0>
+		<#foreach doc in searchResult.docs>
+			<tr>
+				<td>/td>
+				<td>/td>
+				<td>/td>
+				<td>/td>
+				<td>/td>
+				<td>/td>
+				<td>/td>
+			</tr>
+		</#foreach>
+		</tbody>
+	</table>
+</#if>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	oTable = $('#hearings').dataTable({
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bSort": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		"aaSorting": []
+	});
+} );
+</script>

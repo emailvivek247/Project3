@@ -1,0 +1,7 @@
+<#include "multiSelect_filterowner_city.stl">
+<#include "multiSelect_owner_zipcode.stl">
+<#include "multiSelect_num_bedrooms.stl">
+<#include "multiSelect_num_full_baths.stl">
+<#include "multiSelect_num_half_baths.stl">
+<#include "multiSelect_num_kitchens.stl">
+<#include "multiSelect_num_fireplaces.stl">

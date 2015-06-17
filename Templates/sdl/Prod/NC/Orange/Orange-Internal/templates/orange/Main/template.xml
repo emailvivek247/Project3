@@ -1,0 +1,5 @@
+<template>
+  <longname>Main</longname>
+  <description>Main search window</description>
+  <defaultLength>25</defaultLength>
+</template>

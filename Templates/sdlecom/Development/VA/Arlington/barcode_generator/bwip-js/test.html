@@ -1,0 +1,1338 @@
+
+
+<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Grantor Tables</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=8" />  
+		<meta name="CODE_LANGUAGE" content="C#" />
+		<meta name="vs_defaultClientScript" content="JavaScript" />
+        <meta http-equiv="cache-control" content="max-age=0" />
+        <meta http-equiv="cache-control" content="no-cache" />
+        <meta http-equiv="expires" content="0" />
+        <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+        <meta http-equiv="pragma" content="no-cache" />
+		<style type="text/css">
+            input.BUTTON { font-weight: bold; font-family: Courier;
+                height: 21px;
+            }
+		</style>
+
+<script language="JavaScript" type="text/javascript">
+    // global flag to avoid duplicate error messages during paste operations
+    var g_avoidDuplicateAlertsFromThisMethod = false;
+    // ***************************************************************************
+    // Browser Test
+    // ***************************************************************************
+    var G_isNetscape = false;
+
+    if (navigator.appName.indexOf("Microsoft") != -1) {
+        G_isNetscape = false;
+    } else if (navigator.appName.indexOf("Netscape") != -1) {
+        G_isNetscape = true;
+    }
+
+
+    function setWidth() {
+        // set the width of the select list
+        // the number of nbsp will change depending on the browser
+        nbr = 85;
+        if (G_isNetscape != null) { // Netscape
+            nbr = 105;
+        }
+        document.write("<option>");
+        for (j = 0; j < nbr; j++) {
+            document.write("&nbsp;");
+        }
+        document.write("</option>");
+    }
+    // *******************************************************
+    // A function insert the DEM field to the document
+    // *******************************************************
+    function insertDEMField() {
+        if (!G_isNetscape) {
+            document.write("<td>####-AA-##-A-##<br/><input type='text' name='DEMNumber' size=15 maxlength=15 onkeypress='return validate(event,\"####-CC-##-C-##\", this);' onpaste='validatePastedValue(\"####-CC-##-C-##\",this, true);' onblur='if(validateValue(\"####-CC-##-C-##\",this))makeUpperCase(this);'></td>");
+        } else {
+            document.write("<input type='hidden' name='DEMNumber'>");
+
+            document.write("<td><Table><tr>");
+            document.write("<td align='center'><FONT size=2>####</FONT></td>");
+            document.write("<td align='center'><FONT size=2>AA</FONT></td>");
+            document.write("<td align='center'><FONT size=2>##</FONT></td>");
+            document.write("<td align='center'><FONT size=2>A</FONT></td>");
+            document.write("<td align='center'><FONT size=2>##</FONT></td>");
+            document.write("</tr><tr>");
+            document.write("<td><input type='text' name='DEMNumber1' size=4 maxlength=4 onkeypress='return validate(event,\"####\",this)' onpaste='validatePastedValue(\"####\",this);' onblur='validateValue(\"####\",this);'></td>");
+            document.write("<td><input type='text' name='DEMNumber2' size=2 maxlength=2 onkeypress='return validate(event,\"CC\",this)' onpaste='validatePastedValue(\"CC\",this, true);' onblur='if(validateValue(\"CC\",this))makeUpperCase(this);'></td>");
+            document.write("<td><input type='text' name='DEMNumber3' size=2 maxlength=2 onkeypress='return validate(event,\"##\",this)' onpaste='validatePastedValue(\"##\",this);' onblur='validateValue(\"##\",this);'></td>");
+            document.write("<td><input type='text' name='DEMNumber4' size=1 maxlength=1 onkeypress='return validate(event,\"C\",this)' onpaste='validatePastedValue(\"C\",this, true);' onblur='if(validateValue(\"C\",this))makeUpperCase(this);'></td>");
+            document.write("<td><input type='text' name='DEMNumber5' size=2 maxlength=2 onkeypress='return validate(event,\"##\",this)' onpaste='validatePastedValue(\"##\",this);' onblur='validateValue(\"##\",this);'></td>");
+            document.write("</tr></table></td>");
+        }
+    }
+
+    // ***************************************************************************
+    // This fuction allows users the ability to add Intruments and Action Codes to the
+    // List box
+    // ***************************************************************************
+    function AddInst() {
+        var str = document.forms[0].InstrumentTypeList.options[document.forms[0].InstrumentTypeList.selectedIndex].text;
+        var cod = document.forms[0].InstrumentTypeList.options[document.forms[0].InstrumentTypeList.selectedIndex].value;
+
+        if (str != "") {
+            var n = document.forms[0].instList.length;
+            var blank = document.forms[0].instList.options[n - 1].text;
+
+            var NotFoundFlag = true;
+            for (var i = 0; i < document.forms[0].instList.length - 1; i++) {
+                if (document.forms[0].instList.options[i].text == str) {
+                    NotFoundFlag = false;
+                }
+            }
+            
+            if (NotFoundFlag) {
+
+                document.forms[0].instList.options[n - 1] = new Option(str, cod);
+                document.forms[0].instList.options[n] = new Option(blank, blank);
+                document.forms[0].instList.selectedIndex = n - 1;
+
+                var temp = document.forms[0].FullInstList.value;
+                document.forms[0].FullInstList.value = temp + "|" + str;
+
+                document.forms[0].FullCodeList.value = document.forms[0].FullCodeList.value + "|" + cod;
+
+                document.forms[0].InstrumentTypeList.selectedIndex = 0;
+            } else {
+                alert("'" + str + "' already exists in the list");
+            }
+        }
+    }
+    // ***************************************************************************
+    // This fuction allows users the ability to Remove Intruments and Action Codes to the
+    // List box
+    // ***************************************************************************
+    function RemoveInst() {
+        var nbr = 0;
+        var NotSelectedFlag = true;
+        var SelectedRecord = "";
+        var IndexCount = 0;
+        // dont remove the last name
+        for (var i = 0; i < document.forms[0].instList.length - 1; i++) {
+            if (document.forms[0].instList.options[i].selected) {
+                SelectedRecord = document.forms[0].instList.options[i].text;
+                document.forms[0].instList.options[i] = null;
+                NotSelectedFlag = false;
+                nbr++;
+            }
+            IndexCount = IndexCount + 1
+        }
+
+        // Here is where we check to see what has happened based on the users
+        // Remove request.
+
+        if (IndexCount == 0) {
+            alert("All Records have been removed");
+        } else if (NotSelectedFlag) {
+            alert("Please select an 'Instrument' to be removed");
+        } else {
+            alert("Record '" + SelectedRecord + "' has been removed");
+        }
+
+        var str = "";
+        var code = "";
+        for (var i = 0; i < document.forms[0].instList.length - 1; i++) {
+            str += "|" + document.forms[0].instList.options[i].text;
+            code += "|" + document.forms[0].instList.options[i].value;
+        }
+        document.forms[0].FullInstList.value = str;
+        document.forms[0].FullCodeList.value = code;
+    }
+    // ***************************************************************************
+    // This fuction allows users the ability to Change Intruments
+    // ***************************************************************************
+    function ChangeInst() {
+        var nbr = 0;
+        var FoundFlag = false;
+        var IndexCount = 0;
+        for (var i = 0; i < document.forms[0].instList.length - 1; i++) {
+            if (document.forms[0].instList.options[i].selected) {
+                FoundFlag = true;
+                nbr++;
+            }
+            IndexCount = IndexCount + 1;
+        }
+
+        if (FoundFlag) {
+
+            var pos = document.forms[0].instList.selectedIndex;
+            if (pos == document.forms[0].instList.length - 1) return;
+            var str = document.forms[0].instList.options[pos].text;
+            if (str == "") return;
+
+            var a = str.split("\t");
+            for (var i = 0; i < document.forms[0].InstrumentTypeList.length; i++) {
+                if (a[0] == document.forms[0].InstrumentTypeList.options[i].text) {
+                    document.forms[0].InstrumentTypeList.selectedIndex = i;
+                    break;
+                }
+            }
+
+            document.forms[0].instList.options[pos] = null;
+            document.forms[0].InstrumentTypeList.focus();
+        } else if (IndexCount > 0) {
+            alert("Please select an 'Instrument' to change");
+        } else {
+            alert("No Instruments in the List to change");
+        }
+        var str = "";
+        var code = "";
+        for (var i = 0; i < document.forms[0].instList.length - 1; i++) {
+            str += "|" + document.forms[0].instList.options[i].text;
+            code += "|" + document.forms[0].instList.options[i].value;
+        }
+        document.forms[0].FullInstList.value = str;
+        document.forms[0].FullCodeList.value = code;
+    }
+    // ***************************************************************************
+    // clears names and instrument types
+    // ***************************************************************************
+    function finishClear() {
+        for (var i = document.forms[0].instList.length - 2; i > -1; i--) {
+            document.forms[0].instList.options[i] = null;
+        }
+        for (var i = document.forms[0].NameList.length - 2; i > -1; i--) {
+            document.forms[0].NameList.options[i] = null;
+        }
+        for (var i = document.forms[0].TMNumberList.length - 2; i > -1; i--) {
+            document.forms[0].TMNumberList.options[i] = null;
+        }
+        document.forms[0].TMType[0].checked = true;
+        onTMTypeChange();
+    }
+	function setDefaultValue(txtObj){
+		if (trim(txtObj.value) == "")
+		txtObj.value = "0";
+	}
+	function makeUpperCase(obj) {
+        obj.value = obj.value.toUpperCase();
+    }
+            
+
+    // ***************************************************************************
+    // Validations
+    // ***************************************************************************
+
+    // ***************************************************************************
+    // OnKey Press Validations:
+    // Checks to make sure no special characters are typed - added OCM 12/19/2000
+    // ***************************************************************************
+    function checkSpecChar(e, obj) {
+        var charCode = (navigator.appName == "Netscape") ? e.which : e.keyCode;
+        status = charCode;
+        // Only allow upper case
+        if (isLowerAlpha(charCode)) {
+            //setCharCode (e, charCode-32);
+            obj.value += String.fromCharCode(charCode - 32).toUpperCase();
+            return false;
+        }
+        // Only allow special characters comma, ampersand, and at symbol. All others are ignored
+        if ((charCode > 32 && charCode < 48) || (charCode > 57 && charCode < 64) || (charCode > 90 && charCode < 97) || (charCode > 122)) {
+            if (charCode == 38 || charCode == 44) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        return true;
+    }
+    // ***************************************************************************
+    // Onblur Validations:
+    // ***************************************************************************
+    function hasNoSpecialChars(obj) {
+        for (k = 0; k < obj.value.length; k++) {
+            var charCode = obj.value.charCodeAt(k);
+            if ((charCode > 32 && charCode < 48) || (charCode > 57 && charCode < 64) || (charCode > 90 && charCode < 97) || (charCode > 122)) {
+                if (charCode == 38 || charCode == 44) {
+                    continue;
+                }
+                else {
+                    obj.focus();
+                    obj.select();
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    function validateValue(fmt, obj) { 
+        // Most elements ont his page use both onblur and onpaste which inturn call this method
+        // Furhter since this method shows alerts, it results in a onblur event on this obj and will cause this same method to be called
+        // resulting in duplicate alerts (annoying to user) so:
+        if(g_avoidDuplicateAlertsFromThisMethod)
+        {
+            g_avoidDuplicateAlertsFromThisMethod = false;
+            return true;       
+        }
+	    var current = obj.value
+	    var len     = current.length
+
+        for(index=0; index<fmt.length; index++){
+            if(current.length <= index)return true;
+                        
+		    var pchar   = fmt.charAt (index);
+            var charCode= current.charCodeAt(index);
+		    if (charCode == fmt.charCodeAt (index) && formatStr.indexOf (pchar,0) < 0) return true;
+		    if (pchar == '~'){
+                return false;
+            }
+
+		    if (!G_isNetscape) { // doesn't work with netscape
+			    while (index < fmt.length && formatStr.indexOf (pchar,0) < 0) {
+				    obj.value += pchar
+				    pchar = fmt.charAt (++index);
+			    }
+			    current = obj.value
+		    }
+            
+		    // greater than control chars
+		    if (charCode > 31 && index < fmt.length) {
+			    if (pchar == 'n' || pchar == 'N') {
+				    if (!isNumeric (charCode)) {
+					    g_avoidDuplicateAlertsFromThisMethod = true;
+                        alert("Only a numeric character may be entered here.");
+                        obj.focus();
+                        obj.select();
+                        return false;
+				    }
+			    } else if (pchar == '9') {
+			    if ((charCode != 32) && (!isDigit (charCode))) {
+                        g_avoidDuplicateAlertsFromThisMethod = true;
+					    alert("Only a number or a space may be entered here.");
+                        obj.focus();
+                        obj.select();
+                        return false;
+				    }
+			    } else if (pchar == '#') {
+			    if (!isDigit (charCode)) {
+                        g_avoidDuplicateAlertsFromThisMethod = true;
+					    alert("Only a number may be entered here.");
+                        obj.focus();
+                        obj.select();
+                        return false;
+				    }
+			    } else if (pchar == 'A' || pchar == 'a') {
+				    if (!isAlphaNumeric (charCode)) {
+					    g_avoidDuplicateAlertsFromThisMethod = true;
+                        alert("Only alphanumeric may be entered here.");
+                        obj.focus();
+                        obj.select();
+                        return false;
+				    }
+			    } else if (pchar == 'C' || pchar == 'c') {
+				    if (!isAlpha (charCode)) {
+					    g_avoidDuplicateAlertsFromThisMethod = true;
+                        alert("Only characters may be entered here.");
+                        obj.focus();
+                        obj.select();
+                        return false;
+				    }
+			    }else if(pchar == '!'){
+                    continue;
+                }else if (charCode != pchar.charCodeAt(0)) {
+				    g_avoidDuplicateAlertsFromThisMethod = true;
+                    alert("Only a "+pchar+" may be entered here.");
+                    obj.focus();
+                    obj.select();
+                    return false;
+			    }
+		    }
+        }
+	    return true;
+    }
+	// ***************************************************************************
+	// Adds a name and associated flags to the NameList
+	// ***************************************************************************
+	function AddName() {
+	    var str = document.forms[0].Names.value;
+
+	    if (str != "") {
+   		    while (str.match("  ") ) {
+	 		    str = str.replace("  ", " ");
+		    }
+		    str += "\t"+document.forms[0].Name_Type.options[document.forms[0].Name_Type.selectedIndex].text;
+		    if (document.forms[0].Trustee.checked) {
+		    str += "\t"+"Trustee";
+		    } else {
+			    str += "\t"+"Non-Trustee";
+		    }
+		    if (document.forms[0].Firm.checked) {
+			    str += "\t"+"Firm";
+		    } else {
+			    str += "\t"+"Individual";
+		    }
+
+		    //alert(str);
+		    var n = document.forms[0].NameList.length;
+		    var blank = document.forms[0].NameList.options[n-1].text;
+
+		    var NotFoundFlag = true;
+		    var nbr = 0;
+		    for (var i=0; i<document.forms[0].NameList.length-1; i++) {
+			    if (document.forms[0].NameList.options[i].value == str) {
+			    NotFoundFlag = false;
+			    var FoundText = document.forms[0].NameList.options[i].value;
+			    nbr++;
+			    }
+		    }
+
+		    if (NotFoundFlag)
+		    {
+			    document.forms[0].NameList.options[n-1] = new Option(str, str);
+			    document.forms[0].NameList.options[n]   = new Option(blank, blank);
+			    document.forms[0].NameList.selectedIndex = n-1;
+
+	    //         document.forms[0].Name_Type.selectedIndex=0;
+		    } else {
+		    alert("'"+FoundText+"' already exists in the list");
+		    }
+	    } else {
+		    alert("Before you can use the [Add Name] button you must enter a name - Please enter a Name");
+	    }
+	    document.forms[0].Names.focus();
+	    document.forms[0].Names.select();
+	}
+
+	// ***************************************************************************
+	// Removes a name and associated flags to the NameList
+	// ***************************************************************************
+	function RemoveName () {
+		var IndexCount = document.forms[0].NameList.length-1;
+		var pos = document.forms[0].NameList.selectedIndex;
+
+		if (IndexCount == 0) {
+			alert ("All Records have been removed");
+		} else if (pos >= 0 && pos < IndexCount){
+			var txt = document.forms[0].NameList.options[pos].value;
+			document.forms[0].NameList.options[pos] = null;
+			alert ("Record '"+txt+"' has been removed");
+		} else {
+			alert ("Please select a 'Name' to be removed");
+		}
+	}
+	// ***************************************************************************
+	// Allows a name and associated flags to be changed
+	// ***************************************************************************
+	function ChangeName () {
+		var IndexCount = document.forms[0].NameList.length-1;
+
+		if (document.forms[0].NameList.selectedIndex >= 0){
+
+			var pos = document.forms[0].NameList.selectedIndex;
+			if (pos == IndexCount) return;
+			var str = document.forms[0].NameList.options[pos].text;
+			if (str=="") return;
+
+			var a = str.split("\t");
+
+			document.forms[0].Names.value = a[0];
+
+			for (var i=0; i<document.forms[0].Name_Type.length; i++) {
+				if (a[1] == document.forms[0].Name_Type.options[i].text) {
+					document.forms[0].Name_Type.selectedIndex = i;
+					break;
+				}
+			}
+			if (a[2] == "Trustee"){
+				document.forms[0].Trustee.checked = true;
+			} else {
+				document.forms[0].Trustee.checked = false;
+			}
+			if (a[3] == "Firm"){
+				document.forms[0].Firm.checked = true;
+			} else {
+				document.forms[0].Firm.checked = false;
+			}
+
+			document.forms[0].NameList.options[pos]=null;
+			document.forms[0].Names.focus();
+		} else if (IndexCount > 0) {
+				alert("Please select a 'Name' to change");
+		} else {
+				alert("No Names in the List to change");
+		}
+	}
+
+	function addChar(val,len,chr){
+		while (val.length < len){
+			val = chr+val;
+		}
+		return val;
+	}
+
+	function resetTaxMap(){
+		if (document.forms[0].TMType[1].checked)
+		{
+			document.forms[0].TMNumB1.value = "";
+			document.forms[0].TMNumB2.value = "";
+			document.forms[0].TMNumB3.value = "";
+			document.forms[0].TMNumB4.value = "";
+			document.forms[0].TMNumB5.value = "";
+			document.forms[0].TMNumB6.value = "";
+			document.forms[0].TMNumB1.focus();
+		}
+		else
+		{
+			document.forms[0].TMNumA1.value = "";
+			document.forms[0].TMNumA2.value = "";
+			document.forms[0].TMNumA4.value = "";
+			document.forms[0].TMNumA5.value = "";
+			document.forms[0].TMNumA6.value = "";
+			document.forms[0].TMNumA7.value = "";
+			document.forms[0].TMNumA1.focus();
+		}
+	}
+
+	function setTaxMap(val){
+		if (document.forms[0].TMType[1].checked){
+			document.forms[0].TMNumB1.value = val.substring(0,2);
+			document.forms[0].TMNumB2.value = val.substring(3,4);
+			document.forms[0].TMNumB3.value = val.substring(5,7);
+			document.forms[0].TMNumB4.value = val.substring(8,10);
+            document.forms[0].TMNumB5.value = val.substring(11,14);
+            document.forms[0].TMNumB6.value = val.substring(14,16);
+			document.forms[0].TMNumB1.focus();
+		}
+		else{
+			document.forms[0].TMNumA1.value = val.substring(0,3);
+			document.forms[0].TMNumA2.value = val.substring(4,5);
+		    document.forms[0].TMNumA4.value = val.substring(8,10);
+			document.forms[0].TMNumA5.value = val.substring(11,13);
+			document.forms[0].TMNumA6.value = val.substring(14,18);
+			document.forms[0].TMNumA7.value = val.substring(19,21);
+			document.forms[0].TMNumA1.focus();
+		}
+	}
+	// ***************************************************************************
+	// Adds a tax map number and associated flag to the TaxMapNumberList
+	// ***************************************************************************
+	function AddTaxMap(){
+		var str = "";
+		if (document.forms[0].TMType[0].checked){
+			if (document.forms[0].TMNumA1.value.length != 3 || document.forms[0].TMNumA2.value.length != 1 
+				|| document.forms[0].TMNumA4.value.length != 2 || document.forms[0].TMNumA6.value.length != 4){
+                alert("Please enter characters 1-3, 4, 6-7 and 10-13, these are mandatory.");
+                if (document.forms[0].TMNumA1.value.length != 3)
+                    document.forms[0].TMNumA1.focus();
+                else if (document.forms[0].TMNumA2.value.length != 1)
+                    document.forms[0].TMNumA2.focus();
+                else if (document.forms[0].TMNumA4.value.length != 2)
+                    document.forms[0].TMNumA4.focus();
+                else if (document.forms[0].TMNumA6.value.length != 4)
+                    document.forms[0].TMNumA6.focus();
+  			        return;
+  		        }
+                document.forms[0].TMNumA5.value = addChar(document.forms[0].TMNumA5.value,2," ");
+                document.forms[0].TMNumA7.value = addChar(document.forms[0].TMNumA7.value,2," ");
+		        str = document.forms[0].TMNumA1.value+"-"+document.forms[0].TMNumA2.value+"-"+/*document.TMNumA3.value*/" "+"-"
+			        +document.forms[0].TMNumA4.value+"-"+document.forms[0].TMNumA5.value+"-"+document.forms[0].TMNumA6.value+"-"+document.forms[0].TMNumA7.value;
+		}
+		if (document.forms[0].TMType[1].checked){
+            if (document.forms[0].TMNumB1.value.length != 2 || document.forms[0].TMNumB2.value.length != 1 
+                || document.forms[0].TMNumB3.value.length != 2 || document.forms[0].TMNumB5.value.length != 3){
+            alert("Please enter characters 1-2, 3, 4-5 and 8-10, these are mandatory.");
+            if (document.forms[0].TMNumB1.value.length != 2)
+                document.forms[0].TMNumB1.focus();
+            else if (document.forms[0].TMNumB2.value.length != 1)
+                document.forms[0].TMNumB2.focus();
+            else if (document.forms[0].TMNumB3.value.length != 2)
+                document.forms[0].TMNumB3.focus();
+            else if (document.forms[0].TMNumB5.value.length != 3)
+                document.forms[0].TMNumB5.focus();
+            return;
+            }
+            if (document.forms[0].TMNumB4.value.length == 1)
+            if (isNaN(document.forms[0].TMNumB4.value))
+                document.forms[0].TMNumB4.value = addChar(document.forms[0].TMNumB4.value,2," ");
+            else 
+                document.forms[0].TMNumB4.value = addChar(document.forms[0].TMNumB4.value,2,"0");
+            else
+            document.forms[0].TMNumB4.value = addChar(document.forms[0].TMNumB4.value,2," ");
+      
+            document.forms[0].TMNumB6.value = addChar(document.forms[0].TMNumB6.value,2," ");
+            str = document.forms[0].TMNumB1.value+" "+document.forms[0].TMNumB2.value+" "+document.forms[0].TMNumB3.value+" "
+                +document.forms[0].TMNumB4.value+" "+document.forms[0].TMNumB5.value+document.forms[0].TMNumB6.value;
+  	    }
+			
+		if (str != "") 
+		{
+			str += "\t"+(document.forms[0].TMType[0].checked ? "County":"City");
+			var n = document.forms[0].TMNumberList.length;
+			var blank = document.forms[0].TMNumberList.options[n-1].text;
+			var NotFoundFlag = true;
+			var nbr = 0;
+			for (var i=0; i<document.forms[0].TMNumberList.length-1; i++){
+				if (document.forms[0].TMNumberList.options[i].value == str) 
+				{
+				NotFoundFlag = false;
+				var FoundText = document.forms[0].TMNumberList.options[i].value;
+				nbr++;
+				}
+			}
+
+			if (NotFoundFlag){
+				document.forms[0].TMNumberList.options[n-1] = new Option(str, str);
+				document.forms[0].TMNumberList.options[n]   = new Option(blank, blank);
+				document.forms[0].TMNumberList.selectedIndex = n-1;
+			} 
+			else{
+			    alert("'"+FoundText.replace("\t"," ")+"' already exists in the list");
+			    return;
+			}
+		} 
+		else{
+			alert("Before you can use the [Add Tax Map Number] button you must enter a tax map number - Please enter a number");
+			return;
+		}
+		resetTaxMap();
+	}
+	// ***************************************************************************
+	// Removes a tax map number and associated flag to the TMNumberList
+	// ***************************************************************************
+
+	function RemoveTaxMap() 
+	{
+	    var IndexCount = document.forms[0].TMNumberList.length-1;
+	    var pos = document.forms[0].TMNumberList.selectedIndex;
+
+	    if (IndexCount == 0){
+		    alert ("All Records have been removed");
+	    } 
+	    else if (pos >= 0 && pos < IndexCount){
+		    var txt = document.forms[0].TMNumberList.options[pos].value;
+		    document.forms[0].TMNumberList.options[pos] = null;
+		    alert ("Record '"+txt.replace("\t"," ")+"' has been removed");
+	    } 
+	    else{
+		    alert ("Please select a 'Tax Map Number' to be removed");
+	    }
+	}
+	// ***************************************************************************
+	// Allows a tax map and associated flag to be changed
+	// ***************************************************************************
+    function ChangeTaxMap(){
+		var IndexCount = document.forms[0].TMNumberList.length-1;
+
+		if (document.forms[0].TMNumberList.selectedIndex >= 0){
+			var pos = document.forms[0].TMNumberList.selectedIndex;
+			if (pos == IndexCount) return;
+			var str = document.forms[0].TMNumberList.options[pos].text;
+			if (str=="") return;
+
+			var a = str.split("\t");
+
+			if (a[1] == "County")
+				document.forms[0].TMType[0].checked = true;
+			else
+				document.forms[0].TMType[1].checked = true;
+		        
+			onTMTypeChange();
+
+			setTaxMap(a[0]);
+
+			document.forms[0].TMNumberList.options[pos]=null;
+			// document.forms[0].TMNumber.focus();
+		} else if (IndexCount > 0) {
+				alert("Please select a 'Tax Map Number' to change");
+		} else {
+				alert("No Names in the List to change");
+		}
+	}
+	// *******************************************************
+	// Change form display based on city/county flag
+	// *******************************************************
+	function onTMTypeChange(){
+		var TMType = (document.forms[0].TMType[0].checked ? "County":"City");
+			
+		if (TMType == "County"){
+			TaxMapCounty.style.display = "block";
+			TaxMapCity.style.display = "none";
+		}
+		else{
+			TaxMapCounty.style.display = "none";
+			TaxMapCity.style.display = "block";
+		}
+		//  document.forms[0].TMNumber.value = "";
+		resetTaxMap();
+	}
+
+	//+
+	// browser dependent code follows
+	//-
+
+	// *******************************************************
+	// Update the Tax Map fields when the City/County radio button changes
+	// *******************************************************
+
+
+	// *******************************************************
+	// Netscape function to skip a disabled data field
+	// *******************************************************
+	function skip () { this.blur(); }
+
+	// *******************************************************
+	// A function disable a data field
+	// *******************************************************
+	function disableTextField (field) {
+		if (!G_isNetscape) {  //ie
+			//field.disabled = true;
+            field.readOnly = true;
+		} else {                                       //nn
+			field.oldOnFocus = field.onfocus;
+			field.onfocus = skip;
+		}
+	}
+
+	// *******************************************************
+	// A function enable a data field
+	// *******************************************************
+	function enableTextField (field) {
+		if (!G_isNetscape) {
+			//field.disabled = false;
+            field.readOnly = false;
+		} else {
+			field.onfocus = field.oldOnFocus;
+		}
+	}
+
+
+	// *******************************************************
+	// A function insert the TaxMap field to the document
+	// *******************************************************
+
+
+
+	// *******************************************************
+	// A function to validate Netscape fields
+	// kluge because NS has problems with field events in a table (???)
+	// *******************************************************
+	function validateNS (evt) {
+	    var obj = evt.target;
+
+	    if (obj == document.forms[0].Consideration) {
+		    return validate (evt, "NNNNNNNNNNNN",obj);
+	    } else if (obj == document.forms[0].ConsiderationPercentage) {
+		    return validate (evt, "NNNNN",obj);
+	    } else if (obj == document.forms[0].AmountNotTaxed) {
+		    return validate (evt, "NNNNNNNNNNNN",obj);
+	    } else if (obj == document.forms[0].OriginalBook) {
+		    return validate (evt, "#####",obj);
+	    } else if (obj == document.forms[0].OriginalPage) {
+		    return validate (evt, "####",obj);
+	    } else if (obj == document.forms[0].TitleCase) {
+		    return validate (evt, "!!!!!!!!!!",obj);
+	    } else if (obj == document.forms[0].DEMNumber1) {
+		    return validate (evt, "####",obj);
+	    } else if (obj == document.forms[0].DEMNumber2) {
+		    return validate (evt, "CC",obj);
+	    } else if (obj == document.forms[0].DEMNumber3) {
+		    return validate (evt, "##",obj);
+	    } else if (obj == document.forms[0].DEMNumber4) {
+		    return validate (evt, "C",obj);
+	    } else if (obj == document.forms[0].DEMNumber5) {
+		    return validate (evt, "##",obj);
+	    }
+	}
+	// *******************************************************
+	// A function to uppercase Netscape fields
+	// We can't change the case of the field as the data is enter
+	// so we need to wait until we get the change event.
+	// *******************************************************
+    function upperCaseNS (evt) {
+		var obj = evt.target;
+		obj.value = obj.value.toUpperCase ();
+		return true;
+	}
+	// *******************************************************
+	// A function to validate the TaxMap field
+	// The format is dependent upon the City/County radio buttons
+	// *******************************************************
+	function validateTaxMap (e, obj) {
+		if (document.forms[0].TMType[0].checked){
+			return validate(e, "###-#-A-##-AA-####-AA~", obj);
+		} 
+		else{
+			return validate(e, "##-#-##-AA-###-AA~", obj);
+		}
+	}
+	// *******************************************************
+	// A function to SkipDeactivatedFields
+	// This fuction was created because Netscape does not currently support
+	// the DEACTIVATE function Like IE does.
+	// *******************************************************
+
+	// *******************************************************
+	// A function to return the character code of the key entered
+	// *******************************************************
+    function getCharCode (e) {
+		return (G_isNetscape) ? e.which : e.keyCode;
+	}
+
+	// *******************************************************
+	// A function to set the character code of the event
+	// *******************************************************
+	function setCharCode (e, charCode) {
+		if (G_isNetscape) {
+			e.which = charCode;
+		} else {
+			e.keyCode = charCode;
+		}
+	}
+	// *******************************************************
+	// A function to right align a string in a text field
+	// *******************************************************
+	function rightStringAlign (field, size, pad) {
+	    size     = field.size ? field.size : size ? size : 20;
+	    padChar  = pad ? pad : ' ';
+	    var v = field.value;
+	    while (v.length < size) {
+		    v = padChar + v;
+	    }
+	    field.value = v;
+	}
+
+	function isDigit (kode) {
+	    return ((kode >= 48) && (kode <= 57));
+	}
+
+	//digits plus '.', ",", "-" and "+"
+
+	function isNumeric (kode) {
+	    return ((kode >= 43 && kode <= 46) || isDigit (kode));
+	}
+
+	function isUpperAlpha (kode) {
+	    return (kode >= 65  && kode <= 90)
+	}
+
+	function isLowerAlpha (kode) {
+	    return (kode >= 97 && kode <= 122);
+	}
+
+	function isAlpha (kode) {
+	    return ((kode == 32) || isUpperAlpha (kode) || isLowerAlpha (kode));
+	}
+
+	function isAlphaNumeric (kode) {
+	    return isAlpha (kode) || isDigit (kode);
+	}
+
+	function checkBounds (obj,lower, upper) {
+		var val = obj.value;
+
+		while (val.indexOf(',', 0) >= 0) {
+			val = val.replace(',', '');
+		}
+		val = 1*val;
+		if (val < lower || val > upper) {
+			obj.value = "";
+			alert ("Error "+obj.name+" must be between "+lower+" and "+upper);
+		}
+	}
+	// valid format characters are
+	// ! - uppercase (any ascii forced to uppercase)
+	// a - alpha numeric (a-z + 0-9)
+	// A - alpha numeric (uppercase alpha numeric)
+	// N - numeric (number or one of "+-.,"
+	// # - number only (0-9)
+	// c - alpha character (a-z)
+	// C - uppercase alpha character
+	// * - any number of characters
+	// 9 - any number or a space
+
+	var formatStr = "9#!AaNCc";
+
+    // only allows appropriate characters to be entered
+	function validate (e, fmt, obj) {
+	    var charCode= getCharCode (e);
+	    var current = obj.value
+	    var len     = current.length
+	    var pchar   = fmt.charAt (len);
+
+	    if (charCode == fmt.charCodeAt (len) && formatStr.indexOf (pchar,0) < 0) return true;
+	    if (pchar == '~') return false;
+
+	    if (!G_isNetscape) { // doesn't work with netscape
+		    while (len < fmt.length && formatStr.indexOf (pchar,0) < 0) {
+			    obj.value += pchar
+			    pchar = fmt.charAt (++len);
+		    }
+		    current = obj.value
+	    }
+	    // greater than control chars
+	    if (charCode > 31 && len < fmt.length) {
+		    if (pchar == 'n' || pchar == 'N') {
+			    if (!isNumeric (charCode)) {
+				    alert("Only a numeric character may be entered here.");
+				    return false;
+			    }
+		    } else if (pchar == '9') {
+		    if ((charCode != 32) && (!isDigit (charCode))) {
+				    alert("Only a number or a space may be entered here.");
+				    return false;
+			    }
+		    } else if (pchar == '#') {
+		    if (!isDigit (charCode)) {
+				    alert("Only a number may be entered here.");
+				    return false;
+			    }
+		    } else if (pchar == '!') {
+			    if (isLowerAlpha (charCode)) {
+				    //setCharCode (e, charCode-32);
+                    obj.value += String.fromCharCode(charCode-32).toUpperCase();
+                    return false;
+			    }
+		    } else if (pchar == 'A' || pchar == 'a') {
+			    if (!isAlphaNumeric (charCode)) {
+				    alert("Only alphanumeric may be entered here.");
+				    return false;
+			    } else if (pchar == 'A' && isLowerAlpha (charCode)) {
+				    //setCharCode (e, charCode-32);
+                    obj.value += String.fromCharCode(charCode-32).toUpperCase();
+                    return false;
+			    }
+		    } else if (pchar == 'C' || pchar == 'c') {
+			    if (!isAlpha (charCode)) {
+				    alert("Only characters may be entered here.");
+				    return false;
+			    } else if (pchar == 'C' && isLowerAlpha (charCode)) {
+				    //setCharCode (e, charCode-32);
+                    obj.value += String.fromCharCode(charCode-32).toUpperCase();
+                    return false;
+			    }
+		    } else if (charCode != pchar.charCodeAt(0)) {
+			    alert("Only a "+pchar+" may be entered here.");
+			    return false;
+		    }
+	    }
+	    return true;
+	}
+
+	function submitPrep ()
+	{
+		document.forms[0].GrantorNameList.value = "";
+		document.forms[0].GranteeNameList.value = "";
+		document.forms[0].TaxMapNumber.value = "";
+		var temp;
+		for (var i=0; i<document.forms[0].NameList.length-1; i++) {
+			temp = document.forms[0].NameList.options[i].value;
+			var arr = temp.split("\t");
+			if (arr[0] != "") {
+				temp = arr[0];
+
+				if (arr[3] == "Firm")    temp += "_F";
+				if (arr[3] == "Individual")    temp += "_I";
+
+				if (arr[2] == "Trustee") temp += "_T";
+				if (arr[2] == "Non-Trustee") temp += "_N";
+
+				if (arr[1]=="Grantor") {
+					document.forms[0].GrantorNameList.value += temp + "|";
+				} else if (arr[1] = "Grantee") {
+					document.forms[0].GranteeNameList.value += temp + "|";
+				}
+			}
+		}
+		temp = "";
+		for (var i=0; i<document.forms[0].TMNumberList.length-1; i++){
+			if (temp.length > 0)
+			temp += "|";
+			temp += document.forms[0].TMNumberList.options[i].value.replace("\t",",");
+		}
+		document.forms[0].TaxMapNumber.value = temp;
+
+		var RangeCount = 0;
+		var str = document.forms[0].PageRanges.value;
+		if (str.length > 0) {
+		    var arr = str.split(',');
+			for (var j=0; j<arr.length; j++) {
+				var a2 = arr[j].split('-');
+				if (a2.length > 1) {
+					RangeCount = RangeCount + a2[1]*1 - a2[0]*1 + 1;
+				} else {
+					RangeCount++;
+				}
+			}
+		}
+		document.forms[0].RangeCount.value = RangeCount;
+		if (document.forms[0].Certified.checked) {
+			document.forms[0].CertifiedFlag.value = 1;
+		} else {
+			document.forms[0].CertifiedFlag.value = 0;
+		}
+		if (G_isNetscape) {
+			var form = document.forms[0];
+			if (form.DEMNumber1.value != "") {
+				form.DEMNumber.value = form.DEMNumber1.value+"-"+
+										form.DEMNumber2.value+"-"+
+										form.DEMNumber3.value+"-"+
+										form.DEMNumber4.value+"-"+
+										form.DEMNumber5.value;
+			} else {
+				form.DEMNumber.value = "";
+			}
+
+		}
+	}
+
+	function createBarcode () {
+        var thisForm = document.getElementById("COVERSHEET_FORM");
+        thisForm.FeeFlag.value="0";
+        if (thisForm.FullInstList.value == "") {
+	        alert ("At least one instrument type must be entered.");
+	        thisForm.instList.focus();
+	        return;
+        }
+        for (var i=0; i<thisForm.instList.length-1; i++) {
+            if ((thisForm.instList.options[i].value == "RFT0" || thisForm.instList.options[i].value == "RFT1") 
+                && thisForm.instList.length != 2){
+            alert ("You can not combine " + thisForm.instList.options[i].text + " with any other document types.");
+            return;
+            }
+            if (thisForm.instList.options[i].value == "RFT0" && thisForm.TaxExemption.value == "803"
+                && (trim(thisForm.Consideration.value) == "" || trim(thisForm.AmountNotTaxed.value) == "")){
+            alert ("Consideration and amount not taxed are both required for "+thisForm.instList.options[i].text);
+            return;
+            }
+        }
+
+        if (trim(thisForm.OriginalBook.value) != "" && isNaN(thisForm.OriginalBook.value)){
+			    alert ("Please enter a valid original book number.");
+			    thisForm.OriginalBook.focus();
+			    return;
+        }
+        if (trim(thisForm.OriginalPage.value) != "" && isNaN(thisForm.OriginalPage.value)){
+			    alert ("Please enter a valid original page number.");
+			    thisForm.OriginalPage.focus();
+			    return;
+        }
+        if (trim(thisForm.Consideration.value) != "" && isNaN(thisForm.Consideration.value)){
+			    alert ("Please enter a valid consideration.");
+			    thisForm.Consideration.focus();
+			    return;
+        }
+        if (trim(thisForm.ConsiderationPercentage.value) != "" && isNaN(thisForm.ConsiderationPercentage.value)){
+			    alert ("Please enter a valid consideration %.");
+			    thisForm.ConsiderationPercentage.focus();
+			    return;
+        }
+        if (trim(thisForm.AmountNotTaxed.value) != "" && isNaN(thisForm.AmountNotTaxed.value)){
+			    alert ("Please enter a valid amount not taxed.");
+			    thisForm.AmountNotTaxed.focus();
+			    return;
+        }
+		if (updateRange(1)){
+			<!--- alert("range OK"); --->
+		} else {
+		  return;
+		}
+
+		if (thisForm.Certified.checked) {
+			enableTextField (thisForm.PageRanges);
+		}
+		submitPrep ();
+        if (thisForm.GrantorNameList.value == ""){
+          thisForm.GrantorNameList.value="NONE_F_N|";
+        }
+        if (thisForm.GranteeNameList.value == ""){
+          thisForm.GranteeNameList.value="NONE_F_N|";
+        }
+		if (thisForm.Certified.checked) {
+			disableTextField (thisForm.PageRanges);
+		}
+        thisForm.RequestType.value="Bars"
+		thisForm.submit();
+	}
+
+	function calculateFee () {
+        var thisForm = document.getElementById("COVERSHEET_FORM");
+        thisForm.FeeFlag.value="1";
+		if (thisForm.instList.length == 0) {
+			alert ("At least one instrument type must be entered");
+			thisForm.instList.focus();
+			return;
+		}
+        if (trim(thisForm.Pages.value) != "" && isNaN(thisForm.Pages.value)){
+			    alert ("Please enter a valid number of pages.");
+			    thisForm.Pages.focus();
+			    return;
+        }
+        if (trim(thisForm.Plats.value) != "" && isNaN(thisForm.Plats.value)){
+			    alert ("Please enter a valid number of oversized plats.");
+			    thisForm.Plats.focus();
+			    return;
+        }
+        if (trim(thisForm.Covers.value) != "" && isNaN(thisForm.Covers.value)){
+			    alert ("Please enter a valid number of coversheet pages.");
+			    thisForm.Covers.focus();
+			    return;
+        }
+        if (trim(thisForm.Copies.value) != "" && isNaN(thisForm.Copies.value)){
+			    alert ("Please enter a valid number of copies.");
+			    thisForm.Copies.focus();
+			    return;
+        }
+        if (trim(thisForm.PlatsCopies.value) != "" && isNaN(thisForm.PlatsCopies.value)){
+			    alert ("Please enter a valid number of oversized plats copies.");
+			    thisForm.PlatsCopies.focus();
+			    return;
+        }
+
+		if (!updateRange(1)){
+		    return;   		
+		}
+		   
+		var temp = "";
+		var code = "";
+		var RFTFlag = false;
+  		for (var i=0; i<thisForm.instList.length-1; i++) {
+			temp += "|" + thisForm.instList.options[i].text;
+			code += "|" + thisForm.instList.options[i].value;
+			if ((thisForm.instList.options[i].value == "RFT0" || thisForm.instList.options[i].value == "RFT1") 
+				&& thisForm.instList.length != 2)
+			{
+				alert ("You can not combine " + thisForm.instList.options[i].text + " with any other document types.");
+				return;
+			}
+			if (thisForm.instList.options[i].value == "RFT0" && thisForm.TaxExemption.value == "803"
+				&& (trim(thisForm.Consideration.value) == "" || trim(thisForm.AmountNotTaxed.value) == ""))
+			{
+				alert ("Consideration and amount not taxed are both required for "+thisForm.instList.options[i].text);
+				return;
+			}
+		}
+
+		thisForm.FullInstList.value = temp;
+		thisForm.FullCodeList.value = code;
+
+		if (thisForm.FullInstList.value == "") {
+			alert ("At least one instrument type must be entered");
+			return;
+		}
+
+		if (thisForm.Certified.checked) {
+			enableTextField (thisForm.PageRanges);
+		}
+		submitPrep ();
+		if (thisForm.Certified.checked) {
+			disableTextField (thisForm.PageRanges);
+		}
+		thisForm.RequestType.value="Fees"
+		thisForm.submit();
+	}
+
+	function validateRange (e, fmt, obj) {
+		if (document.forms[0].Certified.checked) {
+			return true;
+		}
+		return validate(e, fmt, obj);
+	}
+
+	function validateCertified (e) {
+		// since we get the key event before the checkbox has
+		// changed we reverse the logic
+		if (e != null && getCharCode (e) == " ") {
+			if (document.forms[0].Certified.checked) {
+				document.forms[0].Certified.checked = false;
+			} else {
+				document.forms[0].Certified.checked = true;
+			}
+		}
+
+		if (document.forms[0].Certified.checked) {
+			updateRange (3);
+			disableTextField (document.forms[0].PageRanges);
+		} else {
+			enableTextField (document.forms[0].PageRanges);
+		}
+	}
+
+	function updateRange (r) {
+		var ncopy = 1*document.forms[0].Copies.value;
+		if (r == 2 && ncopy == 0) {  // Copy was changed to 0
+			document.forms[0].Certified.checked = false;
+			document.forms[0].PageRanges.value = "";
+			enableTextField (document.forms[0].PageRanges);
+			return true;
+		} else if (r == 3 && ncopy == 0) { // Certify was choosen therefore at least 1 copy
+			ncopy = 1;
+			document.forms[0].Copies.value = 1;
+		}
+		var pages = 1*document.forms[0].Pages.value;
+		var plats = 1*document.forms[0].Plats.value;
+		var covers = 1*document.forms[0].Covers.value;
+		var list  =   document.forms[0].PageRanges.value;
+		var cert  =   document.forms[0].Certified.checked;
+		var tot = pages + covers;
+		// update the range
+
+		var range  = "";
+		if (ncopy > 0 || cert) {
+			if (cert) {
+				range = "1-"+tot;
+			} else if (r == 1) {  // range field was changed
+		         
+				if (validate_range(tot)){
+		 			range = list;
+				} else {
+		 			return false;
+				}
+			} else {
+				range = "1-"+tot;
+			}
+		}
+		document.forms[0].PageRanges.value = range;
+		   
+		return true;
+	}
+
+	function validate_range(max_pages){
+		var input_str= document.forms[0].PageRanges.value;
+			
+		var range_array = input_str.split(",");
+		for (var i = 0;i<range_array.length; i++){
+			if (range_array[i] == "")	{
+				alert("Invalid page range (" + range_array[i] + ")");
+				document.forms[0].PageRanges.focus();
+				document.forms[0].PageRanges.select();
+				return false;
+			}
+			var loc = range_array[i].indexOf("-");
+			if (loc > 0){
+				var first_page = range_array[i].substr(0, loc);
+				var n = parseInt(first_page, 10);
+				//alert("first page is " + first_page);
+				if (n < 1 || n > max_pages)	{
+					alert("Page range " + range_array[i] + " outside document page range (1-" + max_pages + ")");
+					document.forms[0].PageRanges.focus();
+					document.forms[0].PageRanges.select();
+					return false;
+				}
+				var last_page = range_array[i].substr(loc+1);
+				var m = parseInt(last_page, 10);
+				if (m < 1 || m > max_pages)	{
+					alert("Page range " + range_array[i] + " outside document page range (1-" + max_pages + ")");
+					document.forms[0].PageRanges.focus();
+					document.forms[0].PageRanges.select();
+					return false;
+				}
+				if (m < n)	{
+					alert("Invalid page range (" + range_array[i] + ")");
+					document.forms[0].PageRanges.focus();
+					document.forms[0].PageRanges.select();
+					return false;
+				}
+			}else{
+				if (loc == 0){
+						
+					alert("Invalid page range (" + range_array[i] + ")");
+					document.forms[0].PageRanges.focus();
+					document.forms[0].PageRanges.select();
+					return false;
+					}
+				else{
+					var n = parseInt(range_array[i], 10);
+					if (n < 1 || n > max_pages)	{
+						alert("Page " + range_array[i] + " outside document page range (1-" + max_pages + ")");
+						document.forms[0].PageRanges.focus();
+						document.forms[0].PageRanges.select();
+						return false;
+						}
+					}
+			}
+		}
+		return true;
+	}
+			
+	function trim(str){
+		if (str.length == 0)
+		return "";
+		while (str.charAt(0) == " ")
+		str = str.substring(1,str.length);
+		while (str.charAt(str.length-1) == " ")
+		str = str.substring(0,str.length - 1);
+		return str;
+	}
+
+    function validatePastedValue(fmt, element, makeUpper) {
+        setTimeout(function(){
+		    if(validateValue(fmt, element) && makeUpper == true)
+                makeUpperCase(element);
+	    }, 4);
+   }			  
+
+	</script>
+	</head>
+	<body background="image/blue_bkg.jpg">
+		<form name="COVERSHEET_FORM" method="post" action="coversheet.aspx" id="COVERSHEET_FORM" target="popup">
+<div>
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUJNzE2MzIwNzg1D2QWAgIBD2QWBAIDDxBkDxagAWYCAQICAgMCBAIFAgYCBwIIAgkCCgILAgwCDQIOAg8CEAIRAhICEwIUAhUCFgIXAhgCGQIaAhsCHAIdAh4CHwIgAiECIgIjAiQCJQImAicCKAIpAioCKwIsAi0CLgIvAjACMQIyAjMCNAI1AjYCNwI4AjkCOgI7AjwCPQI+Aj8CQAJBAkICQwJEAkUCRgJHAkgCSQJKAksCTAJNAk4CTwJQAlECUgJTAlQCVQJWAlcCWAJZAloCWwJcAl0CXgJfAmACYQJiAmMCZAJlAmYCZwJoAmkCagJrAmwCbQJuAm8CcAJxAnICcwJ0AnUCdgJ3AngCeQJ6AnsCfAJ9An4CfwKAAQKBAQKCAQKDAQKEAQKFAQKGAQKHAQKIAQKJAQKKAQKLAQKMAQKNAQKOAQKPAQKQAQKRAQKSAQKTAQKUAQKVAQKWAQKXAQKYAQKZAQKaAQKbAQKcAQKdAQKeAQKfARagARAFEkNFUlRJRklDQVRFIE9GIFNBVAUDQ1MwZxAFBERFRUQFAkQwZxAFD1JFRklOQU5DRSBUUlVTVAUEUkZUMGcQBQVUUlVTVAUCVDBnEAUTQVNTSUdOTUVOVCBPRiBUUlVTVAUFVEFTRzBnEAURUE9XRVIgT0YgQVRUT1JORVkFA1BBMGcQBQlBRkZJREFWSVQFA0FGMGcQBQ1TVUJPUkRJTkFUSU9OBQJTMGcQBRRBRkZJREFWSVQgQ09SUkVDVElPTgUDQUYxZxAFFkFGRklEQVZJVCBNT0RJRklDQVRJT04FA0FGMmcQBRdBRkZJREFWSVQgT0YgQUZGSVhBVElPTgUEQUZBMGcQBSJBRkZJREFWSVQgT0YgQUZGSVhBVElPTiBDT1JSRUNUSU9OBQRBRkExZxAFJEFGRklEQVZJVCBPRiBBRkZJWEFUSU9OIE1PRElGSUNBVElPTgUEQUZBMmcQBR1BRkZJREFWSVQgVE8gU0VWRVIgQUZGSVhBVElPTgUFQUZTQTBnEAUoQUZGSURBVklUIFRPIFNFVkVSIEFGRklYQVRJT04gQ09SUkVDVElPTgUFQUZTQTFnEAUqQUZGSURBVklUIFRPIFNFVkVSIEFGRklYQVRJT04gTU9ESUZJQ0FUSU9OBQVBRlNBMmcQBRFBRkZJREFWSVQgUkVMRUFTRQUDQUYzZxAFCUFHUkVFTUVOVAUCQTBnEAUWQUdSRUVNRU5UIENPTkZJUk1BVElPTgUCQTdnEAUUQUdSRUVNRU5UIENPUlJFQ1RJT04FAkExZxAFFkFHUkVFTUVOVCBNT0RJRklDQVRJT04FAkEyZxAFEUFHUkVFTUVOVCBSRUxFQVNFBQJBM2cQBQpBU1NJR05NRU5UBQRBU0cwZxAFFUFTU0lHTk1FTlQgQ09SUkVDVElPTgUEQVNHMWcQBRdBU1NJR05NRU5UIE1PRElGSUNBVElPTgUEQVNHMmcQBR5BU1NJR05NRU5UIE9GIFRSVVNUIENPUlJFQ1RJT04FBVRBU0cxZxAFEkFTU0lHTk1FTlQgUkVMRUFTRQUEQVNHM2cQBRdBU1NJR05NRU5UIFNVUFBMRU1FTlRBTAUEQVNHNWcQBRRBU1NVTVBUSU9OIEFHUkVFTUVOVAUDQUEwZxAFH0FTU1VNUFRJT04gQUdSRUVNRU5UIENPUlJFQ1RJT04FA0FBMWcQBRxBU1NVTVBUSU9OIEFHUkVFTUVOVCBSRUxFQVNFBQNBQTNnEAUMQklMTCBPRiBTQUxFBQRCT1MwZxAFF0JJTEwgT0YgU0FMRSBDT1JSRUNUSU9OBQRCT1MxZxAFB0JZIExBV1MFA0JMMGcQBRJCWSBMQVdTIENPUlJFQ1RJT04FA0JMMWcQBRRCWSBMQVdTIE1PRElGSUNBVElPTgUDQkwyZxAFC0NFUlRJRklDQVRFBQVDRVJUMGcQBRZDRVJUSUZJQ0FURSBDT1JSRUNUSU9OBQVDRVJUMWcQBRhDRVJUSUZJQ0FURSBNT0RJRklDQVRJT04FBUNFUlQyZxAFHUNFUlRJRklDQVRFIE9GIFNBVCBDT1JSRUNUSU9OBQNDUzFnEAUXQ0VSVElGSUNBVEUgT0YgVFJBTlNGRVIFA0NUMGcQBSJDRVJUSUZJQ0FURSBPRiBUUkFOU0ZFUiBDT1JSRUNUSU9OBQNDVDFnEAUTQ0VSVElGSUNBVEUgUkVMRUFTRQUFQ0VSVDNnEAURQ09ORklSTUFUSU9OIERFRUQFBENGRDBnEAUcQ09ORklSTUFUSU9OIERFRUQgQ09SUkVDVElPTgUEQ0ZEMWcQBQhDT05UUkFDVAUCQzBnEAUTQ09OVFJBQ1QgQ09SUkVDVElPTgUCQzFnEAUVQ09OVFJBQ1QgTU9ESUZJQ0FUSU9OBQJDMmcQBRBDT05UUkFDVCBSRUxFQVNFBQJDM2cQBRRDT1JSRUNUSVZFIEFGRklEQVZJVAUEQ09SMGcQBR9DT1JSRUNUSVZFIEFGRklEQVZJVCBDT1JSRUNUSU9OBQRDT1IxZxAFIUNPUlJFQ1RJVkUgQUZGSURBVklUIE1PRElGSUNBVElPTgUEQ09SMmcQBQtDT1VSVCBPUkRFUgUCTzBnEAUWQ09VUlQgT1JERVIgQ09SUkVDVElPTgUCTzFnEAUYQ09VUlQgT1JERVIgTU9ESUZJQ0FUSU9OBQJPMmcQBQhDT1ZFTkFOVAUEQ09WMGcQBRNDT1ZFTkFOVCBDT1JSRUNUSU9OBQRDT1YxZxAFFUNPVkVOQU5UIE1PRElGSUNBVElPTgUEQ09WMmcQBRBDT1ZFTkFOVCBSRUxFQVNFBQRDT1YzZxAFFUNPVkVOQU5UIFNVUFBMRU1FTlRBTAUEQ09WNWcQBQtERUNMQVJBVElPTgUDREwwZxAFFkRFQ0xBUkFUSU9OIENPUlJFQ1RJT04FA0RMMWcQBRhERUNMQVJBVElPTiBNT0RJRklDQVRJT04FA0RMMmcQBQpERURJQ0FUSU9OBQNETjBnEAUVREVESUNBVElPTiBDT1JSRUNUSU9OBQNETjFnEAUPREVFRCBDT1JSRUNUSU9OBQJEMWcQBSBERUVEIEJFVFdFRU4gTUFSUklFRCBJTkRJVklEVUFMUwUFREJNSTBnEAUrREVFRCBCRVRXRUVOIE1BUlJJRUQgSU5ESVZJRFVBTFMgQ09SUkVDVElPTgUFREJNSTFnEAUMREVFRCBPRiBHSUZUBQNERzBnEAUXREVFRCBPRiBHSUZUIENPUlJFQ1RJT04FA0RHMWcQBQpESVNDTEFJTUVSBQVESVNDMGcQBRVESVNDTEFJTUVSIENPUlJFQ1RJT04FBURJU0MxZxAFCEVBU0VNRU5UBQJFMGcQBRNFQVNFTUVOVCBDT1JSRUNUSU9OBQJFMWcQBQ5IT01FU1RFQUQgREVFRAUDSEQwZxAFGUhPTUVTVEVBRCBERUVEIENPUlJFQ1RJT04FA0hEMWcQBRtIT01FU1RFQUQgREVFRCBNT0RJRklDQVRJT04FA0hEMmcQBRNJTlNUUlVNRU5UIE5PVCBVU0VEBQRJTlUwZxAFBUxFQVNFBQJMMGcQBRBMRUFTRSBBU1NJR05NRU5UBQJMNGcQBR9MRUFTRSBDT01NVU5JQ0FUSU9OUyBFUVVJUE1FTlQgBQRMQ0UwZxAFKUxFQVNFIENPTU1VTklDQVRJT05TIEVRVUlQTUVOVCBBU1NJR05NRU5UBQRMQ0U0ZxAFKUxFQVNFIENPTU1VTklDQVRJT05TIEVRVUlQTUVOVCBDT1JSRUNUSU9OBQRMQ0UxZxAFK0xFQVNFIENPTU1VTklDQVRJT05TIEVRVUlQTUVOVCBNT0RJRklDQVRJT04FBExDRTJnEAUmTEVBU0UgQ09NTVVOSUNBVElPTlMgRVFVSVBNRU5UIFJFTEVBU0UFBExDRTNnEAUbTEVBU0UgQ09NTVVOSUNBVElPTlMgVE9XRVIgBQRMQ1QwZxAFJUxFQVNFIENPTU1VTklDQVRJT05TIFRPV0VSIEFTU0lHTk1FTlQFBExDVDRnEAUlTEVBU0UgQ09NTVVOSUNBVElPTlMgVE9XRVIgQ09SUkVDVElPTgUETENUMWcQBSdMRUFTRSBDT01NVU5JQ0FUSU9OUyBUT1dFUiBNT0RJRklDQVRJT04FBExDVDJnEAUiTEVBU0UgQ09NTVVOSUNBVElPTlMgVE9XRVIgUkVMRUFTRQUETENUM2cQBRBMRUFTRSBDT1JSRUNUSU9OBQJMMWcQBRJMRUFTRSBNT0RJRklDQVRJT04FAkwyZxAFDUxFQVNFIFJFTEVBU0UFAkwzZxAFB0xJQ0VOU0UFBExJQzBnEAUSTElDRU5TRSBDT1JSRUNUSU9OBQRMSUMxZxAFBExJRU4FA0xOMGcQBQ9MSUVOIENPUlJFQ1RJT04FA0xOMWcQBQxMSUVOIFJFTEVBU0UFA0xOM2cQBQtMSVMgUEVOREVOUwUDTFAwZxAFFkxJUyBQRU5ERU5TIENPUlJFQ1RJT04FA0xQMWcQBRNMSVMgUEVOREVOUyBSRUxFQVNFBQNMUDNnEAUOTUVDSEFOSUNTIExJRU4FA01MMGcQBRlNRUNIQU5JQ1MgTElFTiBDT1JSRUNUSU9OBQNNTDFnEAUWTUVDSEFOSUNTIExJRU4gUkVMRUFTRQUDTUwzZxAFBk1FUkdFUgUFTUVSRzBnEAURTUVSR0VSIENPUlJFQ1RJT04FBU1FUkcxZxAFFU1PRElGSUNBVElPTiBPRiBUUlVTVAUFTU9ERjBnEAUgTU9ESUZJQ0FUSU9OIE9GIFRSVVNUIENPUlJFQ1RJT04FBU1PREYxZxAFCE1PUlRHQUdFBQJNMGcQBRNNT1JUR0FHRSBDT1JSRUNUSU9OBQJNMWcQBRVNT1JUR0FHRSBNT0RJRklDQVRJT04FAk0yZxAFEE1PUlRHQUdFIFJFTEVBU0UFAk0zZxAFBk5PVElDRQUETk9UMGcQBRFOT1RJQ0UgQ09SUkVDVElPTgUETk9UMWcQBQZPUFRJT04FA09QMGcQBRFPUFRJT04gQ09SUkVDVElPTgUDT1AxZxAFDk9QVElPTiBSRUxFQVNFBQNPUDNnEAUGUEVSTUlUBQNQTTBnEAURUEVSTUlUIENPUlJFQ1RJT04FA1BNMWcQBRxQT1dFUiBPRiBBVFRPUk5FWSBDT1JSRUNUSU9OBQNQQTFnEAUOUVVJVENMQUlNIERFRUQFA1FEMGcQBRlRVUlUQ0xBSU0gREVFRCBDT1JSRUNUSU9OBQNRRDFnEAUSUVVJVENMQUlNIEVBU0VNRU5UBQNRRTBnEAUdUVVJVENMQUlNIEVBU0VNRU5UIENPUlJFQ1RJT04FA1FFMWcQBRpSRUZJTkFOQ0UgVFJVU1QgQ09SUkVDVElPTgUEUkZUMWcQBQ1SRUxFQVNFIFRSVVNUBQJSMGcQBRhSRUxFQVNFIFRSVVNUIENPUlJFQ1RJT04FAlIxZxAFFlJFU0lHTkFUSU9OIE9GIFRSVVNURUUFA1JUMGcQBSFSRVNJR05BVElPTiBPRiBUUlVTVEVFIENPUlJFQ1RJT04FA1JUMWcQBQpSRVNPTFVUSU9OBQVSRVNMMGcQBRVSRVNPTFVUSU9OIENPUlJFQ1RJT04FBVJFU0wxZxAFDVJFU1VCRElWSVNJT04FA1JFMGcQBRhSRVNVQkRJVklTSU9OIENPUlJFQ1RJT04FA1JFMWcQBRhSRVZPS0UgUE9XRVIgT0YgQVRUT1JORVkFBFJQQTBnEAUjUkVWT0tFIFBPV0VSIE9GIEFUVE9STkVZIENPUlJFQ1RJT04FBFJQQTFnEAUYU1VCT1JESU5BVElPTiBDT1JSRUNUSU9OBQJTMWcQBRtTVUJTVElUVVRFIEFUVE9STkVZIElOIEZBQ1QFBVNBSUYwZxAFJlNVQlNUSVRVVEUgQVRUT1JORVkgSU4gRkFDVCBDT1JSRUNUSU9OBQVTQUlGMWcQBRJTVUJTVElUVVRFIFRSVVNURUUFA1NUMGcQBR1TVUJTVElUVVRFIFRSVVNURUUgQ09SUkVDVElPTgUDU1QxZxAFFlRSQU5TRkVSIE9OIERFQVRIIERFRUQFBERURDBnEAUhVFJBTlNGRVIgT04gREVBVEggREVFRCBDT1JSRUNUSU9OBQREVEQxZxAFIVRSQU5TRkVSIE9OIERFQVRIIERFRUQgUkVWT0NBVElPTgUFRFREUjBnEAUsVFJBTlNGRVIgT04gREVBVEggREVFRCBSRVZPQ0FUSU9OIENPUlJFQ1RJT04FBURURFIxZxAFD1RSVVNUIEFHUkVFTUVOVAUDVEEwZxAFGlRSVVNUIEFHUkVFTUVOVCBDT1JSRUNUSU9OBQNUQTFnEAUcVFJVU1QgQUdSRUVNRU5UIE1PRElGSUNBVElPTgUDVEEyZxAFEFRSVVNUIENPUlJFQ1RJT04FAlQxZxAFElRSVVNUIFNVUFBMRU1FTlRBTAUCVDVnEAUNVFJVU1RFRVMgREVFRAUDVEQwZxAFGFRSVVNURUVTIERFRUQgQ09SUkVDVElPTgUDVEQxZxAFD1RSVVNURUVTIFJFUE9SVAUDVFIwZxAFGlRSVVNURUVTIFJFUE9SVCBDT1JSRUNUSU9OBQNUUjFnEAUIVkFDQVRJT04FAlYwZxAFE1ZBQ0FUSU9OIENPUlJFQ1RJT04FAlYxZxAFCVZJT0xBVElPTgUFVklPTDBnEAUUVklPTEFUSU9OIENPUlJFQ1RJT04FBVZJT0wxZxAFEVZJT0xBVElPTiBSRUxFQVNFBQVWSU9MM2cQBQZXQUlWRVIFBVdBSVYwZxAFEVdBSVZFUiBDT1JSRUNUSU9OBQVXQUlWMWdkZAIFDxBkEBUKBE5PTkUDODAzAzgxMQNDRk8CTkMCTkcCTlMDTlNDA05URgJQUxUKASADODAzAzgxMQNDRk8CTkMCTkcCTlMDTlNDA05URgJQUxQrAwpnZ2dnZ2dnZ2dnZGRkWJ9ce+OvreiL1lTT20PgaXchrpE=" />
+</div>
+
+<div>
+
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEWqwEC4bysvgUCuryUygQCkf3/mgMCmc2onwcCof3/mgMC8OHXzwkCx73cywQCtLygywQCoP3/mgMC2YrGpgoC4pPkEQLppdSLAwLppbjWCwLppYyxBAK9/bOhBQK8/bOhBQK//bOhBQKH+JuLBgKS/f+aAwKS/duaAwKS/fOaAwKS/feaAwKS/cuaAwKLvNWLBgKLvLnWDgKLvI2xBwLx4dfPCQKLvJEcAou8ycMBArS83MsEAtmK8qYKAof4t4sGAuTkrqQBAuTkso8KArW8yMsEAt6K7qYKAuOTjBAC3pSElA4C2ZSElA4C3JSElA4C34qKpQoCurzoywQC34qOpQoC35SElA4CvuCPywQCvuCTlg0CkP3/mgMCkP3zmgMCkP33mgMCkP3LmgMCwJ+LyQsCwJ+flAQCwJ/j8AwCrP3/mgMCrP3zmgMCrP33mgMCtKOA5AICtKOUzwsCtKP4qwQCtKPM9gwCtKOkvA4Cu7zIywQC3IrupgoC4ZOMEAK7vMDLBALciuamCgKR/fOaAwKWmJT/CQKXmJT/CQK7vKTLBALcitqmCgKA/KfaBgKB/KfaBgKW/f+aAwKW/fOaAwLPvajLBALQis6mCgL1k+wRAqXa7ooNAqn9/5oDAqn9z5oDAtjO0aYKAtjO4ZMNAtjOpYEDAtjOiewLAtjOnbcEAofN3J8HAofN7IwKAofNoPoPAofNtMUIAofNmKABAqn985oDAqn995oDAqn9y5oDApKbpNAOApKbiLsHArO8wMsEAtSK5qYKAoL4u4sGArO8mMoEAtSKvqUKAoL484sGArC8yMsEAtWK7qYKAoP4o4sGAvSVgOgDAveVgOgDAtL/zIkEAu3/zIkEAq79/5oDAq7985oDAq7995oDAq79y5oDAoXNzJ8HAoXN0PoPAra8mMoEAtuKvqUKAoH484sGAse9zMsEAuiK4qYKAuiK8qYKAsS9qMsEAumKzqYKAsS9rMsEAumKwqYKApnNvPoPAqP9/5oDAqP985oDAsW96MsEAu6KjqUKArLhm+gJArPhm+gJAsW9rMsEAu6KwqYKAv6ljIoDAv6lkNULAqD985oDAo34nOQDAoz4nOQDAsq96MsEAu+KjqUKAr/g98sEAr/g25YNAtX5gN4FAtr5gN4FAsu93MsEAuyK8qYKAvGTkBACof3zmgMCof3DmgMCy72oywQC7IrOpgoCy72QygQC7Iq2pQoCp/3/mgMCp/3zmgMC8vOx3Q8C8/Ox3Q8C8fOx3Q8C8fvcsggC8PvcsggCt7H3zA4CtLS72wsC+sn67QcC27qYpgYC1bHD0g4C1bHT0g4C1bGD0g4C6tfU+A4CmZuDuwkCx7GD0g7k3our3txh2jjyvf5oyxpfZsIYTQ==" />
+</div>
+
+			<table border="0">
+				<tr>
+					<td style="font-weight:bold;">Names to be indexed (Last, First Middle)&nbsp;</td>
+					<td style="font-weight:bold;">Type&nbsp;</td>
+					<td style="font-weight:bold;">Trustee&nbsp;</td>
+					<td style="font-weight:bold;">Firm&nbsp;</td>
+				</tr>
+				<tr>
+					<td>
+						<input type="text" name="Names" size="40" maxlength="60" onkeypress="return checkSpecChar(event, this)" onblur='if(hasNoSpecialChars(this)) makeUpperCase(this);' />
+					</td>
+					<td>
+						<select name="Name_Type">
+							<option selected="selected">Grantor</option>
+							<option>Grantee</option>
+						</select>
+					</td>
+					<td>
+						<input type="checkbox" name="Trustee" />
+					</td>
+					<td>
+						<input type="checkbox" name="Firm" />
+					</td>
+				</tr>
+			</table>
+			<table width="80%" border="0">
+				<tr>
+					<td width="40%">
+						<select name="NameList" id="NameList" size="3">
+							<option value="Grantor guy">Grantor</option>
+							<script type="text/javascript">
+								setWidth();
+							</script>
+						</select>
+					</td>
+					<td align="left" width="40%">
+						<input type="button" class="button" value="Add Name   " onclick="AddName()" /><br/>
+						<input type="button" class="button" value="Remove Name" onclick="RemoveName()" /><br/>
+						<input type="button" class="button" value="Change Name" onclick="ChangeName()" /><br/>
+					</td>
+				</tr>
+			</table>
+
+			<script type="text/javascript">
+		        if (G_isNetscape) {
+			        document.write ("<table name='table1'>");
+		        } else {
+			        document.write ("<table id='TaxMask' border='0' width='100%' cellspacing=0 cellpadding=0>");
+		        }
+			</script>
+	</body>
+</html>

@@ -1,0 +1,280 @@
+<#include "/admin/lib/include.stl" />
+<@loginLayout encoding="utf-8">
+<link rel="stylesheet" media="all" href="resources/styles/login.css" />
+<link rel="stylesheet" media="all" href="resources/styles/prompt.css" />
+<link rel="stylesheet" media="all" href="resources/styles/jquery-ui-1.8.11.base.css" />
+<link rel="stylesheet" media="all" href="resources/styles/jquery-ui-custom-ext.css" />
+<script type="text/javascript" src="resources/javascripts/jquery.min.js"></script>
+<script type="text/javascript" src="resources/javascripts/jquery-ui.min.js"></script>
+<script type="text/javascript" src="resources/javascripts/jquery.printElement.min.js"></script>
+<script type="text/javascript" src="resources/javascripts/jquery.cookie.js"></script>
+
+<!--ARL HEADER-->
+	<meta name="msapplication-TileColor" content="#015CB9">
+	<meta name="msapplication-TileImage" content="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-144x144.png">
+	<link rel="shortcut icon" href="https://d1rn8z435cu2eh.cloudfront.net/favicon.ico" sizes="16x16 32x32 64x64" type="image/x-icon">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-152x152.png" sizes="152x152">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-144x144.png" sizes="144x144">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-120x120.png" sizes="120x120">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-114x114.png" sizes="114x114">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-72x72.png" sizes="72x72">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon-57x57.png" sizes="57x57">
+	<link rel="apple-touch-icon" href="https://d1rn8z435cu2eh.cloudfront.net/apple-touch-icon.png">
+	<link rel='stylesheet' id='open-sans-pt-sans-css'  href='resources/styles/OpenSans.css' type='text/css' media='all' />
+	
+	<script type="text/javascript">
+	var _gas = _gas || [];
+	_gas.push(['_setAccount', 'UA-23381988-1']); // All ACG
+	_gas.push(['_trackPageview']);
+	_gas.push(['_gasTrackOutboundLinks']);
+	_gas.push(['_gasTrackMailto']);
+	_gas.push(['_gasTrackDownloads', {
+	  category: 'Download',
+	  extensions: ['']
+	}]);
+	_gas.push(['_gasTrackYoutube', {
+	  percentages: [1, 20, 40, 60, 80],
+	  category: 'YouTube Video'
+	}]);
+	_gas.push(['_gasTrackVimeo', {
+	  category: 'Vimeo Video'
+	}]);
+	_gas.push(['_gasTrackAudio']);
+	_gas.push(['_gasTrackVideo']);
+	(function () {
+	  var ga = document.createElement('script');
+	  ga.type = 'text/javascript';
+	  ga.async = true;
+	  ga.src = 'resources/javascripts/gas.min.js';
+	  var s = document.getElementsByTagName('script')[0];
+	  s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+<!--END ARL HEADER-->
+
+<style>
+div.ADCSI {
+    width: 975px;
+    text-align:center;
+}
+span.ADCSI_leftcol {
+    width: 150px;
+    text-align:right;
+    display: inline-block;
+}
+.ui-button-text {
+	color:white;
+}
+table#subscriptionDetails {
+	border-collapse: collapse;
+	margin-top: 50px;
+	margin-bottom: 10px;
+	margin-left: 10px;
+	margin-right: 10px;
+	font-size:90%;
+}
+table#subscriptionDetails td {	
+	padding: 5px 5px;
+}
+table#subscriptionDetails tr.paid {	
+	color: #527838;
+}
+table#subscriptionDetails tr.unPaid {	
+	color: #ED1C43;
+}
+th.header{
+	color: #039;
+	border-bottom: 2px solid #6678B1;
+	padding: 5px 5px;
+}
+th.subheader{
+	color: #039;
+	border-top: 1px solid #6678B1;
+	padding: 5px 5px;
+}
+td.footer{
+	color: #039;
+	border-top: 2px solid #6678B1;
+	padding: 5px 5px;	
+}
+#pay {
+	background: #55a003 url(resources/styles/images/greenGrad.png) 50% 50% repeat-x;
+	color: white;
+}
+#pay:hover {
+	background: #55a003 url(resources/styles/images/greenGrad.png) 50% 50% repeat-x;
+	color: white;
+}
+span#transactionId {
+	font-size:20px;
+	font-weight:bold;
+	color:#D61344;
+}
+.paid {	
+	color: #527838;
+	text-align:left;
+	margin:20px;
+}
+
+.unPaid {	
+	color: #ED1C43;
+	text-align:left;
+	margin:20px;
+}
+</style>
+<div class="content">
+	<div style="width: 975px; margin-left: auto;margin-right:auto;margin-top:100px;">
+		<div id="ADCSI" class="ADCSI" style="margin-top: 0px; margin-bottom: 12px;">
+		<div class="ADCSI_title" id="ADCSI_title">				
+			<span style="width:49%;text-align:left;display:inline-block;"><b><@spring.message code="form.name.changePlanConfirmation" /></b></span>
+			<span style="width:49%;text-align:right;display:inline-block;"><a href="logout.admin"><@spring.message code="security.authentication.logout" /></a>&nbsp;(${user.username})</a></span>
+		</div>
+		<div style="text-align: center;padding-top: 20px;padding-bottom: 20px;" id="printArea">
+			<#if !FAILURE_MSG?has_content >
+			<#list changeDTO.getNewAccessDetailDTO().site.getAccess() as access>
+				<#assign newAccessDescription = access.description>
+			</#list>
+
+			<#list changeDTO.getExistingUserAccountDetail().site.getAccess() as currentAccess>
+				<#assign currentAccessDescription = currentAccess.description>
+			</#list>
+				<span class="paid"><b><@spring.message code="security.ecommerce.changeSuccessNoReference" /></b></span>
+				<table id="subscriptionDetails" style="margin-right:auto;margin-left:auto;margin-top:25px;text-align:center;padding:auto;">
+            		<tr>
+            			<td class="desc nowrap" style="text-align:right;color:#3D536E;font-weight:bold;">
+            				<b><@spring.message code="security.ecommerce.label.previousSubscription" /> : </b>
+            			</td>
+            			<td style="text-align:left;">
+            				${currentAccessDescription}
+            			</td>
+            		</tr>
+            		<tr>
+            			<td class="desc nowrap" style="text-align:right;color:#3D536E;font-weight:bold;">
+            				<b><@spring.message code="security.ecommerce.label.previousSubscriptionFee" /> : </b>
+            			</td>
+            			<td style="text-align:left;">
+            				${changeDTO.currentFee?string.currency}
+            			</td>
+            		</tr>
+            		<#if changeDTO.getSecondaryTxId()?has_content && changeDTO.isDowngrade()>
+            			<tr>
+	            			<td class="desc nowrap" style="text-align:right;color:#3D536E;font-weight:bold;">
+	            				<b><@spring.message code="security.ecommerce.label.downgradeFee" /> : </b>
+	            			</td>
+	            			<td style="text-align:left;">
+	            				${changeDTO.downgradeFee?string.currency}
+	            			</td>
+	            		</tr>
+	            	</#if>
+            		<#if changeDTO.getSecondaryTxId()?has_content>
+            			<tr>
+            			<td class="desc nowrap" style="text-align:right;color:#3D536E;font-weight:bold;">
+	            			<#if changeDTO.isDowngrade()>
+	            				<#if changeSubscriptionInfo.unUsedBalance - changeSubscriptionInfo.downgradeFee &gt; 0>
+									<b><@spring.message code="security.ecommerce.label.remainingBalanceRefundWithDowngradeFee" /> : </b>
+								<#else>
+									<b><@spring.message code="security.ecommerce.label.amountDueWithDowngradeFee" /> : </b>
+								</#if>
+	            			<#else>
+	            					<b><@spring.message code="security.ecommerce.label.remainingBalanceRefund" /> : </b>
+	            			</#if>
+            			</td>
+            			<td style="text-align:left;">
+	                		<#if changeSubscriptionInfo.unUsedBalance - changeSubscriptionInfo.downgradeFee &gt; 0>
+									${(changeSubscriptionInfo.unUsedBalance - changeSubscriptionInfo.downgradeFee)?string.currency}						
+	                		<#else>					
+									${(changeSubscriptionInfo.downgradeFee - changeSubscriptionInfo.unUsedBalance)?string.currency}
+							</#if>
+						</td>
+						</tr>
+						<tr>
+                			<td class="desc nowrap"  style="text-align:right;color:#3D536E;font-weight:bold;">
+                				<b><@spring.message code="security.ecommerce.transactionReference" /> : </b>
+                			</td>
+                			<td style="text-align:left;">
+                				${changeDTO.getSecondaryTxId()}
+                			</td>
+                		</tr>
+					</#if>
+            		<tr>
+            			<td class="desc nowrap"  style="text-align:right;color:#3D536E;font-weight:bold;">
+            				<b><@spring.message code="security.ecommerce.label.newCurrentSubscription" /> : </b>
+            			</td>
+            			<td style="text-align:left;">
+            				${newAccessDescription}
+            			</td>
+            		</tr> 
+            		<tr>
+            			<td class="desc nowrap"  style="text-align:right;color:#3D536E;font-weight:bold;">
+            				<b><@spring.message code="security.ecommerce.label.newCurrentFee" /> : </b>
+            			</td>
+            			<td style="text-align:left;">
+            				${changeDTO.newFee?string.currency}
+            			</td>
+            		</tr>            		
+            		<#if changeDTO.getTransactionId()?has_content>
+            			<tr>		            		
+		            		<td class="desc nowrap" style="text-align:right;color:#3D536E;font-weight:bold;"><@spring.message code="security.ecommerce.label.prorateCharge" /> : </td>					
+							<td style="text-align:left;">${changeDTO.newBalance?string.currency}</td>							
+						</tr>
+            			<tr>
+                			<td class="desc nowrap" style="text-align:right;color:#3D536E;font-weight:bold;">
+                				<b><@spring.message code="security.ecommerce.label.prorateChargeTxRefNum" /> : </b>
+                			</td>
+                			<td style="text-align:left;">
+                				${changeDTO.getTransactionId()}
+                			</td>
+                		</tr>
+                	 
+					</#if>                                                     		
+            	</table>	
+            <#else>
+            	<span class="unPaid"><@spring.message code="security.ecommerce.changeFailure" /></span> <br /><br /><br />
+            	<span class="unPaid"><b>${FAILURE_MSG}</b></span>			
+			</#if>
+		</div>
+		<br /><br />
+		<a id="printRecepit" style="cursor:pointer;"><img src="resources/images/print.png" /><@spring.message code="security.ecommerce.label.printConfirmation" /></a>
+		<div class="ADCSI_title" id="ADCSI_title">				
+			<div style="height:40px;">
+						<table width="100%">
+							<tr>
+								<td style="text-align:left;">
+									<span>
+										<a href="accountInformation.admin"><@spring.message code="security.ecommerce.label.returnToAccountInfo" />
+											<img style="border:0px;;" src="resources/images/accountInformation.png"/>
+										</a>
+									</span>
+								</td>
+								<td style="text-align:right;">
+									<span>
+										<a href="checkSubscription.admin"><@spring.message code="security.ecommerce.label.continueToSearchPage" />
+											<img style="border:0px;" src="resources/images/continueSearch.png"/>
+										</a>
+									</span>	
+								</td>
+							</tr>
+						</table>						
+			</div>							
+		</div>		    			
+	</div>
+</div>
+<script type="text/javascript">
+		$("#printRecepit").click(function() {
+              //printElem({});
+             $('#printArea').focus();
+             printElem({pageTitle:'<@spring.message code="security.ecommerce.label.paymentConfirmation" />' }); 
+        }); 
+         
+       function printElem(options){
+	   		$('#printArea').printElement(options);	
+	   }
+		$(function() {			 
+	        $( "#pay" ).button({
+	            icons: {
+	                primary: "ui-icon-cart"
+	            }
+	    });	       
+		});
+</script>
+</@loginLayout>

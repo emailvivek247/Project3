@@ -1,0 +1,5 @@
+<template>
+  <longname>ROAM Help File</longname>
+  <description>Client-Side Sortable Table with Export Options used to display document types in Help File</description>
+  <defaultLength>200</defaultLength>
+</template>

@@ -1,0 +1,379 @@
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/printThis.js"></script>
+<script type="text/javascript" src="<@com.currentUrlPrefix/>/resource/jquery.jqprint-0.3.js"></script>
+
+
+    <script src="<@com.currentUrlPrefix/>/resource/jquery.print-preview.js" type="text/javascript" charset="utf-8"></script>
+
+<link rel="stylesheet" type="text/css" media="print" href="templates/resources/basket-ROD.css" />
+
+<#assign templateName = request.getParameter("templateName")>
+<#assign requestPath = request.getContextPath()>
+<script type="text/javascript" src="resources/javascripts/jquery.linkManager.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    $(".triggerROD").click(function(){
+        $(".basketROD").toggle(); 
+        $(this).toggleClass("basketActiveROD");
+        return false;
+    }); 
+    
+    if (getCookie("basketIndexesROD")) {
+        var indexList = getCookie("basketIndexesROD").split(",");
+        //$("#basketContent").append("Selected Index(s): <select class=\"indexFilter\" id=\"indexFilter\" onChange=\"javascript:filterIndex()\"><option value=\"-1\" selected>All</option></select></br></br>");
+        var i=0;
+        while (i < indexList.length) {
+            var indexName = indexList[i].split('?pk?')[0];
+            var pkName = indexList[i].split('?pk?')[1].split('?size?')[0];
+        var indexValueOnly = indexName.split('?=?')[1];
+            var indexDisplayName = indexName.split('?=?')[2];
+            var cookieName = "basket_" + indexValueOnly;
+            var tableID = "table_" + indexValueOnly;  
+            var tableIDtemp = "#table_" + indexValueOnly;  
+            if (getCookie(cookieName)) {
+                var tableID = "table_" + indexValueOnly; 
+                var contents = getCookie(cookieName).split('#th#')[1].split("#@#");
+                var tableHeader = getCookie(cookieName).split('#th#')[0];               
+                //$("#indexFilter").append("<option value=\"" + tableIDtemp + "\" >" + indexDisplayName + "</option>");
+                $("#basketContent").append("<table id=\"" + tableID + "\"><caption>" + indexDisplayName + "</caption>" + tableHeader + "</table></br></br>");
+                for ( var j=0, len=contents.length; j<len; ++j ){
+                    renderBasket(indexName, pkName, contents[j]);
+                }               
+            }
+            i = i + 1;
+        }
+    }
+    
+});
+
+function filterIndex() {
+    $("#indexFilter option:selected").each(function () {
+        if ($(this).val() == -1) {
+            $("#basketContent table").show();
+        }
+        else
+        {
+            $("#basketContent table").hide();       
+            $($(this).val()).show();
+        }       
+    });
+}
+
+
+function renderBasket(indexName, pkName, contents) {
+    var contentArray = contents.split('?con?');
+    if (contentArray.length > 1) {
+        var indexValueOnly = indexName.split('?=?')[1];
+        var tableID = "table_" + indexValueOnly;  
+        var tableIDtemp = "#table_" + indexValueOnly;   
+        var content = ""; 
+        var pkeyName = pkName;
+        var templateName = "${templateName}";       
+        var pkeyValue = contentArray[0].replace(/ /g,"");
+        var pkeyValueExact = contentArray[0];
+        var titleValue = contentArray[1];
+        var itemID = "item_" + indexValueOnly + "_" + pkeyValue;
+        var itemIDtemp = "#item_" + indexValueOnly + "_" + pkeyValue;
+        if ($(itemIDtemp).length == 0) {
+            if (templateName == "Main") {
+                var tableRow = "<tr id=\"" + itemID + "\"" + "><td>" + "<a href=\"search.do?indexName=" + "okdetails" + "&templateName=Details_SN&lq=%23" + "Instrument" + "%3A%22" + titleValue + "%22\" \>" + titleValue + "</a>" + "</td>";
+            }
+            else if (templateName == "Mobile") {
+                var tableRow = "<tr id=\"" + itemID + "\"" + "><td>" + "<a href=\"search.do?indexName=" + "okdetails" + "&templateName=Details_SNMobile&lq=%23" + "Instrument" + "%3A%22" + titleValue + "%22\" \>" + titleValue + "</a>" + "</td>";
+            }
+            else if (templateName == "Tablet") {
+                var tableRow = "<tr id=\"" + itemID + "\"" + "><td>" + "<a href=\"search.do?indexName=" + "okdetails" + "&templateName=Details_SNTablet&lq=%23" + "Instrument" + "%3A%22" + titleValue + "%22\" \>" + titleValue + "</a>" + "</td>";
+            }
+            else {
+                var tableRow = "<tr id=\"" + itemID + "\"" + "><td>" + "<a href=\"search.do?indexName=" + "okdetails" + "&templateName=Details_SN&lq=%23" + "Instrument" + "%3A%22" + titleValue + "%22\" \>" + titleValue + "</a>" + "</td>";
+            }
+            for ( var i=2, len=contentArray.length-1; i<len; ++i ){
+                if (i < len-1) {       
+                    tableRow = tableRow +  "<td>" + contentArray[i] + "</td>";
+                } else if (i == len-1) {
+                    if (contentArray[i] != "imagepath") {
+                      if (templateName == "Main" || templateName == "") {
+                        tableRow = tableRow +  "<td>" + "<a href=\"javascript:;\" onclick=\"renderImage('" + contentArray[i] + "')\">Preview</a>" + "</td>"; 
+                      } else { 
+                        tableRow = tableRow +  "<td>" + "<a href=\"javascript:;\" onclick=\"renderImagePopup('" + contentArray[i] + "')\">Preview</a>" + "</td>"; 
+                      } 
+                    }
+                }
+                
+            }
+            tableRow = tableRow +  "<td>" + "<a href=\"javascript:;\" onclick=\"removeFromCart('" + itemID + "')\">Remove Item</a>" + "</td>";
+            tableRow = tableRow + "</tr>";
+            $(tableIDtemp).append(tableRow);
+        }       
+        else {      
+            $.prompt('Selection already added to Briefcase',{buttons:{Ok:true}, prefix:'extblue'});
+        }  
+    }
+}
+
+
+
+function renderImage(imagePath) {
+    imagePath = "${requestPath}/search.do?indexName=okimages&lq=" + imagePath + "&format=PDF&ref=&pospdf#scrollbar=0&view=FitV";
+    $('iframe#imageViewer').attr('src', imagePath);
+}
+
+function renderImagePopup(imagePath) {
+    imagePath = "${requestPath}/search.do?indexName=okimages&lq=" + imagePath + "&format=PDF&ref=&pospdf#scrollbar=0&view=FitV";
+    newwindow=window.open(imagePath,'name');
+    if (window.focus) {newwindow.focus()}
+    return false;
+
+}
+
+function addToCart(indexName, contents, imagePath, maxCount) {
+    var contentArray = contents.split('?con?');
+    
+    if (contentArray.length > 1) {
+        var pkValue = contentArray[0].split('?=?')[1].replace(/ /g,"");
+        var pkName = contentArray[0].split('?=?')[0];
+        var indexValueOnly = indexName.split('?=?')[1];
+        var indexDisplayName = indexName.split('?=?')[2];
+        var itemIDtemp = "#item_" + indexValueOnly + "_" + pkValue; 
+        var tableIDChildtemp = "#table_" + indexValueOnly + " >tbody >tr";
+        
+        if ($(itemIDtemp).length < 1) { 
+        $.prompt('Instrument added to briefcase', {buttons:{Ok:false}, timeout:'1000'});
+        }
+        
+        if (($(tableIDChildtemp).size() - 1) >= maxCount) {
+            $.prompt('Briefcase limit reached for this index. Please remove some items for this index from the basket and continue.',{buttons:{Ok:true},    prefix:'extblue'});
+            return;
+        }           
+        if ($(itemIDtemp).length > 0) { 
+            $.prompt('Selection already added to Briefcase',{buttons:{Ok:true}, prefix:'extblue'});
+            
+        }
+        else
+        {
+            var tableID = "table_" + indexValueOnly;  
+            var tableIDtemp = "#table_" + indexValueOnly;  
+            var hasImage = false;
+            var tableHeader = "";
+            var tableRow = "";
+            var tableContent = "";
+            var isNewIndex = false;
+            var strLink = "search.do?indexName=indexValueOnly&templateName=&q="
+            if (imagePath != "imagepath") {
+                hasImage = true;
+            } 
+            if (getCookie("basketIndexesROD")) {
+                var indexList = getCookie("basketIndexesROD").split(",");
+                for ( var i=0, len=indexList.length; i<len; ++i ){             
+                    if (indexName != indexList[i].split('?pk?')[0]) {
+                        isNewIndex = true;
+                    } else {
+                        isNewIndex = false;
+                    }                   
+                }
+                if (isNewIndex) {
+                    setCookie("basketIndexesROD", getCookie("basketIndexesROD") + ',' + indexName + "?pk?" + pkName + "?size?" + maxCount);
+                    //$("#indexFilter").append("<option value=\"" + tableIDtemp + "\" >" + indexDisplayName + "</option>");               
+                }
+            }
+            else {
+                setCookie("basketIndexesROD", indexName + "?pk?" + pkName + "?size?" + maxCount);
+                //$("#basketContent").append("Selected Index(s): <select id=\"indexFilter\" onChange=\"javascript:filterIndex()\"><option value=\"-1\" selected>All</option></select></br></br>");
+                //$("#indexFilter").append("<option value=\"" + tableIDtemp + "\" >" + indexDisplayName + "</option>")
+                isNewIndex = true;
+            }
+            for ( var i=0, len=contentArray.length; i<len; ++i ){
+                var temp = contentArray[i].split('?=?');
+                if (i > 0) {
+                    tableHeader = tableHeader + "<th>" + temp[0] + "</th>";
+                }    
+                tableRow = tableRow + temp[1] + "?con?";
+            }
+            if (imagePath != "imagepath") {
+                tableHeader = tableHeader + "<th>Image</th>";       
+            }
+            tableHeader = tableHeader + "<th>Remove</th>";
+            tableRow = tableRow + imagePath + "?con?";
+            var cookieName = "basket_" + indexValueOnly;
+            
+            if (getCookie(cookieName)) {
+                    setCookie(cookieName, getCookie(cookieName) + "#@#" + tableRow);                 
+            }
+            else
+            {  
+                setCookie(cookieName, tableHeader + "#th#" + tableRow);
+            }
+            if (isNewIndex) {
+                $("#basketContent").append("<table id=\"" + tableID + "\"><caption>" + indexDisplayName + "</caption>" + tableHeader + "</table></br></br>");                
+            }
+            renderBasket(indexName, pkName, tableRow);
+        }
+    }
+}
+
+function removeFromCart(id) {
+    var obj = document.getElementById(id);  
+    if ($(obj).parent().children( 'tr:not(:first)' ).length < 2) {
+        obj = document.getElementById($(obj).closest("table").attr("id"));      
+        var optionValue = "select#indexFilter option[value=\"#" + $(obj).attr("id") + "\"]";        
+        $(optionValue).remove();
+        var indexValueOnly = $(obj).closest("table").attr("id").replace("table_","");
+        var cookieName = "basket_" + indexValueOnly;
+        if (getCookie(cookieName)) {
+            setCookie(cookieName, '', 0);   
+        }
+        $(obj).remove();
+        if ($("#basketContent table").length == 0) {
+            clearBasket();
+        }       
+    }
+    else
+    {
+        $(obj).remove();        
+    }
+}
+
+function clearBasket() {
+    $("#basketContent").empty();    
+    if (getCookie("basketIndexesROD")) {
+        var indexList = getCookie("basketIndexesROD").split(",");
+        for ( var i=0, len=indexList.length; i<len; ++i ){
+            var indexName = indexList[i].split('?pk?')[0].split('?=?')[1];
+            var cookieName = "basket_" + indexName;
+            if (getCookie(cookieName)) {
+                setCookie(cookieName, '');  
+            }
+        }
+        setCookie("basketIndexesROD", '');
+        $('iframe#imageViewer').attr('src', '');
+    }
+    
+    $('#basketROD').toggle("slow");
+    $(".triggerROD").toggleClass("basketActiveROD");
+}
+
+
+function openandPrint(imagePath) {
+    var thePopup = window.open(imagePath);
+}
+
+</script>
+
+<div class="basketROD" id="basketROD" >
+
+<#--<input type="button" value="PRINT" id="simplePrint" />-->
+<div id="emptyBriefCase" style="position: relative; top:10px;">
+<a style="position: relative; left: 700px; vertical-align:10px;" href="javascript:;" onclick="clearBasket();">Empty Briefcase</a>
+</div>
+<div class="imageViewerHolder" id="imageViewerHolder" style="position:absolute;" style="background-color: #fff; float: left;">
+<iframe class="imageViewer" id="imageViewer" src="" scrolling="auto" onload="" frameBorder="0"  style="position: relative; float: center;" ></iframe>
+</div>
+
+<div class="printclass" id="printclass" style="position: relative; display:block; top:10px;"><input type="button" id="print" class="print" value="Print"  />&nbsp;</div>
+<div class="basketContent" id="basketContent"  ></div>
+</div>
+<a class="triggerROD" href="#"></a>
+<script type="text/javascript">
+$(document).ready(function() {
+        oTable = $('#table_okopr').dataTable({
+            "bJQueryUI": true,
+            "bPaginate": false,
+            "bLengthChange": false,
+            "bFilter": false,
+            "bSort": true,
+            "bInfo": false,
+            "bAutoWidth": false,
+            "aaSorting": []
+    }); 
+});
+
+</script>
+
+<script type="text/javascript">
+    $(function(){
+        $("#printclass")
+            .attr( "href", "javascript:void(0)")
+            .click(function(){
+                // Print the DIV.
+                $("#basketContent").jqprint();         
+                // Cancel click event.
+            return( false );
+            });
+
+    });
+</script>
+
+
+
+<style type="text/css">
+.Print {
+    background-color: #7EB544;
+    color: #fff;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-size: 10pt;
+    border: 0px;
+    position: relative;
+    left: 700px;
+    
+}
+div.jqi {
+    width: 20%;
+}
+.jqibuttons {
+    display: none;
+  } 
+div.jqi {
+    border: 3px solid #7EB544;
+}
+div.jqi .jqimessage {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    color: #2e7ee4;
+    text-align: center;   
+    font-size: 10pt;
+}
+
+div.jqi .jqiclose {
+    display:none;
+}
+div.extblue {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    text-align: center;
+    background-color: #fff;
+}
+div.extblue {
+    width: 20%;
+    background-color: #fff;
+}
+div.extblue .extbluemessage {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    color: #2e7ee4;
+    text-align: center;   
+    font-size: 10pt;
+    background-color: #fff;
+    font-weight: bold;
+}
+
+div.extblue .extbluecontainer {
+    border: 3px solid #7EB544;
+    background-color: #fff;
+}
+div.extblue .extblueclose {
+    background-color: #fff;
+    font-weight: bold;
+    font-size: 11pt;
+}
+
+div.extblue button {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    background-color: #7EB544;
+    font-size: 10pt;
+    width: 15%;
+    border: 0px;
+    ---webkit-border-radius: 10px;
+    text-align:center;
+    padding: 1px;
+    margin: 0 0px;
+    font-weight: bold;
+    color: #fff;    
+
+}
+</style>

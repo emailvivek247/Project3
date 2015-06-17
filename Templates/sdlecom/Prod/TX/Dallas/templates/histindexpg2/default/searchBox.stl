@@ -1,0 +1,312 @@
+<script type="text/javascript">
+    function unique(arrayName) {
+        var newArray=new Array();
+        label:for(var i=0; i<arrayName.length;i++ )
+        {  
+            for(var j=0; j<newArray.length;j++ ) {
+                if(newArray[j].name == arrayName[i].name) 
+                 continue label;
+            }
+            setCookie('default' + arrayName[i].name, jQuery.trim(arrayName[i].value), 0);           
+            if ((arrayName[i].type == 'text' || arrayName[i].type == 'select-one') && jQuery.trim(arrayName[i].value).length != 0) {
+                newArray[newArray.length] = arrayName[i];
+            }
+        }
+        return newArray;
+    } 
+    
+    function postAdvancedSearch() {
+        try {
+            document.getElementById("q").value = '';
+            var inputElemenets =  $('select#Booktype,select#BookName,select#IndexName');           
+            var elem = unique(inputElemenets);
+            var searchString = '';
+            var searchQuery = '';
+            var andOrClause ='';
+            var doubleQuotes = '"';
+            var counter = 0;
+            var textcounter = 0;
+            var searchValue = '';
+            var searchValueQuery = '';
+            for(var i = 0; i < elem.length; i++) {
+                if (document.getElementById(elem[i].name + '_select') != null) {
+                    counter++;  
+                }                   
+            }
+            for(var i = 0; i < elem.length; i++) {
+                if (document.getElementById(elem[i].name + '_select') != null) {
+                    setCookie('default' + elem[i].name + '_select', document.getElementById(elem[i].name + '_select').selectedIndex, 0);
+                    textcounter++
+                    if (textcounter == counter) {
+                        andOrClause = '';
+                    } else {
+                        andOrClause = ' ' + document.getElementById(elem[i].name + '_select').value + '  ';
+                    }
+                        searchValue = elem[i].name + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes + '~5';
+                        searchValue = '#' + searchValue + '#';
+                        searchValueQuery = elem[i].name + ':' + doubleQuotes + jQuery.trim(elem[i].value) + doubleQuotes;
+                    searchString = searchString + searchValue + andOrClause;
+                    searchQuery = searchQuery  + searchValueQuery + andOrClause;
+                }
+            }
+            document.getElementById("lq").value = searchString;
+            document.getElementById("searchQuery").value = searchQuery;
+            document.search_${searchResult.indexName}.method = "get";
+            document.search_${searchResult.indexName}.action = "search.do";
+            document.search_${searchResult.indexName}.searchType.value = "2";           
+            document.search_${searchResult.indexName}.submit();
+        } catch (err) {
+            $.prompt(err.message,{buttons:{Ok:true},	prefix:'extblue'});
+        }
+    } 
+    
+</script>
+<form name="search_${searchResult.indexName}" id="search_${searchResult.indexName}">
+    <input type="hidden" name="indexName" value="${searchResult.indexName}">
+    <input type="hidden" name="templateName" value="${searchResult.templateName}">
+    <input type="hidden" name="searchQuery" id="searchQuery">
+    <input type="hidden" name="lq" id="lq">
+    <input type="hidden" name="searchType" id="searchType" value="${Request.searchForm.searchType}">
+    
+            <table align="center"><tr align="center"><td align="center"><b>Historic Index Search</b></td></tr></table>
+            <table  align="center" >
+                     <tr>
+                        <td align="right" name="q" id="q"><b><font class="label">Book Type:</font></b></td>
+				    <td colspan="2">
+					<#function getDocument URL, indexName, query>
+						<#assign sc = new("net.javacoding.xsearch.api.SearchConnection")>
+						<#assign searchQuery = new("net.javacoding.xsearch.api.SearchQuery")>
+						${sc.setIndex(indexName)}
+						${sc.setURL(URL)}
+						${searchQuery.setAdvancedQuery(query)}
+						<#assign sr = sc.search(searchQuery)>
+						<#return sr.getDocList()>
+					</#function>
+
+					<#assign uri = pageStyleUtil.getSystemValue("url") + request.getContextPath()>
+					<#assign booktypes = getDocument(uri, "booktype", "")>
+					<select name="Booktype" id="Booktype">
+							  <option value="">Select a Book Type</option>
+					     <#if booktypes?has_content>
+						 <#foreach doc in booktypes>
+						      <option value="${doc.getString("Booktype")}">${doc.getString("Booktype")}</option>  
+						 </#foreach>
+					     </#if>
+					</select>
+			            <script language="javascript">
+			               if (getCookie('defaultBooktype') != null) {
+					    //alert(getCookie('defaultBooktype'));
+					    document.getElementById("Booktype").value = getCookie('defaultBooktype');
+			 		}
+	                             </script>
+			</td> 
+			<td align="left" style="display:none;">
+				    <select name="Booktype_select" id="Booktype_select" >
+					<option value="AND" >AND</option>
+					<option value="OR" >OR</option>
+				    </select>
+				    <script language="javascript">                                          
+					if (getCookie('defaultBooktype_select') != null) {
+					    document.getElementById("Booktype_select").options[getCookie('defaultBooktype_select')].selected = true;
+					}
+				    </script>                                           
+                                        </td>
+                                        
+                                        
+                                <#if Request.searchForm.searchType = "1">
+                                    <script language="javascript">  
+                                          document.getElementById('q').focus();
+                                    </script>
+                                </#if>
+                        </td>
+                        
+                         <td align="right">
+			     <b><font class="label">Book Name:</font></b>
+			 </td>
+				    <td colspan="2">
+					<#function getDocument URL, indexName, query>
+						<#assign sc = new("net.javacoding.xsearch.api.SearchConnection")>
+						<#assign searchQuery = new("net.javacoding.xsearch.api.SearchQuery")>
+						${sc.setIndex(indexName)}
+						${sc.setURL(URL)}
+						${searchQuery.setAdvancedQuery(query)}
+						<#assign sr = sc.search(searchQuery)>
+						<#return sr.getDocList()>
+					</#function>
+                                       
+					<select name="BookName" id="BookName">
+							  <option value="">Select a Book Name</option>					
+					</select>
+			</td>
+			<td align="left" style="display:none;">
+				    <select name="BookName_select" id="BookName_select" >
+					<option value="AND" >AND</option>
+					<option value="OR" >OR</option>
+				    </select>
+				  <script language="javascript">
+				            if (getCookie('defaultBookName_select') != null) {
+					    //alert(getCookie('defaultBookName'));
+					    document.getElementById("BookName_select").options[getCookie('defaultBookName_select')].selected = true;
+					}
+				    </script>                                         
+			</td>
+				<#if Request.searchForm.searchType = "1">
+				     <script language="javascript">  
+					   document.getElementById('q').focus();
+				     </script>
+				 </#if>
+			 </td>
+                 
+			 <td align="right">
+			     <b><font class="label">Index Name:</font></b>
+			 </td>
+				    <td colspan="2">
+					<#function getDocument URL, indexName, query>
+						<#assign sc = new("net.javacoding.xsearch.api.SearchConnection")>
+						<#assign searchQuery = new("net.javacoding.xsearch.api.SearchQuery")>
+						${sc.setIndex(indexName)}
+						${sc.setURL(URL)}
+						${searchQuery.setAdvancedQuery(query)}
+						<#assign sr = sc.search(searchQuery)>
+						<#return sr.getDocList()>
+					</#function>										
+					<select name="IndexName" id="IndexName">
+					    <option value="">Select a Index Name</option>					  
+					</select>					
+			</td> 
+			
+			<td align="left" style="display:none;">
+				    <select name="IndexName_select" id="IndexName_select" >
+					<option value="AND" >AND</option>
+					<option value="OR" >OR</option>
+				    </select>
+				    <script language="javascript">                                          
+					if (getCookie('defaultIndexName_select') != null) {
+					   //alert(getCookie('defaultIndexName'));
+					    document.getElementById("IndexName_select").options[getCookie('defaultIndexName_select')].selected = true;
+					}
+				    </script>                                          
+					 </td>
+					 
+					 
+				 <#if Request.searchForm.searchType = "1">
+				     <script language="javascript">  
+					   document.getElementById('q').focus();
+				     </script>
+				 </#if>
+			 </td>  
+			 <td align="left">   
+			 			    <button type="button" class="search" onclick="javascript:postAdvancedSearch()">Search</button>
+			</td>
+                </tr>
+            </table>
+            
+           
+
+</form>
+<#include "searchBox_extra.stl">
+<script>
+$('#Booktype').change(function() {
+        if ($(this).val() != "") {
+        $("#BookName").children().remove();
+        $("#BookName").append('<option value="">Select a Book Name</option>');
+ 	var url = "search.do?indexName=bookname&templateName=json&lq=Booktype:%22" + $(this).val() + "%22"; 
+            $.getJSON(url,
+            function(data){
+                $.each(data.items, function(i,item){                       
+                  if (item.BookName != "") {       
+ 	              $("#BookName").append('<option value="' + item.BookName + '">' + item.BookName + '</option>');
+                   }
+                 });		     
+            });	  	     
+         } else {
+           $("#BookName").children().remove();
+           $("#BookName").append('<option value="">Select a Book Name</option>');    
+         }
+         $("#IndexName").children().remove();
+         $("#IndexName").append('<option value="">Select a Index Name</option>'); 
+});
+$('#BookName').change(function() {
+        if ($(this).val() != "") {
+        $("#IndexName").children().remove();
+        $("#IndexName").append('<option value="">Select a Index Name</option>');
+ 	var url = "search.do?indexName=indexname&templateName=json&lq=%23Booktype%3A%22" + $('#Booktype').val() + "%22~5%23+AND++%23BookName%3A%22" + $(this).val() + "%22~5%23"; 
+            $.getJSON(url,
+            function(data){
+                $.each(data.items, function(i,item){  
+                      if (item.IndexName != "") {     
+ 	                  $("#IndexName").append("<option value='" + item.IndexName + "'>" + item.IndexName + "</option>");
+                      }
+                 });		     
+            });
+	   	     
+         } else {
+           $("#IndexName").children().remove();
+           $("#IndexName").append('<option value="">Select a Index Name</option>');    
+         }
+});
+
+
+function loadBookNames() {
+	if ($("#Booktype").val() != "") {
+	        $("#BookName").children().remove();
+	        $("#BookName").append('<option value="">Select a Book Name</option>');
+	 	var url = "search.do?indexName=bookname&templateName=json&lq=Booktype:%22" + $("#Booktype").val() + "%22"; 
+	            $.getJSON(url,
+	            function(data){
+	                $.each(data.items, function(i,item){                       
+	                  if (item.BookName != "") {       
+	                  		 if (getCookie('defaultBookName') != null) {	
+	                  		 	if (item.BookName == getCookie('defaultBookName'))	{
+	                  		 		$("#BookName").append('<option value="' + item.BookName + '" selected="selected">' + item.BookName + '</option>');		
+	                  		 	} else {
+	                  		 		$("#BookName").append('<option value="' + item.BookName + '">' + item.BookName + '</option>');		
+	                  		 	}
+	                  		 } else {
+	                  		 	$("#BookName").append('<option value="' + item.BookName + '">' + item.BookName + '</option>');	
+	                  		 }
+	 	                      
+	                   }	                   
+	                 });
+	                 loadIndexNames();
+	            });	  	     
+	         } else {
+	           $("#BookName").children().remove();
+	           $("#BookName").append('<option value="">Select a Book Name</option>');    
+         }
+}
+
+function loadIndexNames() {
+	if ($("#BookName").val() != "") {
+	        $("#IndexName").children().remove();
+	        $("#IndexName").append('<option value="">Select a Index Name</option>');
+	 	var url = "search.do?indexName=indexname&templateName=json&lq=%23Booktype%3A%22" + $('#Booktype').val() + "%22~5%23+AND++%23BookName%3A%22" + $("#BookName").val() + "%22~5%23"; 
+	            $.getJSON(url,
+	            function(data){
+	                $.each(data.items, function(i,item){  
+	                     if (item.IndexName != "") {     
+	                     	if (getCookie('defaultIndexName') != null) {
+	                     	      //alert(getCookie('defaultIndexName'));
+	 	                  		if (item.IndexName == getCookie('defaultIndexName'))	{
+							$("#IndexName").append("<option value='" + item.IndexName + "' selected='selected'>" + item.IndexName + "</option>");	
+						} else { 
+							$("#IndexName").append("<option value='" + item.IndexName + "'>" + item.IndexName + "</option>");	
+	                  		 	}	 	                  		
+	 	                  	} else {
+						$("#IndexName").append("<option value='" + item.IndexName + "'>" + item.IndexName + "</option>");	
+				}
+	                     }
+	                 });		     
+	            });
+		   	     
+	         } else {
+	           $("#IndexName").children().remove();
+	           $("#IndexName").append('<option value="">Select a Index Name</option>');    
+         }
+}
+$(document).ready(function(){
+    loadBookNames();    
+        
+});
+
+</script>

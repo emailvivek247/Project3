@@ -1,0 +1,30 @@
+<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (pageStyleUtil.isUserInRoleGroup('ALL_ROLE', request))>
+<#assign result = new("org.json.simple.JSONObject")>
+<#assign filters = new("org.json.simple.JSONArray")>
+<#foreach filterColumn in searchResult.filterResult.filterColumns>
+  <#assign c = filterColumn.column>
+  <#assign _isSelfFiltered = searchResult.filterResult.hasFilteredColumn(c.name)>
+  <#assign _isParentFiltered = c.filterParentColumnName?has_content && searchResult.filterResult.hasFilteredColumn(c.filterParentColumnName)>
+  <#if (filterColumn.counts.size()>0) && !_isSelfFiltered && !c.filterParentColumnName?has_content || _isParentFiltered>
+   <#assign filter = new("org.json.simple.JSONObject")>
+   <#assign dummy = filter.put("name", c.columnName)>
+   <#assign entries = new("org.json.simple.JSONArray")>
+   <#foreach cCount in filterColumn.counts>
+    <#assign t1 = pageStyleUtil.appendQuery(searchResult.queryString, "q", c.name + ":\"" + cCount.columnValue?if_exists + "\"")>
+    <#assign t2 = pageStyleUtil.addOrSetQuery(t1, "start", null)>
+    <#assign entry = new("org.json.simple.JSONObject")>
+    <#assign dummy = entry.put("value", cCount.columnValue)>
+    <#assign dummy = entry.put("count", cCount.value)>
+    <#assign dummy = entry.put("link", "?"+t2)>
+    <#assign dummy = entries.add(entry)>
+   </#foreach>
+   <#assign dummy = filter.put("entries", entries)>
+  </#if>
+  <#assign dummy = filters.add(filter)>
+</#foreach>
+<#assign dummy = result.put("filters", filters)>
+
+<#include "documents.stl">
+
+${result}
+</#if>

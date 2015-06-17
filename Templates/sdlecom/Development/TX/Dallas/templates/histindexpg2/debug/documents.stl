@@ -1,0 +1,26 @@
+
+<#if searchResult.docs?has_content>
+<table id="searchResult" class="tablesorter">
+ <thead><tr>
+  <th>${searchResult.datasetConfiguration.getColumn("BookName").displayName}</th><th>${searchResult.datasetConfiguration.getColumn("Image").displayName}</th><th>${searchResult.datasetConfiguration.getColumn("Page").displayName}</th><th>${searchResult.datasetConfiguration.getColumn("Booktype").displayName}</th><th>${searchResult.datasetConfiguration.getColumn("IndexName").displayName}</th>
+  
+  
+  
+ </tr></thead>
+ <tbody>
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+  <#include "document.stl">
+ </#foreach>
+<#else>
+ <#include "noResults.stl"> 
+</#if>
+ </tbody>
+</table>
+
+
+<script type="text/javascript">
+$(function() {      
+    $("#searchResult").tablesorter({widgets: ['zebra']});
+}); 
+</script>

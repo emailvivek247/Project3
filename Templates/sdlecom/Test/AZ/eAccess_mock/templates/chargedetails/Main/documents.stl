@@ -1,0 +1,86 @@
+
+<#if searchResult.docs?has_content>
+<table id="charge" class="tablesorter">
+	<thead>
+		<tr>
+			<th>${searchResult.datasetConfiguration.getColumn("FinalARSCode").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("FinalARSDescription").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("OffenseClassShortDescription").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("DispositionDescription").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("DispositionDate").displayName}</th>
+		</tr>
+	</thead>
+ 	<tbody>
+	<#assign ResultId =0>
+	 <#foreach doc in searchResult.docs>
+		  <tr>
+			<td>${searchResult.highlight(doc, "FinalARSCode")}</td>
+			<td>${searchResult.highlight(doc, "FinalARSDescription")}</td>
+			<td>${searchResult.highlight(doc, "OffenseClassShortDescription")}</td>
+			<td>${searchResult.highlight(doc, "DispositionDescription")}</td>
+			<td>${searchResult.highlight(doc, "DispositionDate")}</td>
+		</tr>
+ 	</#foreach>
+	</tbody>
+</table>
+<#elseif searchResult.xstreamdocs?has_content>
+   <table id="charge" class="tablesorter">
+	<thead>
+		<tr>
+			<th>${searchResult.datasetConfiguration.getColumn("FinalARSCode").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("FinalARSDescription").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("OffenseClassShortDescription").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("DispositionDescription").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("DispositionDate").displayName}</th>
+		</tr>
+	</thead>
+	<tbody>
+	<#assign ResultId =0>
+	<#foreach doc in searchResult.xstreamdocs>
+		<tr>
+			<td>${searchResult.highlight(doc, "FinalARSCode")}</td>
+			<td>${searchResult.highlight(doc, "FinalARSDescription")}</td>
+			<td>${searchResult.highlight(doc, "OffenseClassShortDescription")}</td>
+			<td>${searchResult.highlight(doc, "DispositionDescription")}</td>
+			<td>${searchResult.highlight(doc, "DispositionDate")}</td>
+		</tr>
+	</#foreach>
+	</tbody>
+   </table>
+<#else>
+   <table id="charge" class="tablesorter">
+	<thead>
+		<tr>
+			<th>${searchResult.datasetConfiguration.getColumn("FinalARSCode").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("FinalARSDescription").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("OffenseClassShortDescription").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("DispositionDescription").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("DispositionDate").displayName}</th>
+		</tr>
+	</thead>
+	<tbody>
+ <#assign ResultId =0>
+  
+   			<td></td>
+   			<td></td>
+   			<td></td>
+   			<td></td>
+			<td></td>
+ 	</tbody>
+   </table>
+</#if>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	oTable = $('#charge').dataTable({
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bSort": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		"aaSorting": []
+	});
+} );
+</script>

@@ -1,0 +1,46 @@
+<b>Charge Information</b>
+       <table id="charges" class="tablesorter">
+          <thead>
+             <tr>
+<#--Names which are hardcoded are for display purposes (i.e. they need a space between words in the name)-->
+                 <th>${searchResult.datasetConfiguration.getColumn("OffenseDateFrom").displayName}</th>
+		 <th>Charge Code<#--${searchResult.datasetConfiguration.getColumn("ChargeCode").displayName}--></th>
+		 <th>Charge Description<#--${searchResult.datasetConfiguration.getColumn("ChargeDescription").displayName}--></th>
+		 <th>Charge Type<#--${searchResult.datasetConfiguration.getColumn("ChargeType").displayName}--></th>
+		 <th>${searchResult.datasetConfiguration.getColumn("Disposition").displayName}</th>
+		 <th>Disposition Date<#--${searchResult.datasetConfiguration.getColumn("DispositionDate").displayName}--></th>
+             </tr>
+           </thead>
+        <tbody>
+<#if searchResult.docs?has_content>
+<#foreach doc in searchResult.docs>
+        <#assign ChargeNames = doc.getValues("ChargeName") ChargeCode = doc.getValues("ChargeCode") ChargeDescription = doc.getValues("ChargeDescription") ChargeClass = doc.getValues("ChargeClass")
+                 ChargeType = doc.getValues("ChargeType") OffenseDateFrom = doc.getValues("OffenseDateFrom")
+                 OffenseDateTo = doc.getValues("OffenseDateTo") Disposition = doc.getValues("Disposition") DispositionDate = doc.getValues("DispositionDate") loopCounter = 0>
+
+        <#foreach ChargeName in ChargeNames>
+             <tr>
+                <td>${OffenseDateFrom[loopCounter]?replace('|', '&nbsp;')}</td>
+                <td><#if ChargeCode?has_content>${ChargeCode[loopCounter]}<#else></#if></td>
+                <td><#if ChargeDescription?has_content>${ChargeDescription[loopCounter]}<#else></#if></td>
+                <td>${ChargeType[loopCounter]?replace('|', '&nbsp;')}</td>
+                <td>${Disposition[loopCounter]?replace('|', '&nbsp;')}</td>
+                <td>${DispositionDate[loopCounter]?replace('|', '&nbsp;')}</td>
+                <#assign loopCounter = loopCounter + 1>
+            </tr>
+        </#foreach>      
+</#foreach>
+<#else>
+            <tr>
+                <td colspan="11"><b><i>No Charge Information Available.</i></b></td>               
+            </tr>
+</#if>
+  </tbody>
+</table>
+<script type="text/javascript">
+$(function() { 
+  $("#charges").tablesorter({widgets: ['zebra']});
+}); 
+</script>
+
+

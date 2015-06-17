@@ -1,0 +1,11 @@
+
+ <tr>  
+    <td>${number.format("###0.##",doc.get("AMOUNT1"))}</td>
+  <td>${searchResult.highlight(doc, "DISPLAYNAME")}</td>
+  <td>${searchResult.highlight(doc, "DOC_TYPE")}</td>
+  <td>${searchResult.highlight(doc, "FNAME")}</td>
+  <td>${searchResult.highlight(doc, "LNAME")}</td>
+  <td>${searchResult.highlight(doc, "MNAME")}</td>
+  <td>${date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("RECDATE1"))}</td>
+  <td>${number.format("###0.##",doc.get("SEQ_KEY"))}</td>
+ </tr>

@@ -1,0 +1,31 @@
+
+  		  <@display.column media="html" indexColumnName="Instrument" title="${searchResult.datasetConfiguration.getColumn(\"Instrument\").displayName}">
+		   		${number.format("###0.##",doc.get("Instrument"))}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="Instrument" title="${searchResult.datasetConfiguration.getColumn(\"Instrument\").displayName}">
+		   		${number.format("###0.##",doc.get("Instrument"))}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="Name" title="${searchResult.datasetConfiguration.getColumn(\"Name\").displayName}">
+		   	${searchResult.highlight(doc, "Name")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="Name" title="${searchResult.datasetConfiguration.getColumn(\"Name\").displayName}">
+		   	${doc.get("Name")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="EventDateDisplay" title="${searchResult.datasetConfiguration.getColumn(\"EventDateDisplay\").displayName}">
+		   	${searchResult.highlight(doc, "EventDateDisplay")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="EventDateDisplay" title="${searchResult.datasetConfiguration.getColumn(\"EventDateDisplay\").displayName}">
+		   	${doc.get("EventDateDisplay")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="PartyRole" title="${searchResult.datasetConfiguration.getColumn(\"PartyRole\").displayName}">
+		   	${searchResult.highlight(doc, "PartyRole")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="PartyRole" title="${searchResult.datasetConfiguration.getColumn(\"PartyRole\").displayName}">
+		   	${doc.get("PartyRole")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="DocType" title="${searchResult.datasetConfiguration.getColumn(\"DocType\").displayName}">
+		   	${searchResult.highlight(doc, "DocType")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="DocType" title="${searchResult.datasetConfiguration.getColumn(\"DocType\").displayName}">
+		   	${doc.get("DocType")}
+		  </@display.column>

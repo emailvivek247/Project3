@@ -1,0 +1,7 @@
+
+ <tr>
+               <td>${searchResult.highlight(doc, "CityBlock")}</td>
+             <td>${searchResult.highlight(doc, "CityTown")}</td>
+             <td>${searchResult.highlight(doc, "DESIGSTATUS")}</td>
+ </tr>
+

@@ -1,0 +1,1325 @@
+<#-- *Assign variables for Phonetic Search -->
+<#assign search = "Name,Instrument,RECDATE,DESIGSTATUS,PartyRole,IndexType,DocType,Book,Page,Lot,Block,CityBlock,MapBook,MapPage,MapInstrumentNumber,Subdivision,CityTown,Freeform,Location">
+
+<#assign display=JspTaglibs["http://displaytag.sf.net"]>
+<#assign urlEncoder = new("net.javacoding.xsearch.utility.EscapeChars")>
+<#assign ResultId =0>
+
+<table width="100%" height="100%">
+  <tr>  
+   <td valign = "TOP" width="70%">
+
+
+<#foreach doc in searchResult.docs>
+           <#assign loopCounter = 0>
+    <#foreach MAINACCOUNT_NUM in doc.getValues("MAINACCOUNT_NUM")>	      
+<center><font size="4"><b>RESIDENTIAL ACCOUNT ${MAINACCOUNT_NUM}</b></font></center>
+           <#assign loopCounter = loopCounter + 1>
+     </#foreach>
+</#foreach>
+
+
+<br>
+
+ 
+<#assign propertyCounter = 0>
+
+<#if searchResult.docs?has_content>
+    <#foreach doc in searchResult.docs>
+	<#foreach PROPERTY_ADDRESS in doc.getValues("PROPERTY_ADDRESS")>
+	   <#assign propertyCounter = 1>	
+	   <#break>
+	</#foreach>
+    </#foreach>
+</#if>
+
+
+<#if searchResult.docs?has_content>
+
+
+
+<table id="property" class="tablesorter">
+<caption class="heading"><b>Property Location</b></caption>
+<#if (propertyCounter > 0)>
+ <thead><tr>
+  <th>${searchResult.datasetConfiguration.getColumn("PROPERTY_ADDRESS").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("NBHD_CD").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("MAPSCO").displayName}</th>
+ <#-- <th>View on Map</th> -->
+  <th>Map</th>
+ </tr></thead>
+ <tbody>
+
+<#foreach doc in searchResult.docs>
+           <#assign NBHD_CD = doc.getValues("NBHD_CD")> 
+           <#assign MAPSCO = doc.getValues("MAPSCO")> 
+           <#assign loopCounter = 0>
+
+    <#foreach PROPERTY_ADDRESS in doc.getValues("PROPERTY_ADDRESS")>
+	<tr>
+       
+<td>${PROPERTY_ADDRESS}</td>
+<td>${NBHD_CD[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${MAPSCO[loopCounter]?replace('|','&nbsp;')}</td>
+<#-- <td><input type="button" class="groovybutton" OnClick="navigate(${ResultId}, false)" value="View on map"></td> -->
+<td><input type="button" class="groovybutton" OnClick="navigate(${ResultId}, true)" value="Show Property"></td>
+     <#assign ResultId = ResultId  + 1>
+           <#assign loopCounter = loopCounter + 1>
+	</tr>
+     </#foreach>
+
+</#foreach>
+
+<#else>
+<tr><td colspan=3>
+<center><b><i>Not Applicable (N/A)</i></b></center>
+</td></tr>
+</#if>
+ </tbody>
+</table>
+</#if>
+
+<#assign ownerCounter = 0>
+
+<#if searchResult.docs?has_content>
+    <#foreach doc in searchResult.docs>
+	<#foreach OWNER_NAME1 in doc.getValues("OWNER_NAME1")>
+	   <#assign ownerCounter = 1>	
+	   <#break>
+	</#foreach>
+    </#foreach>
+</#if>
+
+
+<#if searchResult.docs?has_content>
+
+
+<table id="owner" class="tablesorter">
+<caption class="heading"><b>Owner</b></caption>
+<#if (ownerCounter > 0)>
+ <thead><tr>
+  <th>${searchResult.datasetConfiguration.getColumn("OWNER_NAME1").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("OWNER_ADDRESS").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("OWNER_CITY").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("OWNER_STATE").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("OWNER_ZIPCODE").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("OWNER_COUNTRY").displayName}</th>
+ </tr></thead>
+ <tbody>
+
+<#foreach doc in searchResult.docs>
+           <#assign OWNER_ADDRESS = doc.getValues("OWNER_ADDRESS")> 
+           <#assign OWNER_CITY = doc.getValues("OWNER_CITY")> 
+           <#assign OWNER_STATE = doc.getValues("OWNER_STATE")> 
+           <#assign OWNER_ZIPCODE = doc.getValues("OWNER_ZIPCODE")> 
+           <#assign OWNER_COUNTRY = doc.getValues("OWNER_COUNTRY")> 
+           <#assign loopCounter = 0>
+
+ <#foreach OWNER_NAME1 in doc.getValues("OWNER_NAME1")>
+
+	<tr>
+<td>${OWNER_NAME1?replace('|','&nbsp;')}</td>  
+<td>${OWNER_ADDRESS[loopCounter]?replace('|', '&nbsp;')}</td>
+<td>${OWNER_CITY [loopCounter]?replace('|','&nbsp;')}</td>
+<td>${OWNER_STATE[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${OWNER_ZIPCODE [loopCounter]?replace('|','&nbsp;')}</td>
+<td>${OWNER_COUNTRY[loopCounter]?replace('|','&nbsp;')}</td>
+
+<#-- *Set cookie for Owner Name -->
+<#if OWNER_NAME1?contains('&')>
+<#list OWNER_NAME1?split("&") as NAME>
+<#if NAME_index=0>
+<#assign FIRSTPERSON = NAME?trim>
+<#elseif NAME_index=1>
+<#assign SECONDPERSON = NAME?trim>
+</#if>
+</#list> 
+<script type="text/javascript"> 
+setCookie('FIRSTOWNER_NAME1', '${FIRSTPERSON}', 0);  
+setCookie('SECONDOWNER_NAME1', '${SECONDPERSON}', 0);  
+</script>
+<#else>
+<script type="text/javascript"> 
+setCookie('FIRSTOWNER_NAME1', '${OWNER_NAME1}', 0); 
+setCookie('SECONDOWNER_NAME1', ' ', 0);  
+</script>
+</#if> 
+
+           <#assign loopCounter = loopCounter + 1>
+	</tr>
+     </#foreach>
+
+</#foreach>
+
+
+
+<#else>
+<tr><td colspan=3>
+<center><b><i>Not Applicable (N/A)</i></b></center>
+</td></tr>
+</#if>
+ </tbody>
+</table>
+</#if>
+
+<#assign multiownerCounter = 0>
+
+<#if searchResult.docs?has_content>
+    <#foreach doc in searchResult.docs>
+	<#foreach OWNER_SEQ_NUM in doc.getValues("OWNER_SEQ_NUM")>
+	   <#assign multiownerCounter = 1>	
+	   <#break>
+	</#foreach>
+    </#foreach>
+</#if>
+
+
+<#if searchResult.docs?has_content>
+
+
+
+<table id="owner" class="tablesorter">
+<caption class="heading"><b>Multi-Owner</b></caption>
+<#if (multiownerCounter > 0)>
+ <thead><tr>
+  <th>${searchResult.datasetConfiguration.getColumn("OWNER_SEQ_NUM").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("OWNER_NAME").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("OWNERSHIP_PCT").displayName}</th>
+ </tr></thead>
+ <tbody>
+
+<#foreach doc in searchResult.docs>
+           <#assign OWNER_NAME = doc.getValues("OWNER_NAME")> 
+           <#assign OWNERSHIP_PCT = doc.getValues("OWNERSHIP_PCT")> 
+           <#assign loopCounter = 0>
+
+    <#foreach OWNER_SEQ_NUM in doc.getValues("OWNER_SEQ_NUM")>
+	<tr>
+<td>${OWNER_SEQ_NUM?replace('|','&nbsp;')}</td>       
+<td>${OWNER_NAME[loopCounter]?replace('|', '&nbsp;')}</td>
+<td>${OWNERSHIP_PCT[loopCounter]?replace('|','&nbsp;')}</td>
+           <#assign loopCounter = loopCounter + 1>
+	</tr>
+     </#foreach>
+
+</#foreach>
+
+<#else>
+<tr><td colspan=3>
+<center><b><i>Not Applicable (N/A)</i></b></center>
+</td></tr>
+</#if>
+ </tbody>
+</table>
+</#if>
+
+
+<#assign legalCounter = 0>
+
+<#if searchResult.docs?has_content>
+    <#foreach doc in searchResult.docs>
+	<#foreach LEGAL1 in doc.getValues("LEGAL1")>
+	   <#assign legalCounter = 1>	
+	   <#break>
+	</#foreach>
+    </#foreach>
+</#if>
+
+
+<#if searchResult.docs?has_content>
+
+
+<table id="legal" class="tablesorter">
+<caption class="heading"><b>Legal Description</b></caption>
+<#if (legalCounter > 0)>
+ <thead><tr>
+  <th>${searchResult.datasetConfiguration.getColumn("LEGAL1").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("LEGAL2").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("LEGAL3").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("LEGAL4").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("LEGAL5").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("DEEDTRANSFERDATE").displayName}</th>
+ </tr></thead>
+ <tbody>
+
+<#foreach doc in searchResult.docs>
+           
+           <#assign LEGAL2 = doc.getValues("LEGAL2")> 
+           <#assign LEGAL3 = doc.getValues("LEGAL3")>
+           <#assign LEGAL4 = doc.getValues("LEGAL4")> 
+           <#assign LEGAL5 = doc.getValues("LEGAL5")>     
+           <#assign DEEDTRANSFERDATE = doc.getValues("DEEDTRANSFERDATE")>   
+           <#assign loopCounter = 0>
+
+
+
+    <#foreach LEGAL1 in doc.getValues("LEGAL1")>
+	<tr>
+<td>${LEGAL1?replace('|','&nbsp;')}</td>       
+<td>${LEGAL2[loopCounter]?replace('|', '&nbsp;')}</td>
+<td>${LEGAL3[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${LEGAL4[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${LEGAL5[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${DEEDTRANSFERDATE[loopCounter]?replace('|','&nbsp;')}</td>
+
+<#-- *Get Block and City Block from LEGAL2 -->
+
+<#assign LEGAL2WORDS = LEGAL2[loopCounter]?word_list>
+
+<#list LEGAL2WORDS as LEGAL2WORD>
+<#-- [${LEGAL2WORD}] is ${LEGAL2WORD_index + 1} -->
+
+<#if LEGAL2WORD?matches('BLK') || LEGAL2WORD?matches('BLOCK')>
+<#assign BLKCTYBLKWORD = LEGAL2WORD_index + 1>
+</#if>
+
+<#if LEGAL2WORD_index?string = BLKCTYBLKWORD?string>
+<#if LEGAL2WORD?contains("/")>
+<#assign BLKSUB = LEGAL2WORD?index_of('/')>
+<#assign LEGAL2BLOCK = LEGAL2WORD?substring(0,BLKSUB)>
+<#assign LEGAL2CTYBLOCK = LEGAL2WORD?substring(BLKSUB)?replace('/','')>
+<script type="text/javascript"> 
+setCookie('LEGAL2BLOCK', '${LEGAL2BLOCK}', 0);  
+setCookie('LEGAL2CTYBLOCK', '${LEGAL2CTYBLOCK}', 0); 
+</script>
+<#else>
+<#assign LEGAL2BLOCK = LEGAL2WORD>
+<script type="text/javascript"> 
+setCookie('LEGAL2BLOCK', '${LEGAL2BLOCK}', 0);  
+setCookie('LEGAL2CTYBLOCK', ' ', 0); 
+</script>
+</#if>
+</#if>
+
+
+<#if LEGAL2[loopCounter]?contains("BLK") || LEGAL2[loopCounter]?contains("BLOCK")>
+<#else>
+<script type="text/javascript"> 
+setCookie('LEGAL2BLOCK', ' ', 0);  
+setCookie('LEGAL2CTYBLOCK', ' ', 0); 
+</script>
+</#if>
+
+<#if LEGAL2WORD?matches('LOT') || LEGAL2WORD?matches('LOTS') || LEGAL2WORD?matches('LT') || LEGAL2WORD?matches('LTS')>
+<#assign LOTWORD = LEGAL2WORD_index + 1>
+</#if>
+
+<#if LEGAL2WORD_index?string = LOTWORD?string>
+<script type="text/javascript"> 
+setCookie('LEGAL2LOT', '${LEGAL2WORD}', 0); 
+</script>
+</#if>
+
+<#if LEGAL2[loopCounter]?contains("LOT") || LEGAL2[loopCounter]?contains("LOTS") || LEGAL2[loopCounter]?contains("LT") || LEGAL2[loopCounter]?contains("LTS")>
+<#else>
+<script type="text/javascript"> 
+setCookie('LEGAL2LOT', ' ', 0);  
+</script>
+</#if>
+
+</#list> 
+
+<#-- *Get Subdivision from LEGAL1 -->
+
+<#assign LEGAL1WORDS = LEGAL1?word_list>
+
+<#list LEGAL1WORDS as LEGAL1WORD>
+<#-- [${LEGAL1WORD}] is ${LEGAL1WORD_index + 1} -->
+
+<#if LEGAL1WORD?matches('BLK') || LEGAL1WORD?matches('BLOCK')>
+<#assign BLKCTYBLKWORD2 = LEGAL1WORD_index + 1>
+</#if>
+
+<#if LEGAL1WORD_index + 1?string = BLKCTYBLKWORD2?string>
+<#if LEGAL2WORD?contains("/")>
+<#assign BLKSUB2 = LEGAL1WORD?index_of('/')>
+<#assign BLK = LEGAL1WORD>
+<#assign LEGAL1BLOCK = LEGAL1WORD?substring(0,BLKSUB2)>
+<#assign LEGAL1CTYBLOCK = LEGAL1WORD?substring(BLKSUB2)?replace('/','')>
+<script type="text/javascript"> 
+setCookie('LEGAL1BLOCK', '${LEGAL1BLOCK}', 0);   
+setCookie('LEGAL1CTYBLOCK', '${LEGAL1CTYBLOCK}', 0);  
+</script>
+<#else>
+<#assign LEGAL1BLOCK = LEGAL1WORD>
+<#assign BLK = LEGAL1WORD>
+<script type="text/javascript"> 
+setCookie('LEGAL1BLOCK', '${LEGAL1BLOCK}', 0);   
+setCookie('LEGAL1CTYBLOCK', ' ', 0);  
+</script>
+</#if>
+</#if>
+
+<#if LEGAL1?contains("BLK") || LEGAL1?contains("BLOCK")>
+<#else>
+<script type="text/javascript"> 
+setCookie('LEGAL1BLOCK', ' ', 0);   
+setCookie('LEGAL1CTYBLOCK', ' ', 0);  
+</script>
+</#if>
+
+</#list>
+
+<#assign LEGAL1SUBDIVISION1 = LEGAL1?replace('BLK','')?replace(BLK,'')>
+<#--
+<#assign SUBLENGTH = LEGAL1SUBDIVISION1?length>
+<#if SUBLENGTH < 4> 
+-->
+<script type="text/javascript"> 
+setCookie('LEGAL1SUBDIVISION', '${LEGAL1SUBDIVISION1}', 0);    
+</script>
+<#--
+<#else> 
+<#assign LEGAL1SUBDIVISION = LEGAL1SUBDIVISION1?substring(0,4) + "*">
+<script type="text/javascript"> 
+setCookie('LEGAL1SUBDIVISION', '${LEGAL1SUBDIVISION}', 0);    
+</script>
+</#if>
+-->
+
+<#-- *Get Book and Page from LEGAL4 -->
+
+<#assign LEGAL4WORDS1 = LEGAL4[loopCounter]?replace('VOL', 'VOL ')?replace('INT', 'INT ')>
+<#assign LEGAL4WORDS = LEGAL4WORDS1?word_list>
+
+<#list LEGAL4WORDS as LEGAL4WORD>
+<#-- [${LEGAL4WORD}] is ${LEGAL4WORD_index + 1} -->
+
+<#if LEGAL4WORD?matches('VOL')>
+<#assign VOLPAGEWORD = LEGAL4WORD_index + 1>
+</#if>
+
+<#if LEGAL4WORD_index?string = VOLPAGEWORD?string>
+<#if LEGAL4WORD?contains("/")>
+<#assign VOLSUB = LEGAL4WORD?index_of('/')>
+<#assign LEGAL4BOOK = LEGAL4WORD?substring(0,VOLSUB)>
+<#assign LEGAL4PAGE = LEGAL4WORD?substring(VOLSUB)?replace('/','')>
+<script type="text/javascript"> 
+setCookie('LEGAL4BOOK', '${LEGAL4BOOK}', 0);    
+setCookie('LEGAL4PAGE', '${LEGAL4PAGE}', 0);    
+</script>
+<#else>
+<assign LEGAL4BOOK = LEGAL4WORD>
+<script type="text/javascript"> 
+setCookie('LEGAL4BOOK', '${LEGAL4BOOK}', 0);    
+setCookie('LEGAL4PAGE', ' ', 0);    
+</script>
+</#if>
+</#if>
+
+<#if LEGAL4[loopCounter]?contains("VOL")>
+<#else>
+<script type="text/javascript"> 
+setCookie('LEGAL4BOOK', ' ', 0);    
+setCookie('LEGAL4PAGE', ' ', 0);  
+</script>
+</#if>
+
+<#if LEGAL4WORD?matches('INT')>
+<#assign INTWORD = LEGAL4WORD_index + 1>
+</#if>
+
+<#if LEGAL4WORD_index?string = INTWORD?string>
+<script type="text/javascript"> 
+setCookie('LEGAL4INSTRUMENT', '${LEGAL4WORD}', 0);    
+</script>
+</#if>
+
+<#if LEGAL4[loopCounter]?contains("INT")>
+<#else>
+<script type="text/javascript"> 
+setCookie('LEGAL4INSTRUMENT', ' ', 0);    
+</script>
+</#if>
+
+</#list>
+
+
+           <#assign loopCounter = loopCounter + 1>
+	</tr>
+     </#foreach>
+
+</#foreach>
+
+<#else>
+<tr><td colspan=3>
+<center><b><i>Not Applicable (N/A)</i></b></center>
+</td></tr>
+</#if>
+
+ </tbody>
+</table>
+</#if>
+
+<#assign valueCounter = 0>
+
+<#if searchResult.docs?has_content>
+    <#foreach doc in searchResult.docs>
+	<#foreach IMPR_VAL in doc.getValues("IMPR_VAL")>
+	   <#assign valueCounter = 1>	
+	   <#break>
+	</#foreach>
+    </#foreach>
+</#if>
+
+
+<#if searchResult.docs?has_content>
+
+
+
+
+<table id="value" class="tablesorter">
+<caption class="heading"><b>Value</b></caption>
+<#if (valueCounter > 0)>
+ <thead><tr>
+  <th>${searchResult.datasetConfiguration.getColumn("IMPR_VAL").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("LAND_VAL").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("TOT_VAL").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("REVALUATION_YR").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("PREVIOUSREVALUATIONYEAR").displayName}</th>
+ </tr></thead>
+ <tbody>
+
+<#foreach doc in searchResult.docs>
+           
+           <#assign LAND_VAL = doc.getValues("LAND_VAL")>
+           <#assign TOT_VAL = doc.getValues("TOT_VAL")> 
+           <#assign REVALUATION_YR = doc.getValues("REVALUATION_YR")>  
+           <#assign PREVIOUSREVALUATIONYEAR = doc.getValues("PREVIOUSREVALUATIONYEAR")>   
+           <#assign loopCounter = 0>
+
+    <#foreach IMPR_VAL in doc.getValues("IMPR_VAL")>
+<#setting number_format="currency">
+	<tr>
+<td>${IMPR_VAL?number}</td>       
+<td>${LAND_VAL[loopCounter]?number}</td>
+<td>${TOT_VAL[loopCounter]?number}</td>
+<td>${REVALUATION_YR[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${PREVIOUSREVALUATIONYEAR[loopCounter]?replace('|','&nbsp;')}</td>
+
+           <#assign loopCounter = loopCounter + 1>
+	</tr>
+     </#foreach>
+
+</#foreach>
+
+<#else>
+<tr><td colspan=3>
+<center><b><i>Not Applicable (N/A)</i></b></center>
+</td></tr>
+</#if>
+ </tbody>
+</table>
+</#if>
+
+
+<#assign mainimproveCounter = 0>
+
+<#if searchResult.docs?has_content>
+    <#foreach doc in searchResult.docs>
+	<#foreach DEPRECIATION_PCT in doc.getValues("DEPRECIATION_PCT")>
+	   <#assign mainimproveCounter = 1>	
+	   <#break>
+	</#foreach>
+    </#foreach>
+</#if>
+
+
+<#if searchResult.docs?has_content>
+
+
+
+
+<table border="0" id="mainimprove" class="tablesorter">
+<caption class="heading"><b>Main Improvement</b></caption>
+<#if (mainimproveCounter > 0)>
+ <thead><tr>
+  <th>${searchResult.datasetConfiguration.getColumn("DEPRECIATION_PCT").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("BLDG_CLASS_DESC").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("YR_BUILT").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("EFF_YR_BUILT").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("ACT_AGE").displayName}</th>
+  
+ </tr></thead>
+ <tbody>
+
+<#foreach doc in searchResult.docs>
+           
+           <#assign BLDG_CLASS_DESC = doc.getValues("BLDG_CLASS_DESC")>
+           <#assign YR_BUILT = doc.getValues("YR_BUILT")>
+           <#assign EFF_YR_BUILT = doc.getValues("EFF_YR_BUILT")> 
+           <#assign ACT_AGE = doc.getValues("ACT_AGE")>  
+         
+   
+           <#assign loopCounter = 0>
+
+    <#foreach DEPRECIATION_PCT in doc.getValues("DEPRECIATION_PCT")>
+	<tr>
+<td>${DEPRECIATION_PCT?replace('|','&nbsp;')}%</td>       
+<td>${BLDG_CLASS_DESC[loopCounter]?replace('|', '&nbsp;')}</td>
+<td>${YR_BUILT[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${EFF_YR_BUILT[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${ACT_AGE[loopCounter]?replace('|','&nbsp;')}</td>
+
+
+           <#assign loopCounter = loopCounter + 1>
+	</tr>
+     </#foreach>
+
+</#foreach>
+
+ <tr>
+  <td class="heading2">${searchResult.datasetConfiguration.getColumn("CDU_RATING_DESC").displayName}</td>
+  <td class="heading2">${searchResult.datasetConfiguration.getColumn("TOT_LIVING_AREA_SF").displayName}</td>
+  <td class="heading2">${searchResult.datasetConfiguration.getColumn("TOT_MAIN_SF").displayName}</td>
+  <td class="heading2">${searchResult.datasetConfiguration.getColumn("PCT_COMPLETE").displayName}</td>
+  <td class="heading2">${searchResult.datasetConfiguration.getColumn("NUM_STORIES_DESC").displayName}</td>
+
+ </tr>
+<tr>
+
+<#foreach doc in searchResult.docs>
+
+           <#assign CDU_RATING_DESC = doc.getValues("CDU_RATING_DESC")> 
+<#assign TOT_LIVING_AREA_SF = doc.getValues("TOT_LIVING_AREA_SF")>  
+<#assign TOT_MAIN_SF = doc.getValues("TOT_MAIN_SF")>  
+<#assign PCT_COMPLETE = doc.getValues("PCT_COMPLETE")>  
+<#assign NUM_STORIES_DESC = doc.getValues("NUM_STORIES_DESC")>  
+ 
+   
+           <#assign loopCounter = 0>
+
+    <#foreach DEPRECIATION_PCT in doc.getValues("DEPRECIATION_PCT")>
+	<tr>
+<td>${CDU_RATING_DESC[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${TOT_LIVING_AREA_SF[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${TOT_MAIN_SF[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${PCT_COMPLETE[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${NUM_STORIES_DESC[loopCounter]?replace('|','&nbsp;')}</td>
+
+
+           <#assign loopCounter = loopCounter + 1>
+	</tr>
+     </#foreach>
+
+</#foreach>
+</tr>
+<tr>
+
+   <td class="heading2">${searchResult.datasetConfiguration.getColumn("CONSTR_FRAM_TYP_DESC").displayName}</td>
+   <td class="heading2">${searchResult.datasetConfiguration.getColumn("FOUNDATION_TYP_DESC").displayName}</td>
+   <td class="heading2">${searchResult.datasetConfiguration.getColumn("ROOF_TYP_DESC").displayName}</td>
+   <td class="heading2">${searchResult.datasetConfiguration.getColumn("ROOF_MAT_DESC").displayName}</td>
+<td class="heading2">${searchResult.datasetConfiguration.getColumn("FENCE_TYP_DESC").displayName}</td>
+   
+ </tr>
+<tr>
+
+<#foreach doc in searchResult.docs>
+           
+           <#assign CONSTR_FRAM_TYP_DESC = doc.getValues("CONSTR_FRAM_TYP_DESC")>
+           <#assign FOUNDATION_TYP_DESC = doc.getValues("FOUNDATION_TYP_DESC")>
+           <#assign ROOF_TYP_DESC = doc.getValues("ROOF_TYP_DESC")> 
+           <#assign ROOF_MAT_DESC = doc.getValues("ROOF_MAT_DESC")>  
+ <#assign FENCE_TYP_DESC = doc.getValues("FENCE_TYP_DESC")>  
+          
+    
+           <#assign loopCounter = 0>
+
+    <#foreach DEPRECIATION_PCT in doc.getValues("DEPRECIATION_PCT")>
+	<tr>
+<td>${CONSTR_FRAM_TYP_DESC[loopCounter]?replace('|','&nbsp;')}</td>       
+<td>${FOUNDATION_TYP_DESC[loopCounter]?replace('|', '&nbsp;')}</td>
+<td>${ROOF_TYP_DESC[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${ROOF_MAT_DESC[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${FENCE_TYP_DESC[loopCounter]?replace('|','&nbsp;')}</td>
+           <#assign loopCounter = loopCounter + 1>
+	</tr>
+     </#foreach>
+
+</#foreach>
+</tr>
+
+<tr>
+
+  
+  <td class="heading2">${searchResult.datasetConfiguration.getColumn("EXT_WALL_DESC").displayName}</td>
+  <td class="heading2">${searchResult.datasetConfiguration.getColumn("BASEMENT_DESC").displayName}</td>
+  <td class="heading2">${searchResult.datasetConfiguration.getColumn("HEATING_TYP_DESC").displayName}</td>
+  <td class="heading2">${searchResult.datasetConfiguration.getColumn("AC_TYP_DESC").displayName}</td>
+ <td class="heading2">${searchResult.datasetConfiguration.getColumn("NUM_FULL_BATHS").displayName}</td>
+ 
+ </tr>
+<tr>
+
+<#foreach doc in searchResult.docs>
+           
+
+       
+<#assign EXT_WALL_DESC = doc.getValues("EXT_WALL_DESC")>  
+<#assign BASEMENT_DESC = doc.getValues("BASEMENT_DESC")>  
+<#assign HEATING_TYP_DESC = doc.getValues("HEATING_TYP_DESC")>  
+<#assign AC_TYP_DESC = doc.getValues("AC_TYP_DESC")>  
+<#assign NUM_FULL_BATHS = doc.getValues("NUM_FULL_BATHS")>  
+    
+           <#assign loopCounter = 0>
+
+    <#foreach DEPRECIATION_PCT in doc.getValues("DEPRECIATION_PCT")>
+	<tr>
+
+<td>${EXT_WALL_DESC[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${BASEMENT_DESC[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${HEATING_TYP_DESC[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${AC_TYP_DESC[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${NUM_FULL_BATHS[loopCounter]?replace('|','&nbsp;')}</td>
+
+           <#assign loopCounter = loopCounter + 1>
+	</tr>
+     </#foreach>
+
+</#foreach>
+
+</tr>
+ <tr>
+  
+<td class="heading2">${searchResult.datasetConfiguration.getColumn("NUM_HALF_BATHS").displayName}</td>
+   <td class="heading2">${searchResult.datasetConfiguration.getColumn("NUM_KITCHENS").displayName}</td>
+   <td class="heading2">${searchResult.datasetConfiguration.getColumn("NUM_BEDROOMS").displayName}</td>
+   <td class="heading2">${searchResult.datasetConfiguration.getColumn("NUM_WET_BARS").displayName}</td>
+   <td class="heading2">${searchResult.datasetConfiguration.getColumn("NUM_FIREPLACES").displayName}</td>
+   
+ </tr>
+<tr>
+
+<#foreach doc in searchResult.docs>
+           
+    
+           <#assign NUM_HALF_BATHS = doc.getValues("NUM_HALF_BATHS")>
+           <#assign NUM_KITCHENS = doc.getValues("NUM_KITCHENS")> 
+           <#assign NUM_BEDROOMS = doc.getValues("NUM_BEDROOMS")>  
+           <#assign NUM_WET_BARS = doc.getValues("NUM_WET_BARS")> 
+<#assign NUM_FIREPLACES = doc.getValues("NUM_FIREPLACES")>  
+    
+           <#assign loopCounter = 0>
+
+    <#foreach DEPRECIATION_PCT in doc.getValues("DEPRECIATION_PCT")>
+	<tr>
+      
+<td>${NUM_HALF_BATHS[loopCounter]?replace('|', '&nbsp;')}</td>
+<td>${NUM_KITCHENS[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${NUM_BEDROOMS[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${NUM_WET_BARS[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${NUM_FIREPLACES[loopCounter]?replace('|','&nbsp;')}</td>
+           <#assign loopCounter = loopCounter + 1>
+	</tr>
+     </#foreach>
+
+</#foreach>
+</tr>
+
+<tr>
+  <td class="heading2">${searchResult.datasetConfiguration.getColumn("SPRINKLER_SYS_IND").displayName}</td>
+  <td class="heading2">${searchResult.datasetConfiguration.getColumn("DECK_IND").displayName}</td>
+  <td class="heading2">${searchResult.datasetConfiguration.getColumn("SPA_IND").displayName}</td>
+  <td class="heading2">${searchResult.datasetConfiguration.getColumn("POOL_IND").displayName}</td>
+  <td class="heading2">${searchResult.datasetConfiguration.getColumn("SAUNA_IND").displayName}</td>
+ 
+ </tr>
+<tr>
+
+<#foreach doc in searchResult.docs>
+           
+       
+<#assign SPRINKLER_SYS_IND = doc.getValues("SPRINKLER_SYS_IND")>  
+<#assign DECK_IND = doc.getValues("DECK_IND")>  
+<#assign SPA_IND = doc.getValues("SPA_IND")>  
+<#assign POOL_IND = doc.getValues("POOL_IND")>  
+<#assign SAUNA_IND = doc.getValues("SAUNA_IND")>  
+    
+           <#assign loopCounter = 0>
+
+    <#foreach DEPRECIATION_PCT in doc.getValues("DEPRECIATION_PCT")>
+	<tr>
+
+<td>${SPRINKLER_SYS_IND[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${DECK_IND[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${SPA_IND[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${POOL_IND[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${SAUNA_IND[loopCounter]?replace('|','&nbsp;')}</td>
+
+           <#assign loopCounter = loopCounter + 1>
+	</tr>
+     </#foreach>
+
+</#foreach>
+</tr>
+ </tbody>
+</table>
+
+
+<#else>
+<tr><td colspan=3>
+<center><b><i>Not Applicable (N/A)</i></b></center>
+</td></tr>
+</#if>
+ </tbody>
+</table>
+</#if>
+
+
+<#assign addimproveCounter = 0>
+
+<#if searchResult.docs?has_content>
+    <#foreach doc in searchResult.docs>
+	<#foreach SEQ_NUM in doc.getValues("SEQ_NUM")>
+	   <#assign addimproveCounter = 1>	
+	   <#break>
+	</#foreach>
+    </#foreach>
+</#if>
+
+
+<#if searchResult.docs?has_content>
+
+
+
+
+<table id="addimprove" class="tablesorter">
+<caption class="heading"><b>Additional Improvements</b></caption>
+<#if (addimproveCounter > 0)>
+ <thead><tr>
+  <th>${searchResult.datasetConfiguration.getColumn("SEQ_NUM").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("IMPR_TYP_DESC").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("CONSTR_TYP_DESC").displayName}</th>
+<th>${searchResult.datasetConfiguration.getColumn("FLOOR_TYP_DESC").displayName}</th>
+<#-- <th>${searchResult.datasetConfiguration.getColumn("EXT_WALL_DESC").displayName}</th> -->
+<th>${searchResult.datasetConfiguration.getColumn("AREA_SIZE").displayName}</th>
+ </tr></thead>
+ <tbody>
+
+<#foreach doc in searchResult.docs>
+           <#assign IMPR_TYP_DESC = doc.getValues("IMPR_TYP_DESC")> 
+           <#assign CONSTR_TYP_DESC = doc.getValues("CONSTR_TYP_DESC")> 
+<#assign FLOOR_TYP_DESC = doc.getValues("FLOOR_TYP_DESC")> 
+<#-- <#assign EXT_WALL_DESC = doc.getValues("EXT_WALL_DESC")> -->
+<#assign AREA_SIZE = doc.getValues("AREA_SIZE")> 
+           <#assign loopCounter = 0>
+
+    <#foreach SEQ_NUM in doc.getValues("SEQ_NUM")>
+	<tr>
+       
+<td>${SEQ_NUM}</td>
+<td>${IMPR_TYP_DESC[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${CONSTR_TYP_DESC[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${FLOOR_TYP_DESC[loopCounter]?replace('|','&nbsp;')}</td>
+<#-- <td>${EXT_WALL_DESC[loopCounter]?replace('|','&nbsp;')}</td> -->
+<td>${AREA_SIZE[loopCounter]?replace('|','&nbsp;')}</td>
+           <#assign loopCounter = loopCounter + 1>
+	</tr>
+     </#foreach>
+
+</#foreach>
+
+<#else>
+<tr><td colspan=3>
+<center><b><i>Not Applicable (N/A)</i></b></center>
+</td></tr>
+</#if>
+ </tbody>
+</table>
+</#if>
+
+<#assign exempmainCounter = 0>
+
+<#if searchResult.docs?has_content>
+    <#foreach doc in searchResult.docs>
+	<#foreach TJEXEMPDETAILLABEL in doc.getValues("TJEXEMPDETAILLABEL")>
+	   <#assign exempmainCounter = 1>	
+	   <#break>
+	</#foreach>
+    </#foreach>
+</#if>
+
+
+<#if searchResult.docs?has_content>
+
+<table id="exempmain" class="tablesorter">
+<caption class="heading"><b>Exemptions</b></caption>
+<#if (exempmainCounter > 0)>
+ <thead><tr>
+  <th></th>
+
+  <th>${searchResult.datasetConfiguration.getColumn("CITY_JURIS_DESC").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("SCHOOL_JURIS_DESC").displayName}</th>
+<th>${searchResult.datasetConfiguration.getColumn("COUNTY_JURIS_DESC").displayName}</th>
+<th>${searchResult.datasetConfiguration.getColumn("COLLEGE_JURIS_DESC").displayName}</th>
+<th>${searchResult.datasetConfiguration.getColumn("HOSPITAL_JURIS_DESC").displayName}</th>
+<th>${searchResult.datasetConfiguration.getColumn("SPECIAL_DIST_JURIS_DESC").displayName}</th>
+ </tr>
+
+</thead>
+ <tbody>
+
+<#foreach doc in searchResult.docs>
+           <#assign CITY_JURIS_DESC = doc.getValues("CITY_JURIS_DESC")> 
+           <#assign SCHOOL_JURIS_DESC= doc.getValues("SCHOOL_JURIS_DESC")> 
+<#assign COUNTY_JURIS_DESC = doc.getValues("COUNTY_JURIS_DESC")> 
+<#assign COLLEGE_JURIS_DESC = doc.getValues("COLLEGE_JURIS_DESC")> 
+<#assign HOSPITAL_JURIS_DESC = doc.getValues("HOSPITAL_JURIS_DESC")> 
+<#assign SPECIAL_DIST_JURIS_DESC = doc.getValues("SPECIAL_DIST_JURIS_DESC")> 
+
+
+                    <#assign loopCounter = 0>
+
+    <#foreach TJEXEMPDETAILLABEL in doc.getValues("TJEXEMPDETAILLABEL")>
+	<tr>
+       
+<td>${TJEXEMPDETAILLABEL}</td>
+<td>${CITY_JURIS_DESC[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${SCHOOL_JURIS_DESC[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${COUNTY_JURIS_DESC[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${COLLEGE_JURIS_DESC[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${HOSPITAL_JURIS_DESC[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${SPECIAL_DIST_JURIS_DESC[loopCounter]?replace('|','&nbsp;')}</td>
+           <#assign loopCounter = loopCounter + 1>
+	</tr>
+</#foreach>
+</#foreach>
+    
+
+<#foreach doc in searchResult.docs>
+
+ <#assign CITY_APPLD_VAL = doc.getValues("CITY_APPLD_VAL")> 
+           <#assign ISD_APPLD_VAL= doc.getValues("ISD_APPLD_VAL")> 
+<#assign CNTY_APPLD_VAL = doc.getValues("CNTY_APPLD_VAL")> 
+<#assign COLLEGE_APPLD_VAL = doc.getValues("COLLEGE_APPLD_VAL")> 
+<#assign HOSPITAL_APPLD_VAL = doc.getValues("HOSPITAL_APPLD_VAL")> 
+<#assign SPCL_APPLIED_VAL = doc.getValues("SPCL_APPLIED_VAL")>
+           <#assign loopCounter2 = 0>
+
+<#foreach HEXEMPDETAILLABEL in doc.getValues("HEXEMPDETAILLABEL")>
+<#setting number_format="currency">
+<tr>
+<td>${HEXEMPDETAILLABEL}</td>
+<td>${CITY_APPLD_VAL[loopCounter2]?number}</td>
+<td>${ISD_APPLD_VAL[loopCounter2]?number}</td>
+<td>${CNTY_APPLD_VAL[loopCounter2]?number}</td>
+<td>${COLLEGE_APPLD_VAL[loopCounter2]?number}</td>
+<td>${HOSPITAL_APPLD_VAL[loopCounter2]?number}</td>
+<td>${SPCL_APPLIED_VAL[loopCounter2]?number}</td>
+<#assign loopCounter2 = loopCounter2 + 1>
+</tr>
+</#foreach>
+</#foreach>
+           
+<#foreach doc in searchResult.docs>
+          <#assign TVCITY_TAXABLE_VAL = doc.getValues("TVCITY_TAXABLE_VAL")> 
+           <#assign TVSCHOOL_JURIS_VAL = doc.getValues("TVSCHOOL_JURIS_VAL")> 
+<#assign TVCOUNTY_TAXABLE_VAL = doc.getValues("TVCOUNTY_TAXABLE_VAL")> 
+<#assign TVCOLLEGE_TAXABLE_VAL = doc.getValues("TVCOLLEGE_TAXABLE_VAL")> 
+<#assign TVHOSPITAL_TAXABLE_VAL = doc.getValues("TVHOSPITAL_TAXABLE_VAL")> 
+<#assign TVSPECIAL_DIST_TAXABLE_VAL = doc.getValues("TVSPECIAL_DIST_TAXABLE_VAL")>
+           <#assign loopCounter3 = 0>
+
+<#foreach TVEXEMPDETAILLABEL in doc.getValues("TVEXEMPDETAILLABEL")>
+<#setting number_format="currency">
+<tr>
+<td>${TVEXEMPDETAILLABEL}</td>
+<td>${TVCITY_TAXABLE_VAL[loopCounter3]?number}</td>
+<td>${TVSCHOOL_JURIS_VAL[loopCounter3]?number}</td>
+<td>${TVCOUNTY_TAXABLE_VAL[loopCounter3]?number}</td>
+<td>${TVCOLLEGE_TAXABLE_VAL[loopCounter3]?number}</td>
+<td>${TVHOSPITAL_TAXABLE_VAL[loopCounter3]?number}</td>
+<td>${TVSPECIAL_DIST_TAXABLE_VAL[loopCounter3]?number}</td>
+<#assign loopCounter3 = loopCounter3 + 1>
+</tr>
+
+     </#foreach>
+
+</#foreach>
+
+
+<#else>
+<tr><td colspan=3>
+<center><b><i>Not Applicable (N/A)</i></b></center>
+</td></tr>
+</#if>
+ </tbody>
+</table>
+</#if>
+
+
+
+<#assign exempdetCounter = 0>
+
+<#if searchResult.docs?has_content>
+    <#foreach doc in searchResult.docs>
+	<#foreach TJEXEMPDETAILLABEL in doc.getValues("TJEXEMPDETAILLABEL")>
+	   <#assign exempdetCounter = 1>	
+	   <#break>
+	</#foreach>
+    </#foreach>
+</#if>
+
+
+<#if searchResult.docs?has_content>
+
+
+
+
+<table id="exempdet" class="tablesorter">
+<caption class="heading"><b>Exemption Details</b></caption>
+<#if (exempdetCounter > 0)>
+ <thead><tr>
+  <th></th>
+
+  <th>${searchResult.datasetConfiguration.getColumn("CITY_JURIS_DESC").displayName}</th>
+  <th>${searchResult.datasetConfiguration.getColumn("SCHOOL_JURIS_DESC").displayName}</th>
+<th>${searchResult.datasetConfiguration.getColumn("COUNTY_JURIS_DESC").displayName}</th>
+<th>${searchResult.datasetConfiguration.getColumn("COLLEGE_JURIS_DESC").displayName}</th>
+<th>${searchResult.datasetConfiguration.getColumn("HOSPITAL_JURIS_DESC").displayName}</th>
+<th>${searchResult.datasetConfiguration.getColumn("SPECIAL_DIST_JURIS_DESC").displayName}</th>
+<th>Total</th>
+ </tr>
+
+</thead>
+ <tbody>
+
+<#foreach doc in searchResult.docs>
+           <#assign CITY_JURIS_DESC = doc.getValues("CITY_JURIS_DESC")> 
+           <#assign SCHOOL_JURIS_DESC= doc.getValues("SCHOOL_JURIS_DESC")> 
+<#assign COUNTY_JURIS_DESC = doc.getValues("COUNTY_JURIS_DESC")> 
+<#assign COLLEGE_JURIS_DESC = doc.getValues("COLLEGE_JURIS_DESC")> 
+<#assign HOSPITAL_JURIS_DESC = doc.getValues("HOSPITAL_JURIS_DESC")> 
+<#assign SPECIAL_DIST_JURIS_DESC = doc.getValues("SPECIAL_DIST_JURIS_DESC")> 
+
+
+                    <#assign loopCounter = 0>
+
+    <#foreach TJEXEMPDETAILLABEL in doc.getValues("TJEXEMPDETAILLABEL")>
+	<tr>
+       
+<td>${TJEXEMPDETAILLABEL}</td>
+<td>${CITY_JURIS_DESC[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${SCHOOL_JURIS_DESC[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${COUNTY_JURIS_DESC[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${COLLEGE_JURIS_DESC[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${HOSPITAL_JURIS_DESC[loopCounter]?replace('|','&nbsp;')}</td>
+<td>${SPECIAL_DIST_JURIS_DESC[loopCounter]?replace('|','&nbsp;')}</td>
+           <#assign loopCounter = loopCounter + 1>
+	</tr>
+</#foreach>
+</#foreach>
+
+<tr>
+<td>TAX RATE PER $100</td>
+<td>$0.7479</td>
+<td>$1.271343</td>
+<td>$0.233312</td>
+<td>$0.0949</td>
+<td>$0.274</td>
+<td>N/A</td>
+</tr>
+    
+         
+<#foreach doc in searchResult.docs>
+          <#assign TVCITY_TAXABLE_VAL = doc.getValues("TVCITY_TAXABLE_VAL")> 
+           <#assign TVSCHOOL_JURIS_VAL = doc.getValues("TVSCHOOL_JURIS_VAL")> 
+<#assign TVCOUNTY_TAXABLE_VAL = doc.getValues("TVCOUNTY_TAXABLE_VAL")> 
+<#assign TVCOLLEGE_TAXABLE_VAL = doc.getValues("TVCOLLEGE_TAXABLE_VAL")> 
+<#assign TVHOSPITAL_TAXABLE_VAL = doc.getValues("TVHOSPITAL_TAXABLE_VAL")> 
+<#assign TVSPECIAL_DIST_TAXABLE_VAL = doc.getValues("TVSPECIAL_DIST_TAXABLE_VAL")>
+           <#assign loopCounter3 = 0>
+
+<#foreach TVEXEMPDETAILLABEL in doc.getValues("TVEXEMPDETAILLABEL")>
+<#setting number_format="currency">
+<tr>
+<td>${TVEXEMPDETAILLABEL}</td>
+<td>${TVCITY_TAXABLE_VAL[loopCounter3]?number}</td>
+<td>${TVSCHOOL_JURIS_VAL[loopCounter3]?number}</td>
+<td>${TVCOUNTY_TAXABLE_VAL[loopCounter3]?number}</td>
+<td>${TVCOLLEGE_TAXABLE_VAL[loopCounter3]?number}</td>
+<td>${TVHOSPITAL_TAXABLE_VAL[loopCounter3]?number}</td>
+<td>${TVSPECIAL_DIST_TAXABLE_VAL[loopCounter3]?number}</td>
+<#assign loopCounter3 = loopCounter3 + 1>
+</tr>
+     </#foreach>
+</#foreach>
+
+
+<#foreach doc in searchResult.docs>
+
+ <#assign CITY_TAXABLE_VAL = doc.getValues("CITY_TAXABLE_VAL")> 
+           <#assign SCHOOL_JURIS_VAL = doc.getValues("SCHOOL_JURIS_VAL")> 
+<#assign COUNTY_TAXABLE_VAL = doc.getValues("COUNTY_TAXABLE_VAL")> 
+<#assign COLLEGE_TAXABLE_VAL = doc.getValues("COLLEGE_TAXABLE_VAL")> 
+<#assign HOSPITAL_TAXABLE_VAL = doc.getValues("HOSPITAL_TAXABLE_VAL")> 
+<#assign SPECIAL_DIST_TAXABLE_VAL = doc.getValues("SPECIAL_DIST_TAXABLE_VAL")>
+           <#assign loopCounter2 = 0>
+
+<#foreach ETEXEMPDETAILLABEL in doc.getValues("ETEXEMPDETAILLABEL")>
+<#setting number_format="currency">
+<tr>
+<td>${ETEXEMPDETAILLABEL}</td> 
+<td>${CITY_TAXABLE_VAL[loopCounter2]?number}</td>
+<td>${SCHOOL_JURIS_VAL[loopCounter2]?number}</td>
+<td>${COUNTY_TAXABLE_VAL[loopCounter2]?number}</td>
+<td>${COLLEGE_TAXABLE_VAL[loopCounter2]?number}</td>
+<td>${HOSPITAL_TAXABLE_VAL[loopCounter2]?number}</td>
+<td>${SPECIAL_DIST_TAXABLE_VAL[loopCounter2]?replace('|','&nbsp;')}</td>
+<td>$#{CITY_TAXABLE_VAL[loopCounter2]?number + SCHOOL_JURIS_VAL[loopCounter2]?number + COUNTY_TAXABLE_VAL[loopCounter2]?number + COLLEGE_TAXABLE_VAL[loopCounter2]?number + HOSPITAL_TAXABLE_VAL[loopCounter2]?number ; m2M2}</td>
+<#assign loopCounter2 = loopCounter2 + 1>
+</tr>
+</#foreach>
+</#foreach>
+
+
+
+<#foreach doc in searchResult.docs>
+
+ <#assign CITY_CEIL_TAX_VAL = doc.getValues("CITY_CEIL_TAX_VAL")> 
+           <#assign ISD_CEIL_TAX_VAL = doc.getValues("ISD_CEIL_TAX_VAL")> 
+<#assign COUNTY_CEIL_TAX_VAL = doc.getValues("COUNTY_CEIL_TAX_VAL")> 
+<#assign COLLEGE_CEIL_TAX_VAL = doc.getValues("COLLEGE_CEIL_TAX_VAL")> 
+<#assign HOSPITAL_CEIL_TAX_VAL = doc.getValues("HOSPITAL_CEIL_TAX_VAL")> 
+<#assign SPECIAL_CEIL_TAX_VAL = doc.getValues("SPECIAL_CEIL_TAX_VAL")>
+           <#assign loopCounter6 = 0>
+
+<#foreach TCEXEMPDETAILLABEL in doc.getValues("TCEXEMPDETAILLABEL")>
+
+<#setting number_format="currency">
+<tr>
+<td>${TCEXEMPDETAILLABEL}</td> 
+<td>${CITY_CEIL_TAX_VAL[loopCounter6]?number}</td>
+<td>${ISD_CEIL_TAX_VAL[loopCounter6]?number}</td>
+<td>${COUNTY_CEIL_TAX_VAL[loopCounter6]?number}</td>
+<td>${COLLEGE_CEIL_TAX_VAL[loopCounter6]?number}</td>
+<td>${HOSPITAL_CEIL_TAX_VAL[loopCounter6]}</td>
+<td>${SPECIAL_CEIL_TAX_VAL[loopCounter6]}</td>
+<#assign loopCounter6 = loopCounter6 + 1>
+</tr>
+</#foreach>
+</#foreach>
+
+
+
+<#else>
+
+<tr><td colspan=3>
+<center><b><i>Not Applicable (N/A)</i></b></center>
+</td></tr>
+</#if>
+ </tbody>
+</table>
+</#if>
+
+<br>
+<center><font size="4" color="red"><b>DISCLAIMER</b></font></center>
+<br>
+<#foreach doc in searchResult.docs>
+           <#assign loopCounter = 0>
+    <#foreach MAINACCOUNT_NUM in doc.getValues("MAINACCOUNT_NUM")>	      
+This is not an official record. To view the official record, please go to <a href="http://www.dallascad.org/AcctDetailRes.aspx?ID=${MAINACCOUNT_NUM}">Dallas Central Appraisal District</a>.
+           <#assign loopCounter = loopCounter + 1>
+     </#foreach>
+</#foreach>
+<br><br>
+<b>DO NOT PAY TAXES BASED ON THESE ESTIMATED TAXES.</b> You will receive an official tax bill from the appropriate agency when they are prepared. Taxes are collected by the agency sending you the official tax bill. To see a listing of agencies that collect taxes for your property <a href="http://www.dallascad.org/forms/TaxCollectionAgencies.pdf">click here</a>. 
+<br><br>
+The estimated taxes are provided as a courtesy and should not be relied upon in making financial or other decisions. The Dallas Central Appraisal District (DCAD) does not control the tax rate nor the amount of the taxes, as that is the responsibility of each Taxing Jurisdiction. Questions about your taxes should be directed to the appropriate taxing jurisdiction. We cannot assist you in these matters. These tax estimates are calculated by using the most current certified taxable value multiplied by the most current tax rate. It does not take into account other special or unique tax scenarios. If you wish to calculate taxes yourself, you may use the <a href="http://www.dallascad.org/TaxEst/default.aspx">TaxEstimator</a> to assist you.
+
+</td>
+
+
+<#-- *Start Tabs -->
+<td valign = "TOP" width="30%">
+ <table width="100%">
+
+<center><font size="4"><b>MAP OF PROPERTY</b></font></center>
+<br>
+
+<table width="100%" height="100%"><tbody><tr><td>
+<#include "map.stl"></tr></td></tbody>
+</table>
+
+
+
+
+<div id="wrapper">
+<br>
+<center><font size="4"><b>SUGGESTED RECORDS IN DALLAS CLERK OPR</b></font></center>
+<br><br>
+
+	<div id="content">
+	<h3 class="tab" title="By Name">
+        <div class="tabtxt">
+
+
+<#if searchResult.docs?has_content>
+	<#foreach doc in searchResult.docs>  
+    		<#assign loopCounter = 0>
+<#assign OWNER_NAME1 = doc.getValues("OWNER_NAME1")>
+   		<#foreach MAINACCOUNT_NUM in doc.getValues("MAINACCOUNT_NUM")><br>
+
+          <script language="javascript"> 
+          var FIRSTNAMECOOKIE = getCookie('FIRSTOWNER_NAME1');
+          var SECONDNAMECOOKIE = getCookie('SECONDOWNER_NAME1');
+	  document.write('<a href="${request.getContextPath()}/search.do?indexName=dallasclerkopr&templateName=MiniGrid&lq=${pageStyleUtil.encodeURL("Name:\"")}' + FIRSTNAMECOOKIE + '${pageStyleUtil.encodeURL("\"")}~5+OR++${pageStyleUtil.encodeURL("Name:\"")}' + SECONDNAMECOOKIE + '${pageStyleUtil.encodeURL("\"")}~5&Name=' + FIRSTNAMECOOKIE + '&Name_select=OR&Name2=' + SECONDNAMECOOKIE + '&searchable=${search}&length=15" target="searchiframe"><font style="color:#FFFFFF;text-decoration:none;">DALLAS CLERK OPR BY NAME</font></a><Br><br>');
+	  </script>
+
+     	</#foreach>
+</#foreach>
+</#if>
+
+
+        </div>
+        </h3>
+
+	<div class="tab">
+        <h3 class="tabtxt" title="By Legal">
+       
+<#if searchResult.docs?has_content>
+	<#foreach doc in searchResult.docs>  
+    		<#assign loopCounter = 0>
+<#assign DEEDTRANSFERDATE = doc.getValues("DEEDTRANSFERDATE")>
+   		<#foreach MAINACCOUNT_NUM in doc.getValues("MAINACCOUNT_NUM")><br>
+
+<script language="javascript">
+              
+
+         if (getCookie('LEGAL2BLOCK') == " ") {
+             var LEGAL2BLOCKCOOKIE  = getCookie('LEGAL1BLOCK'); 
+             var LEGAL2CTYBLOCKCOOKIE = getCookie('LEGAL1CTYBLOCK'); }
+
+         else {
+             var LEGAL2BLOCKCOOKIE = getCookie('LEGAL2BLOCK'); 
+             var LEGAL2CTYBLOCKCOOKIE = getCookie('LEGAL2CTYBLOCK'); }
+
+          var LEGAL2LOTCOOKIE = getCookie('LEGAL2LOT'); 
+          var LEGAL1SUBDIVISIONCOOKIE = getCookie('LEGAL1SUBDIVISION'); 
+          var LEGAL4BOOKCOOKIE = getCookie('LEGAL4BOOK'); 
+          var LEGAL4PAGECOOKIE = getCookie('LEGAL4PAGE'); 
+          var LEGAL4INSTRUMENTCOOKIE = getCookie('LEGAL4INSTRUMENT');
+
+	  document.write('<a href="${request.getContextPath()}/search.do?indexName=dallasclerkopr&templateName=MiniGrid&lq=${pageStyleUtil.encodeURL("(Block:\"")}' + LEGAL2BLOCKCOOKIE + '${pageStyleUtil.encodeURL("\"")}~5+AND++${pageStyleUtil.encodeURL("CityBlock:\"")}' + LEGAL2CTYBLOCKCOOKIE + '${pageStyleUtil.encodeURL("\"")}~5+AND++${pageStyleUtil.encodeURL("Lot:\"")}' + LEGAL2LOTCOOKIE + '${pageStyleUtil.encodeURL("\"")}~5+AND++${pageStyleUtil.encodeURL("Subdivision:\"")}' + LEGAL1SUBDIVISIONCOOKIE + '${pageStyleUtil.encodeURL("\"")}~5)+OR++${pageStyleUtil.encodeURL("(Book:\"")}' + LEGAL4BOOKCOOKIE + '${pageStyleUtil.encodeURL("\"")}~5+AND++${pageStyleUtil.encodeURL("Page:\"")}' + LEGAL4PAGECOOKIE + '${pageStyleUtil.encodeURL("\"")}~5)+OR++${pageStyleUtil.encodeURL("Instrument:\"")}' + LEGAL4INSTRUMENTCOOKIE + '${pageStyleUtil.encodeURL("\"")}~5&Block=' + LEGAL2BLOCKCOOKIE + '&Block_select=AND&CityBlock=' + LEGAL2CTYBLOCKCOOKIE + '&CityBlock_select=AND&Lot=' + LEGAL2LOTCOOKIE + '&Lot_select=AND&Subdivision=' + LEGAL1SUBDIVISIONCOOKIE + '&Subdivision_select=AND&Book=' + LEGAL4BOOKCOOKIE + '&Book_select=AND&Page=' + LEGAL4PAGECOOKIE + '&Page_select=AND&Instrument=' + LEGAL4INSTRUMENTCOOKIE + '&searchable=${search}&length=15" target="searchiframe"><font style="color:#FFFFFF;text-decoration:none;">DALLAS CLERK OPR BY LEGAL</font></a><Br><br>');
+	  </script>
+
+     	</#foreach>
+</#foreach>
+</#if>
+
+        </h3>
+        </div>
+
+	<div class="boxholder">
+		<div class="box">
+
+			<#if searchResult.docs?has_content>
+	<#foreach doc in searchResult.docs>  
+    		<#assign loopCounter = 0>
+<#assign OWNER_NAME1 = doc.getValues("OWNER_NAME1")>
+   		<#foreach MAINACCOUNT_NUM in doc.getValues("MAINACCOUNT_NUM")><br>
+
+<script language="javascript">          
+          var FIRSTNAMECOOKIE = getCookie('FIRSTOWNER_NAME1');
+          var SECONDNAMECOOKIE = getCookie('SECONDOWNER_NAME1');
+	  document.write('<iframe id="searchiframe" name="searchiframe" src="${request.getContextPath()}/search.do?indexName=dallasclerkopr&templateName=MiniGrid&lq=${pageStyleUtil.encodeURL("Name:\"")}' + FIRSTNAMECOOKIE + '${pageStyleUtil.encodeURL("\"")}~5+OR++${pageStyleUtil.encodeURL("Name:\"")}' + SECONDNAMECOOKIE + '${pageStyleUtil.encodeURL("\"")}~5&Name=' + FIRSTNAMECOOKIE + '&Name_select=OR&Name2=' + SECONDNAMECOOKIE + '&searchable=${search}&length=15" frameborder="0" width="100%" height="800px">')
+          document.write('<p>Your browser does not support iframes.</p>')
+          document.write('</iframe>')
+</script>
+
+     	</#foreach>
+</#foreach>
+</#if>
+
+		</div>
+
+	</div>
+
+
+</div>
+
+    </table>
+   </td> 
+
+
+
+<#-- *Hide Document 
+<td valign = "TOP" width="55%">
+ <table width="100%">
+	<#foreach doc in searchResult.docs>
+		<tr valign = "TOP">
+ 		<#foreach MAINACCOUNT_NUM in doc.getValues("MAINACCOUNT_NUM")>
+ 			<td align="left">
+				<a href = "https://dallas.landrecordsonline.com/LoadImage.aspx?sk=${Instrument}&format=PDF&ref=&pospdf#scrollbar=0&view=FitV" target="image" onclick="return loadit();">View Image</a>
+				&nbsp; &nbsp; <a href = "https://dallas.landrecordsonline.com/LoadImage.aspx?sk=${Instrument}&format=PDF&ref=&pos" target="_new">View Full Screen Image</a>
+                                &nbsp; &nbsp; <a href = "http://www.adobe.com/products/acrobat/readstep2.html"><img src = "${request.getContextPath()}/templates/details/Details/adobe.bmp" border = "0"></a>
+			</td>	
+		
+		</#foreach>
+		</tr>
+	</#foreach>
+<tr><td>
+<#if searchResult.docs?has_content>
+	<#foreach doc in searchResult.docs>  
+    		<#assign loopCounter = 0>
+   		<#foreach MAINACCOUNT_NUM in doc.getValues("MAINACCOUNT_NUM")>
+			<div width="100%" height="100%">				
+                            <div id="loading" style="background-repeat: no-repeat; background-position: 50% 50%;" align="center">
+                        	<iframe frameborder=0 id="image" name="image" src=''></iframe>
+                            </div>
+			</div>
+     	</#foreach>
+</#foreach>
+</td></tr>
+</#if>
+    </table>
+
+   </td> 
+
+-->
+
+  </tr>
+</table>
+
+
+
+<#--
+
+<script type="text/javascript">
+$(function() {      
+    $("#document").tablesorter({widgets: ['zebra']});
+}); 
+</script>
+
+
+<script type="text/javascript">
+$(function() {      
+    $("#property").tablesorter({widgets: ['zebra']});
+}); 
+</script>
+
+<script type="text/javascript">
+$(function() {      
+    $("#entity").tablesorter({widgets: ['zebra']});
+}); 
+</script>
+
+<script type="text/javascript">
+$(function() {      
+    $("#legal").tablesorter({widgets: ['zebra']});
+}); 
+</script>
+
+<script type="text/javascript">
+$(function() {      
+    $("#docref").tablesorter({widgets: ['zebra']});
+}); 
+</script>
+
+<script type="text/javascript">
+$(function() {      
+    $("#returnee").tablesorter({widgets: ['zebra']});
+}); 
+</script>
+ -->

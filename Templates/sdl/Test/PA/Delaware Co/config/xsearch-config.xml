@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="2B8F772BE4948F1A4F5CCF571FE2E354D6B13A0742B78313" adminuser="4509A773D406819FC2E2221BD84B8F2F864092CB009D7969">
+  <index-root-directory><![CDATA[E:\index\delaware\]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[69FFDDE30761F33F53C4284919C003A6606C5B93F5B35F14EFF34EA84D03B06BA8A9EDD046E7E9744EF7911DD32A3F4980A7AF969B82F279CEBE147CB06EF9484D83D9707CE0D79E29D2E5D4D164986C04A7DC2195D756490F6AF53DC16D78A2]]></db-url>
+      <db-username><![CDATA[D384580738DBE575FFF19446CD3B3557]]></db-username>
+      <db-password><![CDATA[08E3DB7C517E79DAD4E28B8F82D06EFF]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

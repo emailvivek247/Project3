@@ -1,0 +1,90 @@
+
+<#if searchResult.docs?has_content>
+<table id="charge" class="tablesorter">
+ <thead>
+    <tr>
+  	<th>${searchResult.datasetConfiguration.getColumn("OffenseClassDescription").displayName}</th>
+	<th>${searchResult.datasetConfiguration.getColumn("DispositionDescription").displayName}</th>
+	<th>${searchResult.datasetConfiguration.getColumn("DispositionDate").displayName}</th>
+	<th>${searchResult.datasetConfiguration.getColumn("InitialChargeDescription").displayName}</th>
+	<th>${searchResult.datasetConfiguration.getColumn("OffenseDesc").displayName}</th>
+	<th>${searchResult.datasetConfiguration.getColumn("OffenceClassCode").displayName}</th>
+    </tr>
+ </thead>
+ <tbody>
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+  <tr>
+	<td>${searchResult.highlight(doc, "OffenseClassDescription")}</td>
+	<td>${searchResult.highlight(doc, "DispositionDescription")}</td>
+	<td>${searchResult.highlight(doc, "DispositionDate")}</td>
+	<td>${searchResult.highlight(doc, "InitialChargeDescription")}</td>
+	<td>${searchResult.highlight(doc, "OffenseDesc")}</td>
+	<td>${searchResult.highlight(doc, "OffenceClassCode")}</td>
+ </tr>
+ </#foreach>
+
+ </tbody>
+</table>
+<#elseif searchResult.xstreamdocs?has_content>
+<table id="charge" class="tablesorter">
+ <thead>
+    <tr>
+  	<th>${searchResult.datasetConfiguration.getColumn("OffenseClassDescription").displayName}</th>
+	<th>${searchResult.datasetConfiguration.getColumn("DispositionDescription").displayName}</th>
+	<th>${searchResult.datasetConfiguration.getColumn("DispositionDate").displayName}</th>
+	<th>${searchResult.datasetConfiguration.getColumn("InitialChargeDescription").displayName}</th>
+	<th>${searchResult.datasetConfiguration.getColumn("OffenseDesc").displayName}</th>
+	<th>${searchResult.datasetConfiguration.getColumn("OffenceClassCode").displayName}</th>
+    </tr>
+ </thead>
+ <tbody>
+<#assign ResultId =0>
+ <#foreach doc in searchResult.xstreamdocs>
+  <tr>
+	<td>${searchResult.highlight(doc, "OffenseClassDescription")}</td>
+	<td>${searchResult.highlight(doc, "DispositionDescription")}</td>
+	<td>${searchResult.highlight(doc, "DispositionDate")}</td>
+	<td>${searchResult.highlight(doc, "InitialChargeDescription")}</td>
+	<td>${searchResult.highlight(doc, "OffenseDesc")}</td>
+	<td>${searchResult.highlight(doc, "OffenceClassCode")}</td>
+ </tr>
+ </#foreach>
+
+ </tbody>
+</table>
+<#else>
+ <table id="charge" class="tablesorter">
+  <thead>
+     <tr>
+   	<th>${searchResult.datasetConfiguration.getColumn("OffenseClassDescription").displayName}</th>
+ 	<th>${searchResult.datasetConfiguration.getColumn("DispositionDescription").displayName}</th>
+ 	<th>${searchResult.datasetConfiguration.getColumn("DispositionDate").displayName}</th>
+ 	<th>${searchResult.datasetConfiguration.getColumn("InitialChargeDescription").displayName}</th>
+ 	<th>${searchResult.datasetConfiguration.getColumn("OffenseDesc").displayName}</th>
+ 	<th>${searchResult.datasetConfiguration.getColumn("OffenceClassCode").displayName}</th>
+     </tr>
+  </thead>
+  <tbody>
+ <#assign ResultId =0>
+  
+   
+ 
+  </tbody>
+</table>
+</#if>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	oTable = $('#charge').dataTable({
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bSort": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		"aaSorting": []
+	});
+} );
+</script>

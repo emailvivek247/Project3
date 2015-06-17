@@ -1,0 +1,196 @@
+<#if searchResult.docs?has_content>
+<table id="doc" class="tablesorter">
+ <thead><tr>
+  		<th>${searchResult.datasetConfiguration.getColumn("DocumentTitle").displayName}</th>
+  		<th>${searchResult.datasetConfiguration.getColumn("DocumentDate").displayName}</th>
+<#--		<th>Add to Cart</th>
+	<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (pageStyleUtil.isUserInRoleGroup('CERT_ROLE', request))>	
+		<th>Add Certified Doc to Cart</th>
+	</#if>
+	<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || pageStyleUtil.isUserInRoleGroup('ADMIN_ROLE', request)>
+		<th>View Image</th>
+        </#if>-->
+  
+  
+ </tr></thead>
+ <tbody>
+<#assign ResultId =0>
+ <#foreach doc in searchResult.docs>
+  
+   <tr>
+	<td>${searchResult.highlight(doc, "DocumentTitle")}</td>
+	<td>${date.format("MM/dd/yyyy HH:mm:ss z",doc.getDate("DocumentDate"))}</td>
+<#--	<td><input class="cartLink" type="button" title="${doc.get("DocumentID")}" value="Add to Cart"/></td>
+<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (pageStyleUtil.isUserInRoleGroup('CERT_ROLE', request))>
+	<td><input class="cartLinkCert" type="button" name="&caseNumber=${doc.get("CaseID")}&caseEvent=${doc.get("DocumentTitle")}" title="${doc.get("DocumentID")}" value="Add Certified Document"/></td>
+</#if>
+<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || pageStyleUtil.isUserInRoleGroup('ADMIN_ROLE', request)>
+	<td><a class="nocolor pphoto" href="${request.getContextPath()}/search.do?indexName=docdetails&templateName=Image&lq=${pageStyleUtil.encodeURL("DocumentID:" + doc.get("DocumentID"))}&page=1&view=FitV&scrollbar=0&navpanes=0&statusbar=0&messages=0?iframe=true&width=50%25&height=95%25" rel="prettyPhoto[iframe]"><img border="0" title="Preview" src="<@com.currentUrlPrefix/>/resource/preview.png"></a></td>
+</#if>  -->
+		
+ </tr>
+ </#foreach>
+
+ </tbody>
+</table>
+<#elseif searchResult.xstreamdocs?has_content>
+
+<table id="doc" class="tablesorter">
+ <thead>
+ 	<tr>
+  		<th>${searchResult.datasetConfiguration.getColumn("DocumentTitle").displayName}</th>
+  		<th>${searchResult.datasetConfiguration.getColumn("DocumentDate").displayName}</th>
+<#--		<th>Add to Cart</th>
+		<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (pageStyleUtil.isUserInRoleGroup('CERT_ROLE', request))>	
+			<th>Add Certified Doc to Cart</th>
+		</#if>
+		<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || pageStyleUtil.isUserInRoleGroup('ADMIN_ROLE', request)>
+			<th>View Image</th>
+		</#if>	-->
+
+ 	</tr>
+ </thead>
+ <tbody>
+	<#assign ResultId =0>
+	 <#foreach doc in searchResult.xstreamdocs>
+
+	   <tr>
+		<td>${searchResult.highlight(doc, "DocumentTitle")}</td>
+		<td>${date.format("MM/dd/yyyy HH:mm:ss z",doc.getDate("DocumentDate"))}</td>
+<#--		<td><input class="cartLink" type="button" title="${doc.get("DocumentID")}" value="Add to Cart"/></td>
+	<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (pageStyleUtil.isUserInRoleGroup('CERT_ROLE', request))>
+		<td><input class="cartLinkCert" type="button" name="&caseNumber=${doc.get("CaseID")}&caseEvent=${doc.get("DocumentTitle")}" title="${doc.get("DocumentID")}" value="Add Certified Document"/></td>
+	</#if>
+	<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || pageStyleUtil.isUserInRoleGroup('ADMIN_ROLE', request)>
+		<td><a class="nocolor pphoto" href="${request.getContextPath()}/search.do?indexName=docdetails&templateName=Image&lq=${pageStyleUtil.encodeURL("DocumentID:" + doc.get("DocumentID"))}&page=1&view=FitV&scrollbar=0&navpanes=0&statusbar=0&messages=0?iframe=true&width=50%25&height=95%25" rel="prettyPhoto[iframe]"><img border="0" title="Preview" src="<@com.currentUrlPrefix/>/resource/preview.png"></a></td>
+	</#if>-->
+
+
+	 </tr>
+	 </#foreach>
+
+ </tbody>
+</table>
+
+<#else>
+ <table id="doc" class="tablesorter">
+ 	 <thead>
+ 		<tr>
+			<th>${searchResult.datasetConfiguration.getColumn("DocumentTitle").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("DocumentDate").displayName}</th>
+		<#--	<th>Add to Cart</th>
+		<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (pageStyleUtil.isUserInRoleGroup('CERT_ROLE', request))>	
+			<th>Add Certified Doc to Cart</th>
+		</#if>
+		<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || pageStyleUtil.isUserInRoleGroup('ADMIN_ROLE', request)>
+			<th>View Image</th>
+		</#if>-->
+ 			
+ 			
+ 		</tr>
+ 	 </thead>
+ 	 <tbody>
+		<#assign ResultId =0>
+		 
+		   <tr>
+			<td></td>
+			<td></td>
+		<#--	<td></td>
+		<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (pageStyleUtil.isUserInRoleGroup('CERT_ROLE', request))>
+			<td></td>
+		</#if>
+		<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || pageStyleUtil.isUserInRoleGroup('ADMIN_ROLE', request)>
+			<td></td>
+		</#if>-->
+
+
+		 </tr>
+		
+	
+	 </tbody>
+</table>
+ 	 
+</#if>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	oTable = $('#doc').dataTable({
+		"bJQueryUI": true,
+		"bPaginate": false,
+		"bLengthChange": false,
+		"bFilter": false,
+		"bSort": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		"aaSorting": []
+	});
+
+
+$(".gallery a[rel^='prettyPhoto']").prettyPhoto({theme:'light_rounded',animationSpeed:'fast',slideshow:false,autoplay_slideshow: false,overlay_gallery: false,keyboard_shortcuts: true,opacity:0.3});
+	   //$('a.pphoto').click(function() {
+	     //  event.preventDefault(); 
+	       //alert($(this).attr('href'));
+	       //$.fn.prettyPhoto();
+	       //$.prettyPhoto.open($(this).attr('href'),$(this).attr('title'),'');
+       //});
+   
+
+      $(".cartLink").click(function() {
+              var dataString = 'indexName=docdetails&templateName=Image&lq=DocumentID:' + $(this).attr("title");
+              $.ajax({
+                type: "POST",
+                url: "${request.getContextPath()}/search.do",
+                data: dataString,      
+                success: function(data) {
+                  $.each(data, function(i,item){                  
+                       if (item.code == "EXISTS") {
+                          var txt = item.description + "You can view your purchase using the below link, <br/> <a target='_blank' href='viewPayAsUGoPaymentDetails.admin?webTxId=" + item.moduleName + "'>View Purchase</a>";     
+                          $.prompt(txt);
+                       } else if (item.code == "SUCCESS") {
+                          if (item.count == 0) {
+                              $("span#shoppingCartItems").text('  Shopping cart is Empty');
+                              $.prompt(item.description);
+                          } else {
+                              $("span#shoppingCartItems").text('  ' + item.count + ' Item(s) in the Shopping Cart');
+                              $.prompt(item.description);
+                          }
+                       } else {
+                          $.prompt(item.description); 
+                       }
+                    });     
+                }
+              });
+          return false;
+          });
+          
+          $(".cartLinkCert").click(function() {
+              	var nameString = $(this).attr("name");
+                      var dataString = 'indexName=docdetails&templateName=Image'+ nameString + '&isCertifiedString=true&lq=DocumentID:' + $(this).attr("title");
+                      $.ajax({
+                        type: "POST",
+                        url: "${request.getContextPath()}/search.do",
+                        data: dataString,
+                        success: function(data) {
+                          $.each(data, function(i,item){
+                               if (item.code == "EXISTS") {
+                                  var txt = item.description + "You can view your purchase using the below link, <br/> <a target='_blank' href='viewPayAsUGoPaymentDetails.admin?webTxId=" + item.moduleName + "'>View Purchase</a>";
+                                  $.prompt(txt);
+                               } else if (item.code == "SUCCESS") {
+                                  if (item.count == 0) {
+                                      $("span#shoppingCartItems").text('  Shopping cart is Empty');
+                                      $.prompt(item.description);
+                                  } else {
+                                      $("span#shoppingCartItems").text('  ' + item.count + ' Item(s) in the Shopping Cart');
+                                      $.prompt(item.description);
+                                  }
+                               } else {
+                                  $.prompt(item.description);
+                               }
+                            });
+                        	}
+                      });
+                  return false;
+          });
+
+} );
+</script>

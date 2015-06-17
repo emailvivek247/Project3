@@ -1,0 +1,142 @@
+<#include "/WEB-INF/view/admin/layout/OtherBasic.stl">
+<@indexLayout title="Search Platform" encoding="utf-8">
+<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/tp.js"></script>
+<script type="text/javascript" src="templates/resources/jquery.watermarkinput.js"></script>
+<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/tp.css" />
+<link rel="shortcut icon" href="${request.getContextPath()}/favicon.ico"/>
+<#assign visibleIndexes = 0>
+
+<table width="80%" align="center" border="0">         
+
+            <tr>
+
+			<td width="2%">&nbsp</td> 
+
+			<td align="left"><img src="templates/Images/Seal2.JPG" /></td>
+
+                        <td align="center"><a href = "http://www.amcad.com"><img src="templates/Images/ROAM.png" border = "0" /></a></td>
+
+			<td align="right"><img src="templates/Images/Warren2.JPG" /></td>
+
+			<td width="2%">&nbsp</td> 
+
+                        </tr>
+
+            </table>
+
+<br/><br/>
+<div id="control" style="margin-left:auto; margin-right:auto;width:80%; ">
+<#foreach dc in dcs>
+<#if dc.isValid() && dc.displayOrder &gt;= 0 && dc.getDefaultTemplateName()?has_content>
+	<#assign visibleIndexes = visibleIndexes + 1>    
+	<#assign _controlString = _controlString + "," + "'" + dc.name + "'">
+	<div id="${dc.name}" title="${dc.displayName}" style="height:auto;">
+	<br/>
+	<form method="get" action="search.do" onsubmit="checkWaterMarkText()">
+		<input type="hidden" name="searchType" value="1">
+		<table align="center" border="0">
+			<tr>
+				<td align="right">
+					<input type="hidden" name="indexName" value="${dc.name}">
+				<#if dc.name == "dallashistorical" || dc.name == "dallashistbook" || dc.name == "dallashistindex">
+					Go To:  <a href="${request.getContextPath()}/search.do?indexName=dallashistindex">Dallas Historical Index Search</a>
+						</br>
+						</br>
+						<a href="${request.getContextPath()}/search.do?indexName=dallashistbook">Dallas Historical Book Search</a>
+					
+				<#else>
+				        <input id="textbox" class="text inputTextBox" type="text" name="q" size="81" maxlength="2048" value="${HTMLEncodedQuery}">
+				        <input type="hidden" name="searchable" value="Name,Instrument,RECDATE,DESIGSTATUS,PartyRole,IndexType,DocType,Book,Page,Lot,Block,CityBlock,MapBook,MapPage,MapInstrumentNumber,Subdivision,CityTown,Freeform,Location">
+				</td>	
+				<td >	
+					<button type="submit" class="search">Search</button>
+				</td>
+				</#if>
+			</tr>
+		</table>
+	</form>
+	
+	<br/>
+	</div>
+</#if> 
+ </#foreach>
+</div>
+<br>
+<div id="controla" style="margin-left:auto; margin-right:auto;width:80%;" class="tabs">
+	<ul class="tabs">
+		<li class="">
+			<a href="javascript:tpShow('control', 'MessageCenter');" class="active">Message Center</a>
+		</li>
+	</ul>
+<div class="tabs">
+	<div id="MessageCenter" title="Message Center" style="height:350px;">
+<br>
+         
+	<table align="left" border="0" width="100%">
+     		<tbody><tr>
+			<td width="2%">&nbsp;</td>
+                 	<td><font face="arial"> 
+                 	
+ <!-- BEGIN MODIFYING MESSAGE CENTER TEXT HERE  -->
+
+<br/>
+The Dallas County Clerk's office is pleased to announce a new update to its ROAM Site. ROAM now provides users the ability to facet by two additional options, the sequence of a party on a document and the sequence of a legal description on a document. In addition, we've included the ability to automatically set these filters in order to allow users an easy way to ensure that the results set includes only one document per line. Lastly, we've included the ability to view images directly from the search grid and, if the single results set option is selected, easily navigate from one document to the next document. Later this year we hope to release additional premium features on the ROAM site in our continuing effort to provide the constituents of Dallas County the most robust official public records search site in the country. In the future, the Clerk's office may charge a fee for the use of these and other premium features that we intend to add to the ROAM site, however, for now we have provided them to you free of charge. 
+<br /><br />
+Note: For users using Google Chrome, we recommend disabling Chrome's default PDF Viewer prior to using the site. Doing so will allow you to print the images that you are viewing. For instructions on how to disable this viewer please click <a href = "${request.getContextPath()}/search.do?indexName=documenttypes&templateName=ROAMHelp&q=&length=300#CHROME">HERE. </a>
+<br><br>
+Learn help tips about ROAM <a href = "${request.getContextPath()}/search.do?indexName=documenttypes&templateName=ROAMHelp&q=&length=300">HERE</a>! Read ROAM's User Manual <a href="${request.getContextPath()}/templates/QuickTips.pdf">HERE</a>!
+			<br><br> View ROAM's latest Dashboard functionality <a href = "${request.getContextPath()}/search.do?indexName=dash_opr_count&q=&length=10000&sortBy=YEAR&desc=N">HERE</a>!
+			<br> <!-- <br>The old website can be accessed at <a href= "http://dallas.landrecordsonline.com">Dallas.LandRecordsonline.com</a>. -->
+			<ul>
+			<!-- <li><a href = "http://dallas.landrecordsonline.com/marriageapplication.aspx">Click to Submit an Online Marriage Application</a></li>
+			<li><a href = "http://dallas.landrecordsonline.com/publicfilings.aspx">Click Here to File an Assumed Name</a></li> -->
+			<li><a href = "${request.getContextPath()}/submitMarriage.do">Click Here to File an Assumed Name or Submit an Online Marriage Application</a></li></ul>
+			</font>			
+
+
+<br/>
+			
+			 
+<!-- END MODIFYING MESSAGE CENTER TEXT HERE -->
+			
+			
+			
+			
+			</font></rem></h3></font></td>
+			<td width="2%">&nbsp;</td>                  
+              	</tr>
+	</tbody></table>
+
+
+<br>
+
+</div></div></div>
+
+
+<script type="text/javascript">
+		jQuery(function($){
+		   $(".inputTextBox").Watermark("Please Enter Name of Individual or Business");
+		   $(".inputTextBox").addClass('italic');
+		});
+
+		function checkWaterMarkText() {
+			    if ($(".inputTextBox").val() == "Please Enter Name of Individual or Business") {
+				$(".inputTextBox").val("");
+			    }
+		}
+</script>
+
+
+<#if visibleIndexes &gt; 0> 
+	<script type="text/javascript">
+	<!--	
+	tpSet('control', 'tabs'${_controlString});
+	// -->
+	</script>
+	<script type="text/javascript">
+	<!--	
+	tpSet('controla', 'tabs'${_controlStringa});
+	// -->
+	</script>
+</#if> 
+</@indexLayout>

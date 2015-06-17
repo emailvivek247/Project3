@@ -1,0 +1,33 @@
+<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (request.isUserInRole('ROAM_ADMIN') || request.isUserInRole('JEFFERSON_ADMIN') || request.isUserInRole('JEFFERSON_PROBATE_ACCESS') || request.isUserInRole('JEFFERSON_PERPAGE_ACCESS'))> 
+	<#if searchResult.docs?has_content>
+		<#foreach doc in searchResult.docs>
+
+		    <#assign fileNetAdapter = new("com.fdt.sdl.adapter.FilenetAdapter")>
+		    <#assign byteArray = fileNetAdapter.getContent(doc.get("Instrument"))>
+	  		<#if byteArray?has_content >
+		  		<#assign baos = new("java.io.ByteArrayOutputStream")>
+	  			<#assign converter = new("com.fdt.common.util.TIFFToPDFConverter")>
+		  	    <#if (converter.convert(byteArray, "Printing Prohibited", 159,159,159,0,1,false,baos,false,1) == true)>
+	    		        ${response.reset()}
+	        	        ${response.resetBuffer()}
+	  			${response.setContentType("application/pdf")}
+				${response.setHeader("Content-Disposition",  " inline; filename=document.pdf" )}
+				${response.setHeader("Expires", " 0")}
+				${response.setHeader("Cache-Control", " must-revalidate, post-check=0, pre-check=0" )} 
+				${response.setHeader("Pragma" , "public")}      
+				${baos.writeTo(response.getOutputStream())}
+				${response.getOutputStream().flush()}
+		   	    <#else>
+				 <br><br><center><b>Not Able to Generate PDF</b></center>
+	 	   	    </#if>
+	   		<#else>
+				<br><br><center><b>Image Unavailable</b></center>
+	   		</#if>
+	   		<#break>
+	    </#foreach>
+	<#else>
+		<#include "denied.html">
+	</#if>
+<#else>
+   <#include "denied.html">
+</#if>

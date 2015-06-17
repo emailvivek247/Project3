@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="E636855ADA027C885DC97854D2A214456E5A76E229A82699" adminuser="76C70C799DEE26A1A3E469F2D0AD802EE76C5F6093563F4F">
+  <index-root-directory><![CDATA[E:\index\jeffersonailis\]]></index-root-directory>
+    <data-source>
+      <name>Oracle</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[45CBCF5071039240F6F61E65669A8F56BF2651627BD1F1BEB52A9570FCE93D164D83317C15580CE7B2A7BF6B2646F15B184100FA9E0FD58392C4F27A18D2B73DCDC6559C7D92D6D4D1D0D7832F4D2C1B8A2C23AE3BDC22E44552D020252EDBC179A4B073194A3489B71EC974A9240848]]></db-url>
+      <db-username><![CDATA[]]></db-username>
+      <db-password><![CDATA[]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+   <instance-job-schedule id="0">
+  <schedule-name><![CDATA[RECREATE]]></schedule-name>
+  <job-data-string><![CDATA[jeffersonopr,Re-create Index|jeffersonml,Re-create Index|publicimages,Re-create Index|jeffersondetails,Re-create Index|]]></job-data-string>
+   <schedule id="0">
+    <is-enabled>false</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>0 0 ? * 7</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+    </instance-job-schedule>
+   <instance-job-schedule id="0">
+  <schedule-name><![CDATA[INCREMENTALS]]></schedule-name>
+  <job-data-string><![CDATA[jeffersonopr,Incremental Indexing with Thorough Deletion Detection|jeffersonml,Incremental Indexing with Thorough Deletion Detection|publicimages,Incremental Indexing|jeffersondetails,Incremental Indexing with Thorough Deletion Detection|]]></job-data-string>
+   <schedule id="0">
+    <is-enabled>false</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>0 7,8,9,10,11,12,13,14,15,16 ? * 2,3,4,5,6</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+    </instance-job-schedule>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

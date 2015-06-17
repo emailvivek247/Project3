@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="9C53C0853E159F4E0DC1B3EF5BDCF924BFDE095B300F43B7" adminuser="646EB5D307F914961A8065E15EBAC48DF2483390ED31AEFC">
+  <index-root-directory><![CDATA[E:\index\warren\]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[4A09C4D75C01F1F4C0EBB40A26898124A228CBC277D173C1577C350BA4AD28C829DB8095F1BE02B8E8F986AC02113F06F88EECF7CC1D3A4F13092540F3B8F6AF0F419835AE525293BAB81385B9E0427BE556C49B6DDA6A22A9ED254EB2DF657C]]></db-url>
+      <db-username><![CDATA[EFE54B91DD217D6C9C6ECD086D2882CC]]></db-username>
+      <db-password><![CDATA[507BFF08206B1D700B6EBE7B3D1A1FEB]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+   <instance-job-schedule id="0">
+  <schedule-name><![CDATA[RECREATE]]></schedule-name>
+  <job-data-string><![CDATA[wd,Re-create Index|cd,Re-create Index|pd,Re-create Index|chd,Re-create Index|sh,Re-create Index|sd,Re-create Index|dd,Re-create Index|]]></job-data-string>
+   <schedule id="0">
+    <is-enabled>true</is-enabled>
+    <is-interval>false</is-interval>
+    <interval>5</interval>
+    <cron-setting>25 11 ? * 6</cron-setting>
+    <indexing-mode>Incremental Indexing</indexing-mode>
+   </schedule>
+    </instance-job-schedule>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>

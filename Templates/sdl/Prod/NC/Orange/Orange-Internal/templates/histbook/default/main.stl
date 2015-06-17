@@ -1,0 +1,41 @@
+<!--  -->
+<@com.useHighlightTag '<span style="background-color:#B2C9FA">', '</span>' />
+<#include "layout.stl">
+<@layout title="Historical Book" encoding="${searchResult.encoding}">
+
+<#include "/templates/globalNav_Orange.stl">
+<#--<#include "/templates/globalBriefCase-HistoricalBook.stl">-->
+
+ <#include "searchBox.stl">
+ <@com.errorMarkup/>
+ <#include "displayPagination.stl">
+ <#include "map.stl">
+ <#include "searchResultHeader.stl">
+ 
+ <br>
+
+ <table class="main" style="width:100%">
+     <tr valign="top">
+        <td class="mainRight" style="width:30%">
+                <div id="documents"><#include "documents.stl"></div>
+        </td>
+        <td class="mainRight" style="width:70%">
+ 		<iframe frameborder=0 height=1000 width="100%" name="image" id="image" allowtransparency="true" src=''>Your browser does not support iframes.</iframe>
+ 	</td>
+</tr></table>
+
+ <#include "displayPagination.stl">
+
+<#-- *Add table for footer with Granicus logo -->
+
+ <BR>
+ <BR>
+
+<table width="100%" border="0">
+ <tr>
+  <td width="70%" align="center"><font color=#696969>Copyright &copy; <script>document.write(new Date().getFullYear())</script> Granicus, INC.</font></td>
+  <td width="15%"><#include "resultsPerPage.stl"></td>
+ </tr>
+</table>
+
+</@layout>

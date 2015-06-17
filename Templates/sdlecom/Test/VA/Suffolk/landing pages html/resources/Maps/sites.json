@@ -1,0 +1,264 @@
+showPrice({
+  "items": [
+    {
+      "id": "AL",
+      "value": "0",
+      "toolText": "AL"
+    },
+    {
+      "id": "AK",
+      "value": "0",
+      "toolText": "AK"
+    },
+    {
+      "id": "AZ",
+      "value": "0",
+      "toolText": "AZ"      
+    },
+    {
+      "id": "AR",
+      "value": "0",
+      "toolText": "AR"
+    },
+    {
+      "id": "CA",
+      "value": "0",
+      "toolText": "CA"
+    },
+    {
+      "id": "CO",
+      "value": "0",
+      "toolText": "CO"
+    },
+    {
+      "id": "CT",
+      "value": "0",
+      "toolText": "CT"
+    },
+    {
+      "id": "DE",
+      "value": "0",
+      "toolText": "DE"
+    },
+    {
+      "id": "FL",
+      "value": "0",
+      "toolText": "FL"
+    },
+    {
+      "id": "GA",
+      "value": "0",
+      "toolText": "GA"
+    },
+    {
+      "id": "HI",
+      "value": "0",
+      "toolText": "HI"
+    },
+    {
+      "id": "ID",
+      "value": "0",
+      "toolText": "ID"
+    },
+    {
+      "id": "IL",
+      "value": "0",
+      "toolText": "IL"
+    },
+    {
+      "id": "IN",
+      "value": "0",
+      "toolText": "IN"
+    },
+    {
+      "id": "IA",
+      "value": "0",
+      "toolText": "IA"
+    },
+    {
+      "id": "KS",
+      "value": "0",
+      "toolText": "KS"
+    },
+    {
+      "id": "KY",
+      "value": "0",
+      "toolText": "KY"
+    },
+    {
+      "id": "LA",
+      "value": "0",
+      "toolText": "LA"
+    },
+    {
+      "id": "ME",
+      "value": "0",
+      "toolText": "ME"
+    },
+    {
+      "id": "MD",
+      "value": "0",
+      "toolText": "MD"
+    },
+    {
+      "id": "MA",
+      "value": "0",
+      "toolText": "MA"
+    },
+    {
+      "id": "MI",
+      "value": "0",
+      "toolText": "MI"
+    },
+    {
+      "id": "MN",
+      "value": "0",
+      "toolText": "MN"
+    },
+    {
+      "id": "MS",
+      "value": "0",
+      "toolText": "MS"
+    },
+    {
+      "id": "MO",
+      "value": "0",
+      "toolText": "MO"
+    },
+    {
+      "id": "MT",
+      "value": "0",
+      "toolText": "MT"
+    },
+    {
+      "id": "NE",
+      "value": "0",
+      "toolText": "NE"
+    },
+    {
+      "id": "NV",
+      "value": "0",
+      "toolText": "NV"
+    },
+    {
+      "id": "NH",
+      "value": "0",
+      "toolText": "NH"
+    },
+    {
+      "id": "NJ",
+      "value": "0",
+      "toolText": "NJ"
+    },
+    {
+      "id": "NM",
+      "value": "0",
+      "toolText": "NM"
+    },
+    {
+      "id": "NY",
+      "value": "0",
+      "toolText": "NY"
+    },
+    {
+      "id": "NC",
+      "value": "1",
+      "toolText": "NC",
+	  "link": "j-showClients-North Carolina@Randolph County Land Records#https://randolph.landrecordsonline.com/randolph/|Orange County Land Records#http://roam.orangecountync.gov/orange/"
+    },
+    {
+      "id": "ND",
+      "value": "0",
+      "toolText": "ND"
+    },
+    {
+      "id": "OH",
+      "value": "1",
+      "toolText": "OH",
+	  "link": "j-showClients-Ohio@Warren Court Case Search#http://records.warrenmuni.us/warren/search.do"
+    },
+    {
+      "id": "OK",
+      "value": "1",
+      "toolText": "OK",
+	  "link": "j-showClients-Oklahoma@Oklahoma Land and Historical Records#https://oklahoma.amcad.com/oklahoma/search.do"
+    },
+    {
+      "id": "OR",
+      "value": "0",
+      "toolText": "OR"
+    },
+    {
+      "id": "PA",
+      "value": "0",
+      "toolText": "PA"
+    },
+    {
+      "id": "RI",
+      "value": "0",
+      "toolText": "RI"
+    },
+    {
+      "id": "SC",
+      "value": "0",
+      "toolText": "SC"
+    },
+    {
+      "id": "SD",
+      "value": "0",
+      "toolText": "SD"
+    },
+    {
+      "id": "TN",
+      "value": "0",
+      "toolText": "TN"
+    },
+    {
+      "id": "TX",
+      "value": "1",
+      "toolText": "TX",
+	  "link": "j-showClients-Texas@Dallas Land Records#http://roamdallaspropertyrecords.com/"
+    },
+    {
+      "id": "UT",
+      "value": "0",
+      "toolText": "UT"
+    },
+    {
+      "id": "VT",
+      "value": "0",
+      "toolText": "VT"
+    },
+    {
+      "id": "VA",
+      "value": "1",
+      "toolText": "VA",
+      "link": "j-showClients-Virginia@Suffolk Land Records#https://suffolk.amcad.com|Virginia Beach Land Records#https://virginiabeach.amcad.com|Virginia Beach Circuit Court Search#https://www.vbcircuitcourt.com/public/search.do"
+    },
+    {
+      "id": "WA",
+      "value": "0",
+      "toolText": "WA"
+    },
+    {
+      "id": "WV",
+      "value": "0",
+      "toolText": "WV"
+    },
+    {
+      "id": "WI",
+      "value": "0",
+      "toolText": "WI"
+    },
+    {
+      "id": "WY",
+      "value": "0",
+      "toolText": "WY"
+    },
+    {
+      "id": "DC",
+      "value": "0",
+      "toolText": "DC"
+    }
+  ]
+});

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsearch basedir="." password="95D06E4287D73873FF2C0B505F0866321CECAE462FF4B147" adminuser="F77C8773A3708AA7F1A00ADAD1E443BD0FCAE533E8CBE3D2">
+  <search-log-size-in-MB>10</search-log-size-in-MB>
+  <index-root-directory><![CDATA[E:\Index\orange]]></index-root-directory>
+    <data-source>
+      <name>SQLServer</name>
+      <driver-directory-name>sqlserver</driver-directory-name>
+      <jdbcdriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbcdriver>
+      <db-url><![CDATA[87680A81DBCBDA4BEEDBF53CEBE386E52088CACCB6F466B29E8A5DB4ED9DD845F371727998B4027BB7BE1CA56AF55FF4EF2D4BBB5DEC1F732C25AF4072699EE77F43EC57A22BCDF5A9BF6FADA8554ADE6ADF7F7BF67817935AD42442DAA79C4B]]></db-url>
+      <db-username><![CDATA[52FAC64D78F36EB8881BED66B8D69355]]></db-username>
+      <db-password><![CDATA[A8714DC4A9816F6F712BD4B04972AA9B]]></db-password>
+      <dbcp-validation-query><![CDATA[
+SELECT 1
+  ]]></dbcp-validation-query>
+    </data-source>
+  <instance-job-schedules>
+  </instance-job-schedules>
+  <logging-configuration>
+    <smtp-host><![CDATA[localhost]]></smtp-host>
+    <threshold>ERROR</threshold>
+  </logging-configuration>
+</xsearch>
