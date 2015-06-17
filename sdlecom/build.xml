@@ -162,23 +162,23 @@
 	</target>
 
 	<target name="buildJenkins" depends="buildjar">
-		<copy todir="${webcontent.web-inf}\classes">
-			<fileset dir="${basedir}\resources" includes="**/*.*" />
+		<copy todir="${webcontent.web-inf}/classes">
+			<fileset dir="${basedir}/resources" includes="**/*.*" />
 		</copy>
-		<copy todir="${webcontent.web-inf}\view\admin\security\authentication">
-			<fileset dir="${basedir}\clients\authentication" includes="**/*.*" />
+		<copy todir="${webcontent.web-inf}/view/admin/security/authentication">
+			<fileset dir="${basedir}/{client.templatepath}/authentication" includes="**/*.*" />
 		</copy>
-		<copy todir="${webcontent.web-inf}\data">
-			<fileset dir="${basedir}\clients\config" includes="**/*.*" />
+		<copy todir="${webcontent.web-inf}/data">
+			<fileset dir="${basedir}/{client.templatepath}/config" includes="**/*.*" />
 		</copy>
-		<copy todir="${webcontent}\templates">
-			<fileset dir="${basedir}\clients\templates" includes="**/*.*" />
+		<copy todir="${webcontent}/templates">
+			<fileset dir="${basedir}/{client.templatepath}/templates" includes="**/*.*" />
 		</copy>
-		<copy todir="${webcontent}\resources\custom_resources">
-			<fileset dir="${basedir}\clients\custom_resources" includes="**/*.*" />
+		<copy todir="${webcontent}/resources/custom_resources">
+			<fileset dir="${basedir}/{client.templatepath}/custom_resources" includes="**/*.*" />
 		</copy>
-		<copy todir="${webcontent.web-inf}\classes" overwrite = "true">
-			<fileset dir="${basedir}\clients\properties" includes="**/*.*" />
+		<copy todir="${webcontent.web-inf}/classes" overwrite = "true">
+			<fileset dir="${basedir}/{client.templatepath}/properties" includes="**/*.*" />
 		</copy>
 		<war destfile="dist/${warfilename}" webxml="${webcontent.web-inf}/web.xml">
 			<fileset dir="${webcontent}">
