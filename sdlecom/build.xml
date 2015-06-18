@@ -1,12 +1,12 @@
 <project name="sdlecom" default="buildwar" basedir=".">
 	<taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask"/>
 	<property file="build.properties"/>
-	<property name="java.src" 			value="${basedir}\src"/>
-	<property name="webcontent" 		value="${basedir}\WebContent\"/>
-	<property name="webcontent.web-inf" value="${webcontent}\WEB-INF\"/>
-	<property name="webcontent.lib" 	value="${webcontent.web-inf}\lib"/>
-	<property name="build_info"  		value="${basedir}\resources\system.properties"/>
-	<property name="client-conf" 		value="${webcontent.web-inf}\conf\spring\properties\client.properties"/>
+	<property name="java.src" 			value="${basedir}/src"/>
+	<property name="webcontent" 		value="${basedir}/WebContent/"/>
+	<property name="webcontent.web-inf" value="${webcontent}/WEB-INF/"/>
+	<property name="webcontent.lib" 	value="${webcontent.web-inf}/lib"/>
+	<property name="build_info"  		value="${basedir}/resources/system.properties"/>
+	<property name="client-conf" 		value="${webcontent.web-inf}/conf/spring/properties/client.properties"/>
 
 	<target name="revision" unless="increment.revision">
 		<propertyfile file="${build_info}">
@@ -84,7 +84,7 @@
 			<entry key="documentManagementSystemWsdl" value="${documentManagementSystemWsdl}" />
 			<entry key="documentManagementSystemClassName" value="${documentManagementSystemClassName}" />
 		</propertyfile>
-		<xmltask source="${basedir}\resources\logback.xml" dest="${basedir}\resources\logback.xml" failWithoutMatch="true">
+		<xmltask source="${basedir}/resources/logback.xml" dest="${basedir}/resources/logback.xml" failWithoutMatch="true">
 			<attr path="/configuration/property" attr="value" value="${prefixPathForLogs}" />
 			<replace path="/configuration/appender/subject/text()" withText="${logfileSubject}" />
 			<replace path="/configuration/appender/to/text()" withText="${toEmail}" />
@@ -94,11 +94,11 @@
 			<replace path="/configuration/appender/username/text()" withText="${smtp.username}" />
 			<replace path="/configuration/appender/password/text()" withText="${smtp.password}" />
 		</xmltask>
-		<xmltask source="${webcontent.web-inf}\conf\spring\applicationContext.xml"
-					dest="${webcontent.web-inf}\conf\spring\applicationContext.xml" failWithoutMatch="true">
+		<xmltask source="${webcontent.web-inf}/conf/spring/applicationContext.xml"
+					dest="${webcontent.web-inf}/conf/spring/applicationContext.xml" failWithoutMatch="true">
 			<attr path="/:beans/:import[1]" attr="resource" value="${ecommerce.mode}"/>
 		</xmltask>
-		<xmltask source="${webcontent.web-inf}\web.xml" dest="${webcontent.web-inf}\web.xml" failWithoutMatch="true">
+		<xmltask source="${webcontent.web-inf}/web.xml" dest="${webcontent.web-inf}/web.xml" failWithoutMatch="true">
 			<replace path="/:web-app/:context-param[4]/:param-value/text()" withText="${ecommerce.isSecurityEnabled}" />
 			<replace path="/:web-app/:context-param[5]/:param-value/text()" withText="${ecommerce.isDBService}" />
 			<replace path="/:web-app/:context-param[6]/:param-value/text()" withText="${ecommerce.isAlertsEnabled}" />
@@ -130,7 +130,7 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<jar jarfile="dist\lib\sdl.jar" compress="true">
+		<jar jarfile="dist/lib/sdl.jar" compress="true">
 			<fileset dir="build/classes">
 				<include name="**/*.class" />
 			</fileset>
@@ -147,7 +147,7 @@
 				</section>
 			</manifest>
 		</jar>
-		<jar jarfile="dist\lib\tomcat-plugin.jar" compress="true">
+		<jar jarfile="dist/lib/tomcat-plugin.jar" compress="true">
 			<fileset dir="build/classes">
 				<include name="com/fdt/sdl/plugins/tomcat/*.class" />
 			</fileset>
@@ -202,8 +202,8 @@
 	</target>
 
 	<target name="buildwar" depends="buildjar, buildDate">
-		<copy todir="${webcontent.web-inf}\classes">
-			<fileset dir="${basedir}\resources" includes="**/*.*" />
+		<copy todir="${webcontent.web-inf}/classes">
+			<fileset dir="${basedir}/resources" includes="**/*.*" />
 		</copy>
 		<war destfile="dist/${warfilename}" webxml="${webcontent.web-inf}/web.xml">
 			<fileset dir="${webcontent}">
