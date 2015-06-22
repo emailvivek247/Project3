@@ -1,0 +1,20 @@
+/sdlecom/dist
+/sdlecom/ant-lib
+
+# Ignore everything in WebContent/templates except for a few  specified files
+/sdlecom/WebContent/templates/*
+!/sdlecom/WebContent/templates/globalBriefCase.stl
+!/sdlecom/WebContent/templates/globalNav.stl
+!/sdlecom/WebContent/templates/index.stl
+!/sdlecom/WebContent/templates/messageCenterPublic.stl
+!/sdlecom/WebContent/templates/multiSearch/
+!/sdlecom/WebContent/templates/multiSearchVm/
+!/sdlecom/WebContent/templates/resources/
+
+# Ignore everything in WebContent/WEB-INF/data except for a few specified files
+/sdlecom/WebContent/WEB-INF/data/*
+!/sdlecom/WebContent/WEB-INF/data/AlertSystem.properties
+!/sdlecom/WebContent/WEB-INF/data/xsearch-config.xml
+!/sdlecom/WebContent/WEB-INF/data/xsearch-config.xml.template
+!/sdlecom/WebContent/WEB-INF/data/dictionary/
+!/sdlecom/WebContent/WEB-INF/data/properties/
