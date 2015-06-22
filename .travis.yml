@@ -1,0 +1,5 @@
+language: java
+before_install: ant -f sdlecom/build.xml init-xmltask
+script: ant -f sdlecom/build.xml buildJenkins 
+jdk:
+  - oraclejdk8

@@ -1,5 +1,5 @@
 <project name="sdlecom" default="buildwar" basedir=".">
-	<taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask"/>
+
 	<property file="build.properties"/>
 	<property name="java.src" 			value="${basedir}/src"/>
 	<property name="webcontent" 		value="${basedir}/WebContent/"/>
@@ -62,9 +62,22 @@
 		<mkdir dir="build/classes" />
 		<mkdir dir="dist" />
 		<mkdir dir="dist/lib" />
+		
 	</target>
 
-	<target name="ConfUpdate" depends="init">
+	<target name="download-xmltask">
+		<mkdir dir="ant-lib" />
+		<get src="http://downloads.sourceforge.net/project/xmltask/xmltask/1.16/xmltask.jar" dest="ant-lib" usetimestamp="true"/>
+	</target>
+
+	<target name="init-xmltask" depends="download-xmltask">
+		<path id="xmltask.lib.path">
+			<fileset dir="ant-lib" includes="*.jar"/>
+		</path>
+		<taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask" classpathref="xmltask.lib.path"/>
+	</target>
+
+	<target name="ConfUpdate" depends="init, init-xmltask">
 		<propertyfile file="${client-conf}">
 			<entry key="nodeName" value="${nodeName}" />
 			<entry key="ecommerce.clienturl" value="${ecommerce.clienturl}" />
@@ -177,7 +190,7 @@
 		<copy todir="${webcontent}/resources/custom_resources">
 			<fileset dir="${basedir}/${client.templatepath}/custom_resources" includes="**/*.*" />
 		</copy>
-		<copy todir="${webcontent.web-inf}/classes" overwrite = "true">
+		<copy todir="${webcontent.web-inf}/classes" overwrite="true">
 			<fileset dir="${basedir}/${client.templatepath}/properties" includes="**/*.*" />
 		</copy>
 		<war destfile="dist/${warfilename}" webxml="${webcontent.web-inf}/web.xml">
