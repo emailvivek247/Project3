@@ -124,7 +124,7 @@ public class WebserverStatic {
             //+" -cp "+getClassPath()
             //+"-XXPermSize=256m"
             //+" -Xms" + heapSize + "m"
-            " -Xmx" + heapSize + "m"
+            "-Xmx" + heapSize + "m"
             +" net.javacoding.xsearch.IndexManager"
             +" -config \""+ ServerConfiguration.getServerConfiguration().getConfigFile() +"\""
             +" -index "+indexName+" ";
