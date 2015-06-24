@@ -406,8 +406,8 @@ public class ImageViewerController extends AbstractBaseController {
 		Date date = new Date();
 		String footerText = super.watermarkText.concat(" - ").concat(" ").concat(certifiedDocumentNumber).concat(" -").
 			 concat(" ").concat(PageStyleUtil.format(date.toString(), super.inputFormat, super.footerDateFormat));
-		String signatureFooter = clerkName.toUpperCase().concat("\n").concat(designation).concat("\n")
-				.concat("County Of ").concat(locationName).concat("\n").concat(state).concat(".");
+		String signatureFooter = clerkName.toUpperCase().concat("\n").concat(designation).concat("\n").concat("State of Arizona").concat("\n")
+				.concat("County Of ").concat(locationName);
 		String noteOfAuthenticity = "I, ".concat(clerkName).concat(", ").concat(designation).concat(" of the ")
 				.concat(state).concat(", in and for the ").concat(locationName).concat(", " +
 				location.getNoteOfAuthenticity()  +	"  \n\nAttest: ".concat(PageStyleUtil.format(date.toString(),
