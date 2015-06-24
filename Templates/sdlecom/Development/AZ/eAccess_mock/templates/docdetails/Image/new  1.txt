@@ -26,7 +26,6 @@
 	<#assign isCertifiedString = request.getParameter("isCertifiedString") >
 	
 	<#if searchResult.docs?has_content>
-	
 		<#foreach doc in searchResult.docs>
 			<#--<#assign imagelocation = "\\\\" + doc.get("Server") + "\\" +  doc.get("Path") + "\\" + doc.get("Year") + "\\" + doc.get("Month") + "\\" + doc.get("Day") + "\\" + doc.get("ImageName")>-->
 			<#assign imagelocation = "C:\\temp\\test.tif">
@@ -56,7 +55,7 @@
 				<#else>
 					<br />
 					<br />
-					<center><b>Image is Unavailable. Please contact Granicus Support at supportRMS@granicus.com with subject line as <i>Case Number</i> you are trying to view.</b></center>
+					<center><b>Image is Unavailable. Please contact AMCAD Support at support@amcad.com with subject line as <i>Case Number</i> you are trying to view.</b></center>
 					<center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>
 				</#if>
 			<#elseif pageStyleUtil.isUserInRoleGroup('CERT_ROLE', request) || pageStyleUtil.isUserInRoleGroup('PER_PAGE_ROLE', request) || pageStyleUtil.isUserInRoleGroup('OFFICIAL_ROLE', request)>
@@ -101,75 +100,38 @@
 			</#if>
 		</#foreach>
 	<#elseif searchResult.xstreamdocs?has_content>
-		<#foreach doc in searchResult.xstreamdocs>			
+		<#foreach doc in searchResult.xstreamdocs>
+			<#--<#assign imagelocation = "\\\\" + doc.get("Server") + "\\" +  doc.get("Path") + "\\" + doc.get("Year") + "\\" + doc.get("Month") + "\\" + doc.get("Day") + "\\" + doc.get("ImageName")>-->
+			<#assign imagelocation = "C:\\temp\\test.tif">
 			<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (pageStyleUtil.isUserInRoleGroup('ADMIN_ROLE', request))>
-			
-					<#assign onbaseAdapter = new("com.fdt.common.util.adapter.DocumentManagementSystemAdapter")>
-					<#assign useDMSID = pageStyleUtil.getSystemValue("system", "useDMSID") >
-					<#if useDMSID == "true">
-						<#assign dmsID = doc.get("DocumentID") >
-						<#assign SDLDMSDocument = onbaseAdapter.getDocumentByDMSID(dmsID) >
-					<#else>
-						<#assign seqKey = doc.get("DocumentID") >
-						<#assign SDLDMSDocument = onbaseAdapter.getDocumentBySeqKey(seqKey) >
-					</#if>
-					<#assign baos = new("java.io.ByteArrayOutputStream")>			
-					<#if SDLDMSDocument?has_content && SDLDMSDocument.getFileExtension()?has_content>			
-						<#assign fileExtension = SDLDMSDocument.getFileExtension() >
-					<#elseif SDLDMSDocument?has_content && SDLDMSDocument.getErrorCode()?has_content>
-							<br />
-							<br />
-							<center><b>Error while retriving document from Document Management System. Details: ${SDLDMSDocument.getErrorCode()} ${dmsID}. Please contact Granicus Support at supportRMS@granicus.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
-							<center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>
-					<#else>
-							<br />
-							<br />
-							<center><b>Error while retriving document from Document Management System. Please contact Granicus Support at supportRMS@granicus.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
-							<center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>
-					</#if>
-			
-					<#if fileExtension?contains("tif")>	
-						<#assign converter = new("com.fdt.common.util.TIFFToPDFConverter")>					
-						<#if (converter.convert(SDLDMSDocument.getFile(), "", 159,159,159,90,0,true,baos,false,1,true) == true)>  		 
-							${response.reset()}
-							${response.resetBuffer()}
-							${response.setContentType("application/pdf")}
-							${response.setHeader("Content-Disposition",  " inline; filename=document.pdf" )}
-							${response.setHeader("Expires", " 0")}
-							${response.setHeader("Cache-Control", " must-revalidate, post-check=0, pre-check=0" )} 
-							${response.setHeader("Pragma" , "public")}      
-							${baos.writeTo(response.getOutputStream())}
-							${response.getOutputStream().flush()}
-						<#else>
-							<br />
-							<br />
-							<center><b>Tiff to Pdf Conversion Failed. Please contact Granicus Support at supportRMS@granicus.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
-							<center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>
-						</#if>
-					<#elseif fileExtension?contains("pdf")>
-						<#assign baos  = pageStyleUtil.getByteArrayOutputStreamFromByteArray(SDLDMSDocument.getFile()) >
-						<#if baos?has_content> 			
-								${response.reset()}
-								${response.resetBuffer()}
-								${response.setContentType("application/pdf")}
-								${response.setHeader("Content-Disposition",  " inline; filename=document.pdf" )}
-								${response.setHeader("Expires", " 0")}
-								${response.setHeader("Cache-Control", " must-revalidate, post-check=0, pre-check=0" )} 
-								${response.setHeader("Pragma" , "public")}      
-								${baos.writeTo(response.getOutputStream())}
-								${response.getOutputStream().flush()}       
-						<#else>
-							<br />
-							<br />
-							<center><b>Rendering Of Pdf file Failed. Please contact Granicus Support at supportRMS@granicus.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
-							<center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>
-						</#if>				
-					<#else>	<#--File Extension Should Either be tiff or PDF-->			
-						<br />
-						<br />
-						<center><b>File Extension Should Either be tiff or PDF. Please contact Granicus Support at supportRMS@granicus.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
-						<center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>				
-					</#if><#--File Extensions IF STATEMENT-->
+				<#assign baos = new("java.io.ByteArrayOutputStream")>
+				<#assign converter = new("com.fdt.common.util.TIFFToPDFConverter")>
+				<#if (converter.convert(imagelocation + ".burned", "", 159,159,159,90,0,true,baos,false,0.5,true) == true)>
+					${response.reset()}
+					${response.resetBuffer()}
+					${response.setContentType("application/pdf")}
+					${response.setHeader("Content-Disposition",  " inline; filename=document.pdf" )}
+					${response.setHeader("Expires", " 0")}
+					${response.setHeader("Cache-Control", " must-revalidate, post-check=0, pre-check=0" )}
+					${response.setHeader("Pragma" , "public")}
+					${baos.writeTo(response.getOutputStream())}
+					${response.getOutputStream().flush()}
+				<#elseif (converter.convert(imagelocation, "", 159,159,159,90,0,true,baos,false,0.5,true) == true)>
+					${response.reset()}
+					${response.resetBuffer()}
+					${response.setContentType("application/pdf")}
+					${response.setHeader("Content-Disposition",  " inline; filename=document.pdf" )}
+					${response.setHeader("Expires", " 0")}
+					${response.setHeader("Cache-Control", " must-revalidate, post-check=0, pre-check=0" )}
+					${response.setHeader("Pragma" , "public")}
+					${baos.writeTo(response.getOutputStream())}
+					${response.getOutputStream().flush()}
+				<#else>
+					<br />
+					<br />
+					<center><b>Image is Unavailable. Please contact AMCAD Support at support@amcad.com with subject line as <i>Case Number</i> you are trying to view.</b></center>
+					<center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>
+				</#if>
 			<#elseif pageStyleUtil.isUserInRoleGroup('CERT_ROLE', request) || pageStyleUtil.isUserInRoleGroup('PER_PAGE_ROLE', request) || pageStyleUtil.isUserInRoleGroup('OFFICIAL_ROLE', request)>
 				<@getUserRole request/>
 				<#if isDownload?has_content && isDownload == "Y" && downloadDocument == "Y">
@@ -178,10 +140,10 @@
 						<#assign caseNumber = request.getParameter("caseNumber") >
 						<#assign caseTitle = request.getParameter("caseTitle") >
 						<#assign caseEvent = request.getParameter("caseEvent") >
-						<#assign downloadUrl = "/downloadDocument.admin?docRetrievalMode=DMS&imagelocation=" + imagelocation + "&waterMarkStr=&waterMarkRedColorCode=159&waterMarkGreenColorCode=159&waterMarkBlueColorCode=159&fontSize=0&pageCount=0&isPrintingAllowed=true&isFillWatermark=false&opacity=0.5&keepOriginalPageSize=true&productkey=" + doc.get("CaseID") + "&productName=" + doc.get("DocumentID") + "&uniqueidentifier=" + useraccesscode + "&application=AICMS&barNumber=" + doc.get("AttorneyBarList") + "&locationName=" + doc.get("CountyName") + "&state=AZ">
+						<#assign downloadUrl = "/downloadDocument.admin?imagelocation=" + imagelocation + "&waterMarkStr=&waterMarkRedColorCode=159&waterMarkGreenColorCode=159&waterMarkBlueColorCode=159&fontSize=0&pageCount=0&isPrintingAllowed=true&isFillWatermark=false&opacity=0.5&keepOriginalPageSize=true&productkey=" + doc.get("CaseID") + "&productName=" + doc.get("DocumentID") + "&uniqueidentifier=" + useraccesscode + "&application=AICMS&barNumber=" + doc.get("AttorneyBarList") + "&locationName=" + doc.get("CountyName") + "&state=AZ">
 						${request.getServletContext().getRequestDispatcher(downloadUrl).forward(request, response)}
 					<#else>
-						<#assign downloadUrl = "/downloadDocument.admin?docRetrievalMode=DMS&imagelocation=" + imagelocation + "&waterMarkStr=&waterMarkRedColorCode=159&waterMarkGreenColorCode=159&waterMarkBlueColorCode=159&fontSize=0&pageCount=0&isPrintingAllowed=true&isFillWatermark=false&opacity=0.5&keepOriginalPageSize=true&productkey=" + doc.get("CaseID") + "&productName=" + doc.get("DocumentID") + "&uniqueidentifier=" + useraccesscode + "&application=AICMS&barNumber=" + doc.get("AttorneyBarList") + "&locationName=" + doc.get("CountyName") + "&state=AZ">
+						<#assign downloadUrl = "/downloadDocument.admin?imagelocation=" + imagelocation + "&waterMarkStr=&waterMarkRedColorCode=159&waterMarkGreenColorCode=159&waterMarkBlueColorCode=159&fontSize=0&pageCount=0&isPrintingAllowed=true&isFillWatermark=false&opacity=0.5&keepOriginalPageSize=true&productkey=" + doc.get("CaseID") + "&productName=" + doc.get("DocumentID") + "&uniqueidentifier=" + useraccesscode + "&application=AICMS&barNumber=" + doc.get("AttorneyBarList") + "&locationName=" + doc.get("CountyName") + "&state=AZ">
 						${request.getServletContext().getRequestDispatcher(downloadUrl).forward(request, response)}
 					</#if>
 				<#elseif isDownload?has_content && isDownload == "Y" && downloadDocument == "N">
@@ -190,10 +152,10 @@
 						<#assign caseTitle = request.getParameter("caseTitle") >
 						<#assign caseEvent = request.getParameter("caseEvent") >
 						<#assign useraccesscode = 'AOC_CERTIFIED_ACCESS' >
-						<#assign downloadUrl = "/viewPurchasedDocument.admin?docRetrievalMode=DMS&imagelocation=" + imagelocation + "&waterMarkStr=&waterMarkRedColorCode=159&waterMarkGreenColorCode=159&waterMarkBlueColorCode=159&fontSize=0&pageCount=0&isPrintingAllowed=true&isFillWatermark=false&opacity=0.5&keepOriginalPageSize=true&productkey=" + doc.get("CaseID") + "&productName=" + doc.get("DocumentID") + "&uniqueidentifier=" + useraccesscode + "&application=AICMS&barNumber=" + doc.get("AttorneyBarList") + "&locationName=" + doc.get("CountyName") + "&state=AZ">
+						<#assign downloadUrl = "/viewPurchasedDocument.admin?imagelocation=" + imagelocation + "&waterMarkStr=&waterMarkRedColorCode=159&waterMarkGreenColorCode=159&waterMarkBlueColorCode=159&fontSize=0&pageCount=0&isPrintingAllowed=true&isFillWatermark=false&opacity=0.5&keepOriginalPageSize=true&productkey=" + doc.get("CaseID") + "&productName=" + doc.get("DocumentID") + "&uniqueidentifier=" + useraccesscode + "&application=AICMS&barNumber=" + doc.get("AttorneyBarList") + "&locationName=" + doc.get("CountyName") + "&state=AZ">
 						${request.getServletContext().getRequestDispatcher(downloadUrl).forward(request, response)}
 					<#else>
-						<#assign downloadUrl = "/viewPurchasedDocument.admin?docRetrievalMode=DMS&imagelocation=" + imagelocation + "&waterMarkStr=&waterMarkRedColorCode=159&waterMarkGreenColorCode=159&waterMarkBlueColorCode=159&fontSize=0&pageCount=0&isPrintingAllowed=true&isFillWatermark=false&opacity=0.5&keepOriginalPageSize=true&productkey=" + doc.get("CaseID") + "&productName=" + doc.get("DocumentID") + "&uniqueidentifier=" + useraccesscode + "&application=AICMS&barNumber=" + doc.get("AttorneyBarList") + "&locationName=" + doc.get("CountyName") + "&state=AZ">
+						<#assign downloadUrl = "/viewPurchasedDocument.admin?imagelocation=" + imagelocation + "&waterMarkStr=&waterMarkRedColorCode=159&waterMarkGreenColorCode=159&waterMarkBlueColorCode=159&fontSize=0&pageCount=0&isPrintingAllowed=true&isFillWatermark=false&opacity=0.5&keepOriginalPageSize=true&productkey=" + doc.get("CaseID") + "&productName=" + doc.get("DocumentID") + "&uniqueidentifier=" + useraccesscode + "&application=AICMS&barNumber=" + doc.get("AttorneyBarList") + "&locationName=" + doc.get("CountyName") + "&state=AZ">
 						${request.getServletContext().getRequestDispatcher(downloadUrl).forward(request, response)}
 					</#if>
 				<#elseif isCertifiedString?has_content && isCertifiedString == "true">
@@ -202,11 +164,11 @@
 					<#assign caseEvent = request.getParameter("caseEvent") >
 					<#assign useraccesscode = 'AOC_CERTIFIED_ACCESS' >
 					${request.setAttribute("requestImageUrl", "search.do?&caseNumber=${caseNumber}&caseTitle=${caseTitle}&caseEvent=${caseEvent}&isCertifiedString=true&indexName=docdetails&templateName=Image&lq=DocumentID:" + doc.get('DocumentID'))}
-					<#assign accessImageUrl = "/viewImage.admin?docRetrievalMode=DMS&imagelocation=" + imagelocation + "&waterMarkStr=UNOFFICIALCERT&waterMarkRedColorCode=159&waterMarkGreenColorCode=159&waterMarkBlueColorCode=159&productkey=" + doc.get("CaseID") + "&productName=" + doc.get("DocumentID") + "&producttype=" + doc.get("DocumentTitle") + "&accessname=" + useraccesscode + "&numberofpages=3&isImageAvailable=true&uniqueidentifier=" + useraccesscode + "&application=AICMS&barNumber=" + doc.get("AttorneyBarList") + "&locationName=" + doc.get("CountyName") + "&state=AZ">
+					<#assign accessImageUrl = "/viewImage.admin?imagelocation=" + imagelocation + "&waterMarkStr=UNOFFICIALCERT&waterMarkRedColorCode=159&waterMarkGreenColorCode=159&waterMarkBlueColorCode=159&productkey=" + doc.get("CaseID") + "&productName=" + doc.get("DocumentID") + "&producttype=" + doc.get("DocumentTitle") + "&accessname=" + useraccesscode + "&numberofpages=3&isImageAvailable=true&uniqueidentifier=" + useraccesscode + "&application=AICMS&barNumber=" + doc.get("AttorneyBarList") + "&locationName=" + doc.get("CountyName") + "&state=AZ">
 					${request.getServletContext().getRequestDispatcher(accessImageUrl).forward(request, response)}
 				<#else>
 					${request.setAttribute("requestImageUrl", "search.do?indexName=docdetails&templateName=Image&lq=DocumentID:" + doc.get('DocumentID'))}
-					<#assign accessImageUrl = "/viewImage.admin?docRetrievalMode=DMS&imagelocation=" + imagelocation + "&waterMarkStr=UNOFFICIALNORMAL&waterMarkRedColorCode=159&waterMarkGreenColorCode=159&waterMarkBlueColorCode=159&productkey=" + doc.get("CaseID") + "&productName=" + doc.get("DocumentID") + "&producttype=" + doc.get("DocumentTitle") + "&accessname=" + useraccesscode + "&numberofpages=3&isImageAvailable=true&uniqueidentifier=" + useraccesscode + "&application=AICMS&barNumber=" + doc.get("AttorneyBarList") + "&locationName=" + doc.get("CountyName") + "&state=AZ">
+					<#assign accessImageUrl = "/viewImage.admin?imagelocation=" + imagelocation + "&waterMarkStr=UNOFFICIALNORMAL&waterMarkRedColorCode=159&waterMarkGreenColorCode=159&waterMarkBlueColorCode=159&productkey=" + doc.get("CaseID") + "&productName=" + doc.get("DocumentID") + "&producttype=" + doc.get("DocumentTitle") + "&accessname=" + useraccesscode + "&numberofpages=3&isImageAvailable=true&uniqueidentifier=" + useraccesscode + "&application=AICMS&barNumber=" + doc.get("AttorneyBarList") + "&locationName=" + doc.get("CountyName") + "&state=AZ">
 					${request.getServletContext().getRequestDispatcher(accessImageUrl).forward(request, response)}
 				</#if>
 			</#if>
@@ -215,13 +177,13 @@
 		<#if pageStyleUtil.isUserInRoleGroup('ADMIN_ROLE', request)>
 			<br />
 			<br />
-			<center><b>Image is Unavailable. Please contact Granicus Support at supportRMS@granicus.com with subject line as <i>Case Number</i> you are trying to view.</b></center>
+			<center><b>Image is Unavailable. Please contact AMCAD Support at support@amcad.com with subject line as <i>Case Number</i> you are trying to view.</b></center>
 			<center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>
 		<#elseif pageStyleUtil.isUserInRoleGroup('PER_PAGE_ROLE', request) || pageStyleUtil.isUserInRoleGroup('OFFICIAL_ROLE', request)>
 			<@getUserRole request/>
 			${request.setAttribute("requestImageUrl", "")}
 			<#assign imagelocation = "noimage.tif">
-			<#assign accessImageUrl = "/viewImage.admin?docRetrievalMode=DMS&imagelocation=" + imagelocation + "&waterMarkStr=UNOFFICIAL&waterMarkRedColorCode=159&waterMarkGreenColorCode=159&waterMarkBlueColorCode=159&productkey=NONE&producttype=NONE&accessname=" + useraccesscode + "&numberofpages=0&isImageAvailable=false&uniqueidentifier=" + useraccesscode + "&application=AICMS&barNumber=" + doc.get("AttorneyBarList") + "&locationName=" + doc.get("CountyName") + "&state=AZ">
+			<#assign accessImageUrl = "/viewImage.admin?imagelocation=" + imagelocation + "&waterMarkStr=UNOFFICIAL&waterMarkRedColorCode=159&waterMarkGreenColorCode=159&waterMarkBlueColorCode=159&productkey=NONE&producttype=NONE&accessname=" + useraccesscode + "&numberofpages=0&isImageAvailable=false&uniqueidentifier=" + useraccesscode + "&application=AICMS&barNumber=" + doc.get("AttorneyBarList") + "&locationName=" + doc.get("CountyName") + "&state=AZ">
 			${request.getServletContext().getRequestDispatcher(accessImageUrl).forward(request, response)}
 		<#else>
 			<#include "denied.html">

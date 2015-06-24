@@ -159,29 +159,6 @@
                                         </td>
                                 </tr>
                                 <tr>                                
-                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("EventDate").displayName}&nbsp;:&nbsp;</font></b></td>
-                                        <td colspan="2">
-                                            <input type="text" id="EventDate"  title="${searchResult.datasetConfiguration.getColumn("EventDate").displayName}" name="EventDate" size="70" maxlength="2048">
-                                            <script language="javascript">                                          
-                                                if (getCookie('MainEventDate') != null) {
-                                                    document.getElementById("EventDate").value = getCookie('MainEventDate');
-                                                }
-                                            </script>
-                                        </td>                                           
-                                        <td align="left">
-                                            <select name="EventDate_select" id="EventDate_select" >
-                                                <option value="AND" >AND</option>
-                                                <option value="OR" >OR</option>
-                                                <option value="NOT" >NOT</option>
-                                            </select>
-                                            <script language="javascript">                                          
-                                                if (getCookie('MainEventDate_select') != null) {
-                                                    document.getElementById("EventDate_select").options[getCookie('MainEventDate_select')].selected = true;
-                                                }
-                                            </script>                                           
-                                        </td>
-                                </tr>
-                                <tr>                                
                                     <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("EventTypeDescription").displayName}&nbsp;:&nbsp;</font></b></td>
                                         <td colspan="2">
                                             <input type="text" id="EventTypeDescription"  title="${searchResult.datasetConfiguration.getColumn("EventTypeDescription").displayName}" name="EventTypeDescription" size="70" maxlength="2048">
@@ -192,13 +169,105 @@
                                             </script>
                                         </td>                                           
                                         <td align="left">
-                                            <select style="display:none" name="EventTypeDescription_select" id="EventTypeDescription_select" >
+                                            <select name="EventTypeDescription_select" id="EventTypeDescription_select" >
                                                 <option value="AND" >AND</option>
                                                 <option value="OR" >OR</option>
+                                                <option value="NOT" >NOT</option>
                                             </select>
                                             <script language="javascript">                                          
                                                 if (getCookie('MainEventTypeDescription_select') != null) {
                                                     document.getElementById("EventTypeDescription_select").options[getCookie('MainEventTypeDescription_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+								<tr>                                
+                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("CourtCode").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td colspan="2">
+                                            <input type="text" id="CourtCode"  title="${searchResult.datasetConfiguration.getColumn("CourtCode").displayName}" name="CourtCode" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('MainCourtCode') != null) {
+                                                    document.getElementById("CourtCode").value = getCookie('MainCourtCode');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td align="left">
+                                            <select name="CourtCode_select" id="CourtCode_select" >
+                                                <option value="AND" >AND</option>
+                                                <option value="OR" >OR</option>
+                                                <option value="NOT" >NOT</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('MainCourtCode_select') != null) {
+                                                    document.getElementById("CourtCode_select").options[getCookie('MainCourtCode_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+								<tr>                                
+                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("CountyName").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td colspan="2">
+                                            <input type="text" id="CountyName"  title="${searchResult.datasetConfiguration.getColumn("CountyName").displayName}" name="CountyName" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('MainCountyName') != null) {
+                                                    document.getElementById("CountyName").value = getCookie('MainCountyName');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td align="left">
+                                            <select name="CountyName_select" id="CountyName_select" >
+                                                <option value="AND" >AND</option>
+                                                <option value="OR" >OR</option>
+                                                <option value="NOT" >NOT</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('MainCountyName_select') != null) {
+                                                    document.getElementById("CountyName_select").options[getCookie('MainCountyName_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+								<tr>                                
+                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("JudicialOfficerName").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td colspan="2">
+                                            <input type="text" id="JudicialOfficerName"  title="${searchResult.datasetConfiguration.getColumn("JudicialOfficerName").displayName}" name="JudicialOfficerName" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('MainJudicialOfficerName') != null) {
+                                                    document.getElementById("JudicialOfficerName").value = getCookie('MainJudicialOfficerName');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td align="left">
+                                            <select name="JudicialOfficerName_select" id="JudicialOfficerName_select" >
+                                                <option value="AND" >AND</option>
+                                                <option value="OR" >OR</option>
+                                                <option value="NOT" >NOT</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('MainJudicialOfficerName_select') != null) {
+                                                    document.getElementById("JudicialOfficerName_select").options[getCookie('MainJudicialOfficerName_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+                                <tr>                                
+                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("CaseType").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td colspan="2">
+                                            <input type="text" id="CaseType"  title="${searchResult.datasetConfiguration.getColumn("CaseType").displayName}" name="CaseType" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('MainCaseType') != null) {
+                                                    document.getElementById("CaseType").value = getCookie('MainCaseType');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td align="left">
+                                            <select style="display:none" name="CaseType_select" id="CaseType_select" >
+                                                <option value="AND" >AND</option>
+                                                <option value="OR" >OR</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('MainCaseType_select') != null) {
+                                                    document.getElementById("CaseType_select").options[getCookie('MainCaseType_select')].selected = true;
                                                 }
                                             </script>                                           
                                         </td>

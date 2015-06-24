@@ -1,4 +1,3 @@
-
 <#if searchResult.docs?has_content>
    <table id="party" class="tablesorter">
 	<thead>
@@ -8,7 +7,7 @@
 			<th>${searchResult.datasetConfiguration.getColumn("ParticipantMiddleName").displayName}</th>
 			<th>${searchResult.datasetConfiguration.getColumn("ParticipantLastName").displayName}</th>
 			<th>${searchResult.datasetConfiguration.getColumn("ParticipantSuffixName").displayName}</th>
-			<th>${searchResult.datasetConfiguration.getColumn("BirthDate").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("DateOfBirth").displayName}</th>
 			<th>${searchResult.datasetConfiguration.getColumn("ParticipantRoleDescription").displayName}</th>
 			<th>${searchResult.datasetConfiguration.getColumn("PartyCity").displayName}</th>
 			<th>${searchResult.datasetConfiguration.getColumn("PartyStateCode").displayName}</th>
@@ -25,7 +24,7 @@
 			<td>${searchResult.highlight(doc, "ParticipantMiddleName")}</td>
 			<td>${searchResult.highlight(doc, "ParticipantLastName")}</td>
 			<td>${searchResult.highlight(doc, "ParticipantSuffixName")}</td>
-			<td>${searchResult.highlight(doc, "BirthDate")}</td>
+			<td>${searchResult.highlight(doc, "DateOfBirth")}</td>
 			<td>${searchResult.highlight(doc, "ParticipantRoleDescription")}</td>
 			<td>${searchResult.highlight(doc, "PartyCity")}</td>
 			<td>${searchResult.highlight(doc, "PartyStateCode")}</td>
@@ -45,7 +44,7 @@
 			<th>${searchResult.datasetConfiguration.getColumn("ParticipantMiddleName").displayName}</th>
 			<th>${searchResult.datasetConfiguration.getColumn("ParticipantLastName").displayName}</th>
 			<th>${searchResult.datasetConfiguration.getColumn("ParticipantSuffixName").displayName}</th>
-			<th>${searchResult.datasetConfiguration.getColumn("BirthDate").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("DateOfBirth").displayName}</th>
 			<th>${searchResult.datasetConfiguration.getColumn("ParticipantRoleDescription").displayName}</th>
 			<th>${searchResult.datasetConfiguration.getColumn("PartyCity").displayName}</th>
 			<th>${searchResult.datasetConfiguration.getColumn("PartyStateCode").displayName}</th>
@@ -62,7 +61,7 @@
 				<td>${searchResult.highlight(doc, "ParticipantMiddleName")}</td>
 				<td>${searchResult.highlight(doc, "ParticipantLastName")}</td>
 				<td>${searchResult.highlight(doc, "ParticipantSuffixName")}</td>
-				<td>${searchResult.highlight(doc, "BirthDate")}</td>
+				<td>${searchResult.highlight(doc, "DateOfBirth")}</td>
 				<td>${searchResult.highlight(doc, "ParticipantRoleDescription")}</td>
 				<td>${searchResult.highlight(doc, "PartyCity")}</td>
 				<td>${searchResult.highlight(doc, "PartyStateCode")}</td>
@@ -82,7 +81,7 @@
 			<th>${searchResult.datasetConfiguration.getColumn("ParticipantMiddleName").displayName}</th>
 			<th>${searchResult.datasetConfiguration.getColumn("ParticipantLastName").displayName}</th>
 			<th>${searchResult.datasetConfiguration.getColumn("ParticipantSuffixName").displayName}</th>
-			<th>${searchResult.datasetConfiguration.getColumn("BirthDate").displayName}</th>
+			<th>${searchResult.datasetConfiguration.getColumn("DateOfBirth").displayName}</th>
 			<th>${searchResult.datasetConfiguration.getColumn("ParticipantRoleDescription").displayName}</th>
 			<th>${searchResult.datasetConfiguration.getColumn("PartyCity").displayName}</th>
 			<th>${searchResult.datasetConfiguration.getColumn("PartyStateCode").displayName}</th>

@@ -52,3 +52,21 @@
 		  <@display.column media="rtf excel pdf" indexColumnName="CountyName" title="${searchResult.datasetConfiguration.getColumn(\"CountyName\").displayName}">
 		   	${doc.get("CountyName")}
 		  </@display.column>
+		  <@display.column media="html" indexColumnName="CourtCode" title="${searchResult.datasetConfiguration.getColumn(\"CourtCode\").displayName}">
+		   	${searchResult.highlight(doc, "CourtCode")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CourtCode" title="${searchResult.datasetConfiguration.getColumn(\"CourtCode\").displayName}">
+		   	${doc.get("CourtCode")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="JudicialOfficerName" title="${searchResult.datasetConfiguration.getColumn(\"JudicialOfficerName\").displayName}">
+		   	${searchResult.highlight(doc, "JudicialOfficerName")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="JudicialOfficerName" title="${searchResult.datasetConfiguration.getColumn(\"JudicialOfficerName\").displayName}">
+		   	${doc.get("JudicialOfficerName")}
+		  </@display.column>
+		  <@display.column media="html" indexColumnName="CaseType" title="${searchResult.datasetConfiguration.getColumn(\"CaseType\").displayName}">
+		   	${searchResult.highlight(doc, "CaseType")}
+		  </@display.column>
+		  <@display.column media="rtf excel pdf" indexColumnName="CaseType" title="${searchResult.datasetConfiguration.getColumn(\"CaseType\").displayName}">
+		   	${doc.get("CaseType")}
+		  </@display.column>
