@@ -1,6 +1,12 @@
 <project name="sdlecom" default="buildwar" basedir=".">
 
+	<property environment="env"/>
+	<property file="build-props/${env.ENV_NAME}.build.properties"/>
 	<property file="build.properties"/>
+
+	<echo message="client.templatepath = ${client.templatepath}"/>
+	<echo message="ecommerce.clientName = ${ecommerce.clientName}"/>
+
 	<property name="java.src" 			value="${basedir}/src"/>
 	<property name="webcontent" 		value="${basedir}/WebContent/"/>
 	<property name="webcontent.web-inf" value="${webcontent}/WEB-INF/"/>
