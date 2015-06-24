@@ -1,4 +1,3 @@
-
 <script type="text/javascript">
 var timeout         = 500;
 var closetimer      = 0;
@@ -26,48 +25,166 @@ function mcancelclosetime()
         closetimer = null;
     }
 }document.onclick = mclose;
-</script>
 
+function getLastDateFunction() {
+		dateContentInput = document.getElementById("lastUpdateDateTime");
+		dateContentInputVal = dateContentInput.value;
+		
+		//GET 3 days ago date
+		var threeDays = new Date(new Date().setDate(new Date().getDate()-3));
+	    var dd = threeDays.getDate();
+	    var mm = threeDays.getMonth()+1; //January is 0!
+	
+	    var yyyy = threeDays.getFullYear();
+	    if(dd<10){
+	        dd='0'+dd
+	    } 
+	    if(mm<10){
+	        mm='0'+mm
+	    } 
+	    var threeDays = mm+'/'+dd+'/'+yyyy;
+	    
+	    //GET 2 days ago date
+	    var twoDays = new Date(new Date().setDate(new Date().getDate()-2));
+	    var dd = twoDays.getDate();
+	    var mm = twoDays.getMonth()+1; //January is 0!
+	
+	    var yyyy = twoDays.getFullYear();
+	    if(dd<10){
+	        dd='0'+dd
+	    } 
+	    if(mm<10){
+	        mm='0'+mm
+	    } 
+	    var twoDays = mm+'/'+dd+'/'+yyyy;
+	    
+	    //GET 1 days ago date
+	    var oneDay = new Date(new Date().setDate(new Date().getDate()-1));
+	    var dd = oneDay.getDate();
+	    var mm = oneDay.getMonth()+1; //January is 0!
+	
+	    var yyyy = oneDay.getFullYear();
+	    if(dd<10){
+	        dd='0'+dd
+	    } 
+	    if(mm<10){
+	        mm='0'+mm
+	    } 
+	    var oneDay = mm+'/'+dd+'/'+yyyy;
+	    
+	    //GET today's date
+	        var today = new Date();
+		    var dd = today.getDate();
+		    var mm = today.getMonth()+1; //January is 0!
+		
+		    var yyyy = today.getFullYear();
+		    if(dd<10){
+		        dd='0'+dd
+		    } 
+		    if(mm<10){
+		        mm='0'+mm
+		    } 
+		    var today = mm+'/'+dd+'/'+yyyy;
+		 
+	    if(dateContentInputVal == today || dateContentInputVal == oneDay || dateContentInputVal == twoDays || dateContentInputVal == threeDays){
+		   document.getElementById("newMessages").style.display = '';
+		   document.getElementById("messagesLink").style.color = '#FF0000';
+		}else {
+		   document.getElementById("newMessages").style.display = 'none';
+		}
+	}
+	window.onload = getLastDateFunction;
+</script>
+<style>
+	#newMessages{
+		color:#fff;
+		padding:5px;
+		font-size:.7em;
+		background:#FF0000;
+		border-radius: 12px 12px 12px 12px;
+		-moz-border-radius: 12px 12px 12px 12px;
+		-webkit-border-radius: 12px 12px 12px 12px;
+		font-weight:bold;
+		width:20px;
+		display:inline;
+}
+
+	a.tooltip {outline:none;}
+	a.tooltip strong {line-height:30px;}
+	a.tooltip:hover {text-decoration:none;} 
+	a.tooltip span {
+	    z-index:10;
+	    display:none; 
+	    padding:14px 20px;
+	    margin-top:20px; 
+	    margin-left:-160px;
+	    width:150px;
+	    line-height:16px;
+	}
+	a.tooltip:hover span{
+	    display:inline; position:absolute; 
+	    border:2px solid #bed73f;
+	    background:#fff;
+	}
+	.callout {z-index:20;position:absolute;border:0;top:-14px;left:120px;}
+	    
+	/*CSS3 extras*/
+	a.tooltip span
+	{
+	    border-radius:2px;        
+	    /*box-shadow: 0px 0px 8px 4px #666;*/
+	    /*opacity: 0.8;*/
+	}	
+</style>
+<#assign lastUpdateTime = pageStyleUtil.getLastUpdateTimeMessages()>
+<input type="hidden" id="lastUpdateDateTime" value="${lastUpdateTime}">
 <#assign indexCount = 0>
 <#foreach dc in dcs>
 	  <#if dc.isValid() && (dc.displayOrder>=0) && dc.getDefaultTemplateName()?has_content>
 	  	<#assign indexCount = indexCount + 1>
 	  </#if>	
 </#foreach>
-
 <table class="ui-state-default" border=0 cellpadding=0 cellspacing=0 width="100%">
-</div>
 	<tr>
 		<td style="width:100%" >
 			<div style="float:left;">
 			  <#if indexCount &gt; 0>
-			 	<ul class="headerList" float:right;>
+			 	<ul class="headerList">
 				<#foreach dc in dcs>			 
 				  <#if dc.isValid() && (dc.displayOrder>=0) && dc.getDefaultTemplateName()?has_content>
-				    <li style="padding-top: 4px; padding-bottom: 4px;" class="<#if indexName == dc.name>ui-state-active </#if>ui-state-default">
-				      <a href="search.do?indexName=${dc.name}&q=${searchResult.getURLEncodedClearQuery()}">${dc.displayName}</a>
+				    <li class="<#if indexName == dc.name>ui-state-active </#if>ui-state-default">
+				      <a href="search.do?indexName=${dc.name}<#--&q=${searchResult.getURLEncodedClearQuery()}-->">${dc.displayName}</a>
 				    </li>
 				  </#if>  
 				</#foreach>
 				</ul>
 			   </#if>
 			</div>
-			</div>
-			<div Style="float:right;color:white;">
-			<#include "/web-inf/view/admin/layout/loginMenu.stl">
-			</div>
-			<div style="float:right;" margin-top:17px;color:white;>
-				<include><a href="http://apps.supremecourt.az.gov/publicaccess/" style="color:white;  padding-left:100px; " > Help </a>
-				
+			<div style="float:right;">
+				<ul class="headerList">
+					<li>
+						<#include "/web-inf/view/admin/layout/loginMenu.stl">
+					</li>
+					<li class="ui-state-active">
+						<a href="${request.getContextPath()}/viewMessageCenter.do" id="messagesLink" class="tooltip" style="text-decoration:none;">
+							<#if lastUpdateTime?has_content>
+								<p id="newMessages" style="display:none;">new</p>
+							</#if>
+							&nbsp;Message Center
+							<span style="color:#000;">
+								<img class="callout" src="${request.getContextPath()}/templates/resources/images/callout_green.gif" />
+								Messages last updated on:&nbsp;${lastUpdateTime} 
+							</span>
+						</a>
+					</li>
+				</ul>
 			</div>
 		</td>		
 	</tr>
 </table>
 <#if request.getServletContext().getInitParameter("isSecurityEnabled") == "true">
-<div style="width:80%;text-align:right;" >
+<div style="width:100%;text-align:right;" >
 </div>
-</#if> 
-	
-
+</#if>
 
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dataset name="Case and Party Search" exportedBy="null" createdAt="Wed Apr 01 19:04:59 EDT 2015">
+<dataset name="Case and Party Search" exportedBy="null" createdAt="Tue Jun 23 16:19:08 EDT 2015">
   <description><![CDATA[Case and Party Search]]></description>
   <index-dir>casesearchparty</index-dir>
   <is-prefix-root-index-directory>true</is-prefix-root-index-directory>
@@ -25,135 +25,167 @@ EXEC proc_Get_eAccessSearchCaseParty
     ]]></sql>
     <column>
       <column-name>UniqueKeyID</column-name>
-      <display-name><![CDATA[UniqueKeyID]]></display-name>
       <column-index>1</column-index>
       <column-type>java.lang.String</column-type>
       <primary-key>true</primary-key>
       <index-field-type>Keyword</index-field-type>
-      <is-searchable search-weight="1000.0">true</is-searchable>
     </column>
     <column>
       <column-name>CountyName</column-name>
-      <display-name><![CDATA[County]]></display-name>
       <column-index>2</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
-      <column-name>CourtCode</column-name>
-      <display-name><![CDATA[Court Code]]></display-name>
+      <column-name>CountyFilter</column-name>
       <column-index>3</column-index>
       <column-type>java.lang.String</column-type>
-      <index-field-type>Keyword</index-field-type>
-      <is-searchable search-weight="3.0">true</is-searchable>
+      <index-field-type>Text</index-field-type>
     </column>
     <column>
-      <column-name>CaseID</column-name>
-      <display-name><![CDATA[CaseID]]></display-name>
+      <column-name>CourtCode</column-name>
       <column-index>4</column-index>
       <column-type>java.lang.String</column-type>
-      <index-field-type>Text</index-field-type>
-      <is-searchable search-weight="-1.0">false</is-searchable>
+      <index-field-type>Keyword</index-field-type>
     </column>
     <column>
-      <column-name>DisplayCaseNumber</column-name>
-      <display-name><![CDATA[Case Number]]></display-name>
+      <column-name>CourtFilter</column-name>
       <column-index>5</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
-      <column-name>SearchCaseNumber</column-name>
-      <display-name><![CDATA[Case Number]]></display-name>
+      <column-name>CaseID</column-name>
       <column-index>6</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
-      <column-name>CaseTitle</column-name>
-      <display-name><![CDATA[CaseTitle]]></display-name>
+      <column-name>DisplayCaseNumber</column-name>
       <column-index>7</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
-      <column-name>FirstName</column-name>
-      <display-name><![CDATA[First Name]]></display-name>
+      <column-name>SearchCaseNumber</column-name>
       <column-index>8</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
-      <column-name>MiddleName</column-name>
-      <display-name><![CDATA[Middle Name]]></display-name>
+      <column-name>CaseTitle</column-name>
       <column-index>9</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
-      <column-name>LastName</column-name>
-      <display-name><![CDATA[Last Name]]></display-name>
+      <column-name>FirstName</column-name>
       <column-index>10</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
-      <column-name>SuffixName</column-name>
-      <display-name><![CDATA[Suffix Name]]></display-name>
+      <column-name>MiddleName</column-name>
       <column-index>11</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
-      <column-name>RoleTypeCode</column-name>
-      <display-name><![CDATA[Role TypeCode]]></display-name>
+      <column-name>LastName</column-name>
       <column-index>12</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
-      <column-name>RoleTypeLongDescription</column-name>
-      <display-name><![CDATA[Role Type]]></display-name>
+      <column-name>NameFilter</column-name>
       <column-index>13</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
-      <column-name>DateOfBirth</column-name>
-      <display-name><![CDATA[DateOfBirth]]></display-name>
+      <column-name>SuffixName</column-name>
       <column-index>14</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
-      <column-name>IsTTEAP</column-name>
-      <display-name><![CDATA[IsTTEAP]]></display-name>
+      <column-name>RoleTypeCode</column-name>
       <column-index>15</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
-      <column-name>AttorneyList</column-name>
-      <display-name><![CDATA[AttorneyList]]></display-name>
+      <column-name>RoleTypeLongDescription</column-name>
       <column-index>16</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
-      <column-name>DefaultTemplate</column-name>
-      <display-name><![CDATA[DefaultTemplate]]></display-name>
+      <column-name>RoleFilter</column-name>
       <column-index>17</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
-      <column-name>CCILastLookupDateTime</column-name>
-      <display-name><![CDATA[CCILastLookupDateTime]]></display-name>
+      <column-name>DateOfBirth</column-name>
       <column-index>18</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>IsTTEAP</column-name>
+      <column-index>19</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>VehicleHoldFilter</column-name>
+      <column-index>20</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>AttorneyList</column-name>
+      <column-index>21</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>DefaultTemplate</column-name>
+      <column-index>22</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>CCILastLookupDateTime</column-name>
+      <column-index>23</column-index>
       <column-type>java.lang.String</column-type>
       <modified-date>true</modified-date>
       <index-field-type>Keyword</index-field-type>
-      <is-searchable search-weight="3.0">true</is-searchable>
+    </column>
+    <column>
+      <column-name>JudicialOfficerName</column-name>
+      <column-index>24</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>JudicialOfficerNameFilter</column-name>
+      <column-index>25</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>CaseType</column-name>
+      <column-index>26</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
+    </column>
+    <column>
+      <column-name>CaseTypeFilter</column-name>
+      <column-index>27</column-index>
+      <column-type>java.lang.String</column-type>
+      <index-field-type>Text</index-field-type>
     </column>
   </dataquery>
   <dataquery name="Deletion" is-delete-only="true">

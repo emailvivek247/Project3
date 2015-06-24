@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dataset name="Charge Details" exportedBy="null" createdAt="Wed Apr 01 19:00:59 EDT 2015">
+<dataset name="Charge Details" exportedBy="null" createdAt="Wed Jun 24 15:35:42 EDT 2015">
   <display-order>-1</display-order>
   <description><![CDATA[Charge Details]]></description>
   <index-dir>chargedetails</index-dir>
@@ -26,190 +26,137 @@ EXEC proc_Get_eAccessCharge
     ]]></sql>
     <column>
       <column-name>UniqueKeyID</column-name>
-      <display-name><![CDATA[UniqueKeyID]]></display-name>
       <column-index>1</column-index>
       <column-type>java.lang.String</column-type>
       <primary-key>true</primary-key>
       <index-field-type>Keyword</index-field-type>
-      <is-searchable search-weight="1000.0">true</is-searchable>
     </column>
     <column>
       <column-name>CountyName</column-name>
-      <display-name><![CDATA[County]]></display-name>
       <column-index>2</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Keyword</index-field-type>
-      <is-searchable search-weight="3.0">true</is-searchable>
     </column>
     <column>
       <column-name>CourtCode</column-name>
-      <display-name><![CDATA[CourtCode]]></display-name>
       <column-index>3</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>CaseID</column-name>
-      <display-name><![CDATA[Case ID]]></display-name>
       <column-index>4</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Keyword</index-field-type>
-      <is-searchable search-weight="3.0">true</is-searchable>
     </column>
     <column>
       <column-name>PartyID</column-name>
-      <display-name><![CDATA[PartyID]]></display-name>
       <column-index>5</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Keyword</index-field-type>
-      <is-searchable search-weight="3.0">true</is-searchable>
     </column>
     <column>
       <column-name>ChargeID</column-name>
-      <display-name><![CDATA[ChargeID]]></display-name>
       <column-index>6</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Keyword</index-field-type>
-      <is-searchable search-weight="3.0">true</is-searchable>
     </column>
     <column>
       <column-name>ChargeCount</column-name>
-      <display-name><![CDATA[Charge Count]]></display-name>
       <column-index>7</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>SequenceNumber</column-name>
-      <display-name><![CDATA[Sequence Number]]></display-name>
       <column-index>8</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
-      <column-name>OffenceClassCode</column-name>
-      <display-name><![CDATA[Final Class]]></display-name>
+      <column-name>OffenseClassCode</column-name>
       <column-index>9</column-index>
       <column-type>java.lang.String</column-type>
-      <index-field-type>Keyword</index-field-type>
-      <is-searchable search-weight="3.0">true</is-searchable>
+      <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>OffenseClassShortDescription</column-name>
-      <display-name><![CDATA[Offense Class]]></display-name>
       <column-index>10</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>OffenseARSCode</column-name>
-      <display-name><![CDATA[Offense ARS Code]]></display-name>
       <column-index>11</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
-      <column-name>OffenseARSDesc</column-name>
-      <display-name><![CDATA[Offense ARS Desc]]></display-name>
+      <column-name>OffenseARSDescription</column-name>
       <column-index>12</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>DispositionDate</column-name>
-      <display-name><![CDATA[Disposition Date]]></display-name>
       <column-index>13</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <is-searchable search-weight="3.0">true</is-searchable>
-    </column>
-    <column>
-      <column-name>DispositionCode</column-name>
-      <display-name><![CDATA[DispositionCode]]></display-name>
-      <column-index>14</column-index>
-      <column-type>java.lang.String</column-type>
-      <index-field-type>Keyword</index-field-type>
-      <is-searchable search-weight="3.0">true</is-searchable>
     </column>
     <column>
       <column-name>DispositionDescription</column-name>
-      <display-name><![CDATA[Disposition Description]]></display-name>
-      <column-index>15</column-index>
+      <column-index>14</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>SentenceDate</column-name>
-      <display-name><![CDATA[Sentence Date]]></display-name>
-      <column-index>16</column-index>
+      <column-index>15</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <is-searchable search-weight="3.0">true</is-searchable>
     </column>
     <column>
       <column-name>SentenceTypeCode</column-name>
-      <display-name><![CDATA[Sentence Type Code]]></display-name>
-      <column-index>17</column-index>
+      <column-index>16</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>SentenceTypeDescription</column-name>
-      <display-name><![CDATA[Sentence Type Description]]></display-name>
-      <column-index>18</column-index>
-      <column-type>java.lang.String</column-type>
-      <index-field-type>Text</index-field-type>
-    </column>
-    <column>
-      <column-name>FinalARSCode</column-name>
-      <display-name><![CDATA[Final ARS Code]]></display-name>
-      <column-index>19</column-index>
-      <column-type>java.lang.String</column-type>
-      <index-field-type>Text</index-field-type>
-    </column>
-    <column>
-      <column-name>FinalARSDescription</column-name>
-      <display-name><![CDATA[Final ARS Description]]></display-name>
-      <column-index>20</column-index>
+      <column-index>17</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>FinalPleaDescription</column-name>
-      <display-name><![CDATA[Final Plea Description]]></display-name>
-      <column-index>21</column-index>
+      <column-index>18</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>MVDReportableFlag</column-name>
-      <display-name><![CDATA[MVDReportableFlag]]></display-name>
-      <column-index>22</column-index>
+      <column-index>19</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>DPSReportableFlag</column-name>
-      <display-name><![CDATA[DPSReportableFlag]]></display-name>
-      <column-index>23</column-index>
+      <column-index>20</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>DefaultTemplate</column-name>
-      <display-name><![CDATA[DefaultTemplate]]></display-name>
-      <column-index>24</column-index>
+      <column-index>21</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>CCILastLookupDateTime</column-name>
-      <display-name><![CDATA[CCILastLookupDateTime]]></display-name>
-      <column-index>25</column-index>
+      <column-index>22</column-index>
       <column-type>java.lang.String</column-type>
       <modified-date>true</modified-date>
       <index-field-type>Keyword</index-field-type>
-      <is-searchable search-weight="3.0">true</is-searchable>
     </column>
   </dataquery>
   <dataquery name="Deletion" is-delete-only="true">
@@ -226,9 +173,9 @@ EXEC proc_Get_eAccessCharge_NEW
        @DeletedRecords = 0
     ]]></sql>
   </dataquery>
-  <default-template>default</default-template>
-  <tablet-template>default</tablet-template>
-  <mobile-template>default</mobile-template>
+  <default-template>Main</default-template>
+  <tablet-template>Main</tablet-template>
+  <mobile-template>Main</mobile-template>
   <searcher-max-active>8</searcher-max-active>
   <searcher-when-exhausted>1</searcher-when-exhausted>
   <searcher-max-wait>10000</searcher-max-wait>

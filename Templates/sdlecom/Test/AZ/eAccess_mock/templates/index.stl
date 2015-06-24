@@ -1,20 +1,17 @@
-
-<#include "/WEB-INF/view/admin/layout/OtherBasic.stl"><div style="float:right;margin:15px 10px 0 0;"><span><a href="http://apps.supremecourt.az.gov/publicaccess/"  > Help </a></span></div>
-
-<#--<div style=" float:right; display:inline; height:20px; width: 70px; padding-right:20px; " >-->
+<#include "/WEB-INF/view/admin/layout/OtherBasic.stl">
 <@indexLayout title="Search Platform" encoding="utf-8">
 <script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/tp.js"></script>
 <link rel="stylesheet" href="${request.getContextPath()}/resources/styles/tp.css" />
 <link rel="shortcut icon" href="${request.getContextPath()}/favicon.ico"/>
-
 <#assign visibleIndexes = 0>
-<div id="control" style="margin-left:auto; margin-right:auto;width:80%; ">
-
+<div style="width:100%"><#include "globalNav.stl"></div>
+<div id="control" style="margin-left:auto; margin-right:auto;width:80%;margin-top:200px; ">
 <#foreach dc in dcs>
 <#if dc.isValid() && dc.displayOrder &gt;= 0 && dc.getDefaultTemplateName()?has_content>
 	<#assign visibleIndexes = visibleIndexes + 1>    
 	<#assign _controlString = _controlString + "," + "'" + dc.name + "'">
-	<div id="${dc.name}" title="${dc.displayName}" style="height:500px;">
+	
+	<div id="${dc.name}" title="${dc.displayName}" style="height:650px;">
 	<br/>
 	<form method="get" action="search.do">
 		<input type="hidden" name="searchType" value="1">
@@ -29,43 +26,10 @@
 				</td>
 			</tr>
 		</table>
-		
-		
-		</form>
-		<br/>
+	</form>
 	
-		
-		<table align="left" border="0" width="95%">
-		         <tbody>
-		            <tr>
-		               <td width="5%">&nbsp;</td>
-		               <td>
-                  <font face="arial" color:black;> 
-					 <!-- BEGIN MODIFYING MESSAGE CENTER TEXT HERE  -->
-					
-			<br/>
-						<p style="text-align:justify;"> Arizona Supreme Court Rule 123 governs what is available on this site.  Civil and criminal cases from all 15 Arizona Superior Courts are currently available. 
-							For an explanation of which cases and documents are available, please <a href="http://apps.supremecourt.az.gov/publicaccess/" style="color:#245fab;" > click here. </a>
-							More information is available by clicking <a href="http://apps.supremecourt.az.gov/publicaccess/" style="color:#245fab;" > Help </a> at the top of this page.<br> <br>Every effort is being made to ensure the accuracy of the information in this web portal.<br> <br>
-							Please be aware that the information may not be a current, accurate or complete record of the case; information is subject to change at any time; 
-							information is not the official record of the court; not all cases from a participating court may be included; and additional or subsequent documents or orders may be available from the court or clerk of the court. 
-							If questions arise regarding the accuracy of the information in this system, the official record in the original court file at the courthouse should be consulted. <br> <br>
-							For more information click <a href="http://apps.supremecourt.az.gov/publicaccess/" style="color:#245fab;" > Help </a> at the top of this page or contact:<br> <br> 
-							AOC Support Services<br>
-							(602) 452-3519 <br>
-							1 (800) 720-7743 <br>
-							<a href="mailto:support@courts.az.gov" style="color:#245fab;">support@courts.az.gov</a> <br>
-							M-F 7:00 am-6:00 pm <br>
-						        (Excluding state holidays)<br><br>
-							
-						</td>	
-						
-					
-		</table>
-	</div>	
+	<br/>
 	</div>
-	
-	
 </#if> 
  </#foreach>
 </div>
