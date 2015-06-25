@@ -1,6 +1,6 @@
 <script type="text/javascript">
 
-var searchfields = "DisplayCaseNumber,FirstName,MiddleName,LastName,SuffixName,DateofBirth,RoleTypeLongDescription,CaseTitle,CountyName";
+var searchfields = "DisplayCaseNumber,FirstName,MiddleName,LastName,SuffixName,RoleTypeLongDescription,CaseTitle,CountyName";
 
     function unique(arrayName) {
         var newArray=new Array();
@@ -208,23 +208,69 @@ var searchfields = "DisplayCaseNumber,FirstName,MiddleName,LastName,SuffixName,D
                                         </td>
                                 </tr>
                                 <tr>                                
-                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("DateOfBirth").displayName}&nbsp;:&nbsp;</font></b></td>
+                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("CaseTitle").displayName}&nbsp;:&nbsp;</font></b></td>
                                         <td colspan="2">
-                                            <input type="text" id="DateOfBirth"  title="${searchResult.datasetConfiguration.getColumn("DateOfBirth").displayName}" name="DateOfBirth" size="70" maxlength="2048">
+                                            <input type="text" id="CaseTitle"  title="${searchResult.datasetConfiguration.getColumn("CaseTitle").displayName}" name="CaseTitle" size="70" maxlength="2048">
                                             <script language="javascript">                                          
-                                                if (getCookie('MainDateOfBirth') != null) {
-                                                    document.getElementById("DateOfBirth").value = getCookie('MainDateOfBirth');
+                                                if (getCookie('MainCaseTitle') != null) {
+                                                    document.getElementById("CaseTitle").value = getCookie('MainCaseTitle');
                                                 }
                                             </script>
                                         </td>                                           
                                         <td align="left">
-                                            <select style="display:none" name="DateOfBirth_select" id="DateOfBirth_select" >
+                                            <select name="CaseTitle_select" id="CaseTitle_select" >
+                                                <option value="AND" >AND</option>
+                                                <option value="OR" >OR</option>
+                                                <option value="NOT" >NOT</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('MainCaseTitle_select') != null) {
+                                                    document.getElementById("CaseTitle_select").options[getCookie('MainCaseTitle_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+								<tr>                                
+                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("JudicialOfficerName").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td colspan="2">
+                                            <input type="text" id="JudicialOfficerName"  title="${searchResult.datasetConfiguration.getColumn("JudicialOfficerName").displayName}" name="JudicialOfficerName" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('MainJudicialOfficerName') != null) {
+                                                    document.getElementById("JudicialOfficerName").value = getCookie('MainJudicialOfficerName');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td align="left">
+                                            <select name="JudicialOfficerName_select" id="JudicialOfficerName_select" >
+                                                <option value="AND" >AND</option>
+                                                <option value="OR" >OR</option>
+                                                <option value="NOT" >NOT</option>
+                                            </select>
+                                            <script language="javascript">                                          
+                                                if (getCookie('MainJudicialOfficerName_select') != null) {
+                                                    document.getElementById("JudicialOfficerName_select").options[getCookie('MainJudicialOfficerName_select')].selected = true;
+                                                }
+                                            </script>                                           
+                                        </td>
+                                </tr>
+                                <tr>                                
+                                    <td align="right"><b><font class="label">${searchResult.datasetConfiguration.getColumn("CaseType").displayName}&nbsp;:&nbsp;</font></b></td>
+                                        <td colspan="2">
+                                            <input type="text" id="CaseType"  title="${searchResult.datasetConfiguration.getColumn("CaseType").displayName}" name="CaseType" size="70" maxlength="2048">
+                                            <script language="javascript">                                          
+                                                if (getCookie('MainCaseType') != null) {
+                                                    document.getElementById("CaseType").value = getCookie('MainCaseType');
+                                                }
+                                            </script>
+                                        </td>                                           
+                                        <td align="left">
+                                            <select style="display:none" name="CaseType_select" id="CaseType_select" >
                                                 <option value="AND" >AND</option>
                                                 <option value="OR" >OR</option>
                                             </select>
                                             <script language="javascript">                                          
-                                                if (getCookie('MainDateOfBirth_select') != null) {
-                                                    document.getElementById("DateOfBirth_select").options[getCookie('MainDateOfBirth_select')].selected = true;
+                                                if (getCookie('MainCaseType_select') != null) {
+                                                    document.getElementById("CaseType_select").options[getCookie('MainCaseType_select')].selected = true;
                                                 }
                                             </script>                                           
                                         </td>

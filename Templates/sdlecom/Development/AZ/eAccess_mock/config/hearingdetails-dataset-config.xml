@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dataset name="Hearing Details" exportedBy="null" createdAt="Tue Mar 31 18:47:40 EDT 2015">
+<dataset name="Hearing Details" exportedBy="null" createdAt="Wed Apr 01 19:02:39 EDT 2015">
   <display-order>-1</display-order>
   <description><![CDATA[Hearing Details]]></description>
   <index-dir>hearingdetails</index-dir>
@@ -31,25 +31,23 @@ EXEC proc_Get_eAccessHearing
       <column-type>java.lang.String</column-type>
       <primary-key>true</primary-key>
       <index-field-type>Keyword</index-field-type>
-      <tag><![CDATA[]]></tag>
+      <is-searchable search-weight="1000.0">true</is-searchable>
     </column>
     <column>
       <column-name>CountyName</column-name>
-      <display-name><![CDATA[CountyName]]></display-name>
+      <display-name><![CDATA[CountyNam]]></display-name>
       <column-index>2</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Keyword</index-field-type>
       <is-searchable search-weight="3.0">true</is-searchable>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>CourtCode</column-name>
-      <display-name><![CDATA[CourtCode]]></display-name>
+      <display-name><![CDATA[Court Code]]></display-name>
       <column-index>3</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Keyword</index-field-type>
       <is-searchable search-weight="3.0">true</is-searchable>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>CaseID</column-name>
@@ -58,88 +56,77 @@ EXEC proc_Get_eAccessHearing
       <column-type>java.lang.String</column-type>
       <index-field-type>Keyword</index-field-type>
       <is-searchable search-weight="3.0">true</is-searchable>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>DisplayCaseNumber</column-name>
-      <display-name><![CDATA[DisplayCaseNumber]]></display-name>
+      <display-name><![CDATA[Case Number]]></display-name>
       <column-index>5</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>CaseTitle</column-name>
-      <display-name><![CDATA[CaseTitle]]></display-name>
+      <display-name><![CDATA[Case Title]]></display-name>
       <column-index>6</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>AssociatedParticipantType</column-name>
-      <display-name><![CDATA[AssociatedParticipantType]]></display-name>
+      <display-name><![CDATA[Associated Participant Type]]></display-name>
       <column-index>7</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>AssociatedParticipantID</column-name>
-      <display-name><![CDATA[AssociatedParticipantID]]></display-name>
+      <display-name><![CDATA[Associated Participant ID]]></display-name>
       <column-index>8</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>HearingStartDateTime</column-name>
-      <display-name><![CDATA[HearingStartDateTime]]></display-name>
+      <display-name><![CDATA[Hearing Start Date Time]]></display-name>
       <column-index>9</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>HearingEndDateTime</column-name>
-      <display-name><![CDATA[HearingEndDateTime]]></display-name>
+      <display-name><![CDATA[Hearing End Date Time]]></display-name>
       <column-index>10</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>HearingTypeCode</column-name>
-      <display-name><![CDATA[HearingTypeCode]]></display-name>
+      <display-name><![CDATA[Hearing Type Code]]></display-name>
       <column-index>11</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>HearingTypeDescription</column-name>
-      <display-name><![CDATA[HearingTypeDescription]]></display-name>
+      <display-name><![CDATA[Hearing Type Description]]></display-name>
       <column-index>12</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>HearingSubTypeCode</column-name>
-      <display-name><![CDATA[HearingSubTypeCode]]></display-name>
+      <display-name><![CDATA[Hearing Sub Type Code]]></display-name>
       <column-index>13</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Keyword</index-field-type>
       <is-searchable search-weight="3.0">true</is-searchable>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>HearingSubTypeDescription</column-name>
-      <display-name><![CDATA[HearingSubTypeDescription]]></display-name>
+      <display-name><![CDATA[Hearing Sub Type Description]]></display-name>
       <column-index>14</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>HearingResultTypeCode</column-name>
@@ -148,7 +135,6 @@ EXEC proc_Get_eAccessHearing
       <column-type>java.lang.String</column-type>
       <index-field-type>Keyword</index-field-type>
       <is-searchable search-weight="3.0">false</is-searchable>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>HearingResultTypeDescription</column-name>
@@ -156,39 +142,34 @@ EXEC proc_Get_eAccessHearing
       <column-index>16</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>CourtRoomCode</column-name>
-      <display-name><![CDATA[CourtRoomCode]]></display-name>
+      <display-name><![CDATA[Court Room Code]]></display-name>
       <column-index>17</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>CourtRoomDescription</column-name>
-      <display-name><![CDATA[CourtRoomDescription]]></display-name>
+      <display-name><![CDATA[Court Room]]></display-name>
       <column-index>18</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>InterpreterNeeded</column-name>
-      <display-name><![CDATA[InterpreterNeeded]]></display-name>
+      <display-name><![CDATA[Interpreter Needed]]></display-name>
       <column-index>19</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>ScheduledBeforeJudgeName</column-name>
-      <display-name><![CDATA[ScheduledBeforeJudgeName]]></display-name>
+      <display-name><![CDATA[Scheduled Before Judge Name]]></display-name>
       <column-index>20</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>HeardByJudgeName</column-name>
@@ -197,7 +178,6 @@ EXEC proc_Get_eAccessHearing
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
       <is-searchable>false</is-searchable>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>DefaultTemplate</column-name>
@@ -205,7 +185,6 @@ EXEC proc_Get_eAccessHearing
       <column-index>22</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>CCILastLookupDateTime</column-name>
@@ -215,7 +194,6 @@ EXEC proc_Get_eAccessHearing
       <modified-date>true</modified-date>
       <index-field-type>Keyword</index-field-type>
       <is-searchable search-weight="3.0">true</is-searchable>
-      <tag><![CDATA[]]></tag>
     </column>
   </dataquery>
   <dataquery name="Deletion" is-delete-only="true">

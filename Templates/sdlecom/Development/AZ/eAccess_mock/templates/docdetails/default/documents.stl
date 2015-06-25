@@ -144,7 +144,7 @@ $(".gallery a[rel^='prettyPhoto']").prettyPhoto({theme:'light_rounded',animation
                 success: function(data) {
                   $.each(data, function(i,item){                  
                        if (item.code == "EXISTS") {
-                          var txt = item.description + "You can view your purchase using the below link, <br/> <a target='_blank' href='viewPayAsUGoPaymentDetails.admin?webTxId=" + item.moduleName + "'>View Purchase</a>";     
+                          var txt = item.description + "You can view your purchase using the below link, <br/> <a target='_blank' href='viewWebPaymentDetails.admin?webTxId=" + item.moduleName + "'>View Image</a>";     
                           $.prompt(txt);
                        } else if (item.code == "SUCCESS") {
                           if (item.count == 0) {
@@ -173,7 +173,7 @@ $(".gallery a[rel^='prettyPhoto']").prettyPhoto({theme:'light_rounded',animation
                         success: function(data) {
                           $.each(data, function(i,item){
                                if (item.code == "EXISTS") {
-                                  var txt = item.description + "You can view your purchase using the below link, <br/> <a target='_blank' href='viewPayAsUGoPaymentDetails.admin?webTxId=" + item.moduleName + "'>View Purchase</a>";
+                                  var txt = item.description + "You can view your purchase using the below link, <br/> <a target='_blank' href='viewWebPaymentDetails.admin?webTxId=" + item.moduleName + "'>View Image</a>";
                                   $.prompt(txt);
                                } else if (item.code == "SUCCESS") {
                                   if (item.count == 0) {

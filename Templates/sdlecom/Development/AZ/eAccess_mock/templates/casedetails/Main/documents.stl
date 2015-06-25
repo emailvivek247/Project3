@@ -6,12 +6,13 @@
 		  <th>${searchResult.datasetConfiguration.getColumn("SearchCaseNumber").displayName}</th>
 		  <th>${searchResult.datasetConfiguration.getColumn("FilingDate").displayName}</th>
 		  <th>${searchResult.datasetConfiguration.getColumn("CaseTitle").displayName}</th>
+		  <th>${searchResult.datasetConfiguration.getColumn("CaseGeneralCategoryDescription").displayName}</th>
+		  <th>${searchResult.datasetConfiguration.getColumn("CaseCategoryDescription").displayName}</th>
 		  <th>${searchResult.datasetConfiguration.getColumn("CaseStatus").displayName}</th>
 		  <th>${searchResult.datasetConfiguration.getColumn("CountyName").displayName}</th>
 		  <th>${searchResult.datasetConfiguration.getColumn("CourtCode").displayName}</th>
 		  <th>${searchResult.datasetConfiguration.getColumn("JudicialOfficer").displayName}</th>
-		  <th>${searchResult.datasetConfiguration.getColumn("CaseGeneralCategoryDescription").displayName}</th>
-		  <th>${searchResult.datasetConfiguration.getColumn("CaseCategoryDescription").displayName}</th>
+
 	</tr>
    </thead>
    <tbody>
@@ -22,12 +23,13 @@
 		<td>${searchResult.highlight(doc, "SearchCaseNumber")}</td>
 		<td>${searchResult.highlight(doc, "FilingDate")}</td>
 		<td>${searchResult.highlight(doc, "CaseTitle")}</td>
+		<td>${searchResult.highlight(doc, "CaseGeneralCategoryDescription")}</td>
+		<td>${searchResult.highlight(doc, "CaseCategoryDescription")}</td>
 		<td>${searchResult.highlight(doc, "CaseStatus")}</td>
 		<td>${searchResult.highlight(doc, "CountyName")}</td>
 		<td>${searchResult.highlight(doc, "CourtCode")}</td>
 		<td>${searchResult.highlight(doc, "JudicialOfficer")}</td>
-		<td>${searchResult.highlight(doc, "CaseGeneralCategoryDescription")}</td>
-		<td>${searchResult.highlight(doc, "CaseCategoryDescription")}</td>
+
 	</tr>
 	<#assign caseNumberKey = doc.getValues("CaseID")>
 	</#foreach>
@@ -41,12 +43,13 @@
 		<th>${searchResult.datasetConfiguration.getColumn("SearchCaseNumber").displayName}</th>
 		<th>${searchResult.datasetConfiguration.getColumn("FilingDate").displayName}</th>
 		<th>${searchResult.datasetConfiguration.getColumn("CaseTitle").displayName}</th>
+		<th>${searchResult.datasetConfiguration.getColumn("CaseGeneralCategoryDescription").displayName}</th>
+		<th>${searchResult.datasetConfiguration.getColumn("CaseCategoryDescription").displayName}</th>
 		<th>${searchResult.datasetConfiguration.getColumn("CaseStatus").displayName}</th>
 		<th>${searchResult.datasetConfiguration.getColumn("CountyName").displayName}</th>
 		<th>${searchResult.datasetConfiguration.getColumn("CourtCode").displayName}</th>
 		<th>${searchResult.datasetConfiguration.getColumn("JudicialOfficer").displayName}</th>
-		<th>${searchResult.datasetConfiguration.getColumn("CaseGeneralCategoryDescription").displayName}</th>
-		<th>${searchResult.datasetConfiguration.getColumn("CaseCategoryDescription").displayName}</th>
+
 	      </tr>
 	   </thead>
 	   <tbody>
@@ -57,12 +60,13 @@
 			<td>${searchResult.highlight(doc, "SearchCaseNumber")}</td>
 			<td>${searchResult.highlight(doc, "FilingDate")}</td>
 			<td>${searchResult.highlight(doc, "CaseTitle")}</td>
+			<td>${searchResult.highlight(doc, "CaseGeneralCategoryDescription")}</td>
+			<td>${searchResult.highlight(doc, "CaseCategoryDescription")}</td>
 			<td>${searchResult.highlight(doc, "CaseStatus")}</td>
 			<td>${searchResult.highlight(doc, "CountyName")}</td>
 			<td>${searchResult.highlight(doc, "CourtCode")}</td>
 			<td>${searchResult.highlight(doc, "JudicialOfficer")}</td>
-			<td>${searchResult.highlight(doc, "CaseGeneralCategoryDescription")}</td>
-			<td>${searchResult.highlight(doc, "CaseCategoryDescription")}</td>
+
 		</tr>
 		<#assign caseNumberKey = doc.getValues("CaseID")>
 		</#foreach>
@@ -76,12 +80,13 @@
 		<th>${searchResult.datasetConfiguration.getColumn("SearchCaseNumber").displayName}</th>
 		<th>${searchResult.datasetConfiguration.getColumn("FilingDate").displayName}</th>
 		<th>${searchResult.datasetConfiguration.getColumn("CaseTitle").displayName}</th>
+		<th>${searchResult.datasetConfiguration.getColumn("CaseGeneralCategoryDescription").displayName}</th>
+		<th>${searchResult.datasetConfiguration.getColumn("CaseCategoryDescription").displayName}</th>
 		<th>${searchResult.datasetConfiguration.getColumn("CaseStatus").displayName}</th>
 		<th>${searchResult.datasetConfiguration.getColumn("CountyName").displayName}</th>
 		<th>${searchResult.datasetConfiguration.getColumn("CourtCode").displayName}</th>
 		<th>${searchResult.datasetConfiguration.getColumn("JudicialOfficer").displayName}</th>
-		<th>${searchResult.datasetConfiguration.getColumn("CaseGeneralCategoryDescription").displayName}</th>
-		<th>${searchResult.datasetConfiguration.getColumn("CaseCategoryDescription").displayName}</th>
+
 	      </tr>
 	   </thead>
 	   <tbody>

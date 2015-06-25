@@ -5,6 +5,7 @@
 			<tr>
 				<th>${searchResult.datasetConfiguration.getColumn("DocumentTitle").displayName}</th>
 				<th>${searchResult.datasetConfiguration.getColumn("DocumentConceptionStamp").displayName}</th>
+				<th>Preview Document</th>
 				<th>Add to Cart</th>
 			<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (pageStyleUtil.isUserInRoleGroup('CERT_ROLE', request))>	
 				<th>Add Certified Doc to Cart</th>
@@ -20,6 +21,9 @@
 			<tr>
 				<td>${searchResult.highlight(doc, "DocumentTitle")}</td>
 				<td>${searchResult.highlight(doc, "DocumentConceptionStamp")}</td>
+			<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || pageStyleUtil.isUserInRoleGroup('ALL_ROLE', request)>
+				<td><a class="nocolor pphoto" href="${request.getContextPath()}/search.do?indexName=docdetails&templateName=imagepreview&lq=${pageStyleUtil.encodeURL("DocumentID:" + doc.get("DocumentID"))}&page=1&view=FitV&scrollbar=0&navpanes=0&statusbar=0&messages=0?iframe=true&width=50%25&height=95%25" rel="prettyPhoto[iframe]"><img border="0" title="Preview" src="<@com.currentUrlPrefix/>/resource/preview.png"></a></td>
+			</#if>	
 				<td><input class="cartLink2" type="button" title="${doc.get("DocumentID")}" value="Add to Cart"/></td>
 			<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (pageStyleUtil.isUserInRoleGroup('CERT_ROLE', request))>
 				<td><input class="cartLinkCert2" type="button" name="&caseNumber=${doc.get("CaseID")}&caseEvent=${doc.get("DocumentTitle")}" title="${doc.get("DocumentID")}" value="Add Certified Document"/></td>
@@ -37,6 +41,7 @@
 			<tr>
 				<th>${searchResult.datasetConfiguration.getColumn("DocumentTitle").displayName}</th>
 				<th>${searchResult.datasetConfiguration.getColumn("DocumentConceptionStamp").displayName}</th>
+				<th>Preview Document</th>
 				<th>Add to Cart</th>
 			<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (pageStyleUtil.isUserInRoleGroup('CERT_ROLE', request))>	
 				<th>Add Certified Doc to Cart</th>
@@ -52,13 +57,16 @@
 			<tr>
 				<td>${searchResult.highlight(doc, "DocumentTitle")}</td>
 				<td>${searchResult.highlight(doc, "DocumentConceptionStamp")}</td>
+			<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || pageStyleUtil.isUserInRoleGroup('ALL_ROLE', request)>
+				<td><a class="nocolor pphoto" href="${request.getContextPath()}/search.do?indexName=docdetails&templateName=imagepreview&lq=${pageStyleUtil.encodeURL("DocumentID:" + doc.get("DocumentID"))}&page=1&view=FitV&scrollbar=0&navpanes=0&statusbar=0&messages=0?iframe=true&width=50%25&height=95%25" rel="prettyPhoto[iframe]"><img border="0" title="Preview" src="<@com.currentUrlPrefix/>/resource/preview.png"></a></td>
+			</#if>
 				<td><input class="cartLink2" type="button" title="${doc.get("DocumentID")}" value="Add to Cart"/></td>
-				<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (pageStyleUtil.isUserInRoleGroup('CERT_ROLE', request))>
+			<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (pageStyleUtil.isUserInRoleGroup('CERT_ROLE', request))>
 				<td><input class="cartLinkCert2" type="button" name="&caseNumber=${doc.get("CaseID")}&caseEvent=${doc.get("DocumentTitle")}" title="${doc.get("DocumentID")}" value="Add Certified Document"/></td>
-				</#if>
-				<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || pageStyleUtil.isUserInRoleGroup('ADMIN_ROLE', request)>
+			</#if>
+			<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || pageStyleUtil.isUserInRoleGroup('ADMIN_ROLE', request)>
 				<td><a class="nocolor pphoto" href="${request.getContextPath()}/search.do?indexName=docdetails&templateName=Image&lq=${pageStyleUtil.encodeURL("DocumentID:" + doc.get("DocumentID"))}&page=1&view=FitV&scrollbar=0&navpanes=0&statusbar=0&messages=0?iframe=true&width=50%25&height=95%25" rel="prettyPhoto[iframe]"><img border="0" title="Preview" src="<@com.currentUrlPrefix/>/resource/preview.png"></a></td>
-				</#if>
+			</#if>
 			</tr>
 		</#foreach>
 		</tbody>
@@ -70,6 +78,7 @@
  		<tr>
 			<th>${searchResult.datasetConfiguration.getColumn("DocumentTitle").displayName}</th>
 			<th>${searchResult.datasetConfiguration.getColumn("DocumentConceptionStamp").displayName}</th>
+			<th>Preview Document</th>
 			<th>Add to Cart</th>
 		<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (pageStyleUtil.isUserInRoleGroup('CERT_ROLE', request))>	
 			<th>Add Certified Doc to Cart</th>
@@ -82,6 +91,7 @@
  	 <tbody>
 		<#assign ResultId =0>
 		<tr>
+			<td></td>
 			<td></td>
 			<td></td>
 			<td></td>

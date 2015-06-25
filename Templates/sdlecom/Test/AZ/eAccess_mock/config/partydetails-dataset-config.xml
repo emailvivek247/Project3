@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dataset name="Party Details" exportedBy="null" createdAt="Wed Apr 01 19:03:43 EDT 2015">
+<dataset name="Party Details" exportedBy="null" createdAt="Wed Jun 24 10:27:51 EDT 2015">
   <display-order>-1</display-order>
   <description><![CDATA[Party Details]]></description>
   <index-dir>partydetails</index-dir>
@@ -26,230 +26,191 @@ EXEC proc_Get_eAccessParticipant
     ]]></sql>
     <column>
       <column-name>UniqueKeyID</column-name>
-      <display-name><![CDATA[UniqueKeyID]]></display-name>
       <column-index>1</column-index>
       <column-type>java.lang.String</column-type>
       <primary-key>true</primary-key>
       <index-field-type>Keyword</index-field-type>
-      <is-searchable search-weight="1000.0">true</is-searchable>
     </column>
     <column>
       <column-name>CountyName</column-name>
-      <display-name><![CDATA[County Name]]></display-name>
       <column-index>2</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Keyword</index-field-type>
-      <is-searchable search-weight="3.0">true</is-searchable>
     </column>
     <column>
       <column-name>CourtCode</column-name>
-      <display-name><![CDATA[Court Code]]></display-name>
       <column-index>3</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Keyword</index-field-type>
-      <is-searchable search-weight="3.0">true</is-searchable>
     </column>
     <column>
       <column-name>CaseID</column-name>
-      <display-name><![CDATA[Case ID]]></display-name>
       <column-index>4</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Keyword</index-field-type>
-      <is-searchable search-weight="3.0">true</is-searchable>
     </column>
     <column>
       <column-name>CCIDataSourceTable</column-name>
-      <display-name><![CDATA[CCIDataSourceTable]]></display-name>
       <column-index>5</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>EntityTypeCode</column-name>
-      <display-name><![CDATA[EntityTypeCode]]></display-name>
       <column-index>6</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>SourceTableName</column-name>
-      <display-name><![CDATA[SourceTableName]]></display-name>
       <column-index>7</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>ParticipantID</column-name>
-      <display-name><![CDATA[ParticipantID]]></display-name>
       <column-index>8</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>ParticipantSequence</column-name>
-      <display-name><![CDATA[Participant Sequence]]></display-name>
       <column-index>9</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>ParticipantPrefixName</column-name>
-      <display-name><![CDATA[Prefix]]></display-name>
       <column-index>10</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>ParticipantFirstName</column-name>
-      <display-name><![CDATA[First Name]]></display-name>
       <column-index>11</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>ParticipantMiddleName</column-name>
-      <display-name><![CDATA[Middle Name]]></display-name>
       <column-index>12</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>ParticipantLastName</column-name>
-      <display-name><![CDATA[Last Name]]></display-name>
       <column-index>13</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>ParticipantSuffixName</column-name>
-      <display-name><![CDATA[Suffix]]></display-name>
       <column-index>14</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>ParticipantRoleCode</column-name>
-      <display-name><![CDATA[Participant Role]]></display-name>
       <column-index>15</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>ParticipantRoleDescription</column-name>
-      <display-name><![CDATA[Participant Role]]></display-name>
       <column-index>16</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
-      <column-name>BirthDate</column-name>
-      <display-name><![CDATA[Birth Date]]></display-name>
+      <column-name>DateOfBirth</column-name>
       <column-index>17</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <is-searchable search-weight="3.0">true</is-searchable>
     </column>
     <column>
       <column-name>IsJuvenile</column-name>
-      <display-name><![CDATA[Is Juvenile]]></display-name>
       <column-index>18</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>TTEAPFlag</column-name>
-      <display-name><![CDATA[Vehicle Registration Hold]]></display-name>
       <column-index>19</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Keyword</index-field-type>
-      <is-sortable>true</is-sortable>
-      <is-searchable search-weight="3.0">false</is-searchable>
     </column>
     <column>
       <column-name>AssociatedToParticipantID</column-name>
-      <display-name><![CDATA[Associated To Participant ID]]></display-name>
       <column-index>20</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>AssociatedToTableColumnName</column-name>
-      <display-name><![CDATA[Associated To Table Column Name]]></display-name>
       <column-index>21</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>AttorneyBarNumber</column-name>
-      <display-name><![CDATA[AttorneyBarNumber]]></display-name>
       <column-index>22</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>AttorneyBarAssociationCode</column-name>
-      <display-name><![CDATA[AttorneyBarAssociationCode]]></display-name>
       <column-index>23</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>AttorneyBarAssociationDescription</column-name>
-      <display-name><![CDATA[AttorneyBarAssociationDescription]]></display-name>
       <column-index>24</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>IsPrimaryAttorney</column-name>
-      <display-name><![CDATA[Is Primary Attorney]]></display-name>
       <column-index>25</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>IsActiveAttorney</column-name>
-      <display-name><![CDATA[Is Active Attorney]]></display-name>
       <column-index>26</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>PartyCity</column-name>
-      <display-name><![CDATA[City]]></display-name>
       <column-index>27</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>PartyStateCode</column-name>
-      <display-name><![CDATA[State]]></display-name>
       <column-index>28</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>PartyCountryCode</column-name>
-      <display-name><![CDATA[Country]]></display-name>
       <column-index>29</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>DefaultTemplate</column-name>
-      <display-name><![CDATA[DefaultTemplate]]></display-name>
       <column-index>30</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
     </column>
     <column>
       <column-name>CCILastLookupDateTime</column-name>
-      <display-name><![CDATA[CCILastLookupDateTime]]></display-name>
       <column-index>31</column-index>
       <column-type>java.lang.String</column-type>
       <modified-date>true</modified-date>
       <index-field-type>Keyword</index-field-type>
-      <is-searchable search-weight="3.0">true</is-searchable>
     </column>
   </dataquery>
   <dataquery name="Content">

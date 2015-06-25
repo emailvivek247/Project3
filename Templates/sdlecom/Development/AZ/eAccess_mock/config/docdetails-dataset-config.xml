@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dataset name="Document Details" exportedBy="null" createdAt="Tue Mar 31 18:46:52 EDT 2015">
+<dataset name="Document Details" exportedBy="null" createdAt="Wed Apr 01 19:01:21 EDT 2015">
   <display-order>-1</display-order>
   <description><![CDATA[Document Details]]></description>
   <index-dir>docdetails</index-dir>
@@ -30,23 +30,21 @@ EXEC proc_Get_eAccessDocument
       <column-type>java.lang.String</column-type>
       <primary-key>true</primary-key>
       <index-field-type>Keyword</index-field-type>
-      <tag><![CDATA[]]></tag>
+      <is-searchable search-weight="1000.0">true</is-searchable>
     </column>
     <column>
       <column-name>CountyName</column-name>
-      <display-name><![CDATA[CountyName]]></display-name>
+      <display-name><![CDATA[County]]></display-name>
       <column-index>2</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>CourtCode</column-name>
-      <display-name><![CDATA[CourtCode]]></display-name>
+      <display-name><![CDATA[CourtCode ]]></display-name>
       <column-index>3</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>CaseID</column-name>
@@ -54,7 +52,6 @@ EXEC proc_Get_eAccessDocument
       <column-index>4</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>DocumentID</column-name>
@@ -63,7 +60,6 @@ EXEC proc_Get_eAccessDocument
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
       <is-searchable search-weight="3.0">true</is-searchable>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>IsAssociatedToEvent</column-name>
@@ -71,7 +67,6 @@ EXEC proc_Get_eAccessDocument
       <column-index>6</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>ParentDocumentID</column-name>
@@ -79,7 +74,6 @@ EXEC proc_Get_eAccessDocument
       <column-index>7</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>ExternalEDMSServerName</column-name>
@@ -87,7 +81,6 @@ EXEC proc_Get_eAccessDocument
       <column-index>8</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>DocumentConceptionStamp</column-name>
@@ -95,23 +88,20 @@ EXEC proc_Get_eAccessDocument
       <column-index>9</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>DocumentStampedAs</column-name>
-      <display-name><![CDATA[DocumentStampedAs]]></display-name>
+      <display-name><![CDATA[Document Stamped As]]></display-name>
       <column-index>10</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>DocumentSequence</column-name>
-      <display-name><![CDATA[DocumentSequence]]></display-name>
+      <display-name><![CDATA[Document Sequence]]></display-name>
       <column-index>11</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>DocumentTitle</column-name>
@@ -119,15 +109,13 @@ EXEC proc_Get_eAccessDocument
       <column-index>12</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>DocumentTypeLongDescription</column-name>
-      <display-name><![CDATA[DocumentTypeLongDescription]]></display-name>
+      <display-name><![CDATA[Document Type]]></display-name>
       <column-index>13</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>SourceModDateTime</column-name>
@@ -135,7 +123,6 @@ EXEC proc_Get_eAccessDocument
       <column-index>14</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>AttorneyBarList</column-name>
@@ -143,7 +130,6 @@ EXEC proc_Get_eAccessDocument
       <column-index>15</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>DefaultTemplate</column-name>
@@ -151,7 +137,6 @@ EXEC proc_Get_eAccessDocument
       <column-index>16</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>CCILastLookupDateTime</column-name>
@@ -159,7 +144,6 @@ EXEC proc_Get_eAccessDocument
       <column-index>17</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
   </dataquery>
   <default-template>default</default-template>
@@ -171,6 +155,7 @@ EXEC proc_Get_eAccessDocument
   <searcher-max-idle>7</searcher-max-idle>
   <is-in-memory-search>false</is-in-memory-search>
   <allowed-ip-list>*</allowed-ip-list>
+  <is-empty-query-match-all>false</is-empty-query-match-all>
   <date-weight-formula>
     <time-weight time="600" weight="12.0"/>
     <time-weight time="1800" weight="11.0"/>

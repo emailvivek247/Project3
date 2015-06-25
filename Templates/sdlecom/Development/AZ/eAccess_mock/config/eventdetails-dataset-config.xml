@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dataset name="Event Details" exportedBy="null" createdAt="Tue Mar 31 18:47:17 EDT 2015">
+<dataset name="Event Details" exportedBy="null" createdAt="Wed Apr 01 19:01:42 EDT 2015">
   <display-order>-1</display-order>
   <description><![CDATA[Event Details]]></description>
   <index-dir>eventdetails</index-dir>
@@ -31,49 +31,44 @@ EXEC proc_Get_eAccessEvent
       <column-type>java.lang.String</column-type>
       <primary-key>true</primary-key>
       <index-field-type>Keyword</index-field-type>
-      <tag><![CDATA[]]></tag>
+      <is-searchable search-weight="1000.0">true</is-searchable>
     </column>
     <column>
       <column-name>CountyName</column-name>
-      <display-name><![CDATA[CountyName]]></display-name>
+      <display-name><![CDATA[County]]></display-name>
       <column-index>2</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Keyword</index-field-type>
       <is-searchable search-weight="3.0">true</is-searchable>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>CourtCode</column-name>
-      <display-name><![CDATA[CourtCode]]></display-name>
+      <display-name><![CDATA[Court Code]]></display-name>
       <column-index>3</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Keyword</index-field-type>
       <is-searchable search-weight="3.0">true</is-searchable>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>CaseID</column-name>
-      <display-name><![CDATA[CaseID]]></display-name>
+      <display-name><![CDATA[Case ID]]></display-name>
       <column-index>4</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>AssociatedParticipantType</column-name>
-      <display-name><![CDATA[AssociatedParticipantType]]></display-name>
+      <display-name><![CDATA[Associated Participant Type]]></display-name>
       <column-index>5</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>AssociatedParticipantID</column-name>
-      <display-name><![CDATA[AssociatedParticipantID]]></display-name>
+      <display-name><![CDATA[Associated Participant ID]]></display-name>
       <column-index>6</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>EventDate</column-name>
@@ -82,31 +77,27 @@ EXEC proc_Get_eAccessEvent
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
       <is-searchable search-weight="3.0">false</is-searchable>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>EventSequence</column-name>
-      <display-name><![CDATA[EventSequence]]></display-name>
+      <display-name><![CDATA[Event Sequence]]></display-name>
       <column-index>8</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>EventTypeCode</column-name>
-      <display-name><![CDATA[EventTypeCode]]></display-name>
+      <display-name><![CDATA[Event Type]]></display-name>
       <column-index>9</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>EventTypeDescription</column-name>
-      <display-name><![CDATA[EventTypeDescription]]></display-name>
+      <display-name><![CDATA[Event Type]]></display-name>
       <column-index>10</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>DefaultTemplate</column-name>
@@ -114,7 +105,6 @@ EXEC proc_Get_eAccessEvent
       <column-index>11</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>CCILastLookupDateTime</column-name>
@@ -124,7 +114,6 @@ EXEC proc_Get_eAccessEvent
       <modified-date>true</modified-date>
       <index-field-type>Keyword</index-field-type>
       <is-searchable search-weight="3.0">false</is-searchable>
-      <tag><![CDATA[]]></tag>
     </column>
   </dataquery>
   <dataquery name="Deletion" is-delete-only="true">

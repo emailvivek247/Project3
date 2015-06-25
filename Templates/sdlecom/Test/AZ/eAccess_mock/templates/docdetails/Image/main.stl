@@ -56,7 +56,7 @@
 				<#else>
 					<br />
 					<br />
-					<center><b>Image is Unavailable. Please contact Granicus Support at support@granicus.com with subject line as <i>Case Number</i> you are trying to view.</b></center>
+					<center><b>Image is Unavailable. Please contact Granicus Support at supportRMS@granicus.com with subject line as <i>Case Number</i> you are trying to view.</b></center>
 					<center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>
 				</#if>
 			<#elseif pageStyleUtil.isUserInRoleGroup('CERT_ROLE', request) || pageStyleUtil.isUserInRoleGroup('PER_PAGE_ROLE', request) || pageStyleUtil.isUserInRoleGroup('OFFICIAL_ROLE', request)>
@@ -119,12 +119,12 @@
 					<#elseif SDLDMSDocument?has_content && SDLDMSDocument.getErrorCode()?has_content>
 							<br />
 							<br />
-							<center><b>Error while retriving document from Document Management System. Details: ${SDLDMSDocument.getErrorCode()} ${dmsID}. Please contact Granicus Support at support@granicus.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
+							<center><b>Error while retriving document from Document Management System. Details: ${SDLDMSDocument.getErrorCode()} ${dmsID}. Please contact Granicus Support at supportRMS@granicus.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
 							<center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>
 					<#else>
 							<br />
 							<br />
-							<center><b>Error while retriving document from Document Management System. Please contact Granicus Support at support@granicus.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
+							<center><b>Error while retriving document from Document Management System. Please contact Granicus Support at supportRMS@granicus.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
 							<center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>
 					</#if>
 			
@@ -143,7 +143,7 @@
 						<#else>
 							<br />
 							<br />
-							<center><b>Tiff to Pdf Conversion Failed. Please contact Granicus Support at support@granicus.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
+							<center><b>Tiff to Pdf Conversion Failed. Please contact Granicus Support at supportRMS@granicus.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
 							<center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>
 						</#if>
 					<#elseif fileExtension?contains("pdf")>
@@ -161,13 +161,13 @@
 						<#else>
 							<br />
 							<br />
-							<center><b>Rendering Of Pdf file Failed. Please contact Granicus Support at support@granicus.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
+							<center><b>Rendering Of Pdf file Failed. Please contact Granicus Support at supportRMS@granicus.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
 							<center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>
 						</#if>				
 					<#else>	<#--File Extension Should Either be tiff or PDF-->			
 						<br />
 						<br />
-						<center><b>File Extension Should Either be tiff or PDF. Please contact Granicus Support at support@granicus.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
+						<center><b>File Extension Should Either be tiff or PDF. Please contact Granicus Support at supportRMS@granicus.com with subject line as <i>Instrument</i> number you are trying to view.</b></center>
 						<center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>				
 					</#if><#--File Extensions IF STATEMENT-->
 			<#elseif pageStyleUtil.isUserInRoleGroup('CERT_ROLE', request) || pageStyleUtil.isUserInRoleGroup('PER_PAGE_ROLE', request) || pageStyleUtil.isUserInRoleGroup('OFFICIAL_ROLE', request)>
@@ -215,7 +215,7 @@
 		<#if pageStyleUtil.isUserInRoleGroup('ADMIN_ROLE', request)>
 			<br />
 			<br />
-			<center><b>Image is Unavailable. Please contact Granicus Support at support@granicus.com with subject line as <i>Case Number</i> you are trying to view.</b></center>
+			<center><b>Image is Unavailable. Please contact Granicus Support at supportRMS@granicus.com with subject line as <i>Case Number</i> you are trying to view.</b></center>
 			<center><img title="Preview" src="<@com.currentUrlPrefix/>/blank.png"></center>
 		<#elseif pageStyleUtil.isUserInRoleGroup('PER_PAGE_ROLE', request) || pageStyleUtil.isUserInRoleGroup('OFFICIAL_ROLE', request)>
 			<@getUserRole request/>

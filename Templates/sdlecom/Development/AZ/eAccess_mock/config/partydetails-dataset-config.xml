@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dataset name="Party Details" exportedBy="null" createdAt="Tue Mar 31 18:47:56 EDT 2015">
+<dataset name="Party Details" exportedBy="null" createdAt="Wed Jun 03 23:29:01 EDT 2015">
   <display-order>-1</display-order>
   <description><![CDATA[Party Details]]></description>
   <index-dir>partydetails</index-dir>
@@ -31,6 +31,7 @@ EXEC proc_Get_eAccessParticipant
       <column-type>java.lang.String</column-type>
       <primary-key>true</primary-key>
       <index-field-type>Keyword</index-field-type>
+      <is-searchable search-weight="1000.0">true</is-searchable>
       <tag><![CDATA[]]></tag>
     </column>
     <column>
@@ -94,7 +95,7 @@ EXEC proc_Get_eAccessParticipant
     </column>
     <column>
       <column-name>ParticipantSequence</column-name>
-      <display-name><![CDATA[ParticipantSequence]]></display-name>
+      <display-name><![CDATA[Participant Sequence]]></display-name>
       <column-index>9</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
@@ -102,7 +103,7 @@ EXEC proc_Get_eAccessParticipant
     </column>
     <column>
       <column-name>ParticipantPrefixName</column-name>
-      <display-name><![CDATA[ParticipantPrefixName]]></display-name>
+      <display-name><![CDATA[Prefix]]></display-name>
       <column-index>10</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
@@ -110,7 +111,7 @@ EXEC proc_Get_eAccessParticipant
     </column>
     <column>
       <column-name>ParticipantFirstName</column-name>
-      <display-name><![CDATA[ParticipantFirstName]]></display-name>
+      <display-name><![CDATA[First Name]]></display-name>
       <column-index>11</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
@@ -118,7 +119,7 @@ EXEC proc_Get_eAccessParticipant
     </column>
     <column>
       <column-name>ParticipantMiddleName</column-name>
-      <display-name><![CDATA[ParticipantMiddleName]]></display-name>
+      <display-name><![CDATA[Middle Name]]></display-name>
       <column-index>12</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
@@ -126,7 +127,7 @@ EXEC proc_Get_eAccessParticipant
     </column>
     <column>
       <column-name>ParticipantLastName</column-name>
-      <display-name><![CDATA[ParticipantLastName]]></display-name>
+      <display-name><![CDATA[Last Name]]></display-name>
       <column-index>13</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
@@ -134,7 +135,7 @@ EXEC proc_Get_eAccessParticipant
     </column>
     <column>
       <column-name>ParticipantSuffixName</column-name>
-      <display-name><![CDATA[ParticipantSuffixName]]></display-name>
+      <display-name><![CDATA[Suffix]]></display-name>
       <column-index>14</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
@@ -142,7 +143,7 @@ EXEC proc_Get_eAccessParticipant
     </column>
     <column>
       <column-name>ParticipantRoleCode</column-name>
-      <display-name><![CDATA[ParticipantRoleCode]]></display-name>
+      <display-name><![CDATA[Participant Role]]></display-name>
       <column-index>15</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
@@ -150,24 +151,23 @@ EXEC proc_Get_eAccessParticipant
     </column>
     <column>
       <column-name>ParticipantRoleDescription</column-name>
-      <display-name><![CDATA[ParticipantRoleDescription]]></display-name>
+      <display-name><![CDATA[Participant Role]]></display-name>
       <column-index>16</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
       <tag><![CDATA[]]></tag>
     </column>
     <column>
-      <column-name>BirthDate</column-name>
-      <display-name><![CDATA[Birth Date]]></display-name>
+      <column-name>DateOfBirth</column-name>
+      <display-name><![CDATA[DateOfBirth]]></display-name>
       <column-index>17</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
-      <is-searchable search-weight="3.0">true</is-searchable>
       <tag><![CDATA[]]></tag>
     </column>
     <column>
       <column-name>IsJuvenile</column-name>
-      <display-name><![CDATA[IsJuvenile]]></display-name>
+      <display-name><![CDATA[Is Juvenile]]></display-name>
       <column-index>18</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
@@ -185,7 +185,7 @@ EXEC proc_Get_eAccessParticipant
     </column>
     <column>
       <column-name>AssociatedToParticipantID</column-name>
-      <display-name><![CDATA[AssociatedToParticipantID]]></display-name>
+      <display-name><![CDATA[Associated To Participant ID]]></display-name>
       <column-index>20</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
@@ -193,7 +193,7 @@ EXEC proc_Get_eAccessParticipant
     </column>
     <column>
       <column-name>AssociatedToTableColumnName</column-name>
-      <display-name><![CDATA[AssociatedToTableColumnName]]></display-name>
+      <display-name><![CDATA[Associated To Table Column Name]]></display-name>
       <column-index>21</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
@@ -225,7 +225,7 @@ EXEC proc_Get_eAccessParticipant
     </column>
     <column>
       <column-name>IsPrimaryAttorney</column-name>
-      <display-name><![CDATA[IsPrimaryAttorney]]></display-name>
+      <display-name><![CDATA[Is Primary Attorney]]></display-name>
       <column-index>25</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
@@ -233,7 +233,7 @@ EXEC proc_Get_eAccessParticipant
     </column>
     <column>
       <column-name>IsActiveAttorney</column-name>
-      <display-name><![CDATA[IsActiveAttorney]]></display-name>
+      <display-name><![CDATA[Is Active Attorney]]></display-name>
       <column-index>26</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
@@ -241,7 +241,7 @@ EXEC proc_Get_eAccessParticipant
     </column>
     <column>
       <column-name>PartyCity</column-name>
-      <display-name><![CDATA[PartyCity]]></display-name>
+      <display-name><![CDATA[City]]></display-name>
       <column-index>27</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
@@ -249,7 +249,7 @@ EXEC proc_Get_eAccessParticipant
     </column>
     <column>
       <column-name>PartyStateCode</column-name>
-      <display-name><![CDATA[PartyStateCode]]></display-name>
+      <display-name><![CDATA[State]]></display-name>
       <column-index>28</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
@@ -257,7 +257,7 @@ EXEC proc_Get_eAccessParticipant
     </column>
     <column>
       <column-name>PartyCountryCode</column-name>
-      <display-name><![CDATA[PartyCountryCode]]></display-name>
+      <display-name><![CDATA[Country]]></display-name>
       <column-index>29</column-index>
       <column-type>java.lang.String</column-type>
       <index-field-type>Text</index-field-type>
