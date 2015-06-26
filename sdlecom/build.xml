@@ -71,19 +71,13 @@
 		
 	</target>
 
-	<target name="download-xmltask">
-		<mkdir dir="ant-lib" />
-		<get src="http://downloads.sourceforge.net/project/xmltask/xmltask/1.16/xmltask.jar" dest="ant-lib" usetimestamp="true"/>
-	</target>
+	<path id="xmltask.lib.path">
+		<fileset dir="ant-lib" includes="*.jar"/>
+	</path>
 
-	<target name="init-xmltask" depends="download-xmltask">
-		<path id="xmltask.lib.path">
-			<fileset dir="ant-lib" includes="*.jar"/>
-		</path>
-		<taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask" classpathref="xmltask.lib.path"/>
-	</target>
+	<taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask" classpathref="xmltask.lib.path"/>
 
-	<target name="ConfUpdate" depends="init, init-xmltask">
+	<target name="ConfUpdate" depends="init">
 		<propertyfile file="${client-conf}">
 			<entry key="nodeName" value="${nodeName}" />
 			<entry key="ecommerce.clienturl" value="${ecommerce.clienturl}" />

@@ -1,5 +1,5 @@
 /sdlecom/dist
-/sdlecom/ant-lib
+/sdlecom/build
 
 # Ignore everything in WebContent/templates except for a few  specified files
 /sdlecom/WebContent/templates/*

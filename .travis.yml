@@ -1,5 +1,13 @@
 language: java
-before_install: ant -f sdlecom/build.xml init-xmltask
+install:
+  - mkdir -p sdlecom/src-dependencies
+  - cd sdlecom/src-dependencies
+  - git clone git@github.com:Granicus/eAccept-eCom.git
+  - cd eAccept-eCom
+  - git checkout ${TRAVIS_BRANCH}
+  - ant buildjar
+  - cp dist/ecomclient.jar ${TRAVIS_BUILD_DIR}/WebContent/WEB-INF/lib/
+  - cd ${TRAVIS_BUILD_DIR}
 script: ant -f sdlecom/build.xml buildJenkins
 jdk:
   - oraclejdk8
