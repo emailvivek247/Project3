@@ -12,4 +12,16 @@ script: ant -f sdlecom/build.xml buildJenkins
 jdk:
   - oraclejdk8
 env:
-  - ENV_NAME=arlington-test
+  global:
+    - ARTIFACTS_KEY=AKIAJF225RQRARLOD63Q
+    - ARTIFACTS_SECRET=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
+    - ARTIFACTS_BUCKET=granicus-development-builds
+  matrix:
+    - ENV_NAME=arlington-test
+addons:
+  artifacts:
+    paths:
+      - $(find sdlecom/dist/ -type f | tr "\n" ":")
+    working_dir: sdlecom/dist
+    target_paths: eaccept-roam/${TRAVIS_COMMIT:0:7}/${ENV_NAME}
+    s3_region: us-west-1
