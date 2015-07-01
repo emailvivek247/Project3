@@ -18,6 +18,9 @@ env:
     - ARTIFACTS_BUCKET=granicus-development-builds
   matrix:
     - ENV_NAME=arlington-test
+    - ENV_NAME=arizona-test
+    - ENV_NAME=dallas-test
+    - ENV_NAME=vbeach-test
 addons:
   artifacts:
     paths:
