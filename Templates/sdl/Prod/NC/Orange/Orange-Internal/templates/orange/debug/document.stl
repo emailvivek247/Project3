@@ -1,6 +1,0 @@
-
- <tr>
-               <td>${searchResult.highlight(doc, "NAME")}</td>
-             <td>${searchResult.highlight(doc, "INSTRUMENT")}</td>
- </tr>
-

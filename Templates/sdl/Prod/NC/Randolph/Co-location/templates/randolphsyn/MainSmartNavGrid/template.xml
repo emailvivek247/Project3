@@ -1,6 +1,0 @@
-<template>
-  <longname>Nicer Pagination Style</longname>
-  <description>Render a nicer pagination. The file generated is overwriting &quot;displayPagination.stl&quot; &#xd;
-  which is included the &quot;search engine&quot; Page Style.</description>
-  <defaultLength>100</defaultLength>
-</template>

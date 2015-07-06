@@ -1,6 +1,0 @@
-<#assign _dumy = response.setContentType("text/xml")>
-<?xml version='1.0' encoding="UTF-8" standalone='yes'?>
-<Results>
-<#include "narrowBy.stl">
-<#include "documents.stl">
-</Results>

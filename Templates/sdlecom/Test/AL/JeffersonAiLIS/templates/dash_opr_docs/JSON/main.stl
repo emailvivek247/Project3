@@ -1,6 +1,0 @@
-<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "false" || (request.isUserInRole('ROAM_ADMIN') || request.isUserInRole('JEFFERSON_ADMIN') || request.isUserInRole('JEFFERSON_PROBATE_ACCESS'))>
-<#assign result = new("org.json.simple.JSONObject")>
-<#assign filters = new("org.json.simple.JSONArray")>
-<#include "documents.stl">
-${result}
-</#if>

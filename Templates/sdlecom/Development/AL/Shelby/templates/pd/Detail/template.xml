@@ -1,5 +1,0 @@
-<template>
-  <longname></longname>
-  <description></description>
-  <defaultLength>1000</defaultLength>
-</template>

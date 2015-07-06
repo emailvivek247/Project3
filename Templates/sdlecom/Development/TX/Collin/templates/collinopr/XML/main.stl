@@ -1,8 +1,0 @@
-<#assign _dumy = response.setContentType("text/xml")>
-<#if pageStyleUtil.isUserInRoleGroup('ALL_ROLE', request)>
-<?xml version='1.0' encoding="UTF-8" standalone='yes'?>
-<Results>
-<#include "narrowBy.stl">
-<#include "documents.stl">
-</#if>
-</Results>

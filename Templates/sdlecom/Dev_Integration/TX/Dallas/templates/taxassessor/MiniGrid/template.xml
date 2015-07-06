@@ -1,5 +1,0 @@
-<template>
-  <longname>MiniGrid Template</longname>
-  <description>Client Side Sortable Template used in Dallas Details</description>
-  <defaultLength>15</defaultLength>
-</template>

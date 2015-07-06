@@ -1,5 +1,0 @@
-<template>
-  <longname>Dallas Clerk OPR Template</longname>
-  <description>Client Side Sortable Template with Export Options used in Main Search for mobile devices</description>
-  <defaultLength>25</defaultLength>
-</template>

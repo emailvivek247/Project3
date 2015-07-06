@@ -1,9 +1,0 @@
-
- <tr>
-              <td>${searchResult.highlight(doc, "FirstName")}</td>
-            <td>${searchResult.highlight(doc, "LastName")}</td>
-            <td>${searchResult.highlight(doc, "MiddleName")}</td>
-	         <td>${number.format("###0.##",doc.get("PartyID"))}</td>
-	         <td>${number.format("###0.##",doc.get("PersonSPN"))}</td>
-	         <td>${number.format("###0.##",doc.get("PersonSPN"))}</td>
- </tr>

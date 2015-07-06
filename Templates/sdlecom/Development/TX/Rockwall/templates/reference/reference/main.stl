@@ -1,5 +1,0 @@
-<#if request.getServletContext().getInitParameter("isSecurityEnabled") == "true" && (pageStyleUtil.isUserInRoleGroup('ALL_ROLE', request))>
-<#include "documents.stl">
-<#else>
-   You are not authorized to access this information.
-</#if>

@@ -7,8 +7,12 @@ install:
   - git checkout ${TRAVIS_BRANCH}
   - ant buildjar
   - cp dist/ecomclient.jar ${TRAVIS_BUILD_DIR}/sdlecom/WebContent/WEB-INF/lib/
+  - cd ${TRAVIS_BUILD_DIR}/sdlecom/src-dependencies
+  - git clone git@github.com:Granicus/eAccept-Templates.git
+  - cd eAccept-Templates
+  - git checkout ${TRAVIS_BRANCH}
   - cd ${TRAVIS_BUILD_DIR}
-script: ant -f sdlecom/build.xml buildJenkins
+script: ant -Dclient.templateroot=sdlecom/src-dependencies/eAccept-Templates -f sdlecom/build.xml buildJenkins
 jdk:
   - oraclejdk8
 env:

@@ -1,5 +1,0 @@
-<template>
-  <longname>XML Search Results</longname>
-  <description>Render Search Results in XML format, easily customizable</description>
-  <defaultLength>100</defaultLength>
-</template>

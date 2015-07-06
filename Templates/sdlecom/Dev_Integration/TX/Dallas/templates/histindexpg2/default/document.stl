@@ -1,9 +1,0 @@
- <tr>
-             <td>${searchResult.highlight(doc, "Page")}</td>
-             <td><a href="${request.getContextPath()}/search.do?indexName=histindeximages&lq=${pageStyleUtil.encodeURL("ID:" + doc.get("ID"))}" target="image">View Image</a></td>
-             <#--<td style="text-align:center;"><a href="javascript:;" onclick="addToCart('indexName?=?${indexName}?=?${dc.displayName}','ID?=?${doc.get("ID")?replace("'", "\\'")?replace("\"","\\\"")}?con?${searchResult.datasetConfiguration.getColumn("BookName").displayName}?=?${doc.get("BookName")?replace("'", "\\'")?replace("\"", "\\\"")?trim}',             
-             'ID%3A${doc.get("ID")}', '25');" >Add</a></td>-->
- </tr>
-
-
-

@@ -1,5 +1,0 @@
-<template>
-  <longname>Smith Marriage Main Template</longname>
-  <description>Client Side Sortable Template with Export Options used in the Main Search</description>
-  <defaultLength>50</defaultLength>
-</template>

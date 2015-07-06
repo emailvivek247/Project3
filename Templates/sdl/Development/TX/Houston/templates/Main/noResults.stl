@@ -1,7 +1,0 @@
-
-<#if !searchResult.docs?has_content || searchResult.docs.size() <= 0>
-	<h4 class="noResults">
-		No results!
-
-	</h4>
-</#if>

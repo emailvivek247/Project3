@@ -1,9 +1,0 @@
-
- <tr>
-               <td>${searchResult.highlight(doc, "COURT_ROOM_DESC")}</td>
-             <td>${searchResult.highlight(doc, "INTERPRETER_NEEDED")}</td>
-             <td>${searchResult.highlight(doc, "JuDGE_NAME")}</td>
-             <td>${searchResult.highlight(doc, "SESSION_END_DT_DISP")}</td>
-             <td>${searchResult.highlight(doc, "SESSION_START_DT_DISP")}</td>
- </tr>
-

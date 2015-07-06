@@ -1,8 +1,0 @@
-<form name="multi_search" action="multiSearch.do" method="get">
-<table align=center><tr><td><b>Search:</b></td>
-<td valign=top>
-<input type="hidden" name="templateName" value="$!{templateName}">
-<input type="text" name="q" size="41" maxlength="2048" value="$!{HTMLEncodedQuery}">&nbsp;
-<input type="submit" value=" Go "></td></tr>
-</table>
-</form>

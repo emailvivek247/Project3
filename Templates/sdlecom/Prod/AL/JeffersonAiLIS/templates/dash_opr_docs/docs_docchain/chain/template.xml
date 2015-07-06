@@ -1,7 +1,0 @@
-<template>
-  <longname>Client-Side Sortable Table</longname>
-  <description>
-    This page view displays result in a Client Side Sortable table.
-  </description>
-  <defaultLength>30</defaultLength>
-</template>

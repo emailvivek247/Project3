@@ -1,9 +1,0 @@
-<#assign spellChecker = new("net.javacoding.xsearch.search.SpellCheckManager")>
-<#assign spellSuggestion = spellChecker.checkSpellHtml(dc, parsedQuery, q, "<b>", "</b>")>
-<#--<#if spellSuggestion?has_content>
- <#assign correctLink = pageStyleUtil.addOrSetQuery(queryString, "q", spellSuggestion.get(0))>
- <font color=#cc0000>Did you mean: </font>
- <span style="font-size:10pt;">
-  <a href="?${correctLink}">${spellSuggestion.get(1)}</a>
- </span>
-</#if>-->

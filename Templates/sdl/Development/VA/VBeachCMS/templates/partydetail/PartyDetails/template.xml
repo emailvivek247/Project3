@@ -1,7 +1,0 @@
-<template>
-  <longname>Nicer Pagination Style</longname>
-  <description>
-  Render a nicer pagination. The file generated is overwriting &quot;displayPagination.ftl&quot; 
-  which is included the &quot;search engine&quot; scaffold.
-  </description>
-</template>

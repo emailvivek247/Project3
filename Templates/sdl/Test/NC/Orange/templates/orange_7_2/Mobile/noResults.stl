@@ -1,3 +1,0 @@
-<#if !searchResult.docs?has_content || searchResult.docs.size() <= 0>
-
-</#if>
