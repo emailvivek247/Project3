@@ -1,0 +1,30 @@
+language: java
+install:
+  - mkdir -p sdlecom/src-dependencies
+  - cd sdlecom/src-dependencies
+  - git clone git@github.com:Granicus/eAccept-eCom.git
+  - cd eAccept-eCom
+  - git checkout ${TRAVIS_BRANCH}
+  - ant buildjar
+  - cp dist/ecomclient.jar ${TRAVIS_BUILD_DIR}/sdlecom/WebContent/WEB-INF/lib/
+  - cd ${TRAVIS_BUILD_DIR}
+script: ant -f sdlecom/build.xml buildJenkins
+jdk:
+  - oraclejdk8
+env:
+  global:
+    - ARTIFACTS_KEY=AKIAJF225RQRARLOD63Q
+    - ARTIFACTS_SECRET=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
+    - ARTIFACTS_BUCKET=granicus-development-builds
+  matrix:
+    - ENV_NAME=arlington-test
+    - ENV_NAME=arizona-test
+    - ENV_NAME=dallas-test
+    - ENV_NAME=vbeach-test
+addons:
+  artifacts:
+    paths:
+      - $(find sdlecom/dist/ -type f | tr "\n" ":")
+    working_dir: sdlecom/dist
+    target_paths: eaccept-roam/${TRAVIS_COMMIT:0:7}/${ENV_NAME}
+    s3_region: us-west-1
