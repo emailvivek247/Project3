@@ -1,6 +1,0 @@
-<div width="100%">
-	<div style="float:right; font-weight:bold;">       
-              <#include "/WEB-INF/view/admin/layout/loginMenu.stl"> 
-        </div>
-</div>
-        

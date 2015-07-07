@@ -1,7 +1,0 @@
-
- <tr>
-               <td>${searchResult.highlight(doc, "REFNUM")}</td>
-             <td>${searchResult.highlight(doc, "LEGACYREFNNUM")}</td>
-             <td>${searchResult.highlight(doc, "SEQKEY")}</td>
- </tr>
-

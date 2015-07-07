@@ -1,7 +1,0 @@
-
- <tr>
-              <td>${searchResult.highlight(doc, "RefInstrument2")}</td>
-            <td>${searchResult.highlight(doc, "DocRefBookType2")}</td>
-            <td>${searchResult.highlight(doc, "DocRefBook2")}</td>
-            <td>${searchResult.highlight(doc, "DocRefPage2")}</td>
- </tr>

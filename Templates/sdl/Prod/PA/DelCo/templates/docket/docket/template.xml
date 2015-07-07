@@ -1,5 +1,0 @@
-<template>
-  <longname>Details</longname>
-  <description>This page view can be used to configure a details page.</description>
-  <defaultLength>10000</defaultLength>
-</template>

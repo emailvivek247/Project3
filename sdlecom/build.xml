@@ -4,6 +4,7 @@
 	<property file="build-props/${env.ENV_NAME}.build.properties"/>
 	<property file="build.properties"/>
 
+	<echo message="client.templateroot = ${client.templateroot}"/>
 	<echo message="client.templatepath = ${client.templatepath}"/>
 	<echo message="ecommerce.clientName = ${ecommerce.clientName}"/>
 
@@ -179,19 +180,19 @@
 			<fileset dir="${basedir}/resources" includes="**/*.*" />
 		</copy>
 		<copy todir="${webcontent.web-inf}/view/admin/security/authentication">
-			<fileset dir="${basedir}/${client.templatepath}/authentication" includes="**/*.*" />
+			<fileset dir="${basedir}/${client.templateroot}/${client.templatepath}/authentication" includes="**/*.*" />
 		</copy>
 		<copy todir="${webcontent.web-inf}/data">
-			<fileset dir="${basedir}/${client.templatepath}/config" includes="**/*.*" />
+			<fileset dir="${basedir}/${client.templateroot}/${client.templatepath}/config" includes="**/*.*" />
 		</copy>
 		<copy todir="${webcontent}/templates">
-			<fileset dir="${basedir}/${client.templatepath}/templates" includes="**/*.*" />
+			<fileset dir="${basedir}/${client.templateroot}/${client.templatepath}/templates" includes="**/*.*" />
 		</copy>
 		<copy todir="${webcontent}/resources/custom_resources">
-			<fileset dir="${basedir}/${client.templatepath}/custom_resources" includes="**/*.*" />
+			<fileset dir="${basedir}/${client.templateroot}/${client.templatepath}/custom_resources" includes="**/*.*" />
 		</copy>
 		<copy todir="${webcontent.web-inf}/classes" overwrite="true">
-			<fileset dir="${basedir}/${client.templatepath}/properties" includes="**/*.*" />
+			<fileset dir="${basedir}/${client.templateroot}/${client.templatepath}/properties" includes="**/*.*" />
 		</copy>
 		<war destfile="dist/${warfilename}" webxml="${webcontent.web-inf}/web.xml">
 			<fileset dir="${webcontent}">

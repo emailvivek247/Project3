@@ -1,9 +1,0 @@
-
- <tr>
-              <td>${searchResult.highlight(doc, "CaseID")}</td>
-            <td>${searchResult.highlight(doc, "CaseNumber")}</td>
-            <td>${searchResult.highlight(doc, "CaseStatus")}</td>
-  		    <td>${date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("DATE_TIME_CREATED"))}</td>
-  		    <td>${date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("DATE_TIME_MOD"))}</td>
-            <td>${searchResult.highlight(doc, "Jurisdiction")}</td>
- </tr>

@@ -1,1 +1,0 @@
-${request.getRequestDispatcher("/search.do?searchType=1&indexName=genesis").forward(request, response)}

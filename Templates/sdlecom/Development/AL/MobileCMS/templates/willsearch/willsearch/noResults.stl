@@ -1,7 +1,0 @@
-
-<#if !searchResult.docs?has_content || searchResult.docs.size() <= 0>
-	<h4 class="noResults">
-		No search results found. Please try a different search criteria.
-
-	</h4>
-</#if>

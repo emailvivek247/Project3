@@ -1,5 +1,0 @@
-<template>
-  <longname>Search Suggestion</longname>
-  <description>Add jQuery based search suggestion. Applicable to templates with searchBox_extra.stl file.</description>
-  <defaultLength>50</defaultLength>
-</template>

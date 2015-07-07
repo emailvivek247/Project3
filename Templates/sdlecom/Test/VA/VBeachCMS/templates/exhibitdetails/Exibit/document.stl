@@ -1,7 +1,0 @@
-
- <tr>
-              <td>${searchResult.highlight(doc, "IDDate")}</td>
-            <td>${searchResult.highlight(doc, "EvidenceDate")}</td>
-            <td>${searchResult.highlight(doc, "IDNumber")}</td>
-            <td>${searchResult.highlight(doc, "ObjectDesc")}</td>
- </tr>

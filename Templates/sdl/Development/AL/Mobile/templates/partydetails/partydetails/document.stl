@@ -1,7 +1,0 @@
-
- <tr>
-              <td>${searchResult.highlight(doc, "PartyName")}</td>
-            <td>${searchResult.highlight(doc, "PartyRole")}</td>
-  		    <td>${date.format("yyyy/MM/dd HH:mm:ss z",doc.getDate("DOD"))}</td>
-	         <td>${number.format("###0.##",doc.get("BondAmount"))}</td>
- </tr>

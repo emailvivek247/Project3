@@ -1,7 +1,0 @@
-
-  		  <@display.column media="html" indexColumnName="desc" title="${searchResult.datasetConfiguration.getColumn(\"desc\").displayName}">
-		   	${searchResult.highlight(doc, "desc")}
-		  </@display.column>
-		  <@display.column media="rtf excel pdf" indexColumnName="desc" title="${searchResult.datasetConfiguration.getColumn(\"desc\").displayName}">
-		   	${doc.get("desc")}
-		  </@display.column>

@@ -1,7 +1,0 @@
-
- <tr>
-               <td>${searchResult.highlight(doc, "CaseID")}</td>
-             <td>${searchResult.highlight(doc, "CaseNumber")}</td>
-             <td>${searchResult.highlight(doc, "CaseType")}</td>
- </tr>
-

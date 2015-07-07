@@ -1,5 +1,0 @@
-<template>
-  <longname>Search Engine</longname>
-  <description>A Search Engine example, with filterable categories, pagination, results-per-page, etc</description>
-  <defaultLength>100</defaultLength>
-</template>

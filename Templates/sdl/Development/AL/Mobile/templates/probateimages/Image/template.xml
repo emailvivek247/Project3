@@ -1,5 +1,0 @@
-<template>
-  <longname>Randolph Image Index</longname>
-  <description>Used for Images</description>
-  <defaultLength>25</defaultLength>
-</template>

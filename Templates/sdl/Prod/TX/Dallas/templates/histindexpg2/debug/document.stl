@@ -1,9 +1,0 @@
-
- <tr>
-               <td>${searchResult.highlight(doc, "BookName")}</td>
-             <td>${searchResult.highlight(doc, "Image")}</td>
-             <td>${searchResult.highlight(doc, "Page")}</td>
-             <td>${searchResult.highlight(doc, "Booktype")}</td>
-             <td>${searchResult.highlight(doc, "IndexName")}</td>
- </tr>
-
