@@ -12,9 +12,17 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public class P {
+
     protected Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
-    public static DecimalFormat rateFormatter = new DecimalFormat("#,###,##0.0");
+    private static final ThreadLocal<DecimalFormat> rateFormatter =
+        new ThreadLocal<DecimalFormat>() {
+            @Override
+            protected DecimalFormat initialValue() {
+               return new DecimalFormat("#,###,##0.0");
+            }
+        };
+
     public static DecimalFormat percentFormatter = new DecimalFormat("#,##0.00%");
 
     private long last_report_time = 0;
@@ -76,10 +84,10 @@ public class P {
             logger.info(
                     prefix
                     + ic.getScheduler().status()
-                    + rateFormatter.format(read_size_rate)+"K("
-                    + rateFormatter.format(read_doc_rate)+"):"
-                    + rateFormatter.format(write_size_rate)+"K("
-                    + rateFormatter.format(write_doc_rate)+")/s"
+                    + rateFormatter.get().format(read_size_rate)+"K("
+                    + rateFormatter.get().format(read_doc_rate)+"):"
+                    + rateFormatter.get().format(write_size_rate)+"K("
+                    + rateFormatter.get().format(write_doc_rate)+")/s"
                     );
         }
     }
