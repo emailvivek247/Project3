@@ -125,7 +125,7 @@ public class MultiSearchAction extends Action {
                 }
             }
             
-            msr.setSearchTimeString(VMTool.timeFormat.format((System.currentTimeMillis() - _start) * .001));
+            msr.setSearchTimeString(VMTool.timeFormat.get().format((System.currentTimeMillis() - _start) * .001));
             msr.setURLEncodedQuery(java.net.URLEncoder.encode(q, "utf-8"));
             msr.setQueryString(request.getQueryString());
             msr.setNoStartQueryString(HttpUtil.addOrSetQuery(request.getQueryString(), "start", ""));

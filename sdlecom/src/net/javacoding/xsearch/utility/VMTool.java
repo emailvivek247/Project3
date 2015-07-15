@@ -158,9 +158,14 @@ public final class VMTool{
         }
         return al;
     }
-    public static DecimalFormat timeFormat = new DecimalFormat("#,###,###0.00");
-    public static DecimalFormat rateFormat = new DecimalFormat("#,###,###0.0");
-    public static DecimalFormat percentFormat = new DecimalFormat("#,##0.00%");
+
+    public static final ThreadLocal<DecimalFormat> timeFormat = new ThreadLocal<DecimalFormat>() {
+        @Override
+        protected DecimalFormat initialValue() {
+            return new DecimalFormat("#,###,###0.00");
+        }
+    };
+
     public static DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("yyyy MMM dd hh:mm");
     public static String longDateToString(long l) {
         return dateFormatter.print(l);

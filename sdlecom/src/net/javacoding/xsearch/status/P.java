@@ -23,8 +23,6 @@ public class P {
             }
         };
 
-    public static DecimalFormat percentFormatter = new DecimalFormat("#,##0.00%");
-
     private long last_report_time = 0;
 
     public P() {
@@ -43,26 +41,20 @@ public class P {
     private long read_start_doc_count = 0;
     private long write_start_doc_count = 0;
 
-    private long read_total_doc_count = 0;
-    private long write_total_doc_count = 0;
-
     public void r(IndexerContext ic, TextDocument td) {
         p(ic, "r");
         read_size_count += td.getSize();
-        read_total_doc_count++;
     }
     public void r(IndexerContext ic, TextDocument[] tds) {
         p(ic, "r");
         for(int i=0;i<tds.length;i++){
             read_size_count += tds[i].getSize();
         }
-        read_total_doc_count+=tds.length;
     }
 
     public void w(IndexerContext ic, TextDocument td) {
         p(ic, "w");
         write_size_count += td.getSize();
-        write_total_doc_count++;
     }
 
     public void p(IndexerContext ic, String prefix) {
@@ -89,6 +81,7 @@ public class P {
                     + rateFormatter.get().format(write_size_rate)+"K("
                     + rateFormatter.get().format(write_doc_rate)+")/s"
                     );
+           
         }
     }
 
