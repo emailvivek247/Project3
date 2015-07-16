@@ -71,6 +71,7 @@ public class WebserverStatic {
     	 put(REBUILD_SPELL_CHECK_DICTIONARY, "unlockStoppedIndex reBuildDictionary");
     	 put(UNLOCK_INDEX, "unlockStoppedIndex");
     	 put(CLEAN_INDEX, "delete");
+    	 put(REFRESH_INDEX, "refreshIndex");
     }};
     
     
