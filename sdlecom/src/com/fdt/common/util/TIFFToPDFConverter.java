@@ -490,11 +490,11 @@ class Watermark extends PdfPageEventHelper {
             contentunder.setColorStroke(this.waterMarkColor);
         }
 
-        int pageFontSize = (int)((document.getPageSize().getWidth() /600.0f)*fontSize);
+        int pageFontSize = (int)((document.getPageSize().getWidth() /310.0f)*fontSize);
 
        	contentunder.setFontAndSize(watermarkFont, pageFontSize);
-        contentunder.showTextAligned(Element.ALIGN_CENTER, waterMark.trim(), document.getPageSize().getWidth() / 2,
-        	document.getPageSize().getHeight() / 2, 45);
+       	contentunder.showTextAligned(Element.ALIGN_CENTER, waterMark.trim(), (document.getPageSize().getWidth() / 2) + 160,
+            	(document.getPageSize().getHeight() / 2) - 50, 45);
         contentunder.endText();
         contentunder.restoreState();
     }
