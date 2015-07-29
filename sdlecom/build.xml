@@ -97,6 +97,7 @@
 			<entry key="indexServerUrl" value="${indexServerUrl}" />
 			<entry key="documentManagementSystemWsdl" value="${documentManagementSystemWsdl}" />
 			<entry key="documentManagementSystemClassName" value="${documentManagementSystemClassName}" />
+			<entry key="printQServiceWsdl" value="${printQServiceWsdl}" />
 		</propertyfile>
 		<xmltask source="${basedir}/resources/logback.xml" dest="${basedir}/resources/logback.xml" failWithoutMatch="true">
 			<attr path="/configuration/property" attr="value" value="${prefixPathForLogs}" />
