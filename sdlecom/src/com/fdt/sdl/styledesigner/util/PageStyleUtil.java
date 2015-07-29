@@ -33,6 +33,7 @@ import java.util.regex.Pattern;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import net.javacoding.xsearch.foundation.WebserverStatic;
 import net.javacoding.xsearch.utility.FileUtil;
@@ -48,9 +49,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
-import com.fdt.alerts.util.AlertUtil;
 import com.fdt.common.util.SystemUtil;
 import com.fdt.ecom.entity.ShoppingCartItem;
+import com.fdt.sdl.admin.ui.controller.printq.PrintQController;
 import com.fdt.security.entity.User;
 
 import freemarker.template.SimpleHash;
@@ -146,6 +147,12 @@ public class PageStyleUtil {
     public static String appendQuery(String query, String name, String value, String encoding){
         return modifyQuery( query,  name,  value, true, encoding);
     }
+    
+    public static String getBasketNameFromSession(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		String basketName = (String) session.getAttribute("PRINTQ_BASKET_NAME");
+		return basketName;
+	}
 
     /**
      * modify a query, replace existing value to new value
@@ -418,23 +425,27 @@ public class PageStyleUtil {
 		}
 		return shoppingCartSize;
 	}
+	
+	public int getPrinQSize(HttpServletRequest request) {
+		return PrintQController.getPrinQSize(request);
+	}
 
-    public static void main(String[] args) {
-		
-		/*private static String PASSWORD_KEY = "Nk0BusFu9aLE4qb";		
-		private static String PASSWORD_KEY = "dookudu";*/
-    	String text1 = "CE5237CE84D2FB5F938296CE07B2E495E0E706088B11423199A156EC96272C161EE63123BBAE540EBCC87544101E9BE0";
-    	String text2 = "036C6B4E3A77C2C59FB0807A7ECD1BD60DAAE6587D92302BB73E3A6B188429C22713241D37624A3B3DC48B0EA85C7126";
-		String algorithm = "PBEWITHSHA256AND256BITAES-CBC-BC";
-		String devPasswordKey = "dookudu";
-		String prodPasswordKey = "Nk0BusFu9aLE4qb";
-		String decryptedText1 = PageStyleUtil.decrypt(text1, algorithm, devPasswordKey);
-		String decryptedText2 = PageStyleUtil.decrypt(text2, algorithm, prodPasswordKey);
-		System.out.println(decryptedText1);
-		System.out.println(decryptedText2);
-		System.out.println(PageStyleUtil.encrypt(decryptedText1, algorithm));
-		System.out.println(PageStyleUtil.encrypt(decryptedText2, algorithm));
-    }
+	 public static void main(String[] args) {
+			
+			/*private static String PASSWORD_KEY = "Nk0BusFu9aLE4qb";		
+			private static String PASSWORD_KEY = "dookudu";*/
+	    	String text1 = "CE5237CE84D2FB5F938296CE07B2E495E0E706088B11423199A156EC96272C161EE63123BBAE540EBCC87544101E9BE0";
+	    	String text2 = "036C6B4E3A77C2C59FB0807A7ECD1BD60DAAE6587D92302BB73E3A6B188429C22713241D37624A3B3DC48B0EA85C7126";
+			String algorithm = "PBEWITHSHA256AND256BITAES-CBC-BC";
+			String devPasswordKey = "dookudu";
+			String prodPasswordKey = "Nk0BusFu9aLE4qb";
+			String decryptedText1 = PageStyleUtil.decrypt(text1, algorithm, devPasswordKey);
+			String decryptedText2 = PageStyleUtil.decrypt(text2, algorithm, prodPasswordKey);
+			System.out.println(decryptedText1);
+			System.out.println(decryptedText2);
+			System.out.println(PageStyleUtil.encrypt(decryptedText1, algorithm));
+			System.out.println(PageStyleUtil.encrypt(decryptedText2, algorithm));
+	}
 
     /*public static void main(String[] args) {
 		String enc = encrypt("roam");

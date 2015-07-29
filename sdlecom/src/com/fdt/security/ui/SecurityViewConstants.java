@@ -63,5 +63,11 @@ public interface SecurityViewConstants extends BaseViewConstants {
     public static final String EXCEL = "excel";
     
     public static final String PDF = "pdf";
+    
+    public static final String LOAD_PRINTQ_GRID = "admin/printq/printQBasket";
+    
+    public static final String JMESA_LOAD_PRINTQ_GRID = "admin/printq/jmesaPrintQBasket";
+    
+    public static final String JMESA_LOAD_PRINTQ_GRID_API = "admin/printq/jmesaPrintQBasketApi";
 
 }
