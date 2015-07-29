@@ -15,7 +15,7 @@
 
     <context-param>
         <param-name>jmesaMessagesLocation</param-name>
-        <param-value>messages</param-value>
+        <param-value>WEB-INF/conf/jmesaResourceBundle</param-value>
     </context-param>
 
     <context-param>
@@ -42,6 +42,11 @@
         <param-name>isPSOOnlyMachine</param-name>
         <param-value>false</param-value>
     </context-param>
+    
+     <context-param>
+        <param-name>isPrintQEnabled</param-name>
+        <param-value>false</param-value>
+    </context-param>
 
 <!--Custom request parameters-->
     <!--508 Compliance Requirements, Oklahoma-->
@@ -55,6 +60,8 @@
         <param-name>isCommentsEnabled</param-name>
         <param-value>false</param-value>
     </context-param>
+    
+   
 
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -186,6 +193,11 @@
         </init-param>
         <load-on-startup>5</load-on-startup>
     </servlet>
+    
+    <servlet>
+        <servlet-name>worksheet</servlet-name>
+        <servlet-class>org.jmesa.worksheet.servlet.WorksheetServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>freemarker</servlet-name>
@@ -205,6 +217,11 @@
     <servlet-mapping>
         <servlet-name>sdl</servlet-name>
         <url-pattern>*.admin</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>worksheet</servlet-name>
+        <url-pattern>*.wrk</url-pattern>
     </servlet-mapping>
 
     <welcome-file-list>

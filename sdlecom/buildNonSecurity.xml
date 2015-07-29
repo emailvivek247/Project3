@@ -81,6 +81,7 @@
 			<replace path="/:web-app/:context-param[3]/:param-value/text()" withText="${ecommerce.isAlertsEnabled}" />
 			<replace path="/:web-app/:context-param[4]/:param-value/text()" withText="${ecommerce.isShoppingCartEnabled}" />
 			<replace path="/:web-app/:context-param[5]/:param-value/text()" withText="${ecommerce.isPSOOnlyMachine}" />
+			<replace path="/:web-app/:context-param[6]/:param-value/text()" withText="${ecommerce.isPrintQEnabled}" />
 		</xmltask>
 	</target>
 	<target name="compile" depends="ConfUpdate">
