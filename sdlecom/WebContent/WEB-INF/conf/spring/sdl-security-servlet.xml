@@ -97,4 +97,15 @@
         </list>
    </property>
 </bean>
+
+<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+    <property name="staticMethod" value="com.fdt.sdl.admin.ui.controller.printq.PrintQController.setPrintQWsdl"/>
+    <property name="arguments">
+        <list>
+             <value>${printQServiceWsdl}</value>
+        </list>
+   </property>
+</bean>
+
+
 </beans>

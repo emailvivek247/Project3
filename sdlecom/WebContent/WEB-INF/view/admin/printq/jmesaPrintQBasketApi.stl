@@ -1,0 +1,43 @@
+<#include "/admin/lib/include.stl" />
+<@loginLayout encoding="utf-8">
+<#assign form  =JspTaglibs["http://www.springframework.org/tags/form"]>
+<#assign spring=JspTaglibs["http://www.springframework.org/tags"]>
+<link rel="stylesheet" href="resources/styles/validationEngine.jquery.css" type="text/css" />
+<link rel="stylesheet" href="resources/styles/login.css" />
+<link rel="stylesheet" href="resources/styles/jquery-ui-1.8.11.base.css" />
+<link rel="stylesheet" href="resources/styles/jquery-ui-custom-ext.css" />
+<link rel="stylesheet" href="resources/styles/vtabs.css" />
+<link href="resources/styles/jmesa/jmesa-pdf.css" rel="stylesheet" type="text/css" media="all">
+<link href="resources/styles/jmesa/jmesa.css" rel="stylesheet" type="text/css" media="all">
+
+
+<script type="text/javascript" src="resources/javascripts/jquery.min.js"/></script>
+<script type="text/javascript" src="resources/javascripts/jquery-ui.min.js"/></script>
+<script type="text/javascript" src="resources/javascripts/jquery.validationEngine-en.js"></script>
+<script type="text/javascript" src="resources/javascripts/jquery.validationEngine.js"></script>
+<script type="text/javascript" src="resources/javascripts/jquery.cookie.js"></script>
+<script type="text/javascript" src="resources/javascripts/jquery.browser.js"></script>
+<script type="text/javascript" src="resources/javascripts/jmesa/jmesa.js"></script>
+<script type="text/javascript" src="resources/javascripts/jmesa/jquery.jmesa.js"></script>
+<script type="text/javascript">
+</script>
+
+<#assign jmesa=JspTaglibs["http://code.google.com/p/jmesa"]>
+
+
+			<#if items?has_content>
+				<form id="presidentsForm" action="loadPrintQGridAPIAction.admin">
+					${items}
+				</form>
+				
+						
+			</#if>
+
+<script type="text/javascript">
+    function onInvokeAction(id) {
+                $.jmesa.createHiddenInputFieldsForLimitAndSubmit(id);
+               
+            } 
+</script>
+
+</@loginLayout>
