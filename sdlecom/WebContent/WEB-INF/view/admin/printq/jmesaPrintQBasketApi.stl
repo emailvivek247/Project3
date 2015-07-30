@@ -29,9 +29,9 @@
 				<form id="presidentsForm" action="loadPrintQGridAPIAction.admin">
 					${items}
 				</form>
-				
-						
 			</#if>
+
+<a href="javascript:history.back()">Go Back</a>
 
 <script type="text/javascript">
     function onInvokeAction(id) {
