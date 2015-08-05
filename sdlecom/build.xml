@@ -69,7 +69,7 @@
 		<mkdir dir="build/classes" />
 		<mkdir dir="dist" />
 		<mkdir dir="dist/lib" />
-		
+		<mkdir dir="dist-all" />
 	</target>
 
 	<path id="xmltask.lib.path">
@@ -215,6 +215,7 @@
 			<lib dir="dist/lib" />
 		</war>
 		<delete dir="build" />
+		<copy file="dist/${warfilename}" todir="dist-all"/>
 	</target>
 
 	<target name="buildwar" depends="buildjar, buildDate">
