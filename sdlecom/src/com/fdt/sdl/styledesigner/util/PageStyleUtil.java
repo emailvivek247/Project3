@@ -434,17 +434,15 @@ public class PageStyleUtil {
 			
 			/*private static String PASSWORD_KEY = "Nk0BusFu9aLE4qb";		
 			private static String PASSWORD_KEY = "dookudu";*/
-	    	String text1 = "CE5237CE84D2FB5F938296CE07B2E495E0E706088B11423199A156EC96272C161EE63123BBAE540EBCC87544101E9BE0";
-	    	String text2 = "036C6B4E3A77C2C59FB0807A7ECD1BD60DAAE6587D92302BB73E3A6B188429C22713241D37624A3B3DC48B0EA85C7126";
+	    	String text1 = "Gr@nicus723$";
+	    	String text2 = "239C4BED958C2527627816CD4CE18E8FE3EF87334EAF57A9AA5A5657F8239258";
 			String algorithm = "PBEWITHSHA256AND256BITAES-CBC-BC";
 			String devPasswordKey = "dookudu";
-			String prodPasswordKey = "Nk0BusFu9aLE4qb";
-			String decryptedText1 = PageStyleUtil.decrypt(text1, algorithm, devPasswordKey);
-			String decryptedText2 = PageStyleUtil.decrypt(text2, algorithm, prodPasswordKey);
-			System.out.println(decryptedText1);
-			System.out.println(decryptedText2);
-			System.out.println(PageStyleUtil.encrypt(decryptedText1, algorithm));
-			System.out.println(PageStyleUtil.encrypt(decryptedText2, algorithm));
+			String prodPasswordKey1 = "Nk0BusFu9aLE4qb";
+			String prodPasswordKey2 = "zEFyZpXc0NYAgYU";
+			
+			System.out.println(PageStyleUtil.encrypt(text1,algorithm,prodPasswordKey2));
+			System.out.println(PageStyleUtil.decrypt(text2,algorithm,devPasswordKey));
 	}
 
     /*public static void main(String[] args) {
