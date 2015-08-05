@@ -33,34 +33,21 @@ public final class FileUtil {
 
     /**
      * delete a whole directory
+     * @throws IOException 
      */
     public static boolean deleteAll(File f) throws IOException {
-        if (f == null)
-            return true;
-        // Make sure the file or directory exists and isn't write protected
-        if (!f.exists())
-            return true;// fail("Delete: no such file or
-                                        // directory: " +
-        // f);
-        if (!f.canWrite())
-            fail("Delete: write protected: " + f);
-        // If it is a directory, make sure it is empty
-        boolean ret = true;
-        if (f.isDirectory()) {
-            File[] files = f.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                ret &= deleteAll(files[i]);
-            }
-        }
-        // If we passed all the tests, then attempt to delete it
-        // logger.debug("deleting " + f);
-        ret &= f.delete();
-        // And throw an exception if it didn't work for some (unknown) reason.
-        // For example, because of a bug with Java 1.1.1 on Linux,
-        // directory deletion always fails
-        if (!ret)
-            fail("Delete: deletion failed for " + f);
-        return ret;
+    	boolean ret = true;
+    	 if (f == null) {
+             return true;
+    	 }
+         if (!f.exists()) {
+             return true;
+         }
+         if (!f.canWrite()) {
+             fail("Delete: write protected: " + f);
+         }
+    	org.apache.commons.io.FileUtils.forceDelete(f);		
+    	return ret;
     }
 
     public static boolean deleteAll(File[] files) throws IOException {
