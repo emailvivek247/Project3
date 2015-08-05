@@ -85,19 +85,6 @@ class WorkerThread extends Thread {
      * Tells this thread not to accept any new tasks.
      */
     public void stopRunning() {
-        if ( ! running ) {
-            return;
-            //throw new RuntimeException ("THREAD NOT RUNNING - CANNOT STOP !");
-        }
-        if ( assigned ) {
-            try {
-                this.interrupt();
-                this.wait();
-            } catch (SecurityException e) {
-            } catch (InterruptedException e) {
-                //this.interrupt();
-            }
-        }
         running = false;
     }
 
