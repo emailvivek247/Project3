@@ -136,7 +136,7 @@ public class MultiSearchVmAction extends Action {
                     }
                 }
             }
-            request.setAttribute("searchTime", VMTool.timeFormat.format((System.currentTimeMillis() - _start) * .001));
+            request.setAttribute("searchTime", VMTool.timeFormat.get().format((System.currentTimeMillis() - _start) * .001));
             request.setAttribute("URLEncodedQuery", java.net.URLEncoder.encode(q, "utf-8")); // encode query in
             request.setAttribute("HTMLEncodedQuery", HTMLEntities.encode(q)); // encode query in html format
             request.setAttribute("request", request);

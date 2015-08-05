@@ -167,7 +167,7 @@ public class SearchResult extends XMLSerializable{
 	/**
 	 * Search Time in seconds, formatted string
 	 */
-	public String getSearchTimeString(){return VMTool.timeFormat.format(searchTime * .001);}
+	public String getSearchTimeString(){return VMTool.timeFormat.get().format(searchTime * .001);}
 	
 	public Integer getTotal(){ return total;}
 	public Integer getStart(){ return start;}

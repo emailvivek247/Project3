@@ -3,14 +3,9 @@ package net.javacoding.xsearch.core;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
-import java.text.DecimalFormat;
 
-import net.javacoding.xsearch.config.DataSource;
 import net.javacoding.xsearch.config.DatasetConfiguration;
-import net.javacoding.xsearch.config.ServerConfiguration;
-import net.javacoding.xsearch.core.impl.IndexerContextImpl;
 import net.javacoding.xsearch.status.IndexStatus;
-import net.javacoding.xsearch.utility.FileUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +26,6 @@ public class DirectorySizeChecker {
         _mainIndexDir = dc.getMainIndexDirectoryFile();
         _tempIndexDir = dc.getTempIndexDirectoryFile();
         _indexMaxSize = dc.getIndexMaxSize();
-        ServerConfiguration sc = ServerConfiguration.getServerConfiguration();
         if(_isIndexing && _isRecreating) {
             _mainIndexDir = IndexStatus.findNonActiveMainDirectoryFile(dc);
             _tempIndexDir = null;
@@ -60,27 +54,7 @@ public class DirectorySizeChecker {
         return isOverLimit(_indexMaxSize);
     }
 
-    private static boolean      isChecking    = false;
-    public static DecimalFormat sizeFormatter = new DecimalFormat("#,###");
-
     public boolean isOverLimit(double maxSize) {
-        //avoid setting it to 0 and got free unlimited index size
-        /*if (requiresChecking()) {
-            synchronized (logger) {// just use one usable object to lock
-                if (isChecking) return false; // let the checking thread check, and set stop flags
-                isChecking = true;
-            }
-            // only one thread is executing the rest
-            long dirSize = getIndexDirectorySize();
-            logger.info("Dir size:" + sizeFormatter.format(dirSize) + " Bytes");
-            if (dirSize >= (maxSize * BYTES_PER_MEGA)) {
-                logger.warn("Index directory " + _mainIndexDir + " is over size limit " + maxSize + " MB");
-                isChecking = false;
-                return true;
-            }
-            touch();
-            isChecking = false;
-        }*/
         return false;
     }
 
@@ -102,28 +76,6 @@ public class DirectorySizeChecker {
                                                             return f.isDirectory();
                                                         }
                                                     };
-
-    /**
-     * Is it time to check to see if the resource source has been updated?
-     */
-    private boolean requiresChecking() {
-        /*
-         * short circuit this if modificationCheckInterval == 0 as this means "don't check"
-         */
-        if (getCheckInterval() <= 0) { return false; }
-
-        /*
-         * see if we need to check now
-         */
-        return (System.currentTimeMillis() >= getNextCheck());
-    }
-
-    /**
-     * 'Touch' this directory and thereby resetting the nextCheck field.
-     */
-    private void touch() {
-        setNextCheck(System.currentTimeMillis() + (MILLIS_PER_SECOND * getCheckInterval()));
-    }
 
     protected long _directoryCheckInterval = 17;
 
