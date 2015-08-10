@@ -69,7 +69,6 @@
 		<mkdir dir="build/classes" />
 		<mkdir dir="dist" />
 		<mkdir dir="dist/lib" />
-		
 	</target>
 
 	<path id="xmltask.lib.path">

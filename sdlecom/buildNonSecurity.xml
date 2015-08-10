@@ -1,39 +1,46 @@
 <project name="sdlecom" default="buildwar" basedir=".">
-	<taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask"/>
 
+	<property environment="env"/>
+	<property file="build-props/${env.ENV_NAME}.build.properties"/>
 	<property file="build.properties"/>
-	<property name="java.src" value="${basedir}\src"/>
-	<property name="webcontent" value="${basedir}\WebContent\"/>
-	<property name="webcontent.web-inf" value="${webcontent}\WEB-INF\"/>
-	<property name="webcontent.lib" value="${webcontent.web-inf}\lib"/>
-	<property name="build_info" value="${basedir}\resources\system.properties"/>
 
-	<target name="revision" unless="increment.revision" >
-		<propertyfile  file="${build_info}">
-			<entry key="build.revision.number" type="int" operation="+" value="1" pattern="000"/>
+	<echo message="client.templateroot = ${client.templateroot}"/>
+	<echo message="client.templatepath = ${client.templatepath}"/>
+	<echo message="ecommerce.clientName = ${ecommerce.clientName}"/>
+
+	<property name="java.src" 			value="${basedir}/src"/>
+	<property name="webcontent" 		value="${basedir}/WebContent/"/>
+	<property name="webcontent.web-inf" value="${webcontent}/WEB-INF/"/>
+	<property name="webcontent.lib" 	value="${webcontent.web-inf}/lib"/>
+	<property name="build_info"  		value="${basedir}/resources/system.properties"/>
+	<!--<property name="client-conf" 		value="${webcontent.web-inf}/conf/spring/properties/client.properties"/>-->
+
+	<target name="revision" unless="increment.revision">
+		<propertyfile file="${build_info}">
+			<entry key="build.revision.number" type="int" operation="+" value="1" pattern="000" />
 		</propertyfile>
 	</target>
 
-	<target name="minor" unless="increment.minor" >
-		<propertyfile  file="${build_info}">
-			<entry key="build.minor.number" type="int" operation="+" value="1" pattern="0"/>
-			<entry key="build.revision.number" type="int" value="0" pattern="000"/>
+	<target name="minor" unless="increment.minor">
+		<propertyfile file="${build_info}">
+			<entry key="build.minor.number" type="int" operation="+" value="1" pattern="0" />
+			<entry key="build.revision.number" type="int" value="0" pattern="000" />
 		</propertyfile>
 	</target>
 
-	<target name="major" unless="increment.major" >
-		<propertyfile  file="${build_info}">
-			<entry key="build.major.number" type="int" operation="+" value="1" pattern="0"/>
-			<entry key="build.minor.number" type="int" value="0" pattern="0"/>
-			<entry key="build.revision.number" type="int" value="0" pattern="000"/>
+	<target name="major" unless="increment.major">
+		<propertyfile file="${build_info}">
+			<entry key="build.major.number" type="int" operation="+" value="1" pattern="0" />
+			<entry key="build.minor.number" type="int" value="0" pattern="0" />
+			<entry key="build.revision.number" type="int" value="0" pattern="000" />
 		</propertyfile>
 	</target>
 
-	<target name="all" unless="increment.all" >
-		<propertyfile  file="${build_info}">
-			<entry key="build.major.number" type="int" operation="+" value="1" pattern="0"/>
-			<entry key="build.minor.number" type="int" operation="+" value="1" pattern="0"/>
-			<entry key="build.revision.number" type="int" operation="+" value="1" pattern="000"/>
+	<target name="all" unless="increment.all">
+		<propertyfile file="${build_info}">
+			<entry key="build.major.number" type="int" operation="+" value="1" pattern="0" />
+			<entry key="build.minor.number" type="int" operation="+" value="1" pattern="0" />
+			<entry key="build.revision.number" type="int" operation="+" value="1" pattern="000" />
 		</propertyfile>
 	</target>
 
@@ -45,37 +52,43 @@
         <propertyfile  file="${build_info}">
             <entry key="build.date" value="${buildDate}"/>
         </propertyfile>
-    </target>	
+    </target>
 
 	<path id="compile.classpath">
 		<fileset dir="${webcontent.lib}">
-			<include name="*.jar"/>
+			<include name="*.jar" />
 		</fileset>
 	</path>
 
 	<target name="clean">
-		<delete dir="dist"/>
-		<delete dir="build"/>
+		<delete dir="dist" />
+		<delete dir="build" />
 	</target>
 
 	<target name="init" depends="clean, buildDate">
-		<mkdir dir="build/classes"/>
-		<mkdir dir="dist"/>
-		<mkdir dir="dist/lib"/>
+		<mkdir dir="build/classes" />
+		<mkdir dir="dist" />
+		<mkdir dir="dist/lib" />
 	</target>
+
+	<path id="xmltask.lib.path">
+		<fileset dir="ant-lib" includes="*.jar"/>
+	</path>
+
+	<taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask" classpathref="xmltask.lib.path"/>
+
 	<target name="ConfUpdate" depends="init">
-		<xmltask source="${basedir}\resources\logback.xml" dest="${basedir}\resources\logback.xml" failWithoutMatch="true">
+		<xmltask source="${basedir}/resources/logback.xml" dest="${basedir}/resources/logback.xml" failWithoutMatch="true">
 			<attr path="/configuration/property" attr="value" value="${prefixPathForLogs}" />
-            <replace path="/configuration/appender/subject/text()" withText="${logfileSubject}" />
-            <replace path="/configuration/appender/to/text()" withText="${toEmail}" />
-            <replace path="/configuration/appender/from/text()" withText="${fromEmail}" />
+			<replace path="/configuration/appender/subject/text()" withText="${logfileSubject}" />
+			<replace path="/configuration/appender/to/text()" withText="${toEmail}" />
+			<replace path="/configuration/appender/from/text()" withText="${fromEmail}" />
 			<replace path="/configuration/appender/smtpHost/text()" withText="${smtp.host}" />
 			<replace path="/configuration/appender/smtpPort/text()" withText="${smtp.port}" />
 			<replace path="/configuration/appender/username/text()" withText="${smtp.username}" />
 			<replace path="/configuration/appender/password/text()" withText="${smtp.password}" />
 		</xmltask>
-
-		<xmltask source="${webcontent.web-inf}\web.xml" dest="${webcontent.web-inf}\web.xml" failWithoutMatch="true">
+		<xmltask source="${webcontent.web-inf}/Non-Security-web.xml" dest="${webcontent.web-inf}/Non-Security-web.xml" failWithoutMatch="true">
 			<replace path="/:web-app/:context-param[1]/:param-value/text()" withText="${ecommerce.isSecurityEnabled}" />
 			<replace path="/:web-app/:context-param[2]/:param-value/text()" withText="${ecommerce.isDBService}" />
 			<replace path="/:web-app/:context-param[3]/:param-value/text()" withText="${ecommerce.isAlertsEnabled}" />
@@ -84,9 +97,10 @@
 			<replace path="/:web-app/:context-param[6]/:param-value/text()" withText="${ecommerce.isPrintQEnabled}" />
 		</xmltask>
 	</target>
+
 	<target name="compile" depends="ConfUpdate">
 		<javac destdir="build/classes" debug="true" srcdir="${java.src}" encoding="utf-8">
-			<classpath refid="compile.classpath"/>
+			<classpath refid="compile.classpath" />
 		</javac>
 	</target>
 
@@ -101,24 +115,24 @@
 				<include name="*.xml" />
 			</fileset>
 		</copy>
-		<jar jarfile="dist\lib\sdl.jar" compress="true">
-					<fileset dir="build/classes">
-						<include name="**/*.class" />
-					</fileset>
-					<fileset dir="${java.src}">
-						<include name="*.properties" />
-						<include name="*.xml" />
-						<exclude name="*.class" />
-					</fileset>
-					<manifest>
-						<attribute name="Built-By" value="Falcon Data Technologies" />
-						<section name="common">
-							<attribute name="Implementation-Title" value="Smart Data Layer" />
-							<attribute name="Implementation-Vendor" value="Falcon Data Technologies." />
-						</section>
-					</manifest>
+		<jar jarfile="dist/lib/sdl.jar" compress="true">
+			<fileset dir="build/classes">
+				<include name="**/*.class" />
+			</fileset>
+			<fileset dir="${java.src}">
+				<include name="*.properties" />
+				<include name="*.xml" />
+				<exclude name="*.class" />
+			</fileset>
+			<manifest>
+				<attribute name="Built-By" value="Falcon Data Technologies" />
+				<section name="common">
+					<attribute name="Implementation-Title" value="Smart Data Layer" />
+					<attribute name="Implementation-Vendor" value="Falcon Data Technologies." />
+				</section>
+			</manifest>
 		</jar>
-		<jar jarfile="dist\lib\tomcat-plugin.jar" compress="true">
+		<jar jarfile="dist/lib/tomcat-plugin.jar" compress="true">
 			<fileset dir="build/classes">
 				<include name="com/fdt/sdl/plugins/tomcat/*.class" />
 			</fileset>
@@ -129,26 +143,23 @@
 					<attribute name="Implementation-Vendor" value="Falcon Data Technologies." />
 				</section>
 			</manifest>
-		 </jar>
+		</jar>
 	</target>
 
 	<target name="buildJenkins" depends="buildjar">
-		<copy todir="${webcontent.web-inf}\classes">
-			<fileset dir="${basedir}\resources" includes="**/*.*" />
+		<copy todir="${webcontent.web-inf}/classes">
+			<fileset dir="${basedir}/resources" includes="**/*.*" />
 		</copy>
-		<copy todir="${webcontent.web-inf}\data">
-			<fileset dir="${basedir}\clients\config" includes="**/*.*" />
+		<copy todir="${webcontent.web-inf}/data">
+			<fileset dir="${basedir}/${client.templateroot}/${client.templatepath}/config" includes="**/*.*" />
 		</copy>
-		<copy todir="${webcontent}\templates">
-			<fileset dir="${basedir}\clients\templates" includes="**/*.*" />
+		<copy todir="${webcontent}/templates">
+			<fileset dir="${basedir}/${client.templateroot}/${client.templatepath}/templates" includes="**/*.*" />
 		</copy>
 		<move file="${webcontent.web-inf}/web.xml" tofile="${webcontent.web-inf}/Security-web.xml" />
 		<move file="${webcontent.web-inf}/Non-Security-web.xml" tofile="${webcontent.web-inf}/web.xml" />
-		<copy todir="${webcontent.web-inf}\classes">
-			<fileset dir="${basedir}\resources" includes="**/*.*"/>
-		</copy>
-		<copy todir="${webcontent.web-inf}\classes">
-			  <file name="${basedir}\clients\properties\system.properties" />
+		<copy todir="${webcontent.web-inf}/classes" overwrite="true">
+			<fileset dir="${basedir}/${client.templateroot}/${client.templatepath}/properties" includes="**/*.*" />
 		</copy>
 		<war destfile="dist/${warfilename}" webxml="${webcontent.web-inf}/web.xml">
 			<fileset dir="${webcontent}" >
@@ -183,8 +194,8 @@
 	<target name="buildwar" depends="buildjar, buildDate">
 		<move file="${webcontent.web-inf}/web.xml" tofile="${webcontent.web-inf}/Security-web.xml" />
 		<move file="${webcontent.web-inf}/Non-Security-web.xml" tofile="${webcontent.web-inf}/web.xml" />
-		<copy todir="${webcontent.web-inf}\classes">
-			<fileset dir="${basedir}\resources" includes="**/*.*"/>
+		<copy todir="${webcontent.web-inf}/classes">
+			<fileset dir="${basedir}/resources" includes="**/*.*" />
 		</copy>
 		<war destfile="dist/${warfilename}" webxml="${webcontent.web-inf}/web.xml">
 			<fileset dir="${webcontent}" >
