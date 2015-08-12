@@ -74,7 +74,11 @@ public class Execute {
 		} catch (InterruptedException interruptedException) {
 			logger.error("InterruptedException Occured", interruptedException);
 		} finally {
-			streamHandler.stop();
+			try {
+				streamHandler.stop();
+			} catch (IOException e) {
+				logger.error("StreamHandler Exception Occured when closing Stream Handler", e);
+			}
 			watchDog.stop();
 			executor.setProcessDestroyer(processDestroyer);
 		}
