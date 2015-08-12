@@ -57,6 +57,7 @@ public final class RefreshIndexAction extends Action
             try{
                 BufferIndexManager.pause(dc);
                 BufferIndexManager.clearIndex(dc);
+                logger.debug("Switching to new searching provider");
                 sp = SearcherManager.createSearcherProviderByDataset(dc);
                 SearcherManager.switchSearchProvider(dc.getName(), sp);
                 if(sp==null) {

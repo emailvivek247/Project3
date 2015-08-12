@@ -76,6 +76,7 @@ public class DefaultSearcherProvider implements SearcherProvider {
                 tempDirectory.close();
                 tempDirectory = null;
             } catch (IOException e) {
+                logger.error("Failed to close tempDirectory", e);
             }
         }
         if(mainDirectoryFile!=null){
@@ -86,6 +87,7 @@ public class DefaultSearcherProvider implements SearcherProvider {
                 mainDirectory.close();
                 mainDirectory = null;
             } catch (IOException e) {
+                logger.error("Failed to close mainDirectory", e);
             }
         }
         //System.gc(); //this is added to prevent some window file deletion error
