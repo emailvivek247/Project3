@@ -19,19 +19,22 @@
 <script type="text/javascript" src="resources/javascripts/jquery.browser.js"></script>
 <script type="text/javascript" src="resources/javascripts/jmesa/jmesa.js"></script>
 <script type="text/javascript" src="resources/javascripts/jmesa/jquery.jmesa.js"></script>
-<script type="text/javascript">
-</script>
 
 <#assign jmesa=JspTaglibs["http://code.google.com/p/jmesa"]>
 
-
+<div id="pageCont">
+	<div id="tableCont">
+	<div id="navCont">
+		<a id="goBack" href = ""><span id="backLinkTxt">Go Back</span></a>
+	</div>
 			<#if items?has_content>
 				<form id="presidentsForm" action="loadPrintQGridAPIAction.admin">
 					${items}
 				</form>
 			</#if>
+	</div><#--END tableCont-->
+</div><#--END pageCont-->
 
-<a id = "goBack" href = "">Go Back</a>
 
 <script type="text/javascript">
 	var somethingChanged = false;

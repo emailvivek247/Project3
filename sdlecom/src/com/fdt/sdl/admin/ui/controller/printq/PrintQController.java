@@ -243,7 +243,7 @@ public class PrintQController extends AbstractBaseSDLController {
 	private HtmlTable constructHTMLTable(String basketName) {
 		String caption = "PrintQ Items";
 		if (!StringUtils.isBlank(basketName)) {
-			caption = caption + " For Basket:" + basketName;
+			caption = caption + " For Basket: " + basketName;
 		}
 		
 		HtmlTable htmlTable = new HtmlTable().caption(caption).width(
