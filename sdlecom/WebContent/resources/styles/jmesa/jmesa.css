@@ -13,7 +13,7 @@
 }
 
 .jmesa .table {
-    border: 1px solid silver;
+    //border: 1px solid silver;
     padding: 2px;
 }
 
@@ -132,8 +132,9 @@
 
 .jmesa .jmesa-header td {
     white-space: nowrap;
-    background-color: #729fcf;
+    background: #184795 url(images/blue-bar-solid.png) repeat-x 55% 55%;
     color: white;
+    font-weight:bold;
     font-size: 14px;
     padding: 4px 3px 4px 3px;
     border-right-style: solid;
@@ -155,7 +156,7 @@
 }
 
 .jmesa .jmesa-even td {
-    border: 1px solid #e3e3e3;
+    border: 1px solid #E2E4FF;
 }
 
 .jmesa .jmesa-removed td {
@@ -167,7 +168,7 @@
 }
 
 .jmesa .jmesa-even {
-    background-color: #e3e3e3;
+    background-color: #E2E4FF;
 }
 
 .jmesa .jmesa-removed {    
@@ -264,3 +265,30 @@
     border-style: none;
     background-color: #ededed;
 }
+#pageCont{
+	width:100%;
+	font-family: Helvetica, Arial, Sans-Serif;
+	}
+#tableCont{
+	width:85%;
+	margin:0 auto;
+	background-color:#fff;
+	padding:35px 20px;
+	-webkit-box-shadow: 0px 0px 20px 0px rgba(178,178,178,1);
+	-moz-box-shadow: 0px 0px 20px 0px rgba(178,178,178,1);
+	box-shadow: 0px 0px 20px 0px rgba(178,178,178,1);
+	}
+#navCont{margin-bottom:30px;}
+#goBack{color:#fff;}
+#backLinkTxt{
+	width:40px;
+	height:20px;
+	padding:7px;
+	background: #184795 url(images/blue-bar-solid.png) repeat-x 55% 55%;
+	border-radius: 5px 5px 5px 5px;
+	-moz-border-radius: 5px 5px 5px 5px;
+	-webkit-border-radius: 5px 5px 5px 5px;
+	}
+#backLinkTxt:hover{
+	background: #f58400 url(images/orange-bar-solid.png) 55% 55% repeat-x;
+	}
