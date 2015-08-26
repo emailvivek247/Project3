@@ -7,7 +7,6 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.servlet.ServletConfig;
@@ -42,6 +41,7 @@ import com.fdt.alerts.job.AlertJob;
 import com.fdt.alerts.job.AlertManager;
 import com.fdt.alerts.util.AlertUtil;
 import com.fdt.sdl.core.ui.action.indexing.status.SDLJobListener;
+import com.fdt.sdl.styledesigner.util.PageStyleUtil;
 
 /**
  * Initialisation Servlet which is called automaticaly at
@@ -99,6 +99,9 @@ public class SDLStartupServlet extends HttpServlet {
         			}
             	}  
             }
+
+            generateHttpFile();
+
             logger.info("Smart Data Layer is up and running");
         } catch(Exception exception){
             exception.printStackTrace();
@@ -207,4 +210,12 @@ public class SDLStartupServlet extends HttpServlet {
 			logger.error("Scheduler Failed To Schedule A Linking Job !!");
 		}		
 	}
+    
+    private void generateHttpFile() {
+        String localUrl = PageStyleUtil.getSystemValue("localUrl");
+        String serverUrl = PageStyleUtil.getSystemValue("serverUrl");
+        if (localUrl != null && serverUrl != null) {
+            WebserverStatic.setURIFile(localUrl, serverUrl);
+        }
+    }
 }

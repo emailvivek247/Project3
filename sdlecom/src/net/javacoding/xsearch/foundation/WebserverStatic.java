@@ -203,6 +203,15 @@ public class WebserverStatic {
 			e.printStackTrace();
 		}
     }
+
+    public static void setURIFile(String localUrl, String serverUrl) {
+        File f = getURIFile();
+        if (httpInfo == null && !f.exists()) {
+            httpInfo = new WebserverHttpInfo(localUrl, serverUrl);
+            httpInfo.save(f);
+        }
+    }
+
     public static void resetURIFile(HttpServletRequest request){
         try {
             File f = getURIFile();
