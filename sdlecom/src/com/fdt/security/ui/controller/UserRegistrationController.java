@@ -85,7 +85,7 @@ public class UserRegistrationController extends AbstractBaseController {
 			}
 			convertPasswordError(bindingResult);
 			//Temporary fix to remove the trailing . at the end of email address
-			if (userRegistrationForm.getUsername().endsWith(".")) {
+			if (validateEmail(userRegistrationForm.getUsername())) {
 				bindingResult.rejectValue("username", "security.invalidEmail.username");
 			}
 			
@@ -108,6 +108,19 @@ public class UserRegistrationController extends AbstractBaseController {
 		return modelAndView;
 	}
 	
+	private static boolean validateEmail(String username) {
+		if(StringUtils.isBlank(username)){
+			return true;
+		}
+		if(username.endsWith(".")) {
+			return true;
+		}
+		if(username.contains("&") || username.contains("\"") || username.contains("/") || username.contains("\\") || username.contains("'")) {
+			return true;
+		}
+		return false;
+	}
+
 	@RequestMapping(value="/publicGetSite.admin", method=RequestMethod.GET,  produces="application/json")
 	@ResponseBody
 	private Site getSite(@RequestParam String siteId){
