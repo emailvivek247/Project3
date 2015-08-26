@@ -10,7 +10,7 @@
 <link href="resources/styles/jmesa/jmesa-pdf.css" rel="stylesheet" type="text/css" media="all">
 <link href="resources/styles/jmesa/jmesa.css" rel="stylesheet" type="text/css" media="all">
 
-<script type="text/javascript" src="resources/javascripts/sdl-min.js"/></script>
+<script type="text/javascript" src="resources/javascripts/sdl.js"/></script>
 <script type="text/javascript" src="resources/javascripts/jquery.min.js"/></script>
 <script type="text/javascript" src="resources/javascripts/jquery-ui.min.js"/></script>
 <script type="text/javascript" src="resources/javascripts/jquery.validationEngine-en.js"></script>
@@ -47,24 +47,28 @@
 	});
 	function discardHandler() {
 	var href = 'search.do?indexName=opr'+getCookie('searchstring');
+	if($('tr').hasClass('jmesa-removed')) {
+	somethingChanged = true; 
+	}
 	if(somethingChanged) {	      
 		if (confirm('Do you want to discard all the changes!')) {
 			jQuery.jmesa.setClearToWorksheet('worksheet');
 			onInvokeAction('worksheet','clear_worksheet');
 			//history.back();
+			document.cookie = 'suffix=' + '?maxRows=10&worksheet_cw_=true&worksheet_tr_=true&worksheet_p_=1&worksheet_mr_=10';
 			window.location.href = href;
 			} 
-		} else {
-			//history.back();
-			window.location.href = href;			
-		}
+	} else {
+		//history.back();
+		window.location.href = href;			
+	}
 	}
 	function onInvokeAction(id) {
 	    $.jmesa.createHiddenInputFieldsForLimitAndSubmit(id);
 	               
 	}
-
-    $(document).ready(function() {
+	
+	$(document).ready(function() {
         if (window.location.href.indexOf('worksheet_sw_') > -1) {
             window.location.replace(removeURLParameter(window.location.href, 'worksheet_sw_'));
         }
@@ -99,6 +103,7 @@
             return url;
         }
     }
+    
 </script>
 
 </@loginLayout>

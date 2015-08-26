@@ -19,6 +19,12 @@
 	<link rel="stylesheet" type="text/css" href="${request.getContextPath()}/resources/styles/prompt.css" />
 	<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/jquery-ui-1.8.11.base.css" />
 	<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/jquery-ui-custom-ext.css" />
+	<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/validationEngine.jquery.css" type="text/css" />
+	<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/login.css" />
+	<link rel="stylesheet" href="${request.getContextPath()}/resources/styles/vtabs.css" />
+	<link href="${request.getContextPath()}/resources/styles/jmesa/jmesa-pdf.css" rel="stylesheet" type="text/css" media="all">
+	<link href="${request.getContextPath()}/resources/styles/jmesa/jmesa.css" rel="stylesheet" type="text/css" media="all">
+	
 	<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.min.js"/></script>
 	<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery-ui.min.js"/></script>
 	<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.cookie.js"></script>
@@ -27,6 +33,11 @@
 	<script type="text/javascript" src="${request.getContextPath()}/smartcharts/js/SmartCharts.js"></script>
 	<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/prompt.js"></script>
 	<script type="text/javascript" src="${request.getContextPath()}/resources/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.validationEngine-en.js"></script>
+	<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.validationEngine.js"></script>
+	<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jquery.browser.js"></script>
+	<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jmesa/jmesa.js"></script>
+	<script type="text/javascript" src="${request.getContextPath()}/resources/javascripts/jmesa/jquery.jmesa.js"></script>
 
 <link rel="shortcut icon" href="favicon.ico"/>
   <#list js as file>

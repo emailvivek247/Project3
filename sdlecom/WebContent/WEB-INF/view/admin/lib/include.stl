@@ -11,7 +11,7 @@
 	<meta http-equiv="Pragma" content="no-cache">
 	<meta http-equiv="Expires" content="-1">
 <link rel="shortcut icon" href="resources/custom_resources/images/favicon.ico"/>
-<link rel="stylesheet" href="resources/styles/FontAwesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="resources/font-awesome/css/font-awesome.min.css">
 </head>
 <body>
 <#nested>

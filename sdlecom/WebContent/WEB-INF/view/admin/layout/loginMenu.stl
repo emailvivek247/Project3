@@ -30,32 +30,8 @@
 	}
 	document.onclick = mclose;	
 </script>
-<ul class="headerList">
-	<#if request.getServletContext().getInitParameter("isPrintQEnabled") == "true">
-		<li>
-			<#assign basketName = pageStyleUtil.getBasketNameFromSession(request)>
-			<#if basketName?has_content> 
-			    <a href="createNewBasket.admin" style="margin-right:4px;vertical-align:top;" class="inactive headerItem" ><img src="resources/images/new.png" /><span id="printQSizeItems" style="vertical-align:top;"> Create New Print Queue </span></a>
-			</#if>
-		
-		</li>
-		<li>
-			<#assign printQSize = pageStyleUtil.getPrinQSize(request)>			
-			<span id="printQSizeItems" style="vertical-align:top;">
-			<#if printQSize = 0> 
-				<a style="margin-right:4px;vertical-align:top;" class="inactive headerItem" > 
-					<img src="resources/images/print.png" /> <#if basketName?has_content> ${basketName} </#if> Print Queue is Empty
-				</a>
-			<#else>
-				<a href="loadPrintQGridAPI.admin" style="margin-right:4px;vertical-align:top;" class="inactive headerItem" >
-					<img src="resources/images/print.png" /> ${printQSize} Item(s) in the <#if basketName?has_content> ${basketName} </#if> Print Queue 
-				</a>
-			</#if>
-			</span>
-		</li>
-	</#if>
 <#if request.getRemoteUser()?has_content && request.getServletContext().getInitParameter("isSecurityEnabled") == "true">
-
+<ul class="headerList">
 	<li>
 		<#if request.getServletContext().getInitParameter("isShoppingCartEnabled") == "true">
 			<#assign shoppingCartSize = pageStyleUtil.getshoppingCartSize(request)>
@@ -70,6 +46,5 @@
 	        <a class="headerSubMenuItem" href="logout.admin">&nbsp;&nbsp;Log Out</a>	        
         </div>
     </li>
-
-</#if>
 </ul>
+</#if>
