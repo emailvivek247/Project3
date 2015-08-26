@@ -6,6 +6,8 @@ import static com.fdt.security.ui.SecurityViewConstants.SECURITY_SIGNUP;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -83,12 +85,19 @@ public class UserRegistrationController extends AbstractBaseController {
 			if (userRegistrationForm.getAccessId() == null || userRegistrationForm.getAccessId() == "") {
 				bindingResult.addError(new ObjectError("accessId", "security.noaccess.access"));
 			}
-			convertPasswordError(bindingResult);
-			//Temporary fix to remove the trailing . at the end of email address
-			if (validateEmail(userRegistrationForm.getUsername())) {
+			convertPasswordError(bindingResult);			
+			Pattern regex = Pattern.compile("[$&+,:;=?#|]");
+			Matcher matcher = regex.matcher(userRegistrationForm.getUsername());
+			if(matcher.find()){
 				bindingResult.rejectValue("username", "security.invalidEmail.username");
 			}
-			
+			if (bindingResult.hasErrors()) {
+				setModelAndViewForError(modelAndView, request);
+				return modelAndView;
+			}			
+			if (validateEmail(userRegistrationForm.getUsername())) {
+				bindingResult.rejectValue("username", "security.invalidEmail.username");
+			}			
 			if (bindingResult.hasErrors()) {
 				setModelAndViewForError(modelAndView, request);
 				return modelAndView;
