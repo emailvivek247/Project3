@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -224,13 +227,18 @@ public class WebserverStatic {
             e.printStackTrace();
         }
     }
+
     private static File getURIFile(){
-        try{
-            return new File(ServerConfiguration.getServerConfiguration().getBaseDirectory(),
-                                "log"+File.separator+"http.xml");
-        }catch(NullPointerException ce){}
-        return null;
+        Path baseDirPath = ServerConfiguration.getServerConfiguration().getBaseDirectory().toPath();
+        Path logPath = baseDirPath.resolve("log");
+        try {
+            logPath = Files.createDirectories(logPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return logPath.resolve("http.xml").toFile();
     }
+
     public static String getServerURL(){
         try{
         	if(httpInfo==null){
