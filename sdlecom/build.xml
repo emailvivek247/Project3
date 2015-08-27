@@ -180,16 +180,16 @@
 		<copy todir="${webcontent.web-inf}/classes">
 			<fileset dir="${basedir}/resources" includes="**/*.*" />
 		</copy>
-		<copy todir="${webcontent.web-inf}/view/admin/security/authentication">
+		<copy todir="${webcontent.web-inf}/view/admin/security/authentication" overwrite="true">
 			<fileset dir="${basedir}/${client.templateroot}/${client.templatepath}/authentication" includes="**/*.*" />
 		</copy>
-		<copy todir="${webcontent.web-inf}/data">
+		<copy todir="${webcontent.web-inf}/data" overwrite="true">
 			<fileset dir="${basedir}/${client.templateroot}/${client.templatepath}/config" includes="**/*.*" />
 		</copy>
-		<copy todir="${webcontent}/templates">
+		<copy todir="${webcontent}/templates" overwrite="true">
 			<fileset dir="${basedir}/${client.templateroot}/${client.templatepath}/templates" includes="**/*.*" />
 		</copy>
-		<copy todir="${webcontent}/resources/custom_resources">
+		<copy todir="${webcontent}/resources/custom_resources" overwrite="true">
 			<fileset dir="${basedir}/${client.templateroot}/${client.templatepath}/custom_resources" includes="**/*.*" />
 		</copy>
 		<copy todir="${webcontent.web-inf}/classes" overwrite="true">
