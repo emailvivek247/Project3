@@ -89,11 +89,13 @@ function getLastDateFunction() {
 	    if(dateContentInputVal == today || dateContentInputVal == oneDay || dateContentInputVal == twoDays || dateContentInputVal == threeDays){
 		   document.getElementById("newMessages").style.display = '';
 		   document.getElementById("messagesLink").style.color = '#FF0000';
-		}else {
-		   document.getElementById("newMessages").style.display = 'none';
+	//	}else {
+	//	   document.getElementById("newMessages").style.display = 'none';
 		}
 	}
 	window.onload = getLastDateFunction;
+	
+	
 </script>
 <style>
 	#newMessages{
@@ -134,7 +136,7 @@ function getLastDateFunction() {
 	    border-radius:2px;        
 	    /*box-shadow: 0px 0px 8px 4px #666;*/
 	    /*opacity: 0.8;*/
-	}	
+	}
 </style>
 <#assign lastUpdateTime = pageStyleUtil.getLastUpdateTimeMessages()>
 <input type="hidden" id="lastUpdateDateTime" value="${lastUpdateTime}">
@@ -162,6 +164,28 @@ function getLastDateFunction() {
 			</div>
 			<div style="float:right;">
 				<ul class="headerList">
+				<#if request.getServletContext().getInitParameter("isPrintQEnabled") == "true">
+					<li>
+						<#assign basketName = pageStyleUtil.getBasketNameFromSession(request)>
+						<#if basketName?has_content> 
+							<a href="#" id="createNewBasketLink" style="margin-right:4px;vertical-align:top;" class="inactive headerItem"><i class="fa fa-plus green"></i><span id="printQSizeItems" style="vertical-align:top;"> Create New Print Queue </span></a>
+						</#if>
+					</li>
+					<li>
+						<#assign printQSize = pageStyleUtil.getPrinQSize(request)>			
+						<span id="printQSizeItems" style="vertical-align:top;">
+							<#if printQSize = 0> 
+								<a style="margin-right:4px;vertical-align:top;" class="inactive headerItem" > 
+									<i class="fa fa-print lightBlue"></i><#if basketName?has_content> ${basketName} </#if> Print Queue is Empty
+								</a>
+							<#else>
+								<a href="loadPrintQGridAPI.admin" style="margin-right:4px;vertical-align:top;" class="inactive headerItem" >
+									<i class="fa fa-print lightBlue"></i> ${printQSize} Item(s) in the <#if basketName?has_content> ${basketName} </#if> Print Queue 
+								</a>
+							</#if>
+						</span>
+					</li>
+				</#if>
 					<li>
 						<#include "/web-inf/view/admin/layout/loginMenu.stl">
 					</li>
@@ -182,6 +206,7 @@ function getLastDateFunction() {
 		</td>		
 	</tr>
 </table>
+
 <#if request.getServletContext().getInitParameter("isSecurityEnabled") == "true">
 <div style="width:100%;text-align:right;" >
 </div>

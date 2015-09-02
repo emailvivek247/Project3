@@ -30,6 +30,7 @@ import org.jmesa.worksheet.editor.CheckboxWorksheetEditor;
 import org.jmesa.worksheet.editor.RemoveRowWorksheetEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -108,11 +109,16 @@ public class PrintQController extends AbstractBaseSDLController {
 		 return "OK";
 	}
 	
-	@RequestMapping(value="/createNewBasket.admin", produces="application/json")
+	@RequestMapping(value="/createNewBasket.admin", method=RequestMethod.GET, produces="application/json")
 	@ResponseBody
-	public String createNewBasket(HttpServletRequest request, HttpServletResponse response) {
-		 PrintQController.closeBasketInSession(request);
-		 return "OK";
+	public Boolean createNewBasket(HttpServletRequest request, HttpServletResponse response) {
+		try {
+		     PrintQController.closeBasketInSession(request);
+		     PrintQController.populateBasketNameInSession(request, request.getParameter("basketName"));
+		     return  true;
+	    } catch (Exception e) {
+	    	return false;
+	    }		
 	}
 	
 	public static String getPrintQWsdl() {
@@ -243,7 +249,7 @@ public class PrintQController extends AbstractBaseSDLController {
 	private HtmlTable constructHTMLTable(String basketName) {
 		String caption = "PrintQ Items";
 		if (!StringUtils.isBlank(basketName)) {
-			caption = caption + " For Basket: " + basketName;
+			caption = caption + " For Basket:" + basketName;
 		}
 		
 		HtmlTable htmlTable = new HtmlTable().caption(caption).width(

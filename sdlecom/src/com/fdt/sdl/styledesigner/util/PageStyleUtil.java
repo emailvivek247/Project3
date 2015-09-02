@@ -435,14 +435,14 @@ public class PageStyleUtil {
 			/*private static String PASSWORD_KEY = "Nk0BusFu9aLE4qb";		
 			private static String PASSWORD_KEY = "dookudu";*/
 	    	String text1 = "Gr@nicus723$";
-	    	String text2 = "239C4BED958C2527627816CD4CE18E8FE3EF87334EAF57A9AA5A5657F8239258";
+	    	String text2 = "A893A81F03B327BF21EC41D4EADB8509E715F72B445B152A329676B13071250A";
 			String algorithm = "PBEWITHSHA256AND256BITAES-CBC-BC";
 			String devPasswordKey = "dookudu";
 			String prodPasswordKey1 = "Nk0BusFu9aLE4qb";
 			String prodPasswordKey2 = "zEFyZpXc0NYAgYU";
 			
-			System.out.println(PageStyleUtil.encrypt(text1,algorithm,prodPasswordKey2));
-			System.out.println(PageStyleUtil.decrypt(text2,algorithm,devPasswordKey));
+			//System.out.println(PageStyleUtil.encrypt(text1,algorithm,prodPasswordKey2));
+			System.out.println(PageStyleUtil.decrypt(text2,algorithm,prodPasswordKey2));
 	}
 
     /*public static void main(String[] args) {
