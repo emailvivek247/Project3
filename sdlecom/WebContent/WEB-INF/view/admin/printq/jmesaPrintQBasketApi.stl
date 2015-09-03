@@ -73,7 +73,7 @@
             window.location.replace(removeURLParameter(window.location.href, 'worksheet_sw_'));
         }
         if (looksLikeRefresh()) {
-            if ($('div.wsColumnChange').length) {
+            if ($('div.wsColumnChange').length || $('tr.jmesa-removed').length) {
                 jQuery.jmesa.setClearToWorksheet('worksheet');
                 onInvokeAction('worksheet','clear_worksheet');
             }
