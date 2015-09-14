@@ -1,5 +1,15 @@
+Thumbs.db
+
 /sdlecom/dist
 /sdlecom/build
+
+# Ignore classes directory into which Java files get built
+/sdlecom/WebContent/WEB-INF/classes/
+
+# Ignore the seal.png image which varies client-to-client
+/sdlecom/WebContent/resources/custom_resources/images/*seal*.(png|jpg)
+
+/sdlecom/WebContent/resources/custom_resources/images/
 
 # Ignore everything in WebContent/templates except for a few  specified files
 /sdlecom/WebContent/templates/*
