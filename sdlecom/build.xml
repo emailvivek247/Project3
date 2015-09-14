@@ -179,24 +179,32 @@
     </jar>
   </target>
 
-  <target name="buildJenkins" depends="buildjar">
+  <target name="copy-dev-config" unless="${build.isProdBuild}">
+    <copy todir="${webcontent.web-inf}/data" overwrite="true">
+      <fileset dir="${full.template.path}/config-dev" includes="**/*.*" />
+    </copy>
+    <copy file="${full.template.path}/properties/systemdev.properties" tofile="${webcontent.web-inf}/classes/system.properties" overwrite="true" />
+  </target>
+
+  <target name="copy-prod-config" if="${build.isProdBuild}">
+    <copy todir="${webcontent.web-inf}/data" overwrite="true">
+      <fileset dir="${full.template.path}/config-prod" includes="**/*.*" />
+    </copy> 
+    <copy file="${full.template.path}/properties/systemprod.properties" tofile="${webcontent.web-inf}/classes/system.properties" overwrite="true" />
+  </target>
+
+  <target name="buildJenkins" depends="buildjar,copy-dev-config,copy-prod-config">
     <copy todir="${webcontent.web-inf}/classes">
       <fileset dir="${basedir}/resources" includes="**/*.*" />
     </copy>
     <copy todir="${webcontent.web-inf}/view/admin/security/authentication" overwrite="true">
       <fileset dir="${full.template.path}/authentication" includes="**/*.*" />
     </copy>
-    <copy todir="${webcontent.web-inf}/data" overwrite="true">
-      <fileset dir="${full.template.path}/config" includes="**/*.*" />
-    </copy>
     <copy todir="${webcontent}/templates" overwrite="true">
       <fileset dir="${full.template.path}/templates" includes="**/*.*" />
     </copy>
     <copy todir="${webcontent}/resources/custom_resources" overwrite="true">
       <fileset dir="${full.template.path}/custom_resources" includes="**/*.*" />
-    </copy>
-    <copy todir="${webcontent.web-inf}/classes" overwrite="true">
-      <fileset dir="${full.template.path}/properties" includes="**/*.*" />
     </copy>
     <war destfile="dist/${warfilename}" webxml="${webcontent.web-inf}/web.xml">
       <fileset dir="${webcontent}">
