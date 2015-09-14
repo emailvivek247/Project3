@@ -325,7 +325,7 @@ padding: 8px 8px 8px 12px;
 								</#if>
 
 									<td class="center">${subscription.siteName}</td>
-									<td class="center">${subscription.subscription}</td>
+									<td class="center"><#if subscription.getSubAdminFirmName()?has_content>${subscription.getSubAdminFirmName()} - <#elseif subscription.isFirmAccessAdmin()?has_content && subscription.isFirmAccessAdmin() ><#if user.getFirmName()?has_content>${user.getFirmName()}</#if> - </#if>${subscription.subscription} </td>
 
 								<!-- if it's not firm level user then display details -->
 								<#if !subscription.isFirmLevelUserSubscription()>
