@@ -111,7 +111,7 @@ public interface ServiceStub {
     public List<RecurTx> getRecurTxDetail(String recurTxRefNum, String userName);
 
     public PageRecordsDTO getPayAsUGoTransactionsByNodePerPage(String userName, String nodeName, String comments,
-    		Date fromDate, Date toDate, Integer startingFrom, Integer numberOfRecords);
+    		Date fromDate, Date toDate, String transactionType, Integer startingFrom, Integer numberOfRecords);
 
     public List<PayAsUGoTxView> getPayAsUGoTransactionsByNode(String userName, String nodeName, String comments,
     		Date fromDate, Date toDate);

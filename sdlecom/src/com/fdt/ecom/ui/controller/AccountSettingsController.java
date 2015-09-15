@@ -538,11 +538,11 @@ public class AccountSettingsController extends AbstractBaseController {
 	@RequestMapping(value="/payAsUGoPaymentHistory.admin", method=RequestMethod.GET,  produces="application/json")
 	@ResponseBody
 	public PageRecordsDTO getPayAsUGoPaymentHistory(HttpServletRequest request, @RequestParam(required=false) Date fromDate,
-			@RequestParam(required=false)  Date toDate, Integer skip, Integer take) {
+			@RequestParam(required=false) Date toDate, @RequestParam(required=false) String comments,
+			@RequestParam(required=false) String transactionType, Integer skip, Integer take) {
 		User user = this.getUser(request);
-		String comments = PageStyleUtil.decodeURL(request.getParameter("comments"));
 		return this.getService().getPayAsUGoTransactionsByNodePerPage(user.getUsername(), this.nodeName,
-				comments, fromDate, toDate, skip, take);
+				comments, fromDate, toDate, transactionType, skip, take);
 	}
 
 	@RequestMapping(value="/recurringPaymentHistoryExport.admin")

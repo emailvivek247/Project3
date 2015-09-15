@@ -474,7 +474,7 @@ public class ServiceStubRS implements ServiceStub {
 		return payAsUGoTransactionList;
 	}
 	public PageRecordsDTO getPayAsUGoTransactionsByNodePerPage(String userName, String nodeName, String comments,
-			Date fromDate, Date toDate, Integer startingFrom, Integer numberOfRecords) {
+			Date fromDate, Date toDate, String transactionType, Integer startingFrom, Integer numberOfRecords) {
 		String url = this.ecomRestURL.concat("getPayAsUGoTransactionsByNodePerPage");
 		TransactionRequestDTO request = new TransactionRequestDTO();
 		request.setUserName(userName);
@@ -482,6 +482,7 @@ public class ServiceStubRS implements ServiceStub {
 		request.setFromDate(fromDate);
 		request.setComments(comments);
 		request.setToDate(toDate);
+		request.setTransactionType(transactionType);
 		request.setStartingFrom(startingFrom);
 		request.setNumberOfRecords(numberOfRecords);
 		PageRecordsDTO PageRecordsDTO  = this.restTemplate.postForObject(url, request,	PageRecordsDTO.class);

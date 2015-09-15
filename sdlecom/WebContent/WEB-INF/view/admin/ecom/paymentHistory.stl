@@ -239,14 +239,28 @@
                 <td>
                   <input type="date" class="textbox" id="toDate_payg" name="toDate_payg" maxlength="10" data-date-msg="Date format is not valid"/>&nbsp;
                 </td>
-                <td align="center">
-                  <label class="control-label required"><@spring.message code="security.ecommerce.label.comments"/>&nbsp;&nbsp;</label>
+                  <td align="center">
+                  <label class="control-label required">
+                    <@spring.message code="security.ecommerce.label.transactionType"/>:&nbsp;&nbsp;
+                  </label>
                 </td>
                 <td>
-                  <input type="text" class="textbox" id="comments_payg" name="comments_payg" 	maxlength="100" />
+                  <select id="transaction-type">
+                    <option value="all-transactions">All Transactions</option>
+                    <option value="charges">Charges</option>
+                    <option value="refunds">Refunds</option>
+                  </select>
+                </td>
+                <td align="center">
+                  <label class="control-label required">
+                    <@spring.message code="security.ecommerce.label.comments"/>:&nbsp;&nbsp;
+                  </label>
+                </td>
+                <td>
+                  <input type="text" class="textbox k-textbox" id="comments_payg" name="comments_payg" 	maxlength="100" />
                 </td>
                 <td align="right" colspan=4>
-                  <button id="payAsUGoSerachButton" onClick="serachPayAsUGoTransactions(); return false">
+                  <button id="payAsUGoSearchButton" class="k-button" onClick="serachPayAsUGoTransactions(); return false">
                     <@spring.message code="security.ecommerce.label.search"/>
                   </button>
                 </td>
@@ -305,29 +319,27 @@
                   start.max(end.value());
                   end.min(start.value());
 
+                  $("#transaction-type").kendoDropDownList();
 
                   var payAsUGoDataSource = new kendo.data.DataSource({
                     transport: {
                       read: {
                         url: function() {
                           var url = 'payAsUGoPaymentHistory.admin?';
+                          var paramArray = new Array();
                           if ($('#comments_payg').val() != '') {
-                            url = url +'comments='+  $('#comments_payg').val();
+                            paramArray.push('comments='+ $('#comments_payg').val());
                           }
                           if ($('#fromDate_payg').val() != '') {
-                            if ($('#comments_payg').val() != '') {
-                              url = url + '&';
-                            }
-                            url = url +'fromDate='+  $('#fromDate_payg').val();
+                            paramArray.push('fromDate='+  $('#fromDate_payg').val());
                           }
                           if ($('#toDate_payg').val() != '') {
-                            // if from date was added then we need '&' character before key-value
-                            if ($('#fromDate_payg').val() != '') {
-                              url = url + '&';
-                            }
-                            url = url + 'toDate=' + $('#toDate_payg').val();
+                            paramArray.push('toDate=' + $('#toDate_payg').val());
                           }
-                          return url;
+                          if ($('#transaction-type').val() != '') {
+                            paramArray.push('transactionType=' + $('#transaction-type').val());
+                          }
+                          return url + paramArray.join('&');
                         },
                         dataType: "json"
                       }
