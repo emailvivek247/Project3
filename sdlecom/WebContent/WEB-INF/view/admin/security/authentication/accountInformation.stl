@@ -17,7 +17,7 @@
 
 <style>
 div.ADCSI {
-	width: 60%;
+	width: 70%;
 	min-width:1135px;!important
 }
 span.ADCSI_leftcol {
@@ -279,7 +279,7 @@ padding: 8px 8px 8px 12px;
 							<#if subscriptions?has_content>
 							<div class="ADCSI_row" style="margin-right:20px;">
 								<div style="border-bottom:1px solid #C8C8C8;">
-									<div style="width:400px;margin:0 0 0 10px;color:#B4B4B4;vertical-align:middle;font-size:16px;padding-bottom:5px;font-family: Adobe Clean, Arial, Helvetica, Verdana, Arial, Tahoma, _sans;font-weight:bold;">
+									<div style="width:500px;margin:0 0 0 10px;color:#B4B4B4;vertical-align:middle;font-size:16px;padding-bottom:5px;font-family: Adobe Clean, Arial, Helvetica, Verdana, Arial, Tahoma, _sans;font-weight:bold;">
 										<span>
 											<@spring.message code="security.ecommerce.currentSubscriptions" />
 										</span>
@@ -299,6 +299,7 @@ padding: 8px 8px 8px 12px;
 										<th><@spring.message code="security.ecommerce.label.fee" /></th>
 										<th><@spring.message code="security.ecommerce.label.paymentStatus" /></th>
 										<th><@spring.message code="security.ecommerce.label.subscriptionStatus" /></th>
+										<th><@spring.message code="security.ecommerce.label.subscriptionOverriddenUntilDate" /></th>
 										<th><@spring.message code="security.ecommerce.label.subscriptionType" /></th>
 										<th><@spring.message code="security.ecommerce.label.lastBillingDate" /></th>
 										<th><@spring.message code="security.ecommerce.label.nextBillingDate" /></th>
@@ -381,6 +382,7 @@ padding: 8px 8px 8px 12px;
 											<@spring.message code="security.ecommerce.label.overridden" />
 										</#if>
 									</td>
+									<td class="center"><#if subscription.overriddenUntillDate?has_content>${subscription.overriddenUntillDate?date}<#elseif subscription.isAccessOverridden()><@spring.message code="security.ecommerce.label.Perpetual" /> <#else><@spring.message code="security.ecommerce.label.na" /></#if ></td>
 									<td class="center">${subscription.getSubscriptionType()}</td>
 									<td class="center"><#if subscription.lastBillingDate?has_content>${subscription.lastBillingDate?date}<#else ><@spring.message code="security.ecommerce.label.na" /></#if ></td>
 									<td class="center"><#if subscription.nextBillingDate?has_content && !subscription.isMarkedForCancellation>${subscription.nextBillingDate?date}<#else ><@spring.message code="security.ecommerce.label.na" /></#if ></td>
@@ -396,6 +398,7 @@ padding: 8px 8px 8px 12px;
 									<#else>
 										<td class="center"><@spring.message code="security.ecommerce.label.inActive"/></td>
 									</#if>
+									<td class="center"><#if subscription.overriddenUntillDate?has_content>${subscription.overriddenUntillDate?date}<#elseif subscription.isAccessOverridden()><@spring.message code="security.ecommerce.label.Perpetual" /> <#else><@spring.message code="security.ecommerce.label.na" /></#if ></td>
 									<td class="center">${subscription.getSubscriptionType()}</td>
 									<td class="center"><@spring.message code="security.ecommerce.label.na" /></td>
 									<td class="center"><@spring.message code="security.ecommerce.label.na" /></td>
