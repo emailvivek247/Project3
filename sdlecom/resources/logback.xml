@@ -10,14 +10,14 @@
     </appender>
 
     <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="FILE">
-        <file>${PREFIX_HOME}\\ROAM\\ROAM.log</file>
+        <file>${PREFIX_HOME}/ROAM/ROAM.log</file>
         <append>true</append>
         <encoder>
             <pattern>%d{MM-dd-yy HH:mm:ss.SSS} %-5level [%33.33logger{5}]: %msg%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- rollover daily -->
-            <fileNamePattern>${PREFIX_HOME}\\ROAM\\ROAM-%d{MM-dd-yyyy}-%i.zip</fileNamePattern>
+            <fileNamePattern>${PREFIX_HOME}/ROAM/ROAM-%d{MM-dd-yyyy}-%i.zip</fileNamePattern>
             <maxHistory>10<!-- days --></maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>20MB<!-- or whenever the file size reaches 20MB --></maxFileSize>
@@ -26,13 +26,13 @@
     </appender>
 
     <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="ALERT_FILE">
-        <file>${PREFIX_HOME}\\Alert\\Alert.log</file>
+        <file>${PREFIX_HOME}/Alert/Alert.log</file>
         <append>true</append>
         <encoder>
             <pattern>%d{MM-dd-yy HH:mm:ss.SSS} %-5level [%33.33logger{5}]: %msg%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${PREFIX_HOME}\\Alert\\Alert-%d{MM-dd-yyyy}-%i.zip</fileNamePattern>
+            <fileNamePattern>${PREFIX_HOME}/Alert/Alert-%d{MM-dd-yyyy}-%i.zip</fileNamePattern>
             <maxHistory>10<!-- days --></maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>20MB<!-- or whenever the file size reaches 20MB --></maxFileSize>
@@ -41,13 +41,13 @@
     </appender>
 
     <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="SEARCH_STATS_APPENDER">
-        <file>${PREFIX_HOME}\\SearchStats\\SearchStats.log</file>
+        <file>${PREFIX_HOME}/SearchStats/SearchStats.log</file>
         <append>true</append>
         <encoder>
             <pattern>%message,%d{MM/dd/yyyy},%d{MM/dd/yyyy hh:mm:ss a z}%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${PREFIX_HOME}\\SearchStats\\SearchStats-%d{MM-dd-yyyy}-%i.zip</fileNamePattern>
+            <fileNamePattern>${PREFIX_HOME}/SearchStats/SearchStats-%d{MM-dd-yyyy}-%i.zip</fileNamePattern>
             <maxHistory>30<!-- days --></maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>8MB<!-- or whenever the file size reaches 8MB. Note: This is a CSV file Excel cannot reade more than 65k Lines --></maxFileSize>
