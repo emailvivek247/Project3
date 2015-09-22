@@ -18,7 +18,13 @@ Thumbs.db
 !/sdlecom/WebContent/templates/messageCenterPublic.stl
 !/sdlecom/WebContent/templates/multiSearch/
 !/sdlecom/WebContent/templates/multiSearchVm/
-!/sdlecom/WebContent/templates/resources/
+!/sdlecom/WebContent/templates/resources/basket.css
+!/sdlecom/WebContent/templates/images/callout.gif
+!/sdlecom/WebContent/templates/images/callout_black.gif
+!/sdlecom/WebContent/templates/images/callout_green.gif
+!/sdlecom/WebContent/templates/images/closedCase.png
+!/sdlecom/WebContent/templates/images/css-tooltip-gradient-gb.png
+!/sdlecom/WebContent/templates/images/openCase.png
 
 # Ignore everything in WebContent/WEB-INF/data except for a few specified files
 /sdlecom/WebContent/WEB-INF/data/*
