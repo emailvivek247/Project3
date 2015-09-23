@@ -490,11 +490,24 @@ class Watermark extends PdfPageEventHelper {
             contentunder.setColorStroke(this.waterMarkColor);
         }
 
-        int pageFontSize = (int)((document.getPageSize().getWidth() /310.0f)*fontSize);
+        float docWidth = document.getPageSize().getWidth();
+        float docHeight = document.getPageSize().getHeight();
 
-       	contentunder.setFontAndSize(watermarkFont, pageFontSize);
-       	contentunder.showTextAligned(Element.ALIGN_CENTER, waterMark.trim(), (document.getPageSize().getWidth() / 2),
-            	(document.getPageSize().getHeight() / 2), 45);
+        String trimmedWaterMark = waterMark.trim();
+        int waterMarkWidth = watermarkFont.getWidth(trimmedWaterMark);
+
+        int calculatedFontSize = (int) ((1000.0f / (float) waterMarkWidth) * docWidth);
+        int maxFontSize = (int) ((document.getPageSize().getWidth() / 310.0f) * fontSize);
+        
+        int finalFontSize = Math.min(maxFontSize, calculatedFontSize);
+
+        float ascentPoint = watermarkFont.getAscentPoint(trimmedWaterMark, finalFontSize);
+        float descentPoint = watermarkFont.getDescentPoint(trimmedWaterMark, finalFontSize);
+        float waterMarkHeight = ascentPoint - descentPoint;
+
+        contentunder.setFontAndSize(watermarkFont, finalFontSize * 1.2f);
+        contentunder.showTextAligned(Element.ALIGN_CENTER, waterMark.trim(), (docWidth / 2) + (waterMarkHeight / 4),
+                (docHeight / 2) - (waterMarkHeight / 4), 45);
         contentunder.endText();
         contentunder.restoreState();
     }
