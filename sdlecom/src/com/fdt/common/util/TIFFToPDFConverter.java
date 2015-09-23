@@ -505,7 +505,7 @@ class Watermark extends PdfPageEventHelper {
         float descentPoint = watermarkFont.getDescentPoint(trimmedWaterMark, finalFontSize);
         float waterMarkHeight = ascentPoint - descentPoint;
 
-        contentunder.setFontAndSize(watermarkFont, finalFontSize * 1.2f);
+        contentunder.setFontAndSize(watermarkFont, finalFontSize * 1.1f);
         contentunder.showTextAligned(Element.ALIGN_CENTER, waterMark.trim(), (docWidth / 2) + (waterMarkHeight / 4),
                 (docHeight / 2) - (waterMarkHeight / 4), 45);
         contentunder.endText();
