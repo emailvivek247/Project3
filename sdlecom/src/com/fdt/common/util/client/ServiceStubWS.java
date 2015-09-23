@@ -214,12 +214,13 @@ public class ServiceStubWS implements ServiceStub, ApplicationContextAware {
     }
 
     public PageRecordsDTO getPayAsUGoTransactionsByNodePerPage(String userName, String nodeName, String comments,
-    		Date fromDate, Date toDate,	Integer startingFrom, Integer numberOfRecords) {
+    		Date fromDate, Date toDate, String transactionType, Integer startingFrom, Integer numberOfRecords) {
 		TransactionRequestDTO request = new TransactionRequestDTO();
 		request.setUserName(userName);
 		request.setNodeName(nodeName);
 		request.setFromDate(fromDate);
 		request.setToDate(toDate);
+		request.setTransactionType(transactionType);
 		request.setComments(comments);
 		request.setStartingFrom(startingFrom);
 		request.setNumberOfRecords(numberOfRecords);

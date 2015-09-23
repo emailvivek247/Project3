@@ -4,17 +4,17 @@ install:
   - cd sdlecom/src-dependencies
   - git clone git@github.com:Granicus/eAccept-eCom.git
   - cd eAccept-eCom
-  - git checkout develop
+  - git checkout ${TRAVIS_BRANCH} || git checkout develop
   - ant buildjar
   - cp dist/ecomclient.jar ${TRAVIS_BUILD_DIR}/sdlecom/WebContent/WEB-INF/lib/
   - cd ${TRAVIS_BUILD_DIR}/sdlecom/src-dependencies
   - git clone git@github.com:Granicus/eAccept-Templates-SDLECOM.git
   - cd eAccept-Templates-SDLECOM
-  - git checkout develop
+  - git checkout ${TRAVIS_BRANCH} || git checkout develop
   - cd ${TRAVIS_BUILD_DIR}/sdlecom/src-dependencies
   - git clone git@github.com:Granicus/eAccept-Templates-SDL.git
   - cd eAccept-Templates-SDL
-  - git checkout develop
+  - git checkout ${TRAVIS_BRANCH} || git checkout develop
   - cd ${TRAVIS_BUILD_DIR}
 script: ant -Dclient.templateroot=src-dependencies -f sdlecom/build.xml buildJenkins
 jdk:
