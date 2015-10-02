@@ -4,44 +4,78 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.lucene.document.Fieldable;
+import net.javacoding.xsearch.api.protocol.SearchProtocol;
+import net.javacoding.xsearch.utility.U;
+import net.javacoding.xsearch.utility.VMTool;
+
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import net.javacoding.xsearch.api.protocol.SearchProtocol;
-import net.javacoding.xsearch.config.Column;
-import net.javacoding.xsearch.utility.U;
-import net.javacoding.xsearch.utility.VMTool;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 public class Document {
+
     SearchProtocol.Document document;
     List<Field> fields;
+
+    private JsonObject source;
+    private float score;
+    private String id;
     
     private final static String[] NO_STRINGS = new String[0];
 
     public Document(SearchProtocol.Document document) {
         this.document = document;
     }
-    public float getScore() {return this.document.getScore();}
-    public float getBoost() {return this.document.getBoost();}
-    
+
+    public Document(JsonObject source, float score, String id) {
+        this.source = source;
+        this.score = score;
+        this.id = id;
+    }
+
+    public float getScore() {
+        return document != null ? this.document.getScore() : score;
+    }
+
+    public float getBoost() {
+        return document != null ? this.document.getBoost() : 1F;
+    }
+
     public String get(String field) {
-    	for(SearchProtocol.Field f : this.document.getFieldList()) {
-            if(f.getName().equals(field)) {
-                return f.getValue();
+        if (document != null) {
+            for (SearchProtocol.Field f : this.document.getFieldList()) {
+                if (f.getName().equals(field)) {
+                    return f.getValue();
+                }
+            }
+        } else if (source != null) {
+            JsonElement element = source.get(field);
+            if (element != null) {
+                return source.get(field).getAsString();
             }
         }
         return "";
     }
+
     public String getString(String field) {
-        for(SearchProtocol.Field f : this.document.getFieldList()) {
-            if(f.getName().equals(field)) {
-                return f.getValue();
+        if (document != null) {
+            for (SearchProtocol.Field f : this.document.getFieldList()) {
+                if (f.getName().equals(field)) {
+                    return f.getValue();
+                }
+            }
+        } else if (source != null) {
+            JsonElement element = source.get(field);
+            if (element != null) {
+                return source.get(field).getAsString();
             }
         }
         return "";
     }
+
     /**
      * One document can have several fields of the same name. 
      * For example, one article can have several comments, if you select comments in the subsequent query.

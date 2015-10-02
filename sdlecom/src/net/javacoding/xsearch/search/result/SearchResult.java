@@ -452,6 +452,9 @@ public class SearchResult extends XMLSerializable{
 	
 	public String highlight(Document doc, String field) {
 	    String t = EscapeChars.forHTMLTag(doc.getString(field));
+	    if (this.summarizer == null) {
+	        return t;
+	    }
 	    return this.summarizer.getHighlighted(t, field);
 	}
 	

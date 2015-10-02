@@ -30,6 +30,7 @@ import org.joda.time.format.DateTimeFormatter;
 import com.fdt.sdl.core.parser.FileParser;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
 
 public class DocumentSQLTaskHelper {
     static    long last_report_time = 0;//this line is to be deleted
@@ -197,7 +198,7 @@ public class DocumentSQLTaskHelper {
     	//logger.debug("put values into hash map...");
     	//2. put into hash map
         final int comparedColumnIndex = p.getColumnIndex()-1;
-        Multimap<String,List<String>> rowMap = new ArrayListMultimap<String,List<String>>();
+        Multimap<String,List<String>> rowMap = ArrayListMultimap.create();
     	for(List<String> r : rows) {
     	    rowMap.put(r.get(comparedColumnIndex),r);
     	}

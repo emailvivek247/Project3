@@ -1,5 +1,10 @@
 package com.fdt.sdl.core.ui.action.search;
 
+import io.searchbox.client.JestClient;
+import io.searchbox.client.JestClientFactory;
+import io.searchbox.client.config.HttpClientConfig;
+import io.searchbox.core.Search;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -71,6 +76,9 @@ import com.fdt.common.util.SystemUtil;
 import com.fdt.sdl.styledesigner.Template;
 import com.fdt.sdl.styledesigner.util.DeviceDetectorUtil;
 import com.fdt.sdl.styledesigner.util.TemplateUtil;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 /**
  * Implementation of <strong>Action </strong> that performs search.
@@ -208,6 +216,28 @@ public class SearchAction extends Action {
 				}
 
 			} else {
+			    
+			    String queryStr = 
+			            "{\n" +
+			            "    \"query\": {\n" +
+        			    "         \"match_all\": {}" +
+			            "    },\n" +
+        			    "    \"size\":" + rowsToReturn + ",\n" +
+			            "    \"from\":" + offset + "\n" +
+			            "}";
+			    
+                JestClientFactory factory = new JestClientFactory();
+                factory.setHttpClientConfig(new HttpClientConfig.Builder("http://localhost:9200").multiThreaded(true)
+                        .build());
+                JestClient client = factory.getObject();
+
+                Search search = new Search.Builder(queryStr)
+                        .addIndex("test")
+                        .build();
+
+                io.searchbox.core.SearchResult result = client.execute(search);
+
+                /*
 				if (query != null) {
 					Hits hits = null;
 					TopDocs topDocs = null;
@@ -239,8 +269,16 @@ public class SearchAction extends Action {
 						}
 					}
 				}
+				*/
+                
+                List<net.javacoding.xsearch.api.Document> resultDocs = extractResultDocs(result, rowsToReturn, offset);
+                
+                sr.initFor3Tier(sc, q, lq, query, resultDocs, defaultDocs, searchTime, result.getTotal(),
+                        offset, rowsToReturn, sortBys, filterResult, request, response);
+                /*
 				sr.init(sc, q, lq, query, docs, defaultDocs, searchTime, total[0], offset, rowsToReturn, sortBys,
 						filterResult, request, response);
+				*/
 			}
 			if (sc.debug)
 				logger.info("Got docs from disk: " + (System.currentTimeMillis() - _start));
@@ -635,11 +673,26 @@ public class SearchAction extends Action {
 		return retValue;
 	}
 
+    protected static List<net.javacoding.xsearch.api.Document> extractResultDocs(io.searchbox.core.SearchResult result,
+            int rowsToReturn, int offset) throws IOException {
+        List<net.javacoding.xsearch.api.Document> retValue = null;
+        if (result != null) {
+            retValue = new ArrayList<>(rowsToReturn);
+            JsonArray hits = result.getJsonObject().getAsJsonObject("hits").getAsJsonArray("hits");
+            for (JsonElement hitElement : hits) {
+                JsonObject hit = hitElement.getAsJsonObject();
+                retValue.add(new net.javacoding.xsearch.api.Document(hit.get("_source").getAsJsonObject(),
+                        hit.get("_score").getAsFloat(), hit.get("_id").getAsString()));
+            }
+        }
+        return retValue;
+    }
+
 	protected static List<HitDocument> collectHits(DatasetConfiguration paramDatasetConfiguration,
 			TopDocs paramTopDocs, Searcher paramSearcher) throws CorruptIndexException, IOException {
-		ArrayList localArrayList = null;
+		List<HitDocument> localArrayList = null;
 		if (paramTopDocs != null) {
-			localArrayList = new ArrayList(paramTopDocs.scoreDocs.length);
+			localArrayList = new ArrayList<>(paramTopDocs.scoreDocs.length);
 			for (int i = 0; i < paramTopDocs.scoreDocs.length; i++) {
 				Document doc = paramSearcher.doc(paramTopDocs.scoreDocs[i].doc);
 				localArrayList.add(new HitDocument(paramDatasetConfiguration, doc, paramTopDocs.scoreDocs[i].score,

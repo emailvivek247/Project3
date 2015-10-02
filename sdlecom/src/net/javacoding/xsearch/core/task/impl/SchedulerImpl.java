@@ -12,6 +12,7 @@ import net.javacoding.xsearch.core.exception.FetcheringDoneException;
 import net.javacoding.xsearch.core.exception.TaskAssignmentException;
 import net.javacoding.xsearch.core.task.Scheduler;
 import net.javacoding.xsearch.core.task.WorkerTask;
+import net.javacoding.xsearch.core.task.work.ESWriteDocumentToIndexTask;
 import net.javacoding.xsearch.core.task.work.SerialWorkerTask;
 import net.javacoding.xsearch.core.task.work.WriteDocumentToIndexTask;
 import net.javacoding.xsearch.core.task.work.subsequent.FetchDocumentBySQLTask;
@@ -195,7 +196,7 @@ public class SchedulerImpl implements Scheduler {
     private WorkerTask createWriterTask(Object obj){
         WorkerTask task = null;
         if(obj instanceof TextDocument){
-            task = new WriteDocumentToIndexTask(this,(TextDocument)obj, taskContexts.length-1);
+            task = new ESWriteDocumentToIndexTask(this,(TextDocument)obj, taskContexts.length-1);
         }else if(obj instanceof WorkerTask){
             task = (WorkerTask) obj;
         }else{
