@@ -1,6 +1,0 @@
-    <jdbcdriver name="SAP DB">
-      <class>com.sap.dbtech.jdbc.DriverSapDB</class>
-      <url-format><![CDATA[jdbc:sapdb:[//host/]dbname[?name=value[&name=value]*]]]></url-format>
-      <url-example><![CDATA[jdbc:sapdb://<i>hostname</i>/<i>dbname</i>?autocommit=off]]></url-example>
-      <validate-sql>Select 'hello world' from dual</validate-sql>
-    </jdbcdriver>

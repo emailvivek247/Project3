@@ -1,0 +1,5 @@
+    <jdbcdriver name="IBM DB2 Type 2">
+      <class>COM.ibm.db2.jdbc.app.DB2Driver</class>
+      <url-format><![CDATA[]]></url-format>
+      <url-example><![CDATA[jdbc:db2:<i>dbname</i>]]></url-example>
+    </jdbcdriver>

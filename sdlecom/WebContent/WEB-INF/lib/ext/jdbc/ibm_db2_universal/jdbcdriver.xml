@@ -1,5 +1,0 @@
-    <jdbcdriver name="IBM DB2 Universal">
-      <class>com.ibm.db2.jcc.DB2Driver</class>
-      <url-format><![CDATA[]]></url-format>
-      <url-example><![CDATA[jdbc:db2://<i>hostname</i>:5000/<i>dbname</i>]]></url-example>
-    </jdbcdriver>

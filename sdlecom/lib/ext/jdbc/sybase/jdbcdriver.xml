@@ -1,0 +1,6 @@
+    <jdbcdriver name="Sybase">
+      <class>com.sybase.jdbc.SybDriver</class>
+      <url-format><![CDATA[jdbc:sybase:Tds:<hostname>:<port>/<database_name>]]></url-format>
+      <url-example><![CDATA[jdbc:sybase:Tds:localhost:5007/tsdata]]></url-example>
+      <validate-sql>SELECT 1</validate-sql>
+    </jdbcdriver>

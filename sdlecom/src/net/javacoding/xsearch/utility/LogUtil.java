@@ -27,7 +27,6 @@ import ch.qos.logback.core.rolling.FixedWindowRollingPolicy;
 import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy;
 import ch.qos.logback.core.spi.CyclicBufferTracker;
-import ch.qos.logback.core.spi.CyclicBufferTrackerImpl;
 
 public final class LogUtil {
 	
@@ -238,7 +237,7 @@ public final class LogUtil {
 		layout.setPattern("%-5level %d{MM-dd-yy HH:mm:ss.SSS} : %msg%n");
 		layout.start();
 		
-		CyclicBufferTracker<ILoggingEvent> cyclicBufferTracker = new CyclicBufferTrackerImpl<ILoggingEvent>();
+		CyclicBufferTracker<ILoggingEvent> cyclicBufferTracker = new CyclicBufferTracker<ILoggingEvent>();
 		cyclicBufferTracker.setBufferSize(2048);
 		
 		sMTPAppender.setCyclicBufferTracker(cyclicBufferTracker);
