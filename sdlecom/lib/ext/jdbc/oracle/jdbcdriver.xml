@@ -1,0 +1,6 @@
+    <jdbcdriver name="Oracle">
+      <class>oracle.jdbc.driver.OracleDriver</class>
+      <url-format><![CDATA[jdbc:oracle:<drivertype>:@<hostname>:<port>:<database_sid>]]></url-format>
+      <url-example><![CDATA[jdbc:oracle:thin:@<i>hostname</i>:1521:<i>dbname</i>, <br />  Oracle JDBC OCI drivers: jdbc:oracle:oci8:@<i>dbname</i>]]></url-example>
+      <validate-sql>SELECT * FROM DUAL</validate-sql>
+    </jdbcdriver>

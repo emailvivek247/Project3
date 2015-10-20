@@ -1,5 +1,0 @@
-    <jdbcdriver name="Informix">
-      <class>com.informix.jdbc.IfxDriver</class>
-      <url-format><![CDATA[]]></url-format>
-      <url-example><![CDATA[jdbc:informix-sqli://<i>hostname</i>:1526:INFORMIXSERVER=myserver]]></url-example>
-    </jdbcdriver>

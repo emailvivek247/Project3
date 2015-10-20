@@ -18,6 +18,27 @@
   <echo message="full.template.path = ${full.template.path}"/>
   <echo message="ecommerce.clientName = ${ecommerce.clientName}"/>
 
+  <tstamp>
+    <format property="buildDate" pattern="MM-dd-yyyy HH:mm a" />
+  </tstamp>
+
+  <path id="compile.classpath">
+    <fileset dir="${webcontent.lib}">
+      <include name="*.jar" />
+    </fileset>
+  </path>
+
+  <path id="ant.lib.path">
+    <fileset dir="ant-lib" includes="*.jar"/>
+  </path>
+
+  <taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask" classpathref="ant.lib.path"/>
+  <taskdef name="ivy-configure" classname="org.apache.ivy.ant.IvyConfigure" classpathref="ant.lib.path"/>
+  <taskdef name="ivy-resolve" classname="org.apache.ivy.ant.IvyResolve" classpathref="ant.lib.path"/>
+  <taskdef name="ivy-retrieve" classname="org.apache.ivy.ant.IvyRetrieve" classpathref="ant.lib.path"/>
+  <taskdef name="ivy-publish" classname="org.apache.ivy.ant.IvyPublish" classpathref="ant.lib.path"/>
+  <taskdef name="ivy-report" classname="org.apache.ivy.ant.IvyReport" classpathref="ant.lib.path"/>
+
   <target name="revision" unless="increment.revision">
     <propertyfile file="${build_info}">
       <entry key="build.revision.number" type="int" operation="+" value="1" pattern="000" />
@@ -47,40 +68,46 @@
     </propertyfile>
   </target>
 
-  <tstamp>
-    <format property="buildDate" pattern="MM-dd-yyyy HH:mm a" />
-  </tstamp>
-
   <target name="buildDate" unless="increment.buildDate" >
     <propertyfile  file="${build_info}">
       <entry key="build.date" value="${buildDate}"/>
     </propertyfile>
   </target>
 
-  <path id="compile.classpath">
-    <fileset dir="${webcontent.lib}">
-      <include name="*.jar" />
-    </fileset>
-  </path>
-
   <target name="clean">
-    <delete dir="dist" />
-    <delete dir="build" />
+    <delete dir="dist"/>
+    <delete dir="build"/>
+    <delete dir="${webcontent.lib}"/>
   </target>
 
   <target name="init" depends="clean, buildDate">
-    <mkdir dir="build/classes" />
-    <mkdir dir="dist" />
-    <mkdir dir="dist/lib" />
+    <mkdir dir="build/classes"/>
+    <mkdir dir="dist"/>
+    <mkdir dir="dist/lib"/>
+    <mkdir dir="${webcontent.lib}"/>
+    <mkdir dir="${webcontent.lib}/ext"/>
   </target>
 
-  <path id="xmltask.lib.path">
-    <fileset dir="ant-lib" includes="*.jar"/>
-  </path>
+  <target name="resolve-dependencies" depends="init" description="Copy private dependencies from lib and retrieve Ivy dependencies">
+    <copy todir="${webcontent.lib}">
+      <fileset dir="${basedir}/lib">
+        <include name="*.jar"/>
+      </fileset>
+      <fileset dir="${basedir}/lib/lucene">
+        <include name="*.jar"/>
+      </fileset>
+    </copy>
+    <copy todir="${webcontent.lib}/ext">
+      <fileset dir="${basedir}/lib/ext"/>
+    </copy>
+    <ivy-retrieve conf="common" pattern="${webcontent.lib}/[artifact]-[revision].[ext]"/>
+  </target>
 
-  <taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask" classpathref="xmltask.lib.path"/>
+  <target name="report-dependencies" depends="resolve-dependencies" description="Generates an Ivy report">
+      <ivy-report todir="dist"/>
+  </target>
 
-  <target name="ConfUpdate" depends="init">
+  <target name="conf-update" depends="init">
     <propertyfile file="${client-conf}">
       <entry key="nodeName" value="${nodeName}" />
       <entry key="ecommerce.clienturl" value="${ecommerce.clienturl}" />
@@ -131,7 +158,7 @@
     </propertyfile>
   </target>
 
-  <target name="compile" depends="ConfUpdate">
+  <target name="compile" depends="conf-update,resolve-dependencies">
     <javac destdir="build/classes" debug="true" srcdir="${java.src}" encoding="utf-8">
       <classpath refid="compile.classpath" />
     </javac>

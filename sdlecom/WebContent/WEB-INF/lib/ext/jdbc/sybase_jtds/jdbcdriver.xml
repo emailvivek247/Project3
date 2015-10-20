@@ -1,7 +1,0 @@
-    <jdbcdriver name="Sybase by jTDS">
-      <class>net.sourceforge.jtds.jdbc.Driver</class>
-      <url-format><![CDATA[jdbc:jtds:sybase://<server>[:<port>][/<database>][;<property>=<value>[;...]]]]></url-format>
-      <url-example><![CDATA[jdbc:jtds:sybase://<i>hostname</i>:1433/<i>dbname</i>;instance=&lt;instance name&gt;;domain=&lt;domain name&gt;<br/>
-      See <a href='http://jtds.sourceforge.net/faq.html#urlFormat' target='_blank'>jTds URL Format</a> for details.]]></url-example>
-      <validate-sql>SELECT 1</validate-sql>
-    </jdbcdriver>

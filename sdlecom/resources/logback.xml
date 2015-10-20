@@ -69,7 +69,7 @@
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>%d{MM-dd-yy HH:mm:ss.SSS} %-5level [%thread][%logger{40}] : %msg%n</pattern>
         </layout>
-        <cyclicBufferTracker class="ch.qos.logback.core.spi.CyclicBufferTrackerImpl">
+        <cyclicBufferTracker class="ch.qos.logback.core.spi.CyclicBufferTracker">
             <bufferSize>128</bufferSize>
         </cyclicBufferTracker>
     </appender>

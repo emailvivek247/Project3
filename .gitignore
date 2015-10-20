@@ -6,6 +6,9 @@ Thumbs.db
 # Ignore classes directory into which Java files get built
 /sdlecom/WebContent/WEB-INF/classes/
 
+# Ignore lib directory which gets populated with private dependencies from 'lib' and public ones from Ivy
+/sdlecom/WebContent/WEB-INF/lib/
+
 # Ignore the seal images which vary client-to-client
 /sdlecom/WebContent/resources/custom_resources/images/*seal*.png
 /sdlecom/WebContent/resources/custom_resources/images/*seal*.jpg

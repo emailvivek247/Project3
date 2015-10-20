@@ -6,7 +6,7 @@ install:
   - cd eAccept-eCom
   - git checkout ${TRAVIS_BRANCH} || git checkout develop
   - ant buildjar
-  - cp dist/ecomclient.jar ${TRAVIS_BUILD_DIR}/sdlecom/WebContent/WEB-INF/lib/
+  - cp dist/ecomclient.jar ${TRAVIS_BUILD_DIR}/sdlecom/lib
   - cd ${TRAVIS_BUILD_DIR}/sdlecom/src-dependencies
   - git clone git@github.com:Granicus/eAccept-Templates-SDLECOM.git
   - cd eAccept-Templates-SDLECOM
@@ -29,6 +29,13 @@ env:
     - ENV_NAME=arizona-test
     - ENV_NAME=dallas-test
     - ENV_NAME=vbeach-test
+branches:
+  only:
+    - master
+    - develop
+    - /^hotfix\/.*$/
+    - /^release\/.*$/
+    - /^environment\/.*$/
 addons:
   artifacts:
     paths:

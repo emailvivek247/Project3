@@ -1,7 +1,0 @@
-<jdbcdriver name="Mysql">
-  <class>com.mysql.jdbc.Driver</class>
-  <url-format><![CDATA[jdbc:mysql://[host][,failoverhost...][:port]/[database][?propertyName1][=propertyValue1][&propertyName2][=propertyValue2]...]]></url-format>
-  <url-example><![CDATA[<br/>jdbc:mysql://<i>hostname</i>:<i>port</i>/<i>dbname</i><br/>
-  jdbc:mysql://<i>hostname</i>:<i>port</i>/<i>dbname</i>&useOldUTF8Behavior=true]]></url-example>
-  <validate-sql>SELECT 1</validate-sql>
-</jdbcdriver>
