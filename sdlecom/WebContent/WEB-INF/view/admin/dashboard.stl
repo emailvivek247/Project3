@@ -101,11 +101,23 @@
                      since ${_time?string("yyyy-MM-dd HH:mm:ss")}
                     </li>
                   </#if>
-                  <li>Index Directory: ${dc.getIndexDirectoryFile()}
-                    <#if !vmTool.checkExists(dc.getIndexDirectoryFile())>
-                      <@warn "(Directory does not exists! <a href='configBasic.do?indexName=" + indexName + "'>Edit directory setting</a>)"/>
+                  <li>
+                    Index Type: 
+                    <#if !dc.getIndexType()?has_content || dc.getIndexType() == "LUCENE">
+                      Lucene
                     </#if>
+                    <#if dc.getIndexType() == "ELASTICSEARCH">
+                      Elasticsearch
+                     </#if>
                   </li>
+                  <#if !dc.getIndexType()?has_content || dc.getIndexType() == "LUCENE">
+                    <li>
+                      Index Directory: ${dc.getIndexDirectoryFile()}
+                      <#if !vmTool.checkExists(dc.getIndexDirectoryFile())>
+                        <@warn "(Directory does not exists! <a href='configBasic.do?indexName=" + indexName + "'>Edit directory setting</a>)"/>
+                      </#if>
+                    </li>
+                  </#if>
                   <#if !U.isEmpty(dc.subscriptionUrl)>
                    <li>
                     Subscribing ${dc.subscriptionUrl}

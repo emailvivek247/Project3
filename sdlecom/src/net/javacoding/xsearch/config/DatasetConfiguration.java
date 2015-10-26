@@ -19,12 +19,14 @@ import net.javacoding.xsearch.utility.FileUtil;
 import net.javacoding.xsearch.utility.U;
 
 import org.apache.commons.pool.impl.GenericObjectPool;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.search.Similarity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fdt.sdl.admin.ui.action.constants.IndexType;
 
 
 /**
@@ -45,9 +47,6 @@ public class DatasetConfiguration extends Configuration implements StorageConfig
 
     /** The base directory for dataset indices and configuration files. */
     private transient File baseDirectory = null;
-
-    /** The absolute pathname for the directory where dataset indices are built. */
-    private transient File indexDirectory = null;
 
     private transient long modifiedTime = 0L;
 
@@ -1225,6 +1224,10 @@ public class DatasetConfiguration extends Configuration implements StorageConfig
             sb.append("  <description><![CDATA[").append(description).append("]]></description>\n");
         }
 
+        if (indexType != null) {
+            sb.append("  <index-type>").append(indexType.toString()).append("</index-type>\n");
+        }
+
         if (indexdir != null) {
             sb.append("  <index-dir>").append(indexdir).append("</index-dir>\n");
         }
@@ -1590,5 +1593,19 @@ public class DatasetConfiguration extends Configuration implements StorageConfig
 		}
 	}
 	
-	
+    private IndexType indexType;
+
+    public void setIndexType(IndexType indexType) {
+        this.indexType = indexType;
+        isDirty = true;
+    }
+
+    public void setIndexType(String indexType) {
+        this.indexType = IndexType.valueOf(indexType);
+        isDirty = true;
+    }
+
+    public IndexType getIndexType() {
+        return indexType;
+    }
 }

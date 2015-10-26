@@ -18,10 +18,18 @@
 <@com.section2 title="Index Information" width='70%'>
 <table id="t" width="100%" cellpadding="5" cellspacing="0" border="0">
 <@com.tr2td "Name">${dc.name?if_exists}</@com.tr2td>
-<@com.tr2td "Type">
+<@com.tr2td "Data Source Type">
  <#if dc.dataSourceType == 0>
    Database, <i>Select data via database connection</i>
  </#if>
+</@com.tr2td>
+<@com.tr2td "Index Type">
+ <#if !dc.getIndexType()?has_content || dc.getIndexType() == "LUCENE">
+   Lucene, <i>Store directly as a Lucene index</i>
+ </#if>
+ <#if dc.getIndexType() == "ELASTICSEARCH">
+   Elasticsearch, <i>Store in an Elasticsearch cluster</i>
+ </#if> 
 </@com.tr2td>
 <@com.trTextInput "Display Name", "displayName",  dc.displayName, 40 />
 <@com.trTextInput "Display Order","displayOrder", dc.displayOrder, 4 >
@@ -30,6 +38,9 @@
 <@com.tr2td "Description">
   <textarea name="desc" id="desc" cols="60" rows="3" wrap="virtual">${dc.description?if_exists}</textarea>
 </@com.tr2td>
+
+<#if !dc.getIndexType()?has_content || dc.getIndexType() == "LUCENE">
+
 <@com.tr2td "Directory">
   <input type="text" name="dir" id="dir" size="60" value="${dc.indexdir}">
 </@com.tr2td>
@@ -48,8 +59,9 @@
 	<br /><br />
 	 Index directory path: ${dc.getIndexDirectory()?if_exists}
 	<br />
-	
 </@com.tr2td>
+
+</#if>
 
 
 <#if !fileUtil.getFile(dc.getIndexDirectory()).exists()>

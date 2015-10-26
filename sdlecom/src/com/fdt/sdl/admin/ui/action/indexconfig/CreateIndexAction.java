@@ -23,6 +23,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 
+import com.fdt.sdl.admin.ui.action.constants.IndexType;
 import com.fdt.sdl.util.SecurityUtil;
 
 /**
@@ -38,9 +39,7 @@ import com.fdt.sdl.util.SecurityUtil;
  */
 public class CreateIndexAction extends Action {
 
-    private static Logger logger = LoggerFactory.getLogger(CreateIndexAction.class);
-
-     
+    private static final Logger logger = LoggerFactory.getLogger(CreateIndexAction.class);
 
     /**
      * Handle server requests.
@@ -68,11 +67,13 @@ public class CreateIndexAction extends Action {
         String name = request.getParameter("name");
         String displayName = request.getParameter("displayName");
         String desc = request.getParameter("desc");
+        String indexType = request.getParameter("index_type");
 
         // Cache the changes made by user
         request.setAttribute("name", name);
         request.setAttribute("displayName", displayName);
         request.setAttribute("desc", desc);
+        request.setAttribute("indexType", indexType);
 
         try {
             ServerConfiguration sc = ServerConfiguration.getServerConfiguration();
@@ -91,8 +92,8 @@ public class CreateIndexAction extends Action {
                     dc.setDescription(desc);
                     dc.setPrefixIndexRootDirectory(true);
                     dc.setIsEmptyQueryMatchAll(false);
-                    //dc.setIndexdir("indexes"+File.separator+name);
                     dc.setDataSourceType(U.getInt(request.getParameter("data_source_type"), 0));
+                    dc.setIndexType(IndexType.valueOf(indexType));
                     dc.save();
                     File dir = dc.getIndexDirectoryFile();
                     if(!dir.exists()){dir.mkdirs();}

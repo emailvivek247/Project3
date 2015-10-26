@@ -1,8 +1,3 @@
-/*
- * Created on Jan 3, 2005 $Header:
- * /data/source/search/htdocs/WEB-INF/classes/net/javacoding/xsearch/core/TextDocument.java,v 1.6 2005/03/27 19:34:38
- * cylu Exp $
- */
 package net.javacoding.xsearch.core.component;
 
 import java.util.ArrayList;
@@ -15,6 +10,9 @@ import net.javacoding.xsearch.core.TextDocumentField;
  * The class is to serialize/deserialze document
  */
 public class TextDocument extends TaskQueueEntry {
+
+    private static final long serialVersionUID = 5333547273047342176L;
+
     List<TextDocumentField> fields = new ArrayList<TextDocumentField>();
 
     private int size = 0;
@@ -29,14 +27,17 @@ public class TextDocument extends TaskQueueEntry {
             size += v.length();
         }
     }
+
     public void add(String n, Date date) {
-        add(n,Long.toString(date.getTime()));
+        add(n, Long.toString(date.getTime()));
     }
 
     public String get(String n) {
         for (int i = 0; i < fields.size(); i++) {
             TextDocumentField field = (TextDocumentField) fields.get(i);
-            if (field.getName().equals(n)) return field.getValue();
+            if (field.getName().equals(n)) {
+                return field.getValue();
+            }
         }
         return null;
     }
@@ -45,16 +46,21 @@ public class TextDocument extends TaskQueueEntry {
         List<String> result = new ArrayList<String>();
         for (int i = 0; i < fields.size(); i++) {
             TextDocumentField field = (TextDocumentField) fields.get(i);
-            if (field.getName().equals(n)) result.add(field.getValue());
+            if (field.getName().equals(n)) {
+                result.add(field.getValue());
+            }
         }
-        if (result.size() == 0) return null;
+        if (result.size() == 0) {
+            return null;
+        }
         return (String[]) result.toArray(new String[result.size()]);
     }
 
     public int getSize() {
         return size;
     }
-    public List<TextDocumentField> getFields(){
+
+    public List<TextDocumentField> getFields() {
         return fields;
     }
 }

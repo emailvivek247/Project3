@@ -28,6 +28,10 @@ import net.javacoding.xsearch.utility.U;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import com.fdt.sdl.styledesigner.util.PageStyleUtil;
 
@@ -92,14 +96,15 @@ public class IndexManager {
     }
 
     public static void main(String args[]) {
-    	long startTime = System.currentTimeMillis();
+
+        AbstractApplicationContext context = null;
+
+        long startTime = System.currentTimeMillis();
         IndexManager im = new IndexManager();
         try {
-            Thread.currentThread().setPriority((Thread.MIN_PRIORITY));// +2));//min
-            // is 1,
-            // norm
-            // is 5,
-            // //+Thread.NORM_PRIORITY)/2);
+            context = new FileSystemXmlApplicationContext("conf/spring/applicationContext-elasticsearch.xml");
+            context.registerShutdownHook();
+            Thread.currentThread().setPriority((Thread.MIN_PRIORITY));
             im.parseArgs(args);
             im.start();
         } catch (Exception e) {
@@ -107,6 +112,7 @@ public class IndexManager {
             usage();
         } finally {
             im.finish(startTime);
+            context.close();
         }
     }
 

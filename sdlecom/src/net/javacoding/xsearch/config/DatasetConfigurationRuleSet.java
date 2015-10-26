@@ -40,6 +40,8 @@ public class DatasetConfigurationRuleSet extends RuleSetBase {
         digester.addBeanPropertySetter("dataset/number-of-hours-before-deletion", "numberOfHoursBeforeDeletion");
         digester.addBeanPropertySetter("dataset/work-directory", "workDirectory");
         digester.addBeanPropertySetter("dataset/data-source-type", "dataSourceType");
+        digester.addCallMethod("dataset/index-type", "setIndexType", 1);
+        digester.addCallParam("dataset/index-type", 0);
 
         digester.addObjectCreate("dataset/fetcher-configuration", "net.javacoding.xsearch.config.FetcherConfiguration");
         digester.addSetProperties("dataset/fetcher-configuration", "dir", "dir");
