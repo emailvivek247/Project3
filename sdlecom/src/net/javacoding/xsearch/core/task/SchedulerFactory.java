@@ -12,7 +12,7 @@ public class SchedulerFactory {
 
     public Scheduler createScheduler(IndexerContext ic) {
 
-        Class providerClass = DefaultSchedulerProvider.class;
+        Class<DefaultSchedulerProvider> providerClass = DefaultSchedulerProvider.class;
         Logger logger = LoggerFactory.getLogger(this.getClass().getName());
         logger.info("TaskScheduler provider class is '" + providerClass + "'");
 

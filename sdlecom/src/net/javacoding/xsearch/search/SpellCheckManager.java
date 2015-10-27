@@ -32,6 +32,8 @@ import org.apache.lucene.search.spell.PlainTextDictionary;
 import org.apache.lucene.search.spell.SpellChecker;
 import org.apache.lucene.store.FSDirectory;
 
+import com.fdt.sdl.admin.ui.action.constants.IndexType;
+
 /**
  * Use lucene spell checker to check query
  */
@@ -269,9 +271,11 @@ public class SpellCheckManager {
     }
 
     public static void reBuildIndex(DatasetConfiguration dc) throws Exception {
-    	FileUtil.deleteAllFiles(dc.getDictionaryIndexDirectoryFile());
-    	FileUtil.deleteAllFiles(dc.getPhraseIndexDirectoryFile());
-    	doBuildIndex(dc);
+        if (dc.getIndexType() == null || dc.getIndexType() == IndexType.LUCENE) {
+            FileUtil.deleteAllFiles(dc.getDictionaryIndexDirectoryFile());
+            FileUtil.deleteAllFiles(dc.getPhraseIndexDirectoryFile());
+            doBuildIndex(dc);
+        }
     }
 
     private static void doBuildIndex(DatasetConfiguration dc) throws Exception {

@@ -397,11 +397,6 @@ public final class ServerConfiguration extends Configuration {
         File f = getDatasetConfigurationFile(name);
         if(old==null || old.lastModified()<f.lastModified() || forceRefresh){
         	datasetConfigs.put(name, new DatasetConfiguration(name, getDatasetConfigurationFile(name), getBaseDirectory()));
-//        	try {
-//				datasetConfigs.put(name, (DatasetConfiguration)XMLSerializable.fromXML(new FileInputStream(getDatasetConfigurationFile(name)), DatasetConfiguration.class));
-//			} catch (FileNotFoundException e) {
-//				e.printStackTrace();
-//			}
         }
     }
 

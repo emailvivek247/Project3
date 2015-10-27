@@ -1,5 +1,8 @@
 package com.fdt.elasticsearch.config;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
 import io.searchbox.client.config.HttpClientConfig;
@@ -39,4 +42,16 @@ public class JestSpringConfiguration {
         return factory.getObject();
     }
 
+    @Bean
+    public Map<String, String> indexSettings() {
+
+        String numberOfShards = environment.getProperty("elasticsearch.index.number_of_shards");
+        String numberOfReplicas = environment.getProperty("elasticsearch.index.number_of_replicas");
+
+        Map<String, String> indexSettings = new HashMap<String, String>();
+        indexSettings.put("number_of_shards", numberOfShards);
+        indexSettings.put("number_of_replicas", numberOfReplicas);
+
+        return indexSettings;
+    }
 }

@@ -3,7 +3,6 @@ package net.javacoding.xsearch.core.task.work;
 import io.searchbox.client.JestClient;
 import io.searchbox.core.Index;
 
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,13 +18,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fdt.elasticsearch.config.SpringContextUtil;
+import com.fdt.elasticsearch.util.JestExecute;
 
 public class ESWriteDocumentToIndexTask extends BaseWorkerTaskImpl {
 
     protected static final Logger logger = LoggerFactory.getLogger(ESWriteDocumentToIndexTask.class);
 
     private TextDocument document;
-    
+
     private IndexerContext ic;
     private DatasetConfiguration dc;
     private List<Column> columns;
@@ -68,8 +68,6 @@ public class ESWriteDocumentToIndexTask extends BaseWorkerTaskImpl {
 
             try {
 
-                String indexName = dc.getName();
-
                 Map<String, String> source = new LinkedHashMap<String, String>();
                 for (Column column : columns) {
                     String[] values = doc.getValues(column.getColumnName());
@@ -80,17 +78,23 @@ public class ESWriteDocumentToIndexTask extends BaseWorkerTaskImpl {
                     }
                 }
 
-                Index index = new Index.Builder(source).index(indexName).type(indexName).build();
-                jestClient.execute(index);
+                String aliasName = dc.getName();
+
+                Index request = new Index.Builder(source)
+                        .index(ic.getNewIndexName())
+                        .type(aliasName)
+                        .build();
+
+                JestExecute.execute(jestClient, request);
 
                 written = true;
 
-            } catch (IOException ioe) {
+            } catch (Throwable t) {
                 triedTimes++;
                 try {
                     Thread.sleep(239);
-                } catch (Exception e) {
-
+                } catch (InterruptedException e) {
+                    // Ignore InterruptedException
                 }
             }
         }

@@ -20,7 +20,9 @@ import org.xml.sax.SAXException;
  */
 public abstract class Configuration extends XMLSerializable implements ConfigConstants {
 
-    private static Logger logger = LoggerFactory.getLogger(Configuration.class);
+    private static final long serialVersionUID = 3942166619045761606L;
+
+    private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 
     /** The digester used to pass the configuration file. */
     protected transient Digester digester = null;
@@ -42,28 +44,33 @@ public abstract class Configuration extends XMLSerializable implements ConfigCon
      * @throws ConfigurationException
      */
     protected void init() throws ConfigurationException {
+
         if (configFile == null) {
             setValid(false);
             throw new ConfigurationException("Configuration file must not be null");
         }
-        
-	        Digester d = initDigester();
-	        d.push(this);
-	        try {
-	            d.parse(configFile);
-	            setValid(true);
-	        } catch (IOException e) {
-	            System.out.println(configFile);
-	            setValid(false);
-	            throw new ConfigurationException(e.getMessage());
-	        } catch (SAXException e) {
-	            setValid(false);
-	            throw new ConfigurationException(e.getMessage());
-	        } finally {
-	            try {
-	                if(d!=null) d.clear();
-	            } catch (Exception e) {}
-	        }
+
+        Digester d = initDigester();
+        d.push(this);
+        try {
+            d.parse(configFile);
+            setValid(true);
+        } catch (IOException e) {
+            System.out.println(configFile);
+            setValid(false);
+            throw new ConfigurationException(e.getMessage());
+        } catch (SAXException e) {
+            setValid(false);
+            throw new ConfigurationException(e.getMessage());
+        } finally {
+            try {
+                if (d != null) {
+                    d.clear();
+                }
+            } catch (Exception e) {
+                // Ignore
+            }
+        }
 
         lastModified = configFile.lastModified();
         isDirty = false;
@@ -123,7 +130,6 @@ public abstract class Configuration extends XMLSerializable implements ConfigCon
      */
     public void writeConfigFile() throws IOException {
         FileUtil.writeFile(configFile, this.toString(), "UTF8");
-//        FileUtil.writeFile(configFile, this.toXML(), "UTF8");
         lastModified = configFile.lastModified();
         isDirty = false;
         setValid(true);
@@ -193,15 +199,15 @@ public abstract class Configuration extends XMLSerializable implements ConfigCon
         return isValid;
     }
 
-    public boolean exists(){
-    	return (configFile!=null && configFile.exists());
+    public boolean exists() {
+        return (configFile != null && configFile.exists());
     }
-    
-    public boolean canRead(){
-    	return (configFile!=null && configFile.canRead());
+
+    public boolean canRead() {
+        return (configFile != null && configFile.canRead());
     }
-    
-    public boolean canWrite(){
-    	return (configFile!=null && configFile.canWrite());
+
+    public boolean canWrite() {
+        return (configFile != null && configFile.canWrite());
     }
 }

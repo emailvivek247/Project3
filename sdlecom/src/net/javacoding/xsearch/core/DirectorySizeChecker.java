@@ -2,13 +2,12 @@ package net.javacoding.xsearch.core;
 
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestResult;
-import io.searchbox.core.Index;
+import io.searchbox.indices.IndicesExists;
 import io.searchbox.indices.Stats;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
-import java.io.IOException;
 
 import net.javacoding.xsearch.config.DatasetConfiguration;
 import net.javacoding.xsearch.status.IndexStatus;
@@ -17,8 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fdt.elasticsearch.config.SpringContextUtil;
+import com.fdt.elasticsearch.type.result.StatsResult;
+import com.fdt.elasticsearch.util.JestExecute;
 import com.fdt.sdl.admin.ui.action.constants.IndexType;
-import com.google.gson.JsonObject;
 
 public class DirectorySizeChecker {
 
@@ -58,7 +58,7 @@ public class DirectorySizeChecker {
     private boolean _isRecreating = false;
 
     private JestClient jestClient;
-    private String indexName;
+    private String dataSetName;
 
     public DirectorySizeChecker() {
 
@@ -90,7 +90,7 @@ public class DirectorySizeChecker {
             }
         } else {
             jestClient = SpringContextUtil.getBean(JestClient.class);
-            indexName = dc.getName();
+            dataSetName = dc.getName();
         }
         return this;
     }
@@ -132,14 +132,14 @@ public class DirectorySizeChecker {
             dirSize = getDirectorySize(_mainIndexDir);
             dirSize += getDirectorySize(_tempIndexDir);
         } else if (indexType == IndexType.ELASTICSEARCH) {
-            Stats stats = new Stats.Builder().addIndex(indexName).build();
-            try {
-                JestResult result = jestClient.execute(stats);
-                JsonObject jsonResult = result.getJsonObject();
-                JsonObject statsJson = jsonResult.getAsJsonObject("indices").getAsJsonObject(indexName).getAsJsonObject("total");
-                dirSize = statsJson.getAsJsonObject("store").get("size_in_bytes").getAsLong();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            IndicesExists indicesExists = new IndicesExists.Builder(dataSetName).build();
+            JestResult jestResult = JestExecute.executeNoCheck(jestClient, indicesExists);
+            if (jestResult.isSucceeded()) {
+                // This means the index exists
+                Stats request = new Stats.Builder().addIndex(dataSetName).build();
+                jestResult = JestExecute.execute(jestClient, request);
+                StatsResult result = new StatsResult(jestResult);
+                dirSize = result.getSizeForFirstIndex();
             }
         }
         return dirSize;

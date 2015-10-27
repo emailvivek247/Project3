@@ -1,5 +1,8 @@
 package net.javacoding.xsearch;
 
+import io.searchbox.client.JestClient;
+import io.searchbox.indices.CreateIndex;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -10,7 +13,6 @@ import net.javacoding.xsearch.core.AffectedDirectoryGroup;
 import net.javacoding.xsearch.core.IndexerContext;
 import net.javacoding.xsearch.core.task.Task;
 import net.javacoding.xsearch.core.task.WorkerTask;
-import net.javacoding.xsearch.core.task.work.BaseWorkerTaskImpl;
 import net.javacoding.xsearch.core.task.work.SerialWorkerTask;
 import net.javacoding.xsearch.core.task.work.fetcher.FetcherWorkerTask;
 import net.javacoding.xsearch.core.task.work.list.FastFetchFullDocumentListBySQLTask;
@@ -24,29 +26,41 @@ import net.javacoding.xsearch.utility.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fdt.elasticsearch.config.SpringContextUtil;
+import com.fdt.elasticsearch.util.JestExecute;
+import com.fdt.sdl.admin.ui.action.constants.IndexType;
+
 /**
  * <code>DBIndexer</code> class based on configuration retrieve the documents
  * from data sources and save the content to ContentWriter
  */
 public class DBIndexer {
-    protected Logger         logger = LoggerFactory.getLogger(this.getClass().getName());
-    public IndexerContext ic;
-    public long              start  = 0;
+
+    private static final Logger logger = LoggerFactory.getLogger(DBIndexer.class);
+
+    private IndexerContext ic;
+    private DatasetConfiguration dc;
+
     private boolean needDeletion = false;
     private boolean isThoroughDelete = false;
+
     private AffectedDirectoryGroup affectedDirectoryGroup;
+    private JestClient jestClient;
+
+    private String newIndexName;
 
     public DBIndexer(IndexerContext ic) throws Exception {
-        logger.info("buiding index for " + ic );
-        start = System.currentTimeMillis();
+        logger.info("building index for " + ic);
         this.ic = ic;
+        this.dc = ic.getDatasetConfiguration();
         this.affectedDirectoryGroup = new AffectedDirectoryGroup();
+        this.jestClient = SpringContextUtil.getBean(JestClient.class);
     }
 
-    public void setFullIndexing(boolean fullIndexing){
+    public void setFullIndexing(boolean fullIndexing) {
         ic.isFullIndexing = fullIndexing;
     }
-    
+
     public void setNeedDeletion(boolean needDeletion) {
         this.needDeletion = needDeletion;
     }
@@ -55,11 +69,11 @@ public class DBIndexer {
         this.isThoroughDelete = isThoroughDelete;
     }
 
-    public void setIsRecreate(boolean b){
+    public void setIsRecreate(boolean b) {
         ic.setIsRecreate(b);
-        if(b){
+        if (b) {
             logger.info("re-creating index ...");
-        }else{
+        } else {
             logger.info("incremental indexing ...");
         }
     }
@@ -69,54 +83,63 @@ public class DBIndexer {
      * call retrieveOne to retrieve the item, and save the changes, update
      * last_run_date
      */
-
     public void start() {
+
         try {
+
             prepareDirectories();
-            
+
+            if (dc.getIndexType() == IndexType.ELASTICSEARCH) {
+                prepareESIndex();
+            }
+
             SerialWorkerTask swt = null;
-            if(ic.getDatasetConfiguration().getDataSourceType()==DatasetConfiguration.DATASOURCE_TYPE_FETCHER) {
-                ic.initAll(affectedDirectoryGroup);
+
+            if (dc.getDataSourceType() == DatasetConfiguration.DATASOURCE_TYPE_FETCHER) {
+                ic.initAll(affectedDirectoryGroup, newIndexName);
                 swt = new SerialWorkerTask(ic.getScheduler());
                 swt.addWorkTask(new FetcherWorkerTask(ic));
-            }else {
+            } else {
                 WorkerTask initTask = null;
-                DeletionDataquery dq = ic.getDatasetConfiguration().getDeletionQuery();
-                if(dq!=null && needDeletion){
+                DeletionDataquery dq = dc.getDeletionQuery();
+                if (dq != null && needDeletion) {
                     ServerConfiguration sc = ServerConfiguration.getServerConfiguration();
-                    if(sc.getAllowedLicenseLevel()<=0) {
+                    if (sc.getAllowedLicenseLevel() <= 0) {
                         logger.warn("Warning!!! Skipping deletion query because license level is 0!");
-                    }else {
-                        if(dq.getIsDeleteOnly()) {
+                    } else {
+                        if (dq.getIsDeleteOnly()) {
                             initTask = new FetchDeletedDocumentListBySQLTask(ic);
-                        }else {
-                            if(isThoroughDelete) {
-                                initTask = new FetchFullDocumentListBySQLTask(ic); //this is slower
-                            }else {
+                        } else {
+                            if (isThoroughDelete) {
+                                // This is slower
+                                initTask = new FetchFullDocumentListBySQLTask(ic);
+                            } else {
                                 initTask = new FastFetchFullDocumentListBySQLTask(ic);
                             }
                         }
                     }
                 }
                 ic.initConnections();
-                if(initTask!=null){
+                if (initTask != null) {
                     initTask.prepare();
                     initTask.execute();
                     initTask.stop();
                 }
-                ic.initAll(affectedDirectoryGroup);
+                ic.initAll(affectedDirectoryGroup, newIndexName);
                 swt = new SerialWorkerTask(ic.getScheduler());
-                if(!ic.isFullIndexing&&!ic.getIsRecreate()&&ic.getDatasetConfiguration().getIncrementalDataquery()!=null) {
-                    //only process it in incremental mode
+                if (!ic.isFullIndexing && !ic.getIsRecreate() && dc.getIncrementalDataquery() != null) {
+                    // only process it in incremental mode
                     swt.addWorkTask(new FetchDocumentListBySQLTask(ic));
-                }else if(ic.getDatasetConfiguration().getDataSource(0).getJdbcdriver().toLowerCase().indexOf("mysql")>=0
-                        || ic.getDatasetConfiguration().getDataSource(0).getJdbcdriver().toLowerCase().indexOf("postgresql")>=0) {
-                    //mysql only handle normal incremental indexing, not the alternative incremental indexing
+                } else if (dc.getDataSource(0).getJdbcdriver().toLowerCase().indexOf("mysql") >= 0
+                        || dc.getDataSource(0).getJdbcdriver().toLowerCase().indexOf("postgresql") >= 0) {
+                    // mysql only handle normal incremental indexing, not the
+                    // alternative incremental indexing
                     swt.addWorkTask(new PaginatedFetchDocumentListBySQLTask(ic));
                 } else {
                     swt.addWorkTask(new FetchDocumentListBySQLTask(ic));
                 }
             }
+
             ic.getScheduler().schedule(0, swt);
 
             Task dispatcherTask = ic.getFetcherPoolDispatchTask();
@@ -135,54 +158,72 @@ public class DBIndexer {
             }
             logger.info("Stopping all threads...");
             ic.stopAll();
-            
+
             cleanDirectories();
 
         } catch (Throwable e) {
             logger.error("Error in Start Method", e);
-        } finally {}
+        }
     }
 
     private void prepareDirectories() {
-        java.io.File dir = null;
-        if(ic.getIsRecreate()){
-            dir = IndexStatus.findNonActiveMainDirectoryFile(ic.getDatasetConfiguration());
-            affectedDirectoryGroup.addOldDirectory(IndexStatus.findActiveMainDirectoryFile(ic.getDatasetConfiguration()));
-        }else{
-            //now it's incremental indexing, still, we can go directly to main if no main index exists
-            dir = IndexStatus.findActiveMainDirectoryFile(ic.getDatasetConfiguration());
-            if(dir==null){
-                dir = ic.getDatasetConfiguration().getMainIndexDirectoryFile();
+
+        File dir = null;
+
+        if (ic.getIsRecreate()) {
+            dir = IndexStatus.findNonActiveMainDirectoryFile(dc);
+            affectedDirectoryGroup.addOldDirectory(IndexStatus.findActiveMainDirectoryFile(dc));
+        } else {
+            // now it's incremental indexing, still, we can go directly to
+            // main if no main index exists
+            dir = IndexStatus.findActiveMainDirectoryFile(dc);
+            if (dir == null) {
+                dir = dc.getMainIndexDirectoryFile();
             }
-            if(IndexStatus.countIndexSize(dir)<=0){
-                //so dir is the main directory but empty, just use the main directory
-                ic.setIsRecreate(true); // to prevent duplication checking
-            }else{
-                File oldDir = IndexStatus.findActiveTempDirectoryFile(ic.getDatasetConfiguration());
-                dir = IndexStatus.findNonActiveTempDirectoryFile(ic.getDatasetConfiguration());
-                if(IndexStatus.countIndexSize(oldDir)>0){
+            if (IndexStatus.countIndexSize(dir) <= 0) {
+                // so dir is the main directory but empty, just use the main
+                // directory to prevent duplication checking
+                ic.setIsRecreate(true);
+            } else {
+                File oldDir = IndexStatus.findActiveTempDirectoryFile(dc);
+                dir = IndexStatus.findNonActiveTempDirectoryFile(dc);
+                if (IndexStatus.countIndexSize(oldDir) > 0) {
                     try {
                         FileUtil.deleteAllFiles(dir);
                         FileUtil.copyAll(oldDir, dir);
-                        //except the "ready" file
+                        // except the "ready" file
                         IndexStatus.setIndexNotReady(dir);
                     } catch (IOException e) {
-                        logger.warn("Error when preparing directory:"+dir,e);
+                        logger.warn("Error when preparing directory:" + dir, e);
                     }
                 }
                 affectedDirectoryGroup.addOldDirectory(oldDir);
             }
         }
-        if(ic.getIsRecreate()){
-            affectedDirectoryGroup.addOldDirectory(ic.getDatasetConfiguration().getAltTempIndexDirectoryFile());
-            affectedDirectoryGroup.addOldDirectory(ic.getDatasetConfiguration().getTempIndexDirectoryFile());
+        if (ic.getIsRecreate()) {
+            affectedDirectoryGroup.addOldDirectory(dc.getAltTempIndexDirectoryFile());
+            affectedDirectoryGroup.addOldDirectory(dc.getTempIndexDirectoryFile());
         }
-        if (!dir.exists()) dir.mkdirs();
-        logger.info("Working in directory:"+dir);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        logger.info("Working in directory:" + dir);
         affectedDirectoryGroup.setNewDirectory(dir);
     }
+
+    private void prepareESIndex() {
+        if (ic.getIsRecreate()) {
+            logger.info("Preparing elasticsearch index for recreate, data set name = {}", dc.getName());
+            newIndexName = IndexStatus.findNewIndexName(jestClient, dc.getName());
+            logger.info("New index name = {}", newIndexName);
+            Object indexSettings = SpringContextUtil.getBean("indexSettings");
+            CreateIndex createIndex = new CreateIndex.Builder(newIndexName).settings(indexSettings).build();
+            JestExecute.execute(jestClient, createIndex);
+        }
+    }
+
     private void cleanDirectories() {
-        if(ic.isDataComplete){
+        if (ic.isDataComplete) {
             affectedDirectoryGroup.setFinalReadyStatus();
         }
     }

@@ -1,10 +1,21 @@
 package net.javacoding.xsearch;
 
 import static com.fdt.common.SystemConstants.NOTIFY_ADMIN;
+import io.searchbox.client.JestClient;
+import io.searchbox.client.JestResult;
+import io.searchbox.indices.aliases.AddAliasMapping;
+import io.searchbox.indices.aliases.AliasMapping;
+import io.searchbox.indices.aliases.GetAliases;
+import io.searchbox.indices.aliases.ModifyAliases;
+import io.searchbox.indices.aliases.ModifyAliases.Builder;
+import io.searchbox.indices.aliases.RemoveAliasMapping;
+import io.searchbox.indices.settings.GetSettings;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import net.javacoding.xsearch.config.DatasetConfiguration;
@@ -28,11 +39,14 @@ import net.javacoding.xsearch.utility.U;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
+import com.fdt.elasticsearch.config.SpringContextUtil;
+import com.fdt.elasticsearch.type.result.GetAliasesResult;
+import com.fdt.elasticsearch.type.result.GetSettingsResult;
+import com.fdt.elasticsearch.util.JestExecute;
+import com.fdt.sdl.admin.ui.action.constants.IndexType;
 import com.fdt.sdl.styledesigner.util.PageStyleUtil;
 
 /**
@@ -40,57 +54,62 @@ import com.fdt.sdl.styledesigner.util.PageStyleUtil;
  */
 public class IndexManager {
 	
-    private static Logger logger   = LoggerFactory.getLogger(IndexManager.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(IndexManager.class);
 
-    private DatasetConfiguration dc       = null;
-
-    private String[]             commands = null;
-    
-    boolean needToRefresh                 = false;
-
+    private DatasetConfiguration dc;
+    private String[] commands;
     private IndexerContext ic;
 
-    private void init(String config_file, String indexName, String[] commands) throws IOException, ConfigurationException {
-        // logger.debug("index name :"+indexName);
-        // logger.debug("command :"+command);
+    private void init(String configFile, String indexName, String[] commands) throws IOException, ConfigurationException {
+
         logger.info("Index Name:" + indexName);
-        Properties p = loadProductProperties();
         logger.debug("init...");
-        if(config_file!=null) {
-            if(config_file.startsWith("\"")&&config_file.endsWith("\"")) {
-                config_file = config_file.substring(1,config_file.length()-1);
+
+        if (configFile != null) {
+            if (configFile.startsWith("\"") && configFile.endsWith("\"")) {
+                configFile = configFile.substring(1, configFile.length() - 1);
             }
         }
-        logger.debug("config file:"+config_file);
-        ServerConfiguration.setServerConfigFile(config_file);
-        this.dc = ServerConfiguration.getDatasetConfiguration(indexName);
+
+        logger.debug("config file:" + configFile);
+        ServerConfiguration.setServerConfigFile(configFile);
+        dc = ServerConfiguration.getDatasetConfiguration(indexName);
+
         try {
             ic = IndexerContextFactory.createContext(dc);
         } catch (Exception e) {
             logger.error(NOTIFY_ADMIN, "!! Failed to load index configuration:" + indexName +" ++++++++++++");
         }
+
         this.commands = commands;
+
         IndexStatus.clearError(dc.getName());
         logger.debug("start...");
         LogUtil.setLog(dc);
+
     }
+
     public static Properties loadProductProperties() {
         Properties properties = new Properties();
         try {
-            InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream ("net/javacoding/xsearch/product.properties");
-            if(in!=null) {
+            InputStream in = Thread.currentThread().getContextClassLoader()
+                    .getResourceAsStream("net/javacoding/xsearch/product.properties");
+            if (in != null) {
                 properties.load(in);
             }
         } catch (IOException e) {
         }
         return properties;
     }
+
     public void setIndexerContext(IndexerContext ic) {
         this.ic = ic;
     }
+
     public void setDatasetConfiguration(DatasetConfiguration dc) {
         this.dc = dc;
     }
+
     public void setCommands(String[] commands) {
         this.commands = commands;
     }
@@ -158,24 +177,28 @@ public class IndexManager {
     }
 
     public void finish(long startTime) {
-        if(ic != null) {
+        if (ic != null) {
             ic.stopAll();
         }
         logger.info("The Total Time Taken is :" + PageStyleUtil.convertMilliSecondsIntoHHmmSSsss(System.currentTimeMillis() - startTime));
         LogUtil.unsetLog(dc);
-        logger.debug("finished.");//note: can not delete this. This line would trigger the email to be sent.
+        // note: can not delete this. This line would trigger the email to be sent.
+        logger.debug("finished.");
     }
-    
+
     public void start() {
+
         boolean running = true;
+
         int i = 0;
+
         // stopIndexing should be the first commands
-        if (commands.length>=1 && "stopIndexing".equals(commands[0])) {
+        if (commands.length >= 1 && "stopIndexing".equals(commands[0])) {
             SchedulerTool.stop(dc);
             i++;
-        }else if (commands.length>=2 && "stopIndexing".equals(commands[1])) {
+        } else if (commands.length >= 2 && "stopIndexing".equals(commands[1])) {
             SchedulerTool.stop(dc);
-            i+=2;
+            i += 2;
         }
 
         SchedulerTool.start(dc);
@@ -223,7 +246,9 @@ public class IndexManager {
                         cr.setIsRecreate(true);
                         cr.setFullIndexing(true);
                         cr.start();
-                        if(!cr.ic.isDataComplete)break;
+                        if (!ic.isDataComplete) {
+                            break;
+                        }
                         SchedulerTool.start(dc);// for following tasks
                         updateIndex(dc, ic.getAffectedDirectoryGroup());
                     }
@@ -284,8 +309,12 @@ public class IndexManager {
                     }
                 } else if ("refreshIndex".equals(command)) {
                     if (SchedulerTool.setStatus(ic, "refreshing index")) {
-                        if (!notifyServer("refreshIndex",dc)) {
-                            logger.debug("Failed to notify server to refresh searcher manager!");
+                        if (dc.getIndexType() == null || dc.getIndexType() == IndexType.LUCENE) {
+                            if (!notifyServer("refreshIndex", dc)) {
+                                logger.debug("Failed to notify server to refresh searcher manager!");
+                            }
+                        } else if (dc.getIndexType() == IndexType.ELASTICSEARCH) {
+                            swapAliases(dc);
                         }
                     }
                 } else if ("buildDictionaryIfNeeded".equals(command)) {
@@ -296,13 +325,14 @@ public class IndexManager {
                     }
                 } else if ("reBuildDictionary".equals(command)) {
                     if (SchedulerTool.setStatus(ic, "Re-building Spell Check dictionary")) {
-                        boolean ret = notifyServer("stopSpellCheckIndex",dc);
-                        if(!ret) {
-                            logger.error("Failed To Contact "+WebserverStatic.getLocalURL()+" to stop spell check index ");
+                        boolean ret = notifyServer("stopSpellCheckIndex", dc);
+                        if (!ret) {
+                            logger.error("Failed To Contact {} to stop spell check index ",
+                                    WebserverStatic.getLocalURL());
                         }
                         SpellCheckManager.reBuildIndex(dc);
-                        if(ret) {
-                            notifyServer("startSpellCheckIndex",dc);
+                        if (ret) {
+                            notifyServer("startSpellCheckIndex", dc);
                         }
                     }
                 } else if ("maybeBuildSynonyms".equals(command)) {
@@ -310,17 +340,16 @@ public class IndexManager {
                         SynonymManager.start(dc);
                     }
                 } else if ("ping-a-url".equals(command)) {
-                	if (!U.isEmpty(dc.getUrlToPing())){
-                		try{
-                			HttpUtil.send(dc.getUrlToPing(), true);
-                		}catch(Exception e){
-                			logger.error("Exception", e);
-                		}
-                	}
+                    if (!U.isEmpty(dc.getUrlToPing())) {
+                        try {
+                            HttpUtil.send(dc.getUrlToPing(), true);
+                        } catch (Exception e) {
+                            logger.error("Exception", e);
+                        }
+                    }
                 } else if ("retrieveSubscription".equals(command)) {
                     if (SchedulerTool.setStatus(ic, "retrieving subscribed index")) {
                         IndexSubscriber is = new IndexSubscriber(ic);
-                        AffectedDirectoryGroup adg = new AffectedDirectoryGroup();
                         is.retrieveMainTempIndex(IndexSubscriber.SUBSCRIBED_MAIN_DIRECTORY, IndexSubscriber.SUBSCRIBED_TEMP_DIRECTORY, new BeforeAfterOperation(){
                             public void after() {
                                 logger.info("updated subscribed spelling check index");
@@ -349,8 +378,9 @@ public class IndexManager {
                 } else if ("debug".equals(command)) {
                     try {
                         Thread.sleep(5000);
-                    }catch(Exception e) {}
-                } else if (command!=null && command.trim().endsWith(".rb")){
+                    } catch (Exception e) {
+                    }
+                } else if (command != null && command.trim().endsWith(".rb")) {
                     ScriptingUtil s = new ScriptingUtil();
                     s.set("dc", dc);
                     s.setBaseDirectoryFile(new File("scripts"));
@@ -386,14 +416,83 @@ public class IndexManager {
         logger.info("End Action " + action + "with URL ==>" + url);
         return isRefreshed;
     }
-    
-    public static void updateIndex(DatasetConfiguration dc, AffectedDirectoryGroup adg) throws IOException{
-        if(adg!=null){
+
+    public static void updateIndex(DatasetConfiguration dc, AffectedDirectoryGroup adg) throws IOException {
+        if (adg != null) {
             adg.setFinalReadyStatus();
-            notifyServer("refreshIndex",dc);
-            for(File dir : adg.getOldDirectories()){
+            if (dc.getIndexType() == null || dc.getIndexType() == IndexType.LUCENE) {
+                notifyServer("refreshIndex", dc);
+            } else if (dc.getIndexType() == IndexType.ELASTICSEARCH) {
+                swapAliases(dc);
+            }
+            for (File dir : adg.getOldDirectories()) {
                 FileUtil.deleteAll(dir);
             }
         }
+    }
+
+    private static void swapAliases(DatasetConfiguration dc) {
+
+        // TODO: This method turned into quite a burden. Can we re-factor?
+
+        logger.info("Swapping aliases for Elasticsearch index");
+
+        JestClient jestClient = SpringContextUtil.getBean(JestClient.class);
+
+        // Get the name of the newest index representing this data set
+        String newestIndexName = getNewestIndexName(dc, jestClient);
+
+        // Now we have to iterate through all the existing aliases to see if
+        // there are any we have to remove.
+
+        GetAliases getAliases = new GetAliases.Builder().build();
+        JestResult jestResult = JestExecute.execute(jestClient, getAliases);
+        GetAliasesResult getAliasesResult = new GetAliasesResult(jestResult);
+
+        // Get the names of indices that match the pattern for this data set
+        List<String> indexNameList = getAliasesResult.getIndexNameList(dc.getName() + "_\\d{5}");
+
+        List<AliasMapping> removeMappings = new ArrayList<AliasMapping>();
+        for (String indexName : indexNameList) {
+            if (!indexName.equals(newestIndexName)) {
+                List<String> aliases = getAliasesResult.getAliases(indexName);
+                if (aliases.contains(dc.getName())) {
+                    logger.info("Queueing alias removal: alias name '{}'; index name '{}'", dc.getName(), indexName);
+                    removeMappings.add(new RemoveAliasMapping.Builder(indexName, dc.getName()).build());
+                }
+            }
+        }
+
+        // Cool. Now we start constructing the request
+        logger.info("Queueing alias addition: alias name '{}'; index name '{}'", dc.getName(), newestIndexName);
+        AddAliasMapping addMapping = new AddAliasMapping.Builder(newestIndexName, dc.getName()).build();
+
+        Builder builder = new ModifyAliases.Builder(addMapping).addAlias(removeMappings);
+
+        ModifyAliases modifyAliases = builder.build();
+
+        logger.info("Sending request to modify aliases");
+        JestExecute.execute(jestClient, modifyAliases);
+    }
+
+    private static String getNewestIndexName(DatasetConfiguration dc, JestClient jestClient) {
+
+        GetSettings getSettings = new GetSettings.Builder().build();
+        JestResult jestResult = JestExecute.execute(jestClient, getSettings);
+        GetSettingsResult getSettingsResult = new GetSettingsResult(jestResult);
+        List<String> indexNameList = getSettingsResult.getIndexNameList(dc.getName() + "_\\d{5}");
+
+        String newestIndexName = null;
+        long newestCreationDate = -1;
+
+        for (String indexName : indexNameList) {
+            long creationDate = getSettingsResult.getCreationDate(indexName);
+            if (creationDate > newestCreationDate) {
+                newestCreationDate = creationDate;
+                newestIndexName = indexName;
+            }
+        }
+        
+        return newestIndexName;
     }
 }

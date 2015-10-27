@@ -2,10 +2,13 @@ package net.javacoding.xsearch.core.task.impl;
 
 import static com.fdt.common.SystemConstants.NOTIFY_ADMIN;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import net.javacoding.queue.DiskBackedQueue;
 import net.javacoding.xsearch.config.Dataquery;
+import net.javacoding.xsearch.config.DatasetConfiguration;
 import net.javacoding.xsearch.core.IndexerContext;
 import net.javacoding.xsearch.core.component.TextDocument;
 import net.javacoding.xsearch.core.exception.FetcheringDoneException;
@@ -29,6 +32,8 @@ public class SchedulerImpl implements Scheduler {
 
     protected IndexerContext ic;
 
+    private DatasetConfiguration dc;
+
     public class TaskContext {
         /*
          * All tasks or objects are put into queues Each queue is for storing
@@ -51,41 +56,37 @@ public class SchedulerImpl implements Scheduler {
 
     public SchedulerImpl(IndexerContext ic) {
         this.ic = ic;
+        this.dc = ic.getDatasetConfiguration();
+        File workDirectory = dc.getWorkDirectoryFile();
         try {
-            Dataquery[] contentQueries = ic.getDatasetConfiguration().getContentDataqueryArray();
+            Dataquery[] contentQueries = dc.getContentDataqueryArray();
             int taskQueueCount = contentQueries.length + 2;
-            this.taskContexts = new TaskContext[taskQueueCount];
+            taskContexts = new TaskContext[taskQueueCount];
             for (int i = 0; i < taskQueueCount; i++) {
                 taskContexts[i] = new TaskContext();
                 if (i == 0) {
-                    taskContexts[i].taskQueue = new DiskBackedQueue(
-                            ic.getDatasetConfiguration().getWorkDirectoryFile(), "result" + i, false, 5);
+                    taskContexts[i].taskQueue = new DiskBackedQueue(workDirectory, "result" + i, false, 5);
                     taskContexts[i].maxThreadCount = 1;
                 } else if (i == taskQueueCount - 1) {
-                    taskContexts[i].taskQueue = new DiskBackedQueue(
-                            ic.getDatasetConfiguration().getWorkDirectoryFile(), "result" + i, false, 10);
-                    taskContexts[i].maxThreadCount = ic.getDatasetConfiguration().getWriterThreadsCount();
+                    taskContexts[i].taskQueue = new DiskBackedQueue(workDirectory, "result" + i, false, 10);
+                    taskContexts[i].maxThreadCount = dc.getWriterThreadsCount();
                 } else {
-                    // if i is 1 ~ (taskQueueCount-2), the content query for it
-                    // is (i-1)
-                    int bufferSize = ic.getDatasetConfiguration().getFetcherThreadsCount()
-                            * contentQueries[i - 1].getBatchSize();
+                    // if i is 1 ~ (taskQueueCount-2), the content query for it is (i-1)
+                    int bufferSize = dc.getFetcherThreadsCount() * contentQueries[i - 1].getBatchSize();
                     if (bufferSize < 10) {
                         bufferSize = 100;
                     }
-                    taskContexts[i].taskQueue = new DiskBackedQueue(
-                            ic.getDatasetConfiguration().getWorkDirectoryFile(), "result" + i, false, bufferSize);
+                    taskContexts[i].taskQueue = new DiskBackedQueue(workDirectory, "result" + i, false, bufferSize);
                     if (contentQueries[i - 1].getIsBatchNeeded()) {
-                        taskContexts[i].maxThreadCount = ic.getDatasetConfiguration().getBatchFetcherThreadsCount();
+                        taskContexts[i].maxThreadCount = dc.getBatchFetcherThreadsCount();
                     } else {
-                        taskContexts[i].maxThreadCount = ic.getDatasetConfiguration().getFetcherThreadsCount();
+                        taskContexts[i].maxThreadCount = dc.getFetcherThreadsCount();
                     }
                 }
             }
-            // writerTaskQueue = taskQueues[taskQueueCount-1];
-        } catch (java.io.IOException ioe) {
+        } catch (IOException ioe) {
             logger.error(NOTIFY_ADMIN, "can not create queue files under directory "
-                    + ic.getDatasetConfiguration().getWorkDirectoryFile(), ioe);
+                    + workDirectory, ioe);
         }
     }
 

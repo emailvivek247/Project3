@@ -1,8 +1,13 @@
 package net.javacoding.xsearch.status;
 
+import io.searchbox.client.JestClient;
+import io.searchbox.client.JestResult;
+import io.searchbox.indices.aliases.GetAliases;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.util.List;
 
 import net.javacoding.xsearch.config.Column;
 import net.javacoding.xsearch.config.DatasetConfiguration;
@@ -24,6 +29,9 @@ import org.apache.lucene.index.TermDocs;
 import org.apache.lucene.index.TermEnum;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+
+import com.fdt.elasticsearch.type.result.GetAliasesResult;
+import com.fdt.elasticsearch.util.JestExecute;
 
 /**
  * status for an index
@@ -415,5 +423,22 @@ public final class IndexStatus {
             indexReader.close();
         } catch (IOException ioe) {}
         return size;
+    }
+
+    public static String findNewIndexName(JestClient jestClient, String aliasName) {
+
+        GetAliases getAliases = new GetAliases.Builder().build();
+        JestResult jestResult = JestExecute.execute(jestClient, getAliases);
+        GetAliasesResult result = new GetAliasesResult(jestResult);
+        List<String> currentIndexes = result.getIndexNameList();
+
+        String newIndexName = null;
+        int counter = 1;
+        do {
+            newIndexName = aliasName + "_" + String.format("%05d", counter++);
+        } while (currentIndexes.contains(newIndexName));
+
+        return newIndexName;
+
     }
 }

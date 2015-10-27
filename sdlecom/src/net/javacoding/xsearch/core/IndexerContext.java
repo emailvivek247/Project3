@@ -5,7 +5,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import net.javacoding.xsearch.config.DataSource;
+import com.fdt.sdl.admin.ui.action.constants.IndexType;
+
 import net.javacoding.xsearch.config.DatasetConfiguration;
 import net.javacoding.xsearch.connection.ConnectionProvider;
 import net.javacoding.xsearch.core.exception.DataSourceException;
@@ -14,105 +15,122 @@ import net.javacoding.xsearch.core.task.dispatch.FetcherPoolDispatchTask;
 import net.javacoding.xsearch.core.task.dispatch.WriterPoolDispatchTask;
 import net.javacoding.xsearch.core.threading.WorkerThreadPool;
 import net.javacoding.xsearch.indexer.IndexWriterProvider;
-import net.javacoding.xsearch.status.IndexStatus;
 import net.javacoding.xsearch.status.P;
-import net.javacoding.xsearch.utility.FileUtil;
 
 public abstract class IndexerContext {
 
-	abstract public ConnectionProvider getConnectionProvider();
+    public static final String PERIOD_TABLE_FILE = "peridTbl";
 
-	abstract public IndexWriterProvider getIndexWriterProvider();
+    public boolean hasDeletion = false;
+    public boolean hasAddition = false;
 
-	abstract public Scheduler getScheduler();
+    public boolean isDataComplete = true;
+    public boolean isFullIndexing = false;
+    
+    public Object listFetcherFlag = new Object();
+    public Object docFetcherFlag = new Object();
 
-	abstract public WorkerThreadPool getFetcherPool();
+    public P p = new P();
 
-	abstract public WorkerThreadPool getWriterPool();
+    protected DatasetConfiguration dc;
+    protected AffectedDirectoryGroup affectedDirectoryGroup;
 
-	abstract public FetcherPoolDispatchTask getFetcherPoolDispatchTask();
+    protected IndexType indexType;
+    protected String newIndexName;
 
-	abstract public WriterPoolDispatchTask getWriterPoolDispatchTask();
+    final Map<Object, Object> cache = new WeakHashMap<Object, Object>();
+
+    public IndexerContext(DatasetConfiguration dc) {
+        this.dc = dc;
+        this.indexType = dc.getIndexType();
+    }
+
+    abstract public ConnectionProvider getConnectionProvider();
+
+    abstract public IndexWriterProvider getIndexWriterProvider();
+
+    abstract public Scheduler getScheduler();
+
+    abstract public WorkerThreadPool getFetcherPool();
+
+    abstract public WorkerThreadPool getWriterPool();
+
+    abstract public FetcherPoolDispatchTask getFetcherPoolDispatchTask();
+
+    abstract public WriterPoolDispatchTask getWriterPoolDispatchTask();
 
     abstract public void initConnections() throws IOException, DataSourceException;
-    abstract public void initAll(AffectedDirectoryGroup affectedDirectoryGroup) throws java.io.IOException, DataSourceException;
-	abstract public void stopAll();
 
-	abstract public PeriodTable getPeriodTable();
+    abstract public void initAll(AffectedDirectoryGroup affectedDirectoryGroup, String newIndexName) throws IOException, DataSourceException;
 
-	abstract public boolean isStopping();
+    abstract public void stopAll();
 
-	abstract public void setStopping();
+    abstract public PeriodTable getPeriodTable();
 
-	abstract public void setIsRecreate(boolean b);
+    abstract public boolean isStopping();
 
-	abstract public boolean getIsRecreate();
+    abstract public void setStopping();
+
+    abstract public void setIsRecreate(boolean b);
+
+    abstract public boolean getIsRecreate();
 
     abstract public void setIsIncrementalSql(boolean b);
 
     abstract public boolean getIsIncrementalSql();
 
-    public boolean hasDeletion = false;
-	public void setHasDeletion(boolean hasDeletion) {
-		this.hasDeletion = hasDeletion;
-	}
-	public boolean hasDeletion() {
-		return hasDeletion;
-	}
+    public void setHasDeletion(boolean hasDeletion) {
+        this.hasDeletion = hasDeletion;
+    }
 
-	public boolean hasAddition = false;
-	public void setHasAddition(boolean hasAddition) {
-		this.hasAddition = hasAddition;
-	}
-	public boolean hasAddition() {
-		return hasAddition;
-	}
+    public boolean hasDeletion() {
+        return hasDeletion;
+    }
 
-	public boolean isDataComplete = true;
+    public void setHasAddition(boolean hasAddition) {
+        this.hasAddition = hasAddition;
+    }
 
-	public Object listFetcherFlag = new Object();
-	public Object docFetcherFlag = new Object();
-	public static final String PERIOD_TABLE_FILE = "peridTbl";
-	public boolean isFullIndexing = false;
+    public boolean hasAddition() {
+        return hasAddition;
+    }
 
-	public P p = new P();
+    /** See if an object is in the cache. */
+    public Object lookup(Object name) {
+        synchronized (this) {
+            return cache.get(name);
+        }
+    }
 
-	/** The internal cache. * */
-	final Map cache = new WeakHashMap();
-	/** See if an object is in the cache. */
-	public Object lookup(Object name) {
-		synchronized (this) {
-			return cache.get(name);
-		}
-	}
-	/** Put an object into the cache. */
-	public Object store(Object name, Object value) {
-		synchronized (this) {
-			return cache.put(name, value);
-		}
-	}
+    /** Put an object into the cache. */
+    public Object store(Object name, Object value) {
+        synchronized (this) {
+            return cache.put(name, value);
+        }
+    }
 
-    protected DatasetConfiguration dc;
     public DatasetConfiguration getDatasetConfiguration() {
-        return this.dc;
+        return dc;
     }
 
-	public IndexerContext(DatasetConfiguration dc) {
-		this.dc = dc;
-	}
-	
-    protected AffectedDirectoryGroup affectedDirectoryGroup;
-    
-    public AffectedDirectoryGroup getAffectedDirectoryGroup(){
-        return this.affectedDirectoryGroup;
+    public IndexType getIndexType() {
+        return indexType;
     }
-    public void setAffectedDirectoryGroup(AffectedDirectoryGroup adg){
+
+    public String getNewIndexName() {
+        return newIndexName;
+    }
+
+    public AffectedDirectoryGroup getAffectedDirectoryGroup() {
+        return affectedDirectoryGroup;
+    }
+
+    public void setAffectedDirectoryGroup(AffectedDirectoryGroup adg) {
         this.affectedDirectoryGroup = adg;
     }
 
-    public File getIndexWriterWorkingDirectory(){
+    public File getIndexWriterWorkingDirectory() {
         return affectedDirectoryGroup.getNewDirectory();
     }
-
 
 }
