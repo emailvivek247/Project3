@@ -4,6 +4,8 @@ import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.KeySpec;
+import java.util.Base64;
+import java.util.HashMap;
 
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
@@ -14,11 +16,6 @@ import javax.crypto.spec.DESedeKeySpec;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
-
-import java.util.HashMap;
 
 /**
  *  Qiu Password Encrypter
@@ -112,8 +109,8 @@ public class Encrypter {
             byte[] cleartext = unencryptedString.getBytes(UNICODE_FORMAT);
             byte[] ciphertext = cipher.doFinal(cleartext);
 
-            BASE64Encoder base64encoder = new BASE64Encoder();
-            return base64encoder.encode(ciphertext);
+            Base64.Encoder base64encoder = Base64.getEncoder();
+            return base64encoder.encodeToString(ciphertext);
         } catch (Exception e) {
             return null;
         }
@@ -127,8 +124,8 @@ public class Encrypter {
         try {
             SecretKey key = keyFactory.generateSecret(keySpec);
             cipher.init(Cipher.DECRYPT_MODE, key);
-            BASE64Decoder base64decoder = new BASE64Decoder();
-            byte[] cleartext = base64decoder.decodeBuffer(encryptedString);
+            Base64.Decoder base64decoder = Base64.getDecoder();
+            byte[] cleartext = base64decoder.decode(encryptedString);
             byte[] ciphertext = cipher.doFinal(cleartext);
 
             return bytes2String(ciphertext);
@@ -146,6 +143,7 @@ public class Encrypter {
     }
 
     public static class EncryptionException extends Exception {
+        private static final long serialVersionUID = 351388682687922155L;
         public EncryptionException(Throwable t) {
             super(t);
         }
