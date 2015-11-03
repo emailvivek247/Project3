@@ -278,7 +278,7 @@ public class IndexManager {
                     if (SchedulerTool.setStatus(ic, "Merging indexes")) {
                         IndexMerger im = new IndexMerger(ic);
                         AffectedDirectoryGroup adg = im.mergeIndexes();
-                        if(adg!=null){
+                        if (adg != null) {
                             updateIndex(dc, adg);
                             this.ic.setAffectedDirectoryGroup(adg);
                         }
@@ -286,14 +286,15 @@ public class IndexManager {
                 } else if ("mergeIndexesIfNeeded".equals(command)) {
                     if (SchedulerTool.setStatus(ic, "Merging indexing(if needed)")) {
                         IndexMerger im = new IndexMerger(ic);
-                    	logger.info("Merging hours is " + dc.getMergeHours().isOK());
-                    	logger.info("The Percentage to merge is " + im.needToMergeSubDirectories());
-                        if (dc.getMergeHours().isOK()&&im.needToMergeSubDirectories()) {
-                        	logger.info("Merging Indexes----");
-                            AffectedDirectoryGroup adg = im.mergeIndexes();
-                            if(adg!=null){
-                                updateIndex(dc, adg);
-                                this.ic.setAffectedDirectoryGroup(adg);
+                        logger.info("Merging hours is " + dc.getMergeHours().isOK());
+                        if (dc.getIndexType() == IndexType.ELASTICSEARCH || dc.getMergeHours().isOK()) {
+                            if (im.needToMergeSubDirectories()) {
+                                logger.info("Merging Indexes----");
+                                AffectedDirectoryGroup adg = im.mergeIndexes();
+                                if (adg != null) {
+                                    updateIndex(dc, adg);
+                                    this.ic.setAffectedDirectoryGroup(adg);
+                                }
                             }
                         }
                     }

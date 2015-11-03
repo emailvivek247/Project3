@@ -39,7 +39,6 @@ public class IndexerContextImpl extends IndexerContext {
     protected FetcherPoolDispatchTask fetcherPoolDispatchTask;
     protected WriterPoolDispatchTask writerPoolDispatchTask;
     protected PeriodTable periodTable;
-    protected String newIndexName;
 
     protected volatile boolean isStopping = false;
 
@@ -63,10 +62,10 @@ public class IndexerContextImpl extends IndexerContext {
     }
 
     @Override
-    public void initAll(AffectedDirectoryGroup adg, String newIndexName) throws IOException, DataSourceException {
+    public void initAll(AffectedDirectoryGroup adg, String targetIndexName) throws IOException, DataSourceException {
 
         this.affectedDirectoryGroup = adg;
-        this.newIndexName = newIndexName;
+        this.targetIndexName = targetIndexName;
 
         this.periodTable = IndexStatus.createPeriodTableIfNeeded(dc);
         logger.info("Existing Period Table: " + this.periodTable);
@@ -209,10 +208,6 @@ public class IndexerContextImpl extends IndexerContext {
 
     public void setIsIncrementalSql(boolean b) {
         _isIncrementalSql = b;
-    }
-
-    public String getNewIndexName() {
-        return newIndexName;
     }
 
     public String toString() {

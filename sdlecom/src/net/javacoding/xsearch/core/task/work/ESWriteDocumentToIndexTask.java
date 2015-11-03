@@ -6,6 +6,7 @@ import io.searchbox.core.Index;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import net.javacoding.xsearch.config.Column;
 import net.javacoding.xsearch.config.DatasetConfiguration;
@@ -28,9 +29,13 @@ public class ESWriteDocumentToIndexTask extends BaseWorkerTaskImpl {
 
     private IndexerContext ic;
     private DatasetConfiguration dc;
+
+    private Optional<String> primaryKeyColumnName;
     private List<Column> columns;
 
     private JestClient jestClient;
+
+    
 
     public ESWriteDocumentToIndexTask(Scheduler sched, TextDocument doc, int contextId) {
         super(WorkerTask.WORKERTASK_WRITERTASK, sched);
@@ -46,6 +51,11 @@ public class ESWriteDocumentToIndexTask extends BaseWorkerTaskImpl {
             columns = dc.getColumns();
         }
         jestClient = SpringContextUtil.getBean(JestClient.class);
+        if (dc.getPrimaryKeyColumn() != null) {
+            primaryKeyColumnName = Optional.of(dc.getPrimaryKeyColumn().getColumnName());
+        } else {
+            primaryKeyColumnName = Optional.empty();
+        }
     }
 
     public void execute() {
@@ -68,6 +78,8 @@ public class ESWriteDocumentToIndexTask extends BaseWorkerTaskImpl {
 
             try {
 
+                Optional<String> primaryKeyValue = primaryKeyColumnName.map(column -> doc.get(column));
+
                 Map<String, String> source = new LinkedHashMap<String, String>();
                 for (Column column : columns) {
                     String[] values = doc.getValues(column.getColumnName());
@@ -79,11 +91,13 @@ public class ESWriteDocumentToIndexTask extends BaseWorkerTaskImpl {
                 }
 
                 String aliasName = dc.getName();
+                String indexName = ic.getTargetIndexName();
 
-                Index request = new Index.Builder(source)
-                        .index(ic.getNewIndexName())
-                        .type(aliasName)
-                        .build();
+                Index.Builder builder = new Index.Builder(source).index(indexName).type(aliasName);
+                if (primaryKeyValue.isPresent()) {
+                    builder = builder.id(primaryKeyValue.get());
+                }
+                Index request = builder.build();
 
                 JestExecute.execute(jestClient, request);
 

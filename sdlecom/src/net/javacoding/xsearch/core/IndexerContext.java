@@ -36,7 +36,7 @@ public abstract class IndexerContext {
     protected AffectedDirectoryGroup affectedDirectoryGroup;
 
     protected IndexType indexType;
-    protected String newIndexName;
+    protected String targetIndexName;
 
     final Map<Object, Object> cache = new WeakHashMap<Object, Object>();
 
@@ -61,7 +61,7 @@ public abstract class IndexerContext {
 
     abstract public void initConnections() throws IOException, DataSourceException;
 
-    abstract public void initAll(AffectedDirectoryGroup affectedDirectoryGroup, String newIndexName) throws IOException, DataSourceException;
+    abstract public void initAll(AffectedDirectoryGroup affectedDirectoryGroup, String targetIndexName) throws IOException, DataSourceException;
 
     abstract public void stopAll();
 
@@ -117,8 +117,8 @@ public abstract class IndexerContext {
         return indexType;
     }
 
-    public String getNewIndexName() {
-        return newIndexName;
+    public String getTargetIndexName() {
+        return targetIndexName;
     }
 
     public AffectedDirectoryGroup getAffectedDirectoryGroup() {

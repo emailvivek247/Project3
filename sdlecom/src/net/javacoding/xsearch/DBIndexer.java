@@ -47,7 +47,7 @@ public class DBIndexer {
     private AffectedDirectoryGroup affectedDirectoryGroup;
     private JestClient jestClient;
 
-    private String newIndexName;
+    private String targetIndexName;
 
     public DBIndexer(IndexerContext ic) throws Exception {
         logger.info("building index for " + ic);
@@ -96,36 +96,38 @@ public class DBIndexer {
             SerialWorkerTask swt = null;
 
             if (dc.getDataSourceType() == DatasetConfiguration.DATASOURCE_TYPE_FETCHER) {
-                ic.initAll(affectedDirectoryGroup, newIndexName);
+                ic.initAll(affectedDirectoryGroup, targetIndexName);
                 swt = new SerialWorkerTask(ic.getScheduler());
                 swt.addWorkTask(new FetcherWorkerTask(ic));
             } else {
-                WorkerTask initTask = null;
-                DeletionDataquery dq = dc.getDeletionQuery();
-                if (dq != null && needDeletion) {
-                    ServerConfiguration sc = ServerConfiguration.getServerConfiguration();
-                    if (sc.getAllowedLicenseLevel() <= 0) {
-                        logger.warn("Warning!!! Skipping deletion query because license level is 0!");
-                    } else {
-                        if (dq.getIsDeleteOnly()) {
-                            initTask = new FetchDeletedDocumentListBySQLTask(ic);
+                ic.initConnections();
+                if (dc.getIndexType() == null || dc.getIndexType() == IndexType.LUCENE) {
+                    WorkerTask initTask = null;
+                    DeletionDataquery dq = dc.getDeletionQuery();
+                    if (dq != null && needDeletion) {
+                        ServerConfiguration sc = ServerConfiguration.getServerConfiguration();
+                        if (sc.getAllowedLicenseLevel() <= 0) {
+                            logger.warn("Warning!!! Skipping deletion query because license level is 0!");
                         } else {
-                            if (isThoroughDelete) {
-                                // This is slower
-                                initTask = new FetchFullDocumentListBySQLTask(ic);
+                            if (dq.getIsDeleteOnly()) {
+                                initTask = new FetchDeletedDocumentListBySQLTask(ic);
                             } else {
-                                initTask = new FastFetchFullDocumentListBySQLTask(ic);
+                                if (isThoroughDelete) {
+                                    // This is slower
+                                    initTask = new FetchFullDocumentListBySQLTask(ic);
+                                } else {
+                                    initTask = new FastFetchFullDocumentListBySQLTask(ic);
+                                }
                             }
                         }
                     }
+                    if (initTask != null) {
+                        initTask.prepare();
+                        initTask.execute();
+                        initTask.stop();
+                    }
                 }
-                ic.initConnections();
-                if (initTask != null) {
-                    initTask.prepare();
-                    initTask.execute();
-                    initTask.stop();
-                }
-                ic.initAll(affectedDirectoryGroup, newIndexName);
+                ic.initAll(affectedDirectoryGroup, targetIndexName);
                 swt = new SerialWorkerTask(ic.getScheduler());
                 if (!ic.isFullIndexing && !ic.getIsRecreate() && dc.getIncrementalDataquery() != null) {
                     // only process it in incremental mode
@@ -180,9 +182,8 @@ public class DBIndexer {
             if (dir == null) {
                 dir = dc.getMainIndexDirectoryFile();
             }
-            if (IndexStatus.countIndexSize(dir) <= 0) {
-                // so dir is the main directory but empty, just use the main
-                // directory to prevent duplication checking
+            if ((dc.getIndexType() == null || dc.getIndexType() == IndexType.LUCENE) && IndexStatus.countIndexSize(dir) <= 0) {
+                // so dir is the main directory but empty, just use the main directory to prevent duplication checking
                 ic.setIsRecreate(true);
             } else {
                 File oldDir = IndexStatus.findActiveTempDirectoryFile(dc);
@@ -214,11 +215,15 @@ public class DBIndexer {
     private void prepareESIndex() {
         if (ic.getIsRecreate()) {
             logger.info("Preparing elasticsearch index for recreate, data set name = {}", dc.getName());
-            newIndexName = IndexStatus.findNewIndexName(jestClient, dc.getName());
-            logger.info("New index name = {}", newIndexName);
+            targetIndexName = IndexStatus.findNewIndexName(jestClient, dc.getName());
+            logger.info("New index name = {}", targetIndexName);
             Object indexSettings = SpringContextUtil.getBean("indexSettings");
-            CreateIndex createIndex = new CreateIndex.Builder(newIndexName).settings(indexSettings).build();
+            CreateIndex createIndex = new CreateIndex.Builder(targetIndexName).settings(indexSettings).build();
             JestExecute.execute(jestClient, createIndex);
+        } else {
+            logger.info("Initializing elasticsearch index for updates, data set name = {}", dc.getName());
+            targetIndexName = IndexStatus.findCurrentIndexName(jestClient, dc.getName());
+            logger.info("Target index name = {}", targetIndexName);
         }
     }
 

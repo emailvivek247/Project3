@@ -5,7 +5,6 @@ import io.searchbox.client.JestResult;
 import io.searchbox.indices.aliases.GetAliases;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.util.List;
 
@@ -20,8 +19,6 @@ import net.javacoding.xsearch.utility.FileUtil;
 import net.javacoding.xsearch.utility.SchedulerTool;
 import net.javacoding.xsearch.utility.VMTool;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.MultiReader;
 import org.apache.lucene.index.Term;
@@ -29,25 +26,21 @@ import org.apache.lucene.index.TermDocs;
 import org.apache.lucene.index.TermEnum;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fdt.elasticsearch.type.result.GetAliasesResult;
 import com.fdt.elasticsearch.util.JestExecute;
+import com.fdt.sdl.admin.ui.action.constants.IndexType;
 
 /**
  * status for an index
- *
- * 
  */
 public final class IndexStatus {
-    private static Logger     logger       = LoggerFactory.getLogger("net.javacoding.xsearch.utility.IndexStatus");
 
-    public static String      indexingTemp = "_temp";
+    private static final Logger logger = LoggerFactory.getLogger(IndexStatus.class);
 
-    private static FileFilter dirFilter    = new FileFilter() {
-                                               public boolean accept(File f) {
-                                                   return f.isDirectory();
-                                               }
-                                           };
+    public static final String indexingTemp = "_temp";
 
     /**
      * unlocks _temp directories
@@ -100,13 +93,17 @@ public final class IndexStatus {
         return segments.exists()? segments.lastModified() : 0L;
     }
 
-    private static PeriodTable getPeriodTable(File storedFile) {
+    private static PeriodTable getPeriodTable(File storedFile, IndexType indexType) {
         if (storedFile == null) return null;
         PeriodTable periodTable = null;
         try {
             if (storedFile.exists()) {
-                File segments = new File(storedFile.getParentFile(),"segments.gen");
-                if(segments.exists()&& segments.lastModified()<storedFile.lastModified()){
+                if (indexType == null || indexType == IndexType.LUCENE) {
+                    File segments = new File(storedFile.getParentFile(), "segments.gen");
+                    if (segments.exists() && segments.lastModified() < storedFile.lastModified()) {
+                        periodTable = PeriodTable.load(storedFile);
+                    }
+                } else if (indexType == IndexType.ELASTICSEARCH) {
                     periodTable = PeriodTable.load(storedFile);
                 }
             }
@@ -128,32 +125,49 @@ public final class IndexStatus {
         return doCreatePeriodTable(dc);
     }
 
-    public static PeriodTable getExistingPeriodTable(DatasetConfiguration dc) throws IOException{
-        if (dc == null) return null;
-        PeriodTable ret = getExistingPeriodTable(IndexStatus.findActiveMainDirectoryFile(dc));
-        PeriodTable tmp = getExistingPeriodTable(IndexStatus.findActiveTempDirectoryFile(dc));
-        if(ret!=null&&tmp!=null){
+    public static PeriodTable getExistingPeriodTable(DatasetConfiguration dc) throws IOException {
+        if (dc == null) {
+            return null;
+        }
+        PeriodTable ret = getExistingPeriodTable(IndexStatus.findActiveMainDirectoryFile(dc), dc.getIndexType());
+        PeriodTable tmp = getExistingPeriodTable(IndexStatus.findActiveTempDirectoryFile(dc), dc.getIndexType());
+        if (ret != null && tmp != null) {
             ret.merge(tmp);
         }
-        if(ret==null&&tmp!=null){
+        if (ret == null && tmp != null) {
             ret = tmp;
         }
         return ret;
     }
 
-    public static PeriodTable getExistingPeriodTable(File dir) throws IOException{
-        if (dir == null || !dir.exists()) return null;
+    public static PeriodTable getExistingPeriodTable(File dir, IndexType indexType) throws IOException {
+        if (dir == null || !dir.exists()) {
+            return null;
+        }
         File storedFile = new File(dir, IndexerContext.PERIOD_TABLE_FILE);
-        return getPeriodTable(storedFile);
+        return getPeriodTable(storedFile, indexType);
     }
 
-    public static PeriodTable createPeriodTableIfNeeded(DatasetConfiguration dc) throws IOException{
-        PeriodTable periodTable = getExistingPeriodTable(dc);
-        if (periodTable != null) {
-            return periodTable;
+    public static PeriodTable createPeriodTableIfNeeded(DatasetConfiguration dc) throws IOException {
+        PeriodTable result = null;
+        if (dc.getIndexType() == null || dc.getIndexType() == IndexType.LUCENE) {
+            PeriodTable periodTable = getExistingPeriodTable(dc);
+            if (periodTable != null) {
+                result = periodTable;
+            } else {
+                result = doCreatePeriodTable(dc);
+            }
+        } else if (dc.getIndexType() == IndexType.ELASTICSEARCH) {
+            PeriodTable periodTable = getExistingPeriodTable(dc);
+            if (periodTable != null) {
+                result = periodTable;
+            } else {
+                result = doCreatePeriodTable(dc);
+            }
         }
-        return doCreatePeriodTable(dc);
+        return result;
     }
+
     private static PeriodTable doCreatePeriodTable(DatasetConfiguration dc) throws IOException{
         if (dc == null) return null;
         if (dc.getWorkingQueueDataquery()== null || dc.getWorkingQueueDataquery().getModifiedDateColumn()== null) {
@@ -266,20 +280,29 @@ public final class IndexStatus {
         }
         return true;
     }
-    /**
-     * Make sure the "ready" file is good
-     * @param fromDir
-     */
-    public static boolean isNewIndexValid(File fromDir){
-        File readyFile = new File(fromDir,"ready");
-        if (fromDir == null || !fromDir.exists()) { return false; }
-        if (!readyFile.exists()) { return false; }
-        if (!org.apache.lucene.index.IndexReader.indexExists(fromDir)) { return false; }
-        if (fromDir.isDirectory()) {
-            File[] files = fromDir.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                if(files[i].getName().endsWith("cfs")&&files[i].lastModified()>readyFile.lastModified()) {
-                    return false;
+
+    public static boolean isNewIndexValid(File fromDir) {
+        return isNewIndexValid(fromDir, null);
+    }
+
+    public static boolean isNewIndexValid(File fromDir, IndexType indexType) {
+        File readyFile = new File(fromDir, "ready");
+        if (fromDir == null || !fromDir.exists()) {
+            return false;
+        }
+        if (!readyFile.exists()) {
+            return false;
+        }
+        if (indexType == null || indexType == IndexType.LUCENE) {
+            if (!IndexReader.indexExists(fromDir)) {
+                return false;
+            }
+            if (fromDir.isDirectory()) {
+                File[] files = fromDir.listFiles();
+                for (int i = 0; i < files.length; i++) {
+                    if (files[i].getName().endsWith("cfs") && files[i].lastModified() > readyFile.lastModified()) {
+                        return false;
+                    }
                 }
             }
         }
@@ -376,33 +399,38 @@ public final class IndexStatus {
         return new File(SchedulerTool.logDirectory, indexName + ".err");
     }
 
-    public static File findActiveMainDirectoryFile(DatasetConfiguration dc){
-        return findActiveDirectoryFile(dc.getMainIndexDirectoryFile(), dc.getAltMainIndexDirectoryFile());
+    public static File findActiveMainDirectoryFile(DatasetConfiguration dc) {
+        return findActiveDirectoryFile(dc.getMainIndexDirectoryFile(), dc.getAltMainIndexDirectoryFile(), dc.getIndexType());
     }
-    public static File findActiveTempDirectoryFile(DatasetConfiguration dc){
-        return findActiveDirectoryFile(dc.getTempIndexDirectoryFile(), dc.getAltTempIndexDirectoryFile());
+
+    public static File findActiveTempDirectoryFile(DatasetConfiguration dc) {
+        return findActiveDirectoryFile(dc.getTempIndexDirectoryFile(), dc.getAltTempIndexDirectoryFile(), dc.getIndexType());
     }
-    public static File findNonActiveMainDirectoryFile(DatasetConfiguration dc){
-        return findNonActiveDirectoryFile(dc.getMainIndexDirectoryFile(), dc.getAltMainIndexDirectoryFile());
+
+    public static File findNonActiveMainDirectoryFile(DatasetConfiguration dc) {
+        return findNonActiveDirectoryFile(dc.getMainIndexDirectoryFile(), dc.getAltMainIndexDirectoryFile(), dc.getIndexType());
     }
-    public static File findNonActiveTempDirectoryFile(DatasetConfiguration dc){
-        return findNonActiveDirectoryFile(dc.getTempIndexDirectoryFile(), dc.getAltTempIndexDirectoryFile());
+
+    public static File findNonActiveTempDirectoryFile(DatasetConfiguration dc) {
+        return findNonActiveDirectoryFile(dc.getTempIndexDirectoryFile(), dc.getAltTempIndexDirectoryFile(), dc.getIndexType());
     }
-    private static File findActiveDirectoryFile(File one, File two){
-        boolean oneReady = isNewIndexValid(one);
-        boolean twoReady = isNewIndexValid(two);
-        if(oneReady&&twoReady){
-            return getIndexTimestamp(one)>getIndexTimestamp(two)? one : two;
+
+    private static File findActiveDirectoryFile(File one, File two, IndexType indexType) {
+        boolean oneReady = isNewIndexValid(one, indexType);
+        boolean twoReady = isNewIndexValid(two, indexType);
+        if (oneReady && twoReady) {
+            return getIndexTimestamp(one) > getIndexTimestamp(two) ? one : two;
         }
-        return oneReady? one : twoReady? two : null;
+        return oneReady ? one : twoReady ? two : null;
     }
-    private static File findNonActiveDirectoryFile(File one, File two){
-        boolean oneReady = isNewIndexValid(one);
-        boolean twoReady = isNewIndexValid(two);
-        if(oneReady&&twoReady){
-            return getIndexTimestamp(one)>getIndexTimestamp(two)? two : one;
+
+    private static File findNonActiveDirectoryFile(File one, File two, IndexType indexType) {
+        boolean oneReady = isNewIndexValid(one, indexType);
+        boolean twoReady = isNewIndexValid(two, indexType);
+        if (oneReady && twoReady) {
+            return getIndexTimestamp(one) > getIndexTimestamp(two) ? two : one;
         }
-        return oneReady? two : twoReady? one : one;
+        return oneReady ? two : twoReady ? one : one;
     }
 
     public static int countIndexSize(Directory dir) {
@@ -439,6 +467,23 @@ public final class IndexStatus {
         } while (currentIndexes.contains(newIndexName));
 
         return newIndexName;
+    }
 
+    public static String findCurrentIndexName(JestClient jestClient, String aliasName) {
+
+        String currentIndexName = null;
+
+        GetAliases getAliases = new GetAliases.Builder().build();
+        JestResult jestResult = JestExecute.execute(jestClient, getAliases);
+        GetAliasesResult result = new GetAliasesResult(jestResult);
+        List<String> currentIndexes = result.getIndexNameList();
+
+        for (String indexName : currentIndexes) {
+            if (result.getAliases(indexName).contains(aliasName)) {
+                currentIndexName = indexName;
+            }
+        }
+
+        return currentIndexName;
     }
 }

@@ -74,21 +74,20 @@ public class DirectorySizeChecker {
     // used in Velocity and FreeMarker
     public DirectorySizeChecker init(DatasetConfiguration dc) {
         indexType = dc.getIndexType();
-        if (indexType == null || indexType == IndexType.LUCENE) {
-            _mainIndexDir = dc.getMainIndexDirectoryFile();
-            _tempIndexDir = dc.getTempIndexDirectoryFile();
-            _indexMaxSize = dc.getIndexMaxSize();
-            if (_isIndexing && _isRecreating) {
-                _mainIndexDir = IndexStatus.findNonActiveMainDirectoryFile(dc);
-                _tempIndexDir = null;
-            } else if (_isIndexing && !_isRecreating) {
-                _mainIndexDir = IndexStatus.findActiveMainDirectoryFile(dc);
-                _tempIndexDir = IndexStatus.findNonActiveTempDirectoryFile(dc);
-            } else {
-                _mainIndexDir = IndexStatus.findActiveMainDirectoryFile(dc);
-                _tempIndexDir = IndexStatus.findActiveTempDirectoryFile(dc);
-            }
+        _mainIndexDir = dc.getMainIndexDirectoryFile();
+        _tempIndexDir = dc.getTempIndexDirectoryFile();
+        _indexMaxSize = dc.getIndexMaxSize();
+        if (_isIndexing && _isRecreating) {
+            _mainIndexDir = IndexStatus.findNonActiveMainDirectoryFile(dc);
+            _tempIndexDir = null;
+        } else if (_isIndexing && !_isRecreating) {
+            _mainIndexDir = IndexStatus.findActiveMainDirectoryFile(dc);
+            _tempIndexDir = IndexStatus.findNonActiveTempDirectoryFile(dc);
         } else {
+            _mainIndexDir = IndexStatus.findActiveMainDirectoryFile(dc);
+            _tempIndexDir = IndexStatus.findActiveTempDirectoryFile(dc);
+        }
+        if (indexType == IndexType.ELASTICSEARCH) {
             jestClient = SpringContextUtil.getBean(JestClient.class);
             dataSetName = dc.getName();
         }
