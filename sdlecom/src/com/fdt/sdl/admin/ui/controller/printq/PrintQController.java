@@ -61,18 +61,18 @@ public class PrintQController extends AbstractBaseSDLController {
 					   	   @RequestParam(required=false) String pageCount,
 					   	   @RequestParam(required=false) String noOfCopies,
 					       HttpSession httpSession,
-					   	   @RequestParam(defaultValue="false") boolean isImageAvailable) {
+					   	   @RequestParam(required=false, defaultValue="N") String noImage) {
 		String code = "ERROR";
 		String description = "Required Information Missing.";
 		ErrorCode errorCode = new ErrorCode();
 		errorCode.setCode(code);
 		errorCode.setDescription(description);
 		if (!StringUtils.isBlank(basketName)) {
-			errorCode =  addToPrintQ(request, basketName, book, page, remarks, seq_Key, code, description);			
+			errorCode =  addToPrintQ(request, basketName, book, page, remarks, seq_Key, code, description, noImage);			
 		} else {
 			basketName = getBasketNameFromSession(request);
 			if (!StringUtils.isBlank(basketName)) {
-				errorCode =  addToPrintQ(request, basketName, book, page, remarks, seq_Key, code, description);			
+				errorCode =  addToPrintQ(request, basketName, book, page, remarks, seq_Key, code, description, noImage);			
 			}
 		}
 		return responseHandler(response, errorCode);
@@ -150,14 +150,15 @@ public class PrintQController extends AbstractBaseSDLController {
 	}
 	
 	private static ErrorCode addToPrintQ(HttpServletRequest request, String basketName, String book, String page, String remarks, 
-			String seq_Key, String code, String description) {
+			String seq_Key, String code, String description, String noImage) {
 		PrintQItem printQItem = new PrintQItem();
 		if(!basketName.equalsIgnoreCase("null")) {			
 			if (!StringUtils.isBlank(book) && !StringUtils.isBlank(page)) {
 				if(!book.equalsIgnoreCase("null") && !page.equalsIgnoreCase("null")) {
 					printQItem.setBkPg(book.concat("/").concat(page));
 				}
-			}				
+			}
+			printQItem.setNoImage(noImage);
 			printQItem.setName(basketName);
 			printQItem.setRemarks(remarks);
 			printQItem.setPageCount(1);
