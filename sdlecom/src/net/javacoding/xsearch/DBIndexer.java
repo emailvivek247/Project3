@@ -11,6 +11,7 @@ import net.javacoding.xsearch.config.DeletionDataquery;
 import net.javacoding.xsearch.config.ServerConfiguration;
 import net.javacoding.xsearch.core.AffectedDirectoryGroup;
 import net.javacoding.xsearch.core.IndexerContext;
+import net.javacoding.xsearch.core.task.DeletionSQLTaskFactory;
 import net.javacoding.xsearch.core.task.Task;
 import net.javacoding.xsearch.core.task.WorkerTask;
 import net.javacoding.xsearch.core.task.work.SerialWorkerTask;
@@ -100,42 +101,34 @@ public class DBIndexer {
                 swt = new SerialWorkerTask(ic.getScheduler());
                 swt.addWorkTask(new FetcherWorkerTask(ic));
             } else {
+
                 ic.initConnections();
-                if (dc.getIndexType() == null || dc.getIndexType() == IndexType.LUCENE) {
-                    WorkerTask initTask = null;
-                    DeletionDataquery dq = dc.getDeletionQuery();
-                    if (dq != null && needDeletion) {
-                        ServerConfiguration sc = ServerConfiguration.getServerConfiguration();
-                        if (sc.getAllowedLicenseLevel() <= 0) {
-                            logger.warn("Warning!!! Skipping deletion query because license level is 0!");
-                        } else {
-                            if (dq.getIsDeleteOnly()) {
-                                initTask = new FetchDeletedDocumentListBySQLTask(ic);
-                            } else {
-                                if (isThoroughDelete) {
-                                    // This is slower
-                                    initTask = new FetchFullDocumentListBySQLTask(ic);
-                                } else {
-                                    initTask = new FastFetchFullDocumentListBySQLTask(ic);
-                                }
-                            }
-                        }
-                    }
-                    if (initTask != null) {
-                        initTask.prepare();
-                        initTask.execute();
-                        initTask.stop();
+
+                WorkerTask initTask = null;
+                if (dc.getDeletionQuery() != null && needDeletion) {
+                    ServerConfiguration sc = ServerConfiguration.getServerConfiguration();
+                    if (sc.getAllowedLicenseLevel() <= 0) {
+                        logger.warn("Warning!!! Skipping deletion query because license level is 0!");
+                    } else {
+                        initTask = DeletionSQLTaskFactory.createTask(ic, isThoroughDelete);
                     }
                 }
+                if (initTask != null) {
+                    initTask.prepare();
+                    initTask.execute();
+                    initTask.stop();
+                }
+
                 ic.initAll(affectedDirectoryGroup, targetIndexName);
+
                 swt = new SerialWorkerTask(ic.getScheduler());
+                String driver = dc.getDataSource(0).getJdbcdriver().toLowerCase();
+
                 if (!ic.isFullIndexing && !ic.getIsRecreate() && dc.getIncrementalDataquery() != null) {
                     // only process it in incremental mode
                     swt.addWorkTask(new FetchDocumentListBySQLTask(ic));
-                } else if (dc.getDataSource(0).getJdbcdriver().toLowerCase().indexOf("mysql") >= 0
-                        || dc.getDataSource(0).getJdbcdriver().toLowerCase().indexOf("postgresql") >= 0) {
-                    // mysql only handle normal incremental indexing, not the
-                    // alternative incremental indexing
+                } else if (driver.indexOf("mysql") >= 0 || driver.indexOf("postgresql") >= 0) {
+                    // mysql only handle normal incremental indexing, not the alternative incremental indexing
                     swt.addWorkTask(new PaginatedFetchDocumentListBySQLTask(ic));
                 } else {
                     swt.addWorkTask(new FetchDocumentListBySQLTask(ic));

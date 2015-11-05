@@ -1,6 +1,7 @@
 package net.javacoding.xsearch.core.task.work.list;
 
 import static com.fdt.common.SystemConstants.NOTIFY_ADMIN;
+
 import java.io.File;
 import java.io.IOException;
 import java.sql.CallableStatement;
@@ -27,8 +28,6 @@ import net.javacoding.xsearch.utility.FileUtil;
 import oracle.jdbc.OracleTypes;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Hits;
@@ -36,7 +35,10 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Searcher;
 import org.apache.lucene.search.TermQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.fdt.sdl.admin.ui.action.constants.IndexType;
 import com.fdt.sdl.styledesigner.util.PageStyleUtil;
 
 public abstract class BaseFetchPrimaryKeysBySingleQueryTask extends BaseWorkerTaskImpl {
@@ -107,9 +109,10 @@ public abstract class BaseFetchPrimaryKeysBySingleQueryTask extends BaseWorkerTa
      * 
      */
     public void executeNormal() {
+        IndexType indexType = ic.getDatasetConfiguration().getIndexType();
         if (primaryKeyColumn == null)
             return;
-        if (indexReader == null)
+        if ((indexType == null || indexType == IndexType.LUCENE) && indexReader == null)
             return;
         if (ic.getIsRecreate())
             return;
@@ -424,7 +427,8 @@ public abstract class BaseFetchPrimaryKeysBySingleQueryTask extends BaseWorkerTa
 
     public void stop() {
         if (simpleDataquery != null) {
-            if (indexReader != null) {
+            IndexType indexType = ic.getDatasetConfiguration().getIndexType();
+            if (indexType == IndexType.ELASTICSEARCH || indexReader != null) {
                 deleteFromIndex();
             }
             TaskUtil.close(searcher);
