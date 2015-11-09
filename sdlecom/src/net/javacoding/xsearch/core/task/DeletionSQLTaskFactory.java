@@ -1,6 +1,6 @@
 package net.javacoding.xsearch.core.task;
 
-import com.fdt.sdl.admin.ui.action.constants.IndexType;
+import java.util.Optional;
 
 import net.javacoding.xsearch.config.DatasetConfiguration;
 import net.javacoding.xsearch.config.DeletionDataquery;
@@ -10,9 +10,11 @@ import net.javacoding.xsearch.core.task.work.list.FastFetchFullDocumentListBySQL
 import net.javacoding.xsearch.core.task.work.list.FetchDeletedDocumentListBySQLTask;
 import net.javacoding.xsearch.core.task.work.list.FetchFullDocumentListBySQLTask;
 
+import com.fdt.sdl.admin.ui.action.constants.IndexType;
+
 public class DeletionSQLTaskFactory {
 
-    public static WorkerTask createTask(IndexerContext ic, boolean isThoroughDelete) {
+    public static Optional<WorkerTask> createTask(IndexerContext ic, boolean isThoroughDelete) {
         WorkerTask task = null;
         DatasetConfiguration dc = ic.getDatasetConfiguration();
         DeletionDataquery dq = dc.getDeletionQuery();
@@ -23,14 +25,16 @@ public class DeletionSQLTaskFactory {
                 task = new ESFetchDeletedDocumentListBySQLTask(ic);
             }
         } else {
-            if (isThoroughDelete) {
-                // This is slower
-                task = new FetchFullDocumentListBySQLTask(ic);
-            } else {
-                task = new FastFetchFullDocumentListBySQLTask(ic);
+            if (dc.getIndexType() == null || dc.getIndexType() == IndexType.LUCENE) {
+                if (isThoroughDelete) {
+                    // This is slower
+                    task = new FetchFullDocumentListBySQLTask(ic);
+                } else {
+                    task = new FastFetchFullDocumentListBySQLTask(ic);
+                }
             }
         }
-        return task;
+        return Optional.ofNullable(task);
     }
 
 }

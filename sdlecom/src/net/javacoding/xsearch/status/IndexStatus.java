@@ -2,6 +2,9 @@ package net.javacoding.xsearch.status;
 
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestResult;
+import io.searchbox.core.Search;
+import io.searchbox.core.SearchResult;
+import io.searchbox.core.search.aggregation.TermsAggregation;
 import io.searchbox.indices.aliases.GetAliases;
 
 import java.io.File;
@@ -10,6 +13,7 @@ import java.util.List;
 
 import net.javacoding.xsearch.config.Column;
 import net.javacoding.xsearch.config.DatasetConfiguration;
+import net.javacoding.xsearch.config.WorkingQueueDataquery;
 import net.javacoding.xsearch.core.IndexerContext;
 import net.javacoding.xsearch.core.PeriodEntry;
 import net.javacoding.xsearch.core.PeriodTable;
@@ -29,6 +33,7 @@ import org.apache.lucene.store.FSDirectory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fdt.elasticsearch.config.SpringContextUtil;
 import com.fdt.elasticsearch.type.result.GetAliasesResult;
 import com.fdt.elasticsearch.util.JestExecute;
 import com.fdt.sdl.admin.ui.action.constants.IndexType;
@@ -168,40 +173,54 @@ public final class IndexStatus {
         return result;
     }
 
-    private static PeriodTable doCreatePeriodTable(DatasetConfiguration dc) throws IOException{
-        if (dc == null) return null;
-        if (dc.getWorkingQueueDataquery()== null || dc.getWorkingQueueDataquery().getModifiedDateColumn()== null) {
-            //logger.debug("No modified time information.");
+    private static PeriodTable doCreatePeriodTable(DatasetConfiguration dc) throws IOException {
+
+        if (dc == null) {
+            return null;
+        }
+
+        WorkingQueueDataquery dataQuery = dc.getWorkingQueueDataquery();
+        if (dataQuery == null || dataQuery.getModifiedDateColumn() == null) {
             return null;
         }
 
         PeriodEntry pe = null;
-        IndexReader indexReader = null;
-        try{
-            Column mc = dc.getWorkingQueueDataquery().getModifiedDateColumn();
-            if(mc!=null) {
-                indexReader = IndexStatus.openIndexReader(dc);
-                pe = getPeriodEntry(indexReader, mc.getColumnName());
-                if(pe!=null) {
-                    logger.debug("Re-created Indexed Period:" + pe);
+        Column mc = dataQuery.getModifiedDateColumn();
+
+        if (mc != null) {
+            if (dc.getIndexType() == null || dc.getIndexType() == IndexType.LUCENE) {
+                IndexReader indexReader = null;
+                try {
+                    indexReader = IndexStatus.openIndexReader(dc);
+                    pe = getPeriodEntry(indexReader, mc.getColumnName());
+                    if (pe != null) {
+                        logger.debug("Re-created Indexed Period:" + pe);
+                    }
+                } catch (Throwable ioe) {
+                    logger.debug("When getting period table:", ioe);
+                } finally {
+                    try {
+                        if (indexReader != null) {
+                            indexReader.close();
+                        }
+                    } catch (IOException e) {
+                    }
                 }
+            } else if (dc.getIndexType() == IndexType.ELASTICSEARCH) {
+                JestClient jestClient = SpringContextUtil.getBean(JestClient.class);
+                pe = getPeriodEntry(jestClient, dc.getName(), mc.getColumnName());
             }
-        }catch(Throwable ioe){
-            logger.debug("When getting period table:", ioe);
-        }finally{
-            try{
-                if(indexReader!=null) indexReader.close();
-            }catch(IOException e){}
         }
 
         File storedFile = new File(IndexStatus.findActiveMainDirectoryFile(dc), IndexerContext.PERIOD_TABLE_FILE);
         PeriodTable periodTable = null;
-        if(pe!=null&&(!storedFile.exists()||storedFile.canWrite())) {
+        if (pe != null && (!storedFile.exists() || storedFile.canWrite())) {
             periodTable = new PeriodTable();
             periodTable.add(pe);
             periodTable.save(storedFile);
             logger.info("Saved Indexed Period.");
         }
+
         return periodTable;
     }
 
@@ -234,6 +253,33 @@ public final class IndexStatus {
             // logger.error(e);
             // e.printStackTrace();
         }
+        return pe;
+    }
+    
+    public static PeriodEntry getPeriodEntry(JestClient jestClient, String dataSetName, String dateKeyName) {
+
+        PeriodEntry pe = new PeriodEntry();
+
+        String query = "{\n" +
+                "    \"query\" : {\n" +
+                "        \"match_all\" : {}\n" +
+                "    },\n" +
+                "    \"aggs\" : {\n" +
+                "        \""+dateKeyName+"\" : {\n" +
+                "            \"terms\" : {\n" +
+                "                \"field\" : \""+dateKeyName+"\"\n" +
+                "            }\n" +
+                "        }\n" +
+                "    }\n" +
+                "}";
+
+        Search search = new Search.Builder(query).addIndex(dataSetName).addType(dataSetName).build();
+        SearchResult jestResult = JestExecute.execute(jestClient, search);
+
+        TermsAggregation termsAgg = jestResult.getAggregations().getTermsAggregation(dateKeyName);
+
+        termsAgg.getBuckets().forEach(e -> pe.add(VMTool.storedStringToLong(e.getKey())));
+
         return pe;
     }
     

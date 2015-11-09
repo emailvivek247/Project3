@@ -5,9 +5,9 @@ import io.searchbox.indices.CreateIndex;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 
 import net.javacoding.xsearch.config.DatasetConfiguration;
-import net.javacoding.xsearch.config.DeletionDataquery;
 import net.javacoding.xsearch.config.ServerConfiguration;
 import net.javacoding.xsearch.core.AffectedDirectoryGroup;
 import net.javacoding.xsearch.core.IndexerContext;
@@ -16,10 +16,7 @@ import net.javacoding.xsearch.core.task.Task;
 import net.javacoding.xsearch.core.task.WorkerTask;
 import net.javacoding.xsearch.core.task.work.SerialWorkerTask;
 import net.javacoding.xsearch.core.task.work.fetcher.FetcherWorkerTask;
-import net.javacoding.xsearch.core.task.work.list.FastFetchFullDocumentListBySQLTask;
-import net.javacoding.xsearch.core.task.work.list.FetchDeletedDocumentListBySQLTask;
 import net.javacoding.xsearch.core.task.work.list.FetchDocumentListBySQLTask;
-import net.javacoding.xsearch.core.task.work.list.FetchFullDocumentListBySQLTask;
 import net.javacoding.xsearch.core.task.work.list.PaginatedFetchDocumentListBySQLTask;
 import net.javacoding.xsearch.status.IndexStatus;
 import net.javacoding.xsearch.utility.FileUtil;
@@ -104,7 +101,7 @@ public class DBIndexer {
 
                 ic.initConnections();
 
-                WorkerTask initTask = null;
+                Optional<WorkerTask> initTask = null;
                 if (dc.getDeletionQuery() != null && needDeletion) {
                     ServerConfiguration sc = ServerConfiguration.getServerConfiguration();
                     if (sc.getAllowedLicenseLevel() <= 0) {
@@ -113,10 +110,11 @@ public class DBIndexer {
                         initTask = DeletionSQLTaskFactory.createTask(ic, isThoroughDelete);
                     }
                 }
-                if (initTask != null) {
-                    initTask.prepare();
-                    initTask.execute();
-                    initTask.stop();
+
+                if (initTask.isPresent()) {
+                    initTask.get().prepare();
+                    initTask.get().execute();
+                    initTask.get().stop();
                 }
 
                 ic.initAll(affectedDirectoryGroup, targetIndexName);

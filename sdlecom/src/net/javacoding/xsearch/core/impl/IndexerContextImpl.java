@@ -1,7 +1,5 @@
 package net.javacoding.xsearch.core.impl;
 
-import io.searchbox.client.JestClient;
-
 import java.io.IOException;
 
 import net.javacoding.xsearch.config.DatasetConfiguration;
@@ -24,8 +22,6 @@ import net.javacoding.xsearch.utility.SchedulerTool;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.fdt.elasticsearch.config.SpringContextUtil;
 
 public class IndexerContextImpl extends IndexerContext {
 
