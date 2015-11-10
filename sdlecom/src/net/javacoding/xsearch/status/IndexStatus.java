@@ -2,10 +2,12 @@ package net.javacoding.xsearch.status;
 
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestResult;
+import io.searchbox.core.Get;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
 import io.searchbox.core.search.aggregation.TermsAggregation;
 import io.searchbox.indices.CreateIndex;
+import io.searchbox.indices.IndicesExists;
 import io.searchbox.indices.aliases.GetAliases;
 
 import java.io.File;
@@ -274,16 +276,19 @@ public final class IndexStatus {
                 "    }\n" +
                 "}";
 
-        Search search = new Search.Builder(query).addIndex(dataSetName).addType(dataSetName).build();
-        SearchResult jestResult = JestExecute.execute(jestClient, search);
-
-        TermsAggregation termsAgg = jestResult.getAggregations().getTermsAggregation(dateKeyName);
-
-        termsAgg.getBuckets().forEach(e -> pe.add(VMTool.storedStringToLong(e.getKey())));
+        IndicesExists indicesExists = new IndicesExists.Builder(dataSetName).build();
+        JestResult jestResult = JestExecute.executeNoCheck(jestClient, indicesExists);
+ 
+        if (jestResult.isSucceeded()) {
+            Search search = new Search.Builder(query).addIndex(dataSetName).addType(dataSetName).build();
+            SearchResult searchResult = JestExecute.execute(jestClient, search);
+            TermsAggregation termsAgg = searchResult.getAggregations().getTermsAggregation(dateKeyName);
+            termsAgg.getBuckets().forEach(e -> pe.add(VMTool.storedStringToLong(e.getKey())));
+        }
 
         return pe;
     }
-    
+
     public static void switchSearchersTo(DatasetConfiguration dc) {
         logger.info("creating searcher provider for index " + dc.getName() + " ...");
         SearcherProvider sp = SearcherManager.createSearcherProviderByDataset(dc);
