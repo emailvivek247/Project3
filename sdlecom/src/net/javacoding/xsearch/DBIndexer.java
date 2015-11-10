@@ -101,7 +101,7 @@ public class DBIndexer {
 
                 ic.initConnections();
 
-                Optional<WorkerTask> initTask = null;
+                Optional<WorkerTask> initTask = Optional.empty();
                 if (dc.getDeletionQuery() != null && needDeletion) {
                     ServerConfiguration sc = ServerConfiguration.getServerConfiguration();
                     if (sc.getAllowedLicenseLevel() <= 0) {
@@ -208,15 +208,15 @@ public class DBIndexer {
             logger.info("Preparing elasticsearch index for recreate, data set name = {}", dc.getName());
             targetIndexName = IndexStatus.findNewIndexName(jestClient, dc.getName());
             logger.info("New index name = {}", targetIndexName);
-            Object indexSettings = SpringContextUtil.getBean("indexSettings");
-            CreateIndex createIndex = new CreateIndex.Builder(targetIndexName).settings(indexSettings).build();
-            JestExecute.execute(jestClient, createIndex);
+            IndexStatus.createIndex(jestClient, targetIndexName);
         } else {
             logger.info("Initializing elasticsearch index for updates, data set name = {}", dc.getName());
             targetIndexName = IndexStatus.findCurrentIndexName(jestClient, dc.getName());
             logger.info("Target index name = {}", targetIndexName);
         }
     }
+
+
 
     private void cleanDirectories() {
         if (ic.isDataComplete) {

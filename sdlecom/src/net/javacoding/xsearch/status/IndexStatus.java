@@ -5,6 +5,7 @@ import io.searchbox.client.JestResult;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
 import io.searchbox.core.search.aggregation.TermsAggregation;
+import io.searchbox.indices.CreateIndex;
 import io.searchbox.indices.aliases.GetAliases;
 
 import java.io.File;
@@ -513,6 +514,12 @@ public final class IndexStatus {
         } while (currentIndexes.contains(newIndexName));
 
         return newIndexName;
+    }
+    
+    public static void createIndex(JestClient jestClient, String indexName) {
+        Object indexSettings = SpringContextUtil.getBean("indexSettings");
+        CreateIndex createIndex = new CreateIndex.Builder(indexName).settings(indexSettings).build();
+        JestExecute.execute(jestClient, createIndex);
     }
 
     public static String findCurrentIndexName(JestClient jestClient, String aliasName) {
