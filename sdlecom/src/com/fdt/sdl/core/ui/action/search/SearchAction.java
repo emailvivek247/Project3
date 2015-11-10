@@ -232,12 +232,12 @@ public class SearchAction extends Action {
                 JestClient client = factory.getObject();
 
                 Search search = new Search.Builder(queryStr)
-                        .addIndex("test")
+                        .addIndex(sc.indexName)
                         .build();
 
                 io.searchbox.core.SearchResult result = client.execute(search);
 
-                /*
+               
 				if (query != null) {
 					Hits hits = null;
 					TopDocs topDocs = null;
@@ -269,16 +269,16 @@ public class SearchAction extends Action {
 						}
 					}
 				}
-				*/
+				
                 
                 List<net.javacoding.xsearch.api.Document> resultDocs = extractResultDocs(result, rowsToReturn, offset);
                 
                 sr.initFor3Tier(sc, q, lq, query, resultDocs, defaultDocs, searchTime, result.getTotal(),
                         offset, rowsToReturn, sortBys, filterResult, request, response);
-                /*
-				sr.init(sc, q, lq, query, docs, defaultDocs, searchTime, total[0], offset, rowsToReturn, sortBys,
-						filterResult, request, response);
-				*/
+                
+				//sr.init(sc, q, lq, query, docs, defaultDocs, searchTime, total[0], offset, rowsToReturn, sortBys,
+						//filterResult, request, response);
+				
 			}
 			if (sc.debug)
 				logger.info("Got docs from disk: " + (System.currentTimeMillis() - _start));
