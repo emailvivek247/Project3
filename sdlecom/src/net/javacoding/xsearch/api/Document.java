@@ -109,12 +109,19 @@ public class Document {
     }
     
     public Date getDate(String field) {
-        for(SearchProtocol.Field f : this.document.getFieldList()) {
-            if(f.getName().equals(field)&&f.getType().equals(SearchProtocol.Field.Type.DATETIME)) {
-                return VMTool.storedStringToDate(f.getValue());
+    	if (document != null) {
+    		for(SearchProtocol.Field f : this.document.getFieldList()) {
+                if(f.getName().equals(field)&&f.getType().equals(SearchProtocol.Field.Type.DATETIME)) {
+                    return VMTool.storedStringToDate(f.getValue());
+                }
+    		}
+        } else if (source != null) {
+            JsonElement element = source.get(field);
+            if (element != null) {                
+                return VMTool.storedStringToDate(source.get(field).getAsString());
             }
         }
-        return null;
+        return new Date();       
     }
     public Integer getInteger(String field) {
         for(SearchProtocol.Field f : this.document.getFieldList()) {
