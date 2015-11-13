@@ -114,9 +114,7 @@ public class QueryStringQuery extends AbstractQuery {
         System.out.println(query.getAsStringPrettyPrint());
 
         query = new QueryStringQuery.Builder()
-                .addField("testField")
-                .addField("testField2")
-                .withQuery("test*query*")
+                .withQuery("testField:test*query*")
                 .build();
         System.out.println(query.getAsStringPrettyPrint());
 
