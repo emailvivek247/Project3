@@ -74,15 +74,17 @@
             <exclude module="xml-apis"/>
         </dependency>
 
-        <dependency org="io.searchbox" name="jest" rev="0.1.7">
+        <dependency org="io.searchbox" name="jest" rev="2.0.0">
             <exclude module="lucene-codecs"/>
             <exclude module="lucene-test-framework"/>
             <exclude module="groovy-all"/>
             <exclude module="randomizedtesting-runner"/>
             <exclude module="elasticsearch"/>
+            <exclude module="delete-by-query"/>
             <exclude module="hamcrest-all"/>
             <exclude module="littleproxy"/>
             <exclude module="mockito-all"/>
+            <exclude module="mockito-core"/>
         </dependency>
 
         <!-- Java X dependencies -->
@@ -139,10 +141,10 @@
         <dependency org="org.apache.geronimo.specs" name="geronimo-jms_1.1_spec" rev="1.1.1"/>
         <dependency org="org.apache.geronimo.specs" name="geronimo-jta_1.1_spec" rev="1.1.1"/>
 
-        <dependency org="org.apache.httpcomponents" name="httpasyncclient" rev="4.1"/>
+        <dependency org="org.apache.httpcomponents" name="httpasyncclient" rev="4.1.1"/>
         <dependency org="org.apache.httpcomponents" name="httpclient" rev="4.5.1"/>
-        <dependency org="org.apache.httpcomponents" name="httpcore" rev="4.4.3"/>
-        <dependency org="org.apache.httpcomponents" name="httpcore-nio" rev="4.4.3"/>
+        <dependency org="org.apache.httpcomponents" name="httpcore" rev="4.4.4"/>
+        <dependency org="org.apache.httpcomponents" name="httpcore-nio" rev="4.4.4"/>
 
         <dependency org="org.apache.neethi" name="neethi" rev="3.0.3"/>
 
