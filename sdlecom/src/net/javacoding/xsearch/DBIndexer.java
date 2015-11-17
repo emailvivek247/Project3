@@ -209,14 +209,13 @@ public class DBIndexer {
             targetIndexName = IndexStatus.findNewIndexName(jestClient, dc.getName());
             logger.info("New index name = {}", targetIndexName);
             IndexStatus.createIndex(jestClient, targetIndexName);
+            IndexStatus.putMapping(jestClient, dc, targetIndexName);
         } else {
             logger.info("Initializing elasticsearch index for updates, data set name = {}", dc.getName());
             targetIndexName = IndexStatus.findCurrentIndexName(jestClient, dc.getName());
             logger.info("Target index name = {}", targetIndexName);
         }
     }
-
-
 
     private void cleanDirectories() {
         if (ic.isDataComplete) {

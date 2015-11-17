@@ -1,6 +1,7 @@
 package net.javacoding.xsearch.core.task.work;
 
 import io.searchbox.client.JestClient;
+import io.searchbox.core.DocumentResult;
 import io.searchbox.core.Index;
 
 import java.util.LinkedHashMap;
@@ -10,10 +11,12 @@ import java.util.Optional;
 
 import net.javacoding.xsearch.config.Column;
 import net.javacoding.xsearch.config.DatasetConfiguration;
+import net.javacoding.xsearch.config.IndexFieldType;
 import net.javacoding.xsearch.core.IndexerContext;
 import net.javacoding.xsearch.core.component.TextDocument;
 import net.javacoding.xsearch.core.task.Scheduler;
 import net.javacoding.xsearch.core.task.WorkerTask;
+import net.javacoding.xsearch.utility.VMTool;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +37,6 @@ public class ESWriteDocumentToIndexTask extends BaseWorkerTaskImpl {
     private List<Column> columns;
 
     private JestClient jestClient;
-
-    
 
     public ESWriteDocumentToIndexTask(Scheduler sched, TextDocument doc, int contextId) {
         super(WorkerTask.WORKERTASK_WRITERTASK, sched);
@@ -80,12 +81,16 @@ public class ESWriteDocumentToIndexTask extends BaseWorkerTaskImpl {
 
                 Optional<String> primaryKeyValue = primaryKeyColumnName.map(column -> doc.get(column));
 
-                Map<String, String> source = new LinkedHashMap<String, String>();
+                Map<String, Object> source = new LinkedHashMap<>();
                 for (Column column : columns) {
                     String[] values = doc.getValues(column.getColumnName());
                     if (values != null) {
                         for (String value : values) {
-                            source.put(column.getColumnName(), value);
+                            if (column.getIndexFieldType() == IndexFieldType.KEYWORD_DATE_HIERARCHICAL) {
+                                source.put(column.getColumnName(), VMTool.storedStringToLongValue(value));
+                            } else {
+                                source.put(column.getColumnName(), value);
+                            }
                         }
                     }
                 }

@@ -9,10 +9,12 @@ import io.searchbox.core.search.aggregation.TermsAggregation;
 import io.searchbox.indices.CreateIndex;
 import io.searchbox.indices.IndicesExists;
 import io.searchbox.indices.aliases.GetAliases;
+import io.searchbox.indices.mapping.PutMapping;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import net.javacoding.xsearch.config.Column;
 import net.javacoding.xsearch.config.DatasetConfiguration;
@@ -37,6 +39,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fdt.elasticsearch.config.SpringContextUtil;
+import com.fdt.elasticsearch.mapping.AbstractMapping;
+import com.fdt.elasticsearch.mapping.RootMapping;
 import com.fdt.elasticsearch.type.result.GetAliasesResult;
 import com.fdt.elasticsearch.util.JestExecute;
 import com.fdt.sdl.admin.ui.action.constants.IndexType;
@@ -520,11 +524,25 @@ public final class IndexStatus {
 
         return newIndexName;
     }
-    
+
     public static void createIndex(JestClient jestClient, String indexName) {
         Object indexSettings = SpringContextUtil.getBean("indexSettings");
         CreateIndex createIndex = new CreateIndex.Builder(indexName).settings(indexSettings).build();
         JestExecute.execute(jestClient, createIndex);
+    }
+
+    public static void putMapping(JestClient jestClient, DatasetConfiguration dc, String indexName) {
+
+        List<AbstractMapping> mappings = dc.getColumns().stream().map(
+                c -> AbstractMapping.fromColumn(c)
+        ).collect(Collectors.toList());
+
+        RootMapping rootMapping = new RootMapping.Builder().addMapping(mappings).build();
+        String mappingStr = rootMapping.getAsString();
+
+        PutMapping putMapping = new PutMapping.Builder(indexName, dc.getName(), mappingStr).build();
+
+        JestExecute.execute(jestClient, putMapping);
     }
 
     public static String findCurrentIndexName(JestClient jestClient, String aliasName) {

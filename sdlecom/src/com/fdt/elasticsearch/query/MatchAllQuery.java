@@ -2,10 +2,8 @@ package com.fdt.elasticsearch.query;
 
 import java.util.Optional;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-@JsonDeserialize(builder = MatchAllQuery.Builder.class)
 public class MatchAllQuery extends AbstractQuery {
 
     private final Optional<Float> boost;

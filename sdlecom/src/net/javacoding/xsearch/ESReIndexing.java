@@ -47,6 +47,7 @@ public class ESReIndexing extends AbstractReIndexing {
         logger.info("New index name will be {}", newIndexName);
 
         IndexStatus.createIndex(jestClient, newIndexName);
+        IndexStatus.putMapping(jestClient, dc, newIndexName);
 
         String query = "{\"query\" : { \"match_all\" : { } } }";
 
