@@ -4,9 +4,9 @@
     <property name="PREFIX_HOME" value="C:\\logs\\sdlecom"/>
 
     <appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">
-	    <encoder>
-	       <pattern>%d{MM-dd-yy HH:mm:ss.SSS} %-5level [%33.33logger{5}]: %msg%n</pattern>
-	    </encoder>
+        <encoder>
+            <pattern>%d{MM-dd-yy HH:mm:ss.SSS} %-5level [%33.33logger{5}]: %msg%n</pattern>
+        </encoder>
     </appender>
 
     <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="FILE">
@@ -60,10 +60,10 @@
             <marker>NOTIFY_ADMIN</marker>
         </evaluator>
         <smtpHost>email-smtp.us-east-1.amazonaws.com</smtpHost>
-		<smtpPort>587</smtpPort>
-		<username>AKIAJZSKMSNOBKAT2IZA</username>
-		<password>AgSJzhgeLeNHZQaIioms6Y3lHYPaHgZCWrL7BcMraSt1</password>
-    	<to>roamsupport@amcad.com</to>
+        <smtpPort>587</smtpPort>
+        <username>AKIAJZSKMSNOBKAT2IZA</username>
+        <password>AgSJzhgeLeNHZQaIioms6Y3lHYPaHgZCWrL7BcMraSt1</password>
+        <to>roamsupport@amcad.com</to>
         <from>no-reply@amcad.com</from>
         <subject>${HOSTNAME} - Local Machine Dev Error: %logger{20} - %msg</subject>
         <layout class="ch.qos.logback.classic.PatternLayout">
@@ -77,6 +77,8 @@
     <logger level="INFO" name="net.javacoding.xsearch.core.task.dispatch"/>
     <logger level="INFO" name="net.javacoding"/>
     <logger level="DEBUG" name="org.springframework"/>
+    <logger level="INFO" name="org.springframework.beans.factory.support.DefaultListableBeanFactory"/>
+    <logger level="INFO" name="io.searchbox"/>
     <logger level="WARN" name="freemarker"/>
     <logger level="WARN" name="net.sf.jasperreports"/>
     <logger level="WARN" name="org.jmesa"/>
@@ -89,7 +91,7 @@
     <logger level="ERROR" name="com.fdt.common.util.TIFFToPDFConverter"/>
 
     <logger additivity="false" level="INFO" name="com.fdt.alerts.job">
-    	<appender-ref ref="ALERT_FILE"/>
+        <appender-ref ref="ALERT_FILE"/>
     </logger>
 
     <logger additivity="false" level="INFO" name="SEARCH_STATS_LOGGER">
