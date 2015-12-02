@@ -9,20 +9,19 @@ public class MatchQuery extends AbstractQuery {
     private final String field;
     private final String query;
 
-    private final Optional<Float> boost;
     private final Optional<String> operator;
     private final Optional<String> type;
 
     protected MatchQuery(Builder builder) {
+        super(builder);
         this.field = builder.field;
         this.query = builder.query;
-        this.boost = builder.boost;
         this.operator = builder.operator;
         this.type = builder.type;
     }
 
     @Override
-    public ObjectNode getAsJsonObject() {
+    public ObjectNode getQueryObjectNode() {
 
         ObjectNode innerNode = mapper.createObjectNode();
         innerNode.put("query", query);
@@ -45,17 +44,15 @@ public class MatchQuery extends AbstractQuery {
         return queryNode;
     }
 
-    public static class Builder {
+    public static class Builder extends AbstractQueryBuilder<MatchQuery, Builder>  {
 
         private String field;
         private String query;
 
-        private Optional<Float> boost;
         private Optional<String> operator;
         private Optional<String> type;
 
         public Builder() {
-            boost = Optional.empty();
             operator = Optional.empty();
             type = Optional.empty();
         }
@@ -67,11 +64,6 @@ public class MatchQuery extends AbstractQuery {
 
         public Builder withQuery(String query) {
             this.query = query;
-            return this;
-        }
-
-        public Builder withBoost(Float boost) {
-            this.boost = Optional.of(boost);
             return this;
         }
 

@@ -1,7 +1,5 @@
 package com.fdt.elasticsearch.query;
 
-import java.util.Optional;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class WildcardQuery extends AbstractQuery {
@@ -9,17 +7,14 @@ public class WildcardQuery extends AbstractQuery {
     private final String field;
     private final String value;
 
-    private final Optional<Float> boost;
-
     protected WildcardQuery(Builder builder) {
+        super(builder);
         this.field = builder.field;
         this.value = builder.value;
-        this.boost = builder.boost;
-
     }
 
     @Override
-    public ObjectNode getAsJsonObject() {
+    public ObjectNode getQueryObjectNode() {
 
         ObjectNode innerNode = mapper.createObjectNode();
         innerNode.put("value", value);
@@ -36,16 +31,10 @@ public class WildcardQuery extends AbstractQuery {
         return queryNode;
     }
 
-    public static class Builder {
+    public static class Builder extends AbstractQueryBuilder<WildcardQuery, Builder>  {
 
         private String field;
         private String value;
-
-        private Optional<Float> boost;
-
-        public Builder() {
-            boost = Optional.empty();
-        }
 
         public Builder withField(String field) {
             this.field = field;
@@ -54,11 +43,6 @@ public class WildcardQuery extends AbstractQuery {
 
         public Builder withValue(String value) {
             this.value = value;
-            return this;
-        }
-
-        public Builder withBoost(Float boost) {
-            this.boost = Optional.of(boost);
             return this;
         }
 

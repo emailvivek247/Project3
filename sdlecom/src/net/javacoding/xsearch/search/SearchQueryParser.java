@@ -19,7 +19,15 @@ import org.apache.lucene.search.Query;
 /** Implements parsing a query for search
 */
 public class SearchQueryParser {
-    private static Logger logger = LoggerFactory.getLogger("net.javacoding.xsearch.search.action.SearchQueryParser");
+
+    private static final  Logger logger = LoggerFactory.getLogger(SearchQueryParser.class);
+
+    public static String elasticsearchParse(String text) {
+        text = reformatQuery(text);
+        text = reformatRangeQuery(text);
+        return text;
+    }
+
     public static Query luceneParse(Analyzer analyzer, String text) throws Exception{
         BooleanQuery.setMaxClauseCount(16384);
         QueryParser parser = new QueryParser("content", analyzer);

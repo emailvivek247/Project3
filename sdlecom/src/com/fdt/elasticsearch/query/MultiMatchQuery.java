@@ -13,20 +13,19 @@ public class MultiMatchQuery extends AbstractQuery {
     private final List<String> fields;
     private final String query;
 
-    private final Optional<Float> boost;
     private final Optional<String> operator;
     private final Optional<String> type;
 
     protected MultiMatchQuery(Builder builder) {
+        super(builder);
         this.fields = builder.fields;
         this.query = builder.query;
-        this.boost = builder.boost;
         this.operator = builder.operator;
         this.type = builder.type;
     }
 
     @Override
-    public ObjectNode getAsJsonObject() {
+    public ObjectNode getQueryObjectNode() {
 
         ObjectNode multiMatchNode = mapper.createObjectNode();
 
@@ -51,18 +50,16 @@ public class MultiMatchQuery extends AbstractQuery {
         return queryNode;
     }
 
-    public static class Builder {
+    public static class Builder extends AbstractQueryBuilder<MultiMatchQuery, Builder>  {
 
         private List<String> fields;
         private String query;
 
-        private Optional<Float> boost;
         private Optional<String> operator;
         private Optional<String> type;
 
         public Builder() {
             fields = new ArrayList<>();
-            boost = Optional.empty();
             operator = Optional.empty();
             type = Optional.empty();
         }
@@ -79,11 +76,6 @@ public class MultiMatchQuery extends AbstractQuery {
 
         public Builder withQuery(String query) {
             this.query = query;
-            return this;
-        }
-
-        public Builder withBoost(Float boost) {
-            this.boost = Optional.of(boost);
             return this;
         }
 

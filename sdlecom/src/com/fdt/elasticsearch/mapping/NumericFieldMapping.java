@@ -24,7 +24,7 @@ public class NumericFieldMapping extends AbstractMapping {
     public ObjectNode getAsJsonObject() {
 
         ObjectNode innerNode = mapper.createObjectNode();
-        innerNode.put("type", type);
+        innerNode.put("type", "string");
         if (boost.isPresent()) {
             innerNode.put("boost", boost.get());
         }
@@ -34,6 +34,23 @@ public class NumericFieldMapping extends AbstractMapping {
         if (store.isPresent()) {
             innerNode.put("store", store.get());
         }
+
+        ObjectNode numberNode = mapper.createObjectNode();
+        numberNode.put("type", type);
+        if (boost.isPresent()) {
+            numberNode.put("boost", boost.get());
+        }
+        if (index.isPresent()) {
+            numberNode.put("index", index.get());
+        }
+        if (store.isPresent()) {
+            numberNode.put("store", store.get());
+        }
+
+        ObjectNode fieldsNode = mapper.createObjectNode();
+        fieldsNode.set("number", numberNode);
+
+        innerNode.set("fields", fieldsNode);
 
         return innerNode;
     }

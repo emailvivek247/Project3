@@ -1,19 +1,15 @@
 package com.fdt.elasticsearch.query;
 
-import java.util.Optional;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class MatchAllQuery extends AbstractQuery {
 
-    private final Optional<Float> boost;
-
     protected MatchAllQuery(Builder builder) {
-        this.boost = builder.boost;
+        super(builder);
     }
 
     @Override
-    public ObjectNode getAsJsonObject() {
+    public ObjectNode getQueryObjectNode() {
 
         ObjectNode matchAllNode = mapper.createObjectNode();
         if (boost.isPresent()) {
@@ -26,19 +22,7 @@ public class MatchAllQuery extends AbstractQuery {
         return queryNode;
     }
 
-    public static class Builder {
-
-        private Optional<Float> boost;
-
-        public Builder() {
-            boost = Optional.empty();
-        }
-
-        public Builder withBoost(Float boost) {
-            this.boost = Optional.of(boost);
-            return this;
-        }
-
+    public static class Builder extends AbstractQueryBuilder<MatchAllQuery, Builder>  {
         public MatchAllQuery build() {
             return new MatchAllQuery(this);
         }

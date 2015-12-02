@@ -10,16 +10,26 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-public class SearchSort{
+public class SearchSort {
+
     public String field = null;
     public boolean descending = true;
     public Column column = null;
-    public SearchSort(Column c){
-        if(c==null) return;
+
+    public SearchSort(Column c) {
+        if (c == null) {
+            return;
+        }
         this.field = c.getColumnName();
         this.descending = c.getIsDescending();
         this.column = c;
     }
+
+    public SearchSort(String field, boolean descending) {
+        this.field = field;
+        this.descending = descending;
+    }
+
     /**
      * Used during searching. create Sort by sortBy, and desc=Y?, default to true
      * @param sorts

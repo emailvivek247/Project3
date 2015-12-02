@@ -3,7 +3,6 @@ package com.fdt.elasticsearch.query;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -15,18 +14,16 @@ public class BoolQuery extends AbstractQuery {
     private final List<AbstractQuery> filterClauses;
     private final List<AbstractQuery> shouldClauses;
 
-    private final Optional<Float> boost;
-
     public BoolQuery(Builder builder) {
+        super(builder);
         this.mustClauses = builder.mustClauses;
         this.mustNotClauses = builder.mustNotClauses;
         this.filterClauses = builder.filterClauses;
         this.shouldClauses = builder.shouldClauses;
-        this.boost = builder.boost;
     }
 
     @Override
-    public ObjectNode getAsJsonObject() {
+    public ObjectNode getQueryObjectNode() {
 
         ObjectNode boolNode = mapper.createObjectNode();
 
@@ -47,24 +44,21 @@ public class BoolQuery extends AbstractQuery {
 
     private static void addClauses(String field, List<AbstractQuery> clauses, ObjectNode boolNode) {
         if (clauses.size() == 1) {
-            boolNode.set(field, clauses.get(0).getAsJsonObject());
+            boolNode.set(field, clauses.get(0).getQueryObjectNode());
         } else if (clauses.size() > 1) {
             ArrayNode mustArrayNode = boolNode.putArray(field);
-            clauses.stream().forEach(c -> mustArrayNode.add(c.getAsJsonObject()));
+            clauses.stream().forEach(c -> mustArrayNode.add(c.getQueryObjectNode()));
         }
     }
 
-    public static class Builder {
+    public static class Builder extends AbstractQueryBuilder<BoolQuery, Builder> {
 
         private List<AbstractQuery> mustClauses;
         private List<AbstractQuery> mustNotClauses;
         private List<AbstractQuery> filterClauses;
         private List<AbstractQuery> shouldClauses;
 
-        private Optional<Float> boost;
-
         public Builder() {
-            boost = Optional.empty();
             mustClauses = new ArrayList<>();
             mustNotClauses = new ArrayList<>();
             filterClauses = new ArrayList<>();
@@ -108,11 +102,6 @@ public class BoolQuery extends AbstractQuery {
 
         public Builder addShouldClause(Collection<AbstractQuery> queries) {
             this.shouldClauses.addAll(queries);
-            return this;
-        }
-
-        public Builder withBoost(Float boost) {
-            this.boost = Optional.of(boost);
             return this;
         }
 

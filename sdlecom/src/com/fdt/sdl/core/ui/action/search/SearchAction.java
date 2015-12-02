@@ -1,9 +1,8 @@
 package com.fdt.sdl.core.ui.action.search;
 
 import io.searchbox.client.JestClient;
-import io.searchbox.client.JestClientFactory;
-import io.searchbox.client.config.HttpClientConfig;
 import io.searchbox.core.Search;
+import io.searchbox.params.Parameters;
 
 import java.io.File;
 import java.io.IOException;
@@ -73,6 +72,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fdt.common.util.SystemUtil;
+import com.fdt.elasticsearch.config.SpringContextUtil;
+import com.fdt.elasticsearch.query.AbstractQuery;
+import com.fdt.elasticsearch.query.MatchAllQuery;
+import com.fdt.elasticsearch.query.QueryStringQuery;
+import com.fdt.sdl.admin.ui.action.constants.IndexType;
 import com.fdt.sdl.styledesigner.Template;
 import com.fdt.sdl.styledesigner.util.DeviceDetectorUtil;
 import com.fdt.sdl.styledesigner.util.TemplateUtil;
@@ -216,88 +220,86 @@ public class SearchAction extends Action {
 				}
 
 			} else {
-			    
-			    String queryStr = 
-			            "{\n" +
-			            "    \"query\": {\n" +
-        			    "         \"match_all\": {}" +
-			            "    },\n" +
-        			    "    \"size\":" + rowsToReturn + ",\n" +
-			            "    \"from\":" + offset + "\n" +
-			            "}";
-			    
-                JestClientFactory factory = new JestClientFactory();
-                factory.setHttpClientConfig(new HttpClientConfig.Builder("http://localhost:9200").multiThreaded(true)
-                        .build());
-                JestClient client = factory.getObject();
 
-                Search search = new Search.Builder(queryStr)
-                        .addIndex(sc.indexName)
-                        .build();
+                if (sc.dc.getIndexType() == null || sc.dc.getIndexType() == IndexType.LUCENE) {
 
-                io.searchbox.core.SearchResult result = client.execute(search);
+                    if (query != null) {
+                        Hits hits = null;
+                        TopDocs topDocs = null;
+                        if (sortBys == null) {
+                            if (topRows == 0) {
+                                hits = directSearch(query, sc.irs, sc.dc, hits, errors, request);
+                                searchTime = System.currentTimeMillis() - start;
+                                docs = collectHits(sc.dc, hits, rowsToReturn, offset, total);
+                            } else {
+                                topDocs = topDocsSearch(query, sc.irs, sc.dc, errors, request, topRows);
+                                searchTime = System.currentTimeMillis() - start;
+                                docs = collectHits(sc.dc, topDocs, sc.irs.getSearcher());
+                            }
+                        } else {
+                            hits = sortBySearch(query, sc.irs, sc.dc, sortBys, request, hits, errors);
+                            searchTime = System.currentTimeMillis() - start;
+                            docs = collectHits(sc.dc, hits, rowsToReturn, offset, total);
+                        }
+                        if (hits != null && hits.length() > 0) {
+                            narrowBySearch(query, sc.irs, sc.dc, filterResult, errors, request);
+                        } else {
+                            if (!U.isEmpty(defaultQ)) {
+                                Query defaultQuery = getSearchQuery(sr, defaultQ, lq, filterResult, request, sc.dc, sc.irs,
+                                        getBooleanOperator(request), request.getParameter("searchable"),
+                                        U.getInt(request.getParameter("randomQuerySeed"), 0), sc.debug);
+                                hits = directSearch(defaultQuery, sc.irs, sc.dc, hits, errors, request);
+                                searchTime = System.currentTimeMillis() - start;
+                                defaultDocs = collectHits(sc.dc, hits, rowsToReturn, offset, total);
+                            }
+                        }
+                    }
 
-               
-				if (query != null) {
-					Hits hits = null;
-					TopDocs topDocs = null;
-					if (sortBys == null) {
-						if (topRows == 0) {
-							hits = directSearch(query, sc.irs, sc.dc, hits, errors, request);
-							searchTime = System.currentTimeMillis() - start;
-							docs = collectHits(sc.dc, hits, rowsToReturn, offset, total);
-						} else {
-							topDocs = topDocsSearch(query, sc.irs, sc.dc, errors, request, topRows);
-							searchTime = System.currentTimeMillis() - start;
-							docs = collectHits(sc.dc, topDocs, sc.irs.getSearcher());
-						}
-					} else {
-						hits = sortBySearch(query, sc.irs, sc.dc, sortBys, request, hits, errors);
-						searchTime = System.currentTimeMillis() - start;
-						docs = collectHits(sc.dc, hits, rowsToReturn, offset, total);
-					}
-					if (hits != null && hits.length() > 0) {
-						narrowBySearch(query, sc.irs, sc.dc, filterResult, errors, request);
-					} else {
-						if (!U.isEmpty(defaultQ)) {
-							Query defaultQuery = getSearchQuery(sr, defaultQ, lq, filterResult, request, sc.dc, sc.irs,
-									getBooleanOperator(request), request.getParameter("searchable"),
-									U.getInt(request.getParameter("randomQuerySeed"), 0), sc.debug);
-							hits = directSearch(defaultQuery, sc.irs, sc.dc, hits, errors, request);
-							searchTime = System.currentTimeMillis() - start;
-							defaultDocs = collectHits(sc.dc, hits, rowsToReturn, offset, total);
-						}
-					}
-				}
-				
-                
-                List<net.javacoding.xsearch.api.Document> resultDocs = extractResultDocs(result, rowsToReturn, offset);
-                
-                sr.initFor3Tier(sc, q, lq, query, resultDocs, defaultDocs, searchTime, result.getTotal(),
-                        offset, rowsToReturn, sortBys, filterResult, request, response);
-                
-				//sr.init(sc, q, lq, query, docs, defaultDocs, searchTime, total[0], offset, rowsToReturn, sortBys,
-						//filterResult, request, response);
-				
-			}
-			if (sc.debug)
-				logger.info("Got docs from disk: " + (System.currentTimeMillis() - _start));
-			sr.setAttributes();
-			request.setAttribute("searchResult", sr);
+                    sr.init(sc, q, lq, query, docs, defaultDocs, searchTime, total[0], offset, rowsToReturn, sortBys,
+                            filterResult, request, response);
 
-			// logger.debug("Set velocity variables: " +
-			// (System.currentTimeMillis() - _start));
+                } else if (sc.dc.getIndexType() == IndexType.ELASTICSEARCH) {
 
-			if (sc.debug)
-				logger.info("Found " + total[0] + " MATCHING with \"" + q + "\" in " + searchTime + " milliseconds");
+                    AbstractQuery abstractQuery = null;
+                    if (lq == null || lq.isEmpty()) {
+                        abstractQuery = new MatchAllQuery.Builder().addSort(sortBys).build();
+                    } else {
+                        String queryStr = SearchQueryParser.elasticsearchParse(lq);
+                        abstractQuery = new QueryStringQuery.Builder(queryStr).addSort(sortBys).build();
+                    }
 
-			// searcher.close();
+                    JestClient client = SpringContextUtil.getBean(JestClient.class);
 
-			log(q, lq, request, sc.indexName,
-					(sc.actualTemplateName == null ? sc.templateName : sc.actualTemplateName),
-					System.currentTimeMillis(), searchTime, System.currentTimeMillis() - _start, total[0]);
+                    Search search = new Search.Builder(abstractQuery.getAsString())
+                            .addIndex(sc.indexName)
+                            .setParameter(Parameters.SIZE, rowsToReturn)
+                            .setParameter("from", offset)
+                            .build();
 
-			return sc.af;
+                    io.searchbox.core.SearchResult result = client.execute(search);
+
+                    List<net.javacoding.xsearch.api.Document> resultDocs = extractResultDocs(result, rowsToReturn, offset);
+
+                    sr.initFor3Tier(sc, q, lq, query, resultDocs, defaultDocs, searchTime, result.getTotal(), offset,
+                            rowsToReturn, sortBys, filterResult, request, response);
+                }
+            }
+
+            if (sc.debug) {
+                logger.info("Got docs from disk: " + (System.currentTimeMillis() - _start));
+            }
+            sr.setAttributes();
+            request.setAttribute("searchResult", sr);
+
+            if (sc.debug) {
+                logger.info("Found " + total[0] + " MATCHING with \"" + q + "\" in " + searchTime + " milliseconds");
+            }
+
+            log(q, lq, request, sc.indexName,
+                    (sc.actualTemplateName == null ? sc.templateName : sc.actualTemplateName),
+                    System.currentTimeMillis(), searchTime, System.currentTimeMillis() - _start, total[0]);
+
+            return sc.af;
 		} catch (TooManyClauses tooManyClauseExcep) {
 			errors.add("error", new ActionMessage("action.search.runtime.error.toomanyclause"));
 			logger.info("Error while using wildcard search:" + tooManyClauseExcep);
