@@ -49,14 +49,13 @@ public class ESReIndexing extends AbstractReIndexing {
         IndexStatus.createIndex(jestClient, newIndexName);
         IndexStatus.putMapping(jestClient, dc, newIndexName);
 
-        String query = "{\"query\" : { \"match_all\" : { } } }";
+        String query = "{\"sort\": [\"_doc\"], \"query\" : { \"match_all\" : { } } }";
 
         Search search = new Search.Builder(query)
                 .addIndex(dc.getName())
                 .addType(dc.getName())
                 .setParameter(Parameters.SIZE, 10000)
                 .setParameter(Parameters.SCROLL, "5m")
-                .setParameter(Parameters.SEARCH_TYPE, "scan")
                 .build();
 
         SearchResult jestResult = JestExecute.execute(jestClient, search);
