@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-public class GetSettingsResult extends CustomJestResult {
+public class GetSettingsResult extends CustomJestResult<JestResult> {
 
     public GetSettingsResult(JestResult jestResult) {
         super(jestResult);

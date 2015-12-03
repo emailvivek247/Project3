@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import com.google.gson.JsonElement;
 
-public class GetAliasesResult extends CustomJestResult {
+public class GetAliasesResult extends CustomJestResult<JestResult> {
 
     public GetAliasesResult(JestResult jestResult) {
         super(jestResult);

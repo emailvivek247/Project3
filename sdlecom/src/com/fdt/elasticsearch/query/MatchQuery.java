@@ -11,6 +11,7 @@ public class MatchQuery extends AbstractQuery {
 
     private final Optional<String> operator;
     private final Optional<String> type;
+    private final Optional<Integer> slop;
 
     protected MatchQuery(Builder builder) {
         super(builder);
@@ -18,6 +19,7 @@ public class MatchQuery extends AbstractQuery {
         this.query = builder.query;
         this.operator = builder.operator;
         this.type = builder.type;
+        this.slop = builder.slop;
     }
 
     @Override
@@ -33,6 +35,9 @@ public class MatchQuery extends AbstractQuery {
         }
         if (type.isPresent()) {
             innerNode.put("type", type.get());
+        }
+        if (slop.isPresent()) {
+            innerNode.put("slop", slop.get());
         }
 
         ObjectNode matchNode = mapper.createObjectNode();
@@ -51,20 +56,14 @@ public class MatchQuery extends AbstractQuery {
 
         private Optional<String> operator;
         private Optional<String> type;
+        private Optional<Integer> slop;
 
-        public Builder() {
-            operator = Optional.empty();
-            type = Optional.empty();
-        }
-
-        public Builder withField(String field) {
+        public Builder(String field, String query) {
             this.field = field;
-            return this;
-        }
-
-        public Builder withQuery(String query) {
             this.query = query;
-            return this;
+            this.operator = Optional.empty();
+            this.type = Optional.empty();
+            this.slop = Optional.empty();
         }
 
         public Builder withType(String type) {
@@ -77,6 +76,11 @@ public class MatchQuery extends AbstractQuery {
             return this;
         }
 
+        public Builder withSlop(Integer slop) {
+            this.slop = Optional.of(slop);
+            return this;
+        }
+
         public MatchQuery build() {
             return new MatchQuery(this);
         }
@@ -84,18 +88,14 @@ public class MatchQuery extends AbstractQuery {
 
     public static void main(String[] args) {
 
-        MatchQuery query = new MatchQuery.Builder()
-                .withField("testField")
-                .withQuery("test query")
-                .build();
+        MatchQuery query = new MatchQuery.Builder("testField", "test query").build();
         System.out.println(query.getAsStringPrettyPrint());
 
-        query = new MatchQuery.Builder()
-                .withField("testField")
-                .withQuery("test query")
+        query = new MatchQuery.Builder("testField", "test query")
                 .withBoost(3F)
                 .withOperator("and")
                 .withType("phrase")
+                .withSlop(3)
                 .build();
         System.out.println(query.getAsStringPrettyPrint());
     }

@@ -112,28 +112,17 @@ public class BoolQuery extends AbstractQuery {
 
     public static void main(String[] args) {
 
-        MatchQuery query1 = new MatchQuery.Builder()
-                .withField("testField1")
-                .withQuery("test query 1")
-                .build();
+        MatchQuery query1 = new MatchQuery.Builder("testField1", "test query 1").build();
 
-        MatchQuery query2 = new MatchQuery.Builder()
-                .withField("testField2")
-                .withQuery("test query 2")
+        MatchQuery query2 = new MatchQuery.Builder("testField2", "test query 2")
                 .withBoost(3F)
                 .withOperator("and")
                 .withType("phrase")
                 .build();
 
-        MatchQuery query3 = new MatchQuery.Builder()
-                .withField("testField3")
-                .withQuery("test query 3")
-                .build();
+        MatchQuery query3 = new MatchQuery.Builder("testField3", "test query 3").build();
 
-        MatchQuery query4 = new MatchQuery.Builder()
-                .withField("testField4")
-                .withQuery("test query 4")
-                .build();
+        MatchQuery query4 = new MatchQuery.Builder("testField4", "test query 4").build();
 
         BoolQuery boolQuery = new BoolQuery.Builder()
                 .addMustClause(query1)

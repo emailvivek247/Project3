@@ -8,8 +8,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.javacoding.xsearch.config.DatasetConfiguration;
 import net.javacoding.xsearch.config.ServerConfiguration;
+import net.javacoding.xsearch.search.analysis.QueryHelper;
 import net.javacoding.xsearch.search.memory.BufferIndex;
 import net.javacoding.xsearch.search.memory.BufferIndexManager;
+
 import com.fdt.sdl.core.ui.action.indexing.memory.SubmitAction;
 import com.fdt.sdl.util.SecurityUtil;
 
@@ -80,7 +82,7 @@ public class DeleteAction extends Action {
                 q = "";
             }
             String lq = request.getParameter("lq");
-            Query query = SearchAction.getSearchQuery(q, lq, null, request, dc, irs, SearchAction.getBooleanOperator(request), request.getParameter("searchable"), U.getInt(request.getParameter("randomQuerySeed"),0), false);
+            Query query = QueryHelper.getSearchQuery(q, lq, null, request, dc, irs, SearchAction.getBooleanOperator(request), request.getParameter("searchable"), U.getInt(request.getParameter("randomQuerySeed"),0), false);
 
             // logger.debug("Start Searching: " + (System.currentTimeMillis() - _start));
             if (query != null) {

@@ -14,6 +14,7 @@ import net.javacoding.xsearch.core.exception.ConfigurationException;
 import net.javacoding.xsearch.foundation.WebserverStatic;
 import net.javacoding.xsearch.search.HTMLEntities;
 import net.javacoding.xsearch.search.HitDocument;
+import net.javacoding.xsearch.search.analysis.QueryHelper;
 import net.javacoding.xsearch.search.searcher.IndexReaderSearcher;
 import net.javacoding.xsearch.search.searcher.SearcherManager;
 import net.javacoding.xsearch.utility.HttpUtil;
@@ -90,7 +91,7 @@ public class MultiSearchVmAction extends Action {
                     try {
                         logger.debug("Loaded Analyzer: " + (System.currentTimeMillis() - _start));
                         if (!U.isEmpty(q)) {
-                            query = SearchAction.getSearchQuery(q, request.getParameter("lq"), null, request, dcs[i], irs, SearchAction.getBooleanOperator(request), request.getParameter("searchable"), U.getInt(request.getParameter("randomQuerySeed"),0), false);
+                            query = QueryHelper.getSearchQuery(q, request.getParameter("lq"), null, request, dcs[i], irs, SearchAction.getBooleanOperator(request), request.getParameter("searchable"), U.getInt(request.getParameter("randomQuerySeed"),0), false);
                         }else {
                             query = new MatchAllDocsQuery();
                         }

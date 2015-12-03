@@ -10,12 +10,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.javacoding.xsearch.api.Document;
 import net.javacoding.xsearch.api.FacetChoice;
 import net.javacoding.xsearch.api.FacetCount;
 import net.javacoding.xsearch.api.Result;
@@ -29,13 +31,9 @@ import net.javacoding.xsearch.foundation.WebserverStatic;
 import net.javacoding.xsearch.search.HTMLEntities;
 import net.javacoding.xsearch.search.HitDocument;
 import net.javacoding.xsearch.search.QueryTranslator;
-import net.javacoding.xsearch.search.SearchQueryParser;
 import net.javacoding.xsearch.search.analysis.AdvancedQueryAnalysis;
-import net.javacoding.xsearch.search.analysis.QueryAnalysis;
-import net.javacoding.xsearch.search.function.RandomQuery;
-import net.javacoding.xsearch.search.function.TimeWeightQuery;
+import net.javacoding.xsearch.search.analysis.QueryHelper;
 import net.javacoding.xsearch.search.memory.BufferIndexManager;
-import net.javacoding.xsearch.search.query.DbsQuery;
 import net.javacoding.xsearch.search.result.SearchResult;
 import net.javacoding.xsearch.search.result.SearchSort;
 import net.javacoding.xsearch.search.result.filter.Count;
@@ -51,13 +49,10 @@ import net.javacoding.xsearch.utility.HttpUtil;
 import net.javacoding.xsearch.utility.U;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery.TooManyClauses;
 import org.apache.lucene.search.Hits;
-import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Searcher;
 import org.apache.lucene.search.TermQuery;
@@ -74,154 +69,153 @@ import org.slf4j.LoggerFactory;
 import com.fdt.common.util.SystemUtil;
 import com.fdt.elasticsearch.config.SpringContextUtil;
 import com.fdt.elasticsearch.query.AbstractQuery;
-import com.fdt.elasticsearch.query.MatchAllQuery;
-import com.fdt.elasticsearch.query.QueryStringQuery;
+import com.fdt.elasticsearch.query.BoolQuery;
+import com.fdt.elasticsearch.query.ESQueryHelper;
+import com.fdt.elasticsearch.type.result.CustomSearchResult;
 import com.fdt.sdl.admin.ui.action.constants.IndexType;
 import com.fdt.sdl.styledesigner.Template;
 import com.fdt.sdl.styledesigner.util.DeviceDetectorUtil;
 import com.fdt.sdl.styledesigner.util.TemplateUtil;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 /**
  * Implementation of <strong>Action </strong> that performs search.
  */
 
 public class SearchAction extends Action {
-	private static Logger logger = LoggerFactory.getLogger(SearchAction.class);
 
-	private void displayFilterResult(FilterResult filterResult, Result result) {
-		List<FilterColumn> filterColumns = filterResult.getFilterColumns();
+    private static Logger logger = LoggerFactory.getLogger(SearchAction.class);
 
-		for (FilterColumn filterColumn : filterColumns) {
-			System.out.println("***************************************************");
-			Column column = filterColumn.getColumn();
-			System.out.println(column);
-			List<Count> counts = filterColumn.getCounts();
-			for (Count count : counts) {
-				System.out.println("------------------------------------------------");
-				System.out.println(count);
-			}
-		}
+    /**
+     * Process the search request.
+     */
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws IOException, ServletException {
 
-	}
+        if ("Y".equals(request.getParameter("displayCached"))) {
+            return mapping.findForward("displayCached");
+        }
+        if ("1".equals(request.getParameter("rss"))) {
+            response.addHeader("content-disposition", "inline; filename=\"search.xml\"");
+        }
 
-	/**
-	 * Process the search request.
-	 */
-	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-			HttpServletResponse response) throws IOException, ServletException {
+        SearchContext sc = null;
+        SearchResult sr = new SearchResult();
 
-		if ("Y".equals(request.getParameter("displayCached"))) {
-			return mapping.findForward("displayCached");
-		}
-		if ("1".equals(request.getParameter("rss"))) {
-			response.addHeader("content-disposition", "inline; filename=\"search.xml\"");
-		}
+        String q = request.getParameter("q");
+        if (q == null) {
+            q = "";
+        }
+        String lq = request.getParameter("lq");
+        String defaultQ = request.getParameter("defaultQ");
 
-		SearchContext sc = null;
-		SearchResult sr = new SearchResult();
+        ActionMessages errors = new ActionMessages();
 
-		String q = request.getParameter("q");
-		if (q == null) {
-			q = "";
-		}
-		String lq = request.getParameter("lq");
-		String defaultQ = request.getParameter("defaultQ");
+        try {
 
-		ActionMessages errors = new ActionMessages();
-		try {
-			long _start = System.currentTimeMillis();
+            long _start = System.currentTimeMillis();
 
-			sc = findSearchContext(mapping, request);
-			if (sc.af == null) {
-				return mapping.findForward("continue");
-			}
+            sc = findSearchContext(mapping, request);
+            if (sc.af == null) {
+                return mapping.findForward("continue");
+            }
 
-			if (sc.debug)
-				logger.info("Got config: " + (System.currentTimeMillis() - _start));
+            if (sc.debug) {
+                logger.info("Got config: " + (System.currentTimeMillis() - _start));
+            }
 
-			// Get searchers from the indexNames
-			sc.irs = getIndexReaderSearcher(sc.indexNames);
-			if (sc.irs == null) {
-				if (sc.debug)
-					logger.warn("Can not get searcher ");
-				errors.add("error", new ActionMessage("action.search.index.error", sc.indexName));
-				return (sc.af);
-			}
-			if (sc.debug)
-				logger.info("Got searcher: " + (System.currentTimeMillis() - _start));
+            // Get searchers from the indexNames
+            sc.irs = getIndexReaderSearcher(sc.indexNames);
+            if (sc.irs == null) {
+                if (sc.debug) {
+                    logger.warn("Can not get searcher ");
+                }
+                errors.add("error", new ActionMessage("action.search.index.error", sc.indexName));
+                return (sc.af);
+            }
+            if (sc.debug) {
+                logger.info("Got searcher: " + (System.currentTimeMillis() - _start));
+            }
 
-			FilterResult filterResult = new FilterResult();
+            FilterResult filterResult = new FilterResult();
 
-			// parse the query
-			Query query = null;
-			if (!sc.dc.getIsEmptyQueryMatchAll() && U.isEmpty(q) && U.isEmpty(lq)) {
-				query = null;
-			} else {
-				query = getSearchQuery(sr, q, lq, filterResult, request, sc.dc, sc.irs, getBooleanOperator(request),
-						request.getParameter("searchable"), U.getInt(request.getParameter("randomQuerySeed"), 0),
-						sc.debug);
-			}
+            // pagination
+            int offset = U.getInt(request.getParameter("start"), 0);
+            if (offset < 0) {
+                offset = 0;
+            }
 
-			// pagination
-			int offset = U.getInt(request.getParameter("start"), 0);
-			if (offset < 0)
-				offset = 0;
+            int topRows = U.getInt(request.getParameter("topRows"), 0);
+            if (topRows < 0) {
+                topRows = 0;
+            }
 
-			int topRows = U.getInt(request.getParameter("topRows"), 0);
-			if (topRows < 0)
-				topRows = 0;
+            int defaultLength = sc.template != null && sc.template.defaultLength != null ? sc.template.defaultLength : 30;
+            Cookie cLength = HttpUtil.getCookie(request, "resultspp");
+            if (cLength != null) {
+                defaultLength = U.getInt(cLength.getValue(), defaultLength);
+            }
+            int rowsToReturn = U.getInt(request.getParameter("length"), U.getInt(request.getParameter("limit"), defaultLength));
+            if (rowsToReturn <= 0) {
+                rowsToReturn = 100;
+            }
 
-			int defaultLength = sc.template != null && sc.template.defaultLength != null ? sc.template.defaultLength
-					: 30;
-			Cookie cLength = HttpUtil.getCookie(request, "resultspp");
-			if (cLength != null) {
-				defaultLength = U.getInt(cLength.getValue(), defaultLength);
-			}
-			int rowsToReturn = U.getInt(request.getParameter("length"),
-					U.getInt(request.getParameter("limit"), defaultLength));
-			if (rowsToReturn <= 0)
-				rowsToReturn = 100;
 
-			List<HitDocument> docs = null;
-			List<HitDocument> defaultDocs = null;
-			int[] total = new int[1];
-			long searchTime = 0;
-			List<SearchSort> sortBys = findSearchSorts(sc.dc, request);
-			if (sc.debug)
-				logger.info("Start Searching: " + (System.currentTimeMillis() - _start));
-			File propertiesFile = FileUtil.resolveFile(WebserverStatic.getRootDirectoryFile(), "WEB-INF", "conf",
-					"spring", "properties", "client.properties");
-			String threeTier = null;
-			String indexServerUrl = null;
+            int[] total = new int[1];
+            long searchTime = 0;
+            List<SearchSort> sortBys = findSearchSorts(sc.dc, request);
+            if (sc.debug) {
+                logger.info("Start Searching: " + (System.currentTimeMillis() - _start));
+            }
+            File propertiesFile = FileUtil.resolveFile(WebserverStatic.getRootDirectoryFile(), "WEB-INF", "conf",
+                    "spring", "properties", "client.properties");
+            String indexServerUrl = null;
 
-			long start = System.currentTimeMillis();
-			if (Boolean.parseBoolean(request.getServletContext().getInitParameter("isPSOOnlyMachine"))) {
-				if (propertiesFile != null && propertiesFile.getAbsolutePath() != null) {
-					indexServerUrl = SystemUtil.readProperty("indexServerUrl", propertiesFile.getAbsolutePath());
-					SearchConnection searchConnection = new SearchConnection(indexServerUrl).setIndex(sc.indexName);
-					SearchQuery searchQuery = new SearchQuery().setStart(offset).setLength(rowsToReturn);
 
-					if (!StringUtils.isBlank(q)) {
-						searchQuery.setBasicQuery(q);
-					}
-					if (!StringUtils.isBlank(lq)) {
-						searchQuery.setAdvancedQuery(lq);
-					}
-					Result result = searchConnection.search(searchQuery);
-					// Populate Filters
-					narrowBySearch(query, sc.irs, sc.dc, filterResult, errors, request);
-					populateFilterResult(filterResult, result);
-					sr.initFor3Tier(sc, q, lq, query, result.getDocList(), defaultDocs, searchTime, result.getTotal(),
-							offset, rowsToReturn, sortBys, filterResult, request, response);
-					// displayFilterResult(filterResult, result);
-				}
+            long start = System.currentTimeMillis();
+            if (Boolean.parseBoolean(request.getServletContext().getInitParameter("isPSOOnlyMachine"))) {
+                if (propertiesFile != null && propertiesFile.getAbsolutePath() != null) {
+                    
+                    Query query = null;
+                    if (!sc.dc.getIsEmptyQueryMatchAll() && U.isEmpty(q) && U.isEmpty(lq)) {
+                        query = null;
+                    } else {
+                        query = QueryHelper.getSearchQuery(sr, q, lq, filterResult, request, sc.dc, sc.irs,
+                                getBooleanOperator(request), request.getParameter("searchable"),
+                                U.getInt(request.getParameter("randomQuerySeed"), 0), sc.debug);
+                    }
 
-			} else {
+                    indexServerUrl = SystemUtil.readProperty("indexServerUrl", propertiesFile.getAbsolutePath());
+                    SearchConnection searchConnection = new SearchConnection(indexServerUrl).setIndex(sc.indexName);
+                    SearchQuery searchQuery = new SearchQuery().setStart(offset).setLength(rowsToReturn);
+                    if (!StringUtils.isBlank(q)) {
+                        searchQuery.setBasicQuery(q);
+                    }
+                    if (!StringUtils.isBlank(lq)) {
+                        searchQuery.setAdvancedQuery(lq);
+                    }
+                    Result result = searchConnection.search(searchQuery);
+                    // Populate Filters
+                    narrowBySearch(query, sc.irs, sc.dc, filterResult, errors, request);
+                    populateFilterResult(filterResult, result);
+                    sr.initFor3Tier(sc, q, lq, query, result.getDocList(), null, searchTime, result.getTotal(),
+                            offset, rowsToReturn, sortBys, filterResult, request, response);
+                }
+
+            } else {
 
                 if (sc.dc.getIndexType() == null || sc.dc.getIndexType() == IndexType.LUCENE) {
+
+                    List<HitDocument> docs = null;
+                    List<HitDocument> defaultDocs = null;
+
+                    Query query = null;
+                    if (!sc.dc.getIsEmptyQueryMatchAll() && U.isEmpty(q) && U.isEmpty(lq)) {
+                        query = null;
+                    } else {
+                        query = QueryHelper.getSearchQuery(sr, q, lq, filterResult, request, sc.dc, sc.irs,
+                                getBooleanOperator(request), request.getParameter("searchable"),
+                                U.getInt(request.getParameter("randomQuerySeed"), 0), sc.debug);
+                    }
 
                     if (query != null) {
                         Hits hits = null;
@@ -245,8 +239,9 @@ public class SearchAction extends Action {
                             narrowBySearch(query, sc.irs, sc.dc, filterResult, errors, request);
                         } else {
                             if (!U.isEmpty(defaultQ)) {
-                                Query defaultQuery = getSearchQuery(sr, defaultQ, lq, filterResult, request, sc.dc, sc.irs,
-                                        getBooleanOperator(request), request.getParameter("searchable"),
+                                Query defaultQuery = QueryHelper.getSearchQuery(sr, defaultQ, lq, filterResult,
+                                        request, sc.dc, sc.irs, getBooleanOperator(request),
+                                        request.getParameter("searchable"),
                                         U.getInt(request.getParameter("randomQuerySeed"), 0), sc.debug);
                                 hits = directSearch(defaultQuery, sc.irs, sc.dc, hits, errors, request);
                                 searchTime = System.currentTimeMillis() - start;
@@ -260,13 +255,11 @@ public class SearchAction extends Action {
 
                 } else if (sc.dc.getIndexType() == IndexType.ELASTICSEARCH) {
 
-                    AbstractQuery abstractQuery = null;
-                    if (lq == null || lq.isEmpty()) {
-                        abstractQuery = new MatchAllQuery.Builder().addSort(sortBys).build();
-                    } else {
-                        String queryStr = SearchQueryParser.elasticsearchParse(lq);
-                        abstractQuery = new QueryStringQuery.Builder(queryStr).addSort(sortBys).build();
-                    }
+                    BoolQuery.Builder esQueryBuilder = ESQueryHelper.getSearchQuery(sr, q, lq, filterResult, request, sc.dc, sc.irs,
+                            getBooleanOperator(request), request.getParameter("searchable"),
+                            U.getInt(request.getParameter("randomQuerySeed"), 0), sc.debug);
+
+                    AbstractQuery abstractQuery = esQueryBuilder.addSort(sortBys).build();
 
                     JestClient client = SpringContextUtil.getBean(JestClient.class);
 
@@ -276,11 +269,10 @@ public class SearchAction extends Action {
                             .setParameter("from", offset)
                             .build();
 
-                    io.searchbox.core.SearchResult result = client.execute(search);
+                    CustomSearchResult result = new CustomSearchResult(client.execute(search));
+                    List<Document> resultDocs = extractResultDocs(result, rowsToReturn, offset);
 
-                    List<net.javacoding.xsearch.api.Document> resultDocs = extractResultDocs(result, rowsToReturn, offset);
-
-                    sr.initFor3Tier(sc, q, lq, query, resultDocs, defaultDocs, searchTime, result.getTotal(), offset,
+                    sr.initFor3Tier(sc, q, lq, null, resultDocs, null, searchTime, result.getTotal(), offset,
                             rowsToReturn, sortBys, filterResult, request, response);
                 }
             }
@@ -300,37 +292,54 @@ public class SearchAction extends Action {
                     System.currentTimeMillis(), searchTime, System.currentTimeMillis() - _start, total[0]);
 
             return sc.af;
-		} catch (TooManyClauses tooManyClauseExcep) {
-			errors.add("error", new ActionMessage("action.search.runtime.error.toomanyclause"));
-			logger.info("Error while using wildcard search:" + tooManyClauseExcep);
-			return (mapping.findForward("error"));
-		} catch (IOException ioe) {
-			errors.add("error", new ActionMessage("action.showIndexStatus.index.error", sc.indexName));
-			System.err.println("Search IOE:" + q);
-			ioe.printStackTrace();
-			return (mapping.findForward("error"));
-		} catch (NullPointerException se) {
-			errors.add("error", new ActionMessage("action.showIndexStatus.index.error", sc.indexName));
-			System.err.println("Search NPE:" + q);
-			se.printStackTrace();
-			return (mapping.findForward("error"));
-		} catch (Throwable t) {
-			errors.add("error", new ActionMessage("action.showIndexStatus.index.error", sc.indexName));
-			System.err.println("Search Error:" + q);
-			t.printStackTrace();
-			request.setAttribute("errors", t);
-			return (mapping.findForward("error"));
-		} finally {
-			if (sc != null && sc.indexName != null && sc.irs != null) {
-				SearchAction.closeIndexReaderSearcher(sc.irs);
-			}
-			request.setAttribute("layout", "Empty.vm");
-			saveErrors(request, errors);
-		}
+        } catch (TooManyClauses tooManyClauseExcep) {
+            errors.add("error", new ActionMessage("action.search.runtime.error.toomanyclause"));
+            logger.info("Error while using wildcard search:" + tooManyClauseExcep);
+            return (mapping.findForward("error"));
+        } catch (IOException ioe) {
+            errors.add("error", new ActionMessage("action.showIndexStatus.index.error", sc.indexName));
+            System.err.println("Search IOE:" + q);
+            ioe.printStackTrace();
+            return (mapping.findForward("error"));
+        } catch (NullPointerException se) {
+            errors.add("error", new ActionMessage("action.showIndexStatus.index.error", sc.indexName));
+            System.err.println("Search NPE:" + q);
+            se.printStackTrace();
+            return (mapping.findForward("error"));
+        } catch (Throwable t) {
+            errors.add("error", new ActionMessage("action.showIndexStatus.index.error", sc.indexName));
+            System.err.println("Search Error:" + q);
+            t.printStackTrace();
+            request.setAttribute("errors", t);
+            return (mapping.findForward("error"));
+        } finally {
+            if (sc != null && sc.indexName != null && sc.irs != null) {
+                SearchAction.closeIndexReaderSearcher(sc.irs);
+            }
+            request.setAttribute("layout", "Empty.vm");
+            saveErrors(request, errors);
+        }
 
-	}
+    }
 
-	private void populateFilterResult(FilterResult filterResult, Result result) {
+	@SuppressWarnings("unused")
+    private void displayFilterResult(FilterResult filterResult, Result result) {
+        List<FilterColumn> filterColumns = filterResult.getFilterColumns();
+    
+        for (FilterColumn filterColumn : filterColumns) {
+            System.out.println("***************************************************");
+            Column column = filterColumn.getColumn();
+            System.out.println(column);
+            List<Count> counts = filterColumn.getCounts();
+            for (Count count : counts) {
+                System.out.println("------------------------------------------------");
+                System.out.println(count);
+            }
+        }
+    
+    }
+
+    private void populateFilterResult(FilterResult filterResult, Result result) {
 		for (FacetChoice fChoice : result.getFacetChoiceList()) {
 			FilterColumn filterColumn = filterResult.getFilterColumn(fChoice.getColumn());
 			if (filterColumn != null) {
@@ -491,94 +500,6 @@ public class SearchAction extends Action {
 		return ret;
 	}
 
-	public static Query getSearchQuery(SearchResult sr, String q, String lq, FilterResult filterResult,
-			HttpServletRequest request, DatasetConfiguration dc, IndexReaderSearcher irs, int booleanOperator,
-			String dynamicSearchable, int randomQuerySeed, boolean debug) {
-		// parse the query
-		Query advancedQuery = null;
-		Query query = null;
-		if (filterResult == null) {
-			filterResult = new FilterResult();
-		}
-		try {
-			if ("Y".equalsIgnoreCase(request.getParameter("lucene"))) {
-				// option to switch to Lucene's RAW query parser
-				query = SearchQueryParser.luceneParse(dc.getAnalyzer(), q);
-			} else {
-				if (U.isEmpty(q) && dc.getIsEmptyQueryMatchAll() && U.isEmpty(lq)) {
-					advancedQuery = new MatchAllDocsQuery();
-				}
-				// query = SearchQueryParser.parse(dc, analyzer, q,
-				// filteredColumns);
-				// copy SearchQueryParser.parse to here
-				if (!U.isEmpty(q)) {
-					AdvancedQueryAnalysis aqa = new AdvancedQueryAnalysis(dc, q, filterResult);
-					q = aqa.getRemainingQueryString();
-					advancedQuery = aqa.getAdvancedQuery();
-					if (debug)
-						logger.info("Advanced query: " + advancedQuery);
-					if (aqa.getIsAllNegative() && advancedQuery != null) {
-						advancedQuery = AdvancedQueryAnalysis.appendQuery(advancedQuery, new MatchAllDocsQuery(),
-								Occur.MUST);
-					}
-				}
-				if (!U.isEmpty(q)) {
-					QueryTranslator translator = new QueryTranslator(dc.getColumns(), dynamicSearchable);
-					if (debug)
-						logger.info("Start parse query: " + HTMLEntities.encode(q));
-					DbsQuery myQuery = QueryAnalysis.parseQuery(q, dc);
-					request.setAttribute("parsedQuery", myQuery);
-					if (sr != null) {
-						sr.setUserInput(myQuery.getUserInput());
-					}
-					if (debug)
-						logger.info("parsed query: " + HTMLEntities.encode(myQuery.toString()));
-					translator.setSlop(5);
-					translator.setBooleanOperator(booleanOperator);
-					query = translator.translate(dc.getAnalyzer(), myQuery, filterResult, dc);
-					if (debug)
-						logger.info("translated query: " + HTMLEntities.encode(query.toString()));
-					if (translator.getIsAllNegative()) {
-						query = AdvancedQueryAnalysis.appendQuery(query, new MatchAllDocsQuery(), Occur.MUST);
-					}
-				}
-				query = AdvancedQueryAnalysis.andQuery(query, advancedQuery);
-				if (!U.isEmpty(lq)) {
-					Query luceneQuery = SearchQueryParser.luceneParse(dc.getAnalyzer(), lq);
-					query = AdvancedQueryAnalysis.appendQuery(query, luceneQuery);
-					if (debug)
-						logger.info("added Lucene query: " + HTMLEntities.encode(query.toString()));
-				}
-			}
-			if (dc.getDateWeightColumnName() != null) {
-				query = new TimeWeightQuery(query, dc, irs.getIndexReader());
-				if (debug)
-					logger.info("added time-weighted query: " + HTMLEntities.encode(query.toString()));
-			}
-			if (randomQuerySeed != 0) {
-				query = new RandomQuery(query, randomQuerySeed);
-				if (debug)
-					logger.info("added random query: " + HTMLEntities.encode(query.toString()));
-			}
-		} catch (Exception ex) {
-			if (debug)
-				logger.info("Exception Occurred", ex);
-			if (debug)
-				logger.error("Cannot parse query: " + q);
-		}
-		// logger.debug("Parsed Query: " + (System.currentTimeMillis() -
-		// _start));
-		return query;
-	}
-
-	public static Query getSearchQuery(String q, String lq, FilterResult filterResult, HttpServletRequest request,
-			DatasetConfiguration dc, IndexReaderSearcher irs, int booleanOperator, String dynamicSearchable,
-			int randomQuerySeed, boolean debug) {
-		// this is used for cases you don't have a SearchResult available
-		return getSearchQuery(null, q, lq, filterResult, request, dc, irs, booleanOperator, dynamicSearchable,
-				randomQuerySeed, debug);
-	}
-
 	protected static void narrowBySearch(Query query, IndexReaderSearcher irs, DatasetConfiguration dc,
 			FilterResult filterResult, ActionMessages errors, HttpServletRequest request) throws IOException {
 		try {
@@ -675,34 +596,35 @@ public class SearchAction extends Action {
 		return retValue;
 	}
 
-    protected static List<net.javacoding.xsearch.api.Document> extractResultDocs(io.searchbox.core.SearchResult result,
-            int rowsToReturn, int offset) throws IOException {
-        List<net.javacoding.xsearch.api.Document> retValue = null;
-        if (result != null) {
-            retValue = new ArrayList<>(rowsToReturn);
-            JsonArray hits = result.getJsonObject().getAsJsonObject("hits").getAsJsonArray("hits");
-            for (JsonElement hitElement : hits) {
-                JsonObject hit = hitElement.getAsJsonObject();
-                retValue.add(new net.javacoding.xsearch.api.Document(hit.get("_source").getAsJsonObject(),
-                        hit.get("_score").getAsFloat(), hit.get("_id").getAsString()));
-            }
-        }
+    protected static List<Document> extractResultDocs(CustomSearchResult result, int rowsToReturn, int offset)
+            throws IOException {
+        List<Document> retValue = result.stream().map((hit) -> {
+            return new Document(
+                    hit.get("_source").getAsJsonObject(),
+                    hit.get("_score").getAsFloat(),
+                    hit.get("_id").getAsString()
+            );
+        }).collect(Collectors.toList());
         return retValue;
     }
 
-	protected static List<HitDocument> collectHits(DatasetConfiguration paramDatasetConfiguration,
-			TopDocs paramTopDocs, Searcher paramSearcher) throws CorruptIndexException, IOException {
-		List<HitDocument> localArrayList = null;
-		if (paramTopDocs != null) {
-			localArrayList = new ArrayList<>(paramTopDocs.scoreDocs.length);
-			for (int i = 0; i < paramTopDocs.scoreDocs.length; i++) {
-				Document doc = paramSearcher.doc(paramTopDocs.scoreDocs[i].doc);
-				localArrayList.add(new HitDocument(paramDatasetConfiguration, doc, paramTopDocs.scoreDocs[i].score,
-						paramTopDocs.scoreDocs[i].doc));
-			}
-		}
-		return localArrayList;
-	}
+    protected static List<HitDocument> collectHits(DatasetConfiguration paramDatasetConfiguration,
+            TopDocs paramTopDocs, Searcher paramSearcher) throws CorruptIndexException, IOException {
+        List<HitDocument> localArrayList = null;
+        if (paramTopDocs != null) {
+            localArrayList = new ArrayList<>(paramTopDocs.scoreDocs.length);
+            for (int i = 0; i < paramTopDocs.scoreDocs.length; i++) {
+                localArrayList.add(
+                        new HitDocument(
+                                paramDatasetConfiguration,
+                                paramSearcher.doc(paramTopDocs.scoreDocs[i].doc),
+                                paramTopDocs.scoreDocs[i].score,
+                                paramTopDocs.scoreDocs[i].doc)
+                        );
+            }
+        }
+        return localArrayList;
+    }
 
 	protected static Query getAccessFilterQuery(DatasetConfiguration dc, Query query, HttpServletRequest request,
 			ActionMessages errors) {
@@ -750,94 +672,95 @@ public class SearchAction extends Action {
 		return new String[] { indexName };
 	}
 
-	public static IndexReaderSearcher getIndexReaderSearcher(String[] indexNames) throws Exception {
-		if (indexNames == null)
-			return null;
-		ArrayList<IndexReaderSearcher> irss = new ArrayList<IndexReaderSearcher>();
-		for (String indexName : indexNames) {
-			SearcherProvider sp = SearcherManager.getSearcherProvider(indexName);
-			if (sp != null) {
-				IndexReaderSearcher irs = sp.getIndexReaderSearcher();
-				if (irs != null) {
-					irss.add(irs);
-				}
-			}
-		}
-		IndexReaderSearcher irs = IndexReaderSearcher.getIndexReaderSearcher(irss,
-				BufferIndexManager.getIndex(indexNames[0], false));
-		return irs;
-	}
+    public static IndexReaderSearcher getIndexReaderSearcher(String[] indexNames) throws Exception {
+        if (indexNames == null) {
+            return null;
+        }
+        ArrayList<IndexReaderSearcher> irss = new ArrayList<>();
+        for (String indexName : indexNames) {
+            SearcherProvider sp = SearcherManager.getSearcherProvider(indexName);
+            if (sp != null) {
+                IndexReaderSearcher irs = sp.getIndexReaderSearcher();
+                if (irs != null) {
+                    irss.add(irs);
+                }
+            }
+        }
+        IndexReaderSearcher irs = IndexReaderSearcher.getIndexReaderSearcher(irss,
+                BufferIndexManager.getIndex(indexNames[0], false));
+        return irs;
+    }
 
-	public static void closeIndexReaderSearcher(IndexReaderSearcher irs) {
-		try {
-			irs.release();
-		} catch (Throwable e) {
-			logger.warn("Exception Occurred", e);
-			e.printStackTrace();
-		}
-	}
+    public static void closeIndexReaderSearcher(IndexReaderSearcher irs) {
+        try {
+            irs.release();
+        } catch (Throwable e) {
+            logger.warn("Exception Occurred", e);
+            e.printStackTrace();
+        }
+    }
 
-	public static class SearchContext {
-		public boolean debug;
+    public static void log(String q, String lq, HttpServletRequest request, String indexName, String templateName,
+            long visitTime, long searchingTime, long renderTime, int returnedDoc) {
+        String ipaddress = request.getRemoteAddr();
+        if (request.getHeader("HTTP_X_FORWARDED_FOR") != null) {
+            ipaddress = request.getHeader("HTTP_X_FORWARDED_FOR");
+        } else if (request.getHeader("X-FORWARDED-FOR") != null) {
+            ipaddress = request.getHeader("X-FORWARDED-FOR");
+        }
+        if (!U.isEmpty(q)) {
+            QueryLogger.log(request.getRemoteUser(), ipaddress, HTMLEntities.encode(q), indexName, templateName,
+                    visitTime, searchingTime, renderTime, returnedDoc);
+        } else if (!U.isEmpty(lq)) {
+            QueryLogger.log(request.getRemoteUser(), ipaddress, HTMLEntities.encode(lq), indexName, templateName,
+                    visitTime, searchingTime, renderTime, returnedDoc);
+        }
+    }
 
-		public IndexReaderSearcher irs;
-		/*
-		 * This is actually only used for displaying purpose
-		 */
-		public DatasetConfiguration dc;
-		public Template template;
-		public ActionForward af;
+    public static int getBooleanOperator(HttpServletRequest request) {
+        int booleanOperator = 0;
+        String operator = request.getParameter("booleanOperator");
+        if (!U.isEmpty(operator)) {
+            if ("and".equalsIgnoreCase(operator)) {
+                booleanOperator = QueryTranslator.AND;
+            } else {
+                booleanOperator = QueryTranslator.OR;
+            }
+        }
+        return booleanOperator;
+    }
 
-		// this one holds the actual template name that'll be used
-		public String actualTemplateName;
-		public String actualIndexName;
-		public String actualFileName;
+    public static class SearchContext {
+        public boolean debug;
 
-		/*
-		 * derived from "indexName" parameter, this is acutally been used to get
-		 * the list of index searchers
-		 */
-		public String[] indexNames;
-		/*
-		 * same as "indexName" parameter, which may have several index names.
-		 * It's only used for displaying messages, and to pass to the result
-		 * rendering
-		 */
-		public String indexName;
-		/*
-		 * same as "templateName" parameter. It's only used to pass to the
-		 * result rendering
-		 */
-		public String templateName;
-	}
+        public IndexReaderSearcher irs;
+        /*
+         * This is actually only used for displaying purpose
+         */
+        public DatasetConfiguration dc;
+        public Template template;
+        public ActionForward af;
 
-	public static void log(String q, String lq, HttpServletRequest request, String indexName, String templateName,
-			long visitTime, long searchingTime, long renderTime, int returnedDoc) {
-		String ipaddress = request.getRemoteAddr();
-		if (request.getHeader("HTTP_X_FORWARDED_FOR") != null) {
-			ipaddress = request.getHeader("HTTP_X_FORWARDED_FOR");
-		} else if (request.getHeader("X-FORWARDED-FOR") != null) {
-			ipaddress = request.getHeader("X-FORWARDED-FOR");
-		}
-		if (!U.isEmpty(q)) {
-			QueryLogger.log(request.getRemoteUser(), ipaddress, HTMLEntities.encode(q), indexName, templateName,
-					visitTime, searchingTime, renderTime, returnedDoc);
-		} else if (!U.isEmpty(lq)) {
-			QueryLogger.log(request.getRemoteUser(), ipaddress, HTMLEntities.encode(lq), indexName, templateName,
-					visitTime, searchingTime, renderTime, returnedDoc);
-		}
-	}
+        // this one holds the actual template name that'll be used
+        public String actualTemplateName;
+        public String actualIndexName;
+        public String actualFileName;
 
-	public static int getBooleanOperator(HttpServletRequest request) {
-		int booleanOperator = 0;
-		String operator = request.getParameter("booleanOperator");
-		if (!U.isEmpty(operator)) {
-			if ("and".equalsIgnoreCase(operator)) {
-				booleanOperator = QueryTranslator.AND;
-			} else {
-				booleanOperator = QueryTranslator.OR;
-			}
-		}
-		return booleanOperator;
-	}
+        /*
+         * derived from "indexName" parameter, this is acutally been used to get
+         * the list of index searchers
+         */
+        public String[] indexNames;
+        /*
+         * same as "indexName" parameter, which may have several index names.
+         * It's only used for displaying messages, and to pass to the result
+         * rendering
+         */
+        public String indexName;
+        /*
+         * same as "templateName" parameter. It's only used to pass to the
+         * result rendering
+         */
+        public String templateName;
+    }
 }

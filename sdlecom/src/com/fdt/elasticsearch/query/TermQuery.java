@@ -1,7 +1,5 @@
 package com.fdt.elasticsearch.query;
 
-import java.util.Optional;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class TermQuery extends AbstractQuery {
@@ -38,18 +36,9 @@ public class TermQuery extends AbstractQuery {
         private String field;
         private String value;
 
-        public Builder() {
-            boost = Optional.empty();
-        }
-
-        public Builder withField(String field) {
+        public Builder(String field, String value) {
             this.field = field;
-            return this;
-        }
-
-        public Builder withValue(String value) {
             this.value = value;
-            return this;
         }
 
         public TermQuery build() {
@@ -59,17 +48,10 @@ public class TermQuery extends AbstractQuery {
 
     public static void main(String[] args) {
 
-        TermQuery query = new TermQuery.Builder()
-                .withField("testField")
-                .withValue("test value")
-                .build();
+        TermQuery query = new TermQuery.Builder("testField", "test value").build();
         System.out.println(query.getAsStringPrettyPrint());
 
-        query = new TermQuery.Builder()
-                .withField("testField")
-                .withValue("test value")
-                .withBoost(3F)
-                .build();
+        query = new TermQuery.Builder("testField", "test value").withBoost(3F).build();
         System.out.println(query.getAsStringPrettyPrint());
     }
 }

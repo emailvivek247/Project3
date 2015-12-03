@@ -31,10 +31,14 @@ public abstract class AbstractQuery {
     public ArrayNode getSortArrayNode() {
 
         List<ObjectNode> outerNodes = sorts.stream().map((sort) -> {
+            String sortField = sort.field;
+            if (sort.getColumn().getIsNumber()) {
+                sortField += ".number";
+            }
             ObjectNode innerNode = mapper.createObjectNode();
             innerNode.put("order", sort.descending ? "desc" : "asc");
             ObjectNode outerNode = mapper.createObjectNode();
-            outerNode.set(sort.field, innerNode);
+            outerNode.set(sortField, innerNode);
             return outerNode;
         }).collect(Collectors.toList());
 
@@ -92,12 +96,16 @@ public abstract class AbstractQuery {
         }
 
         public K addSort(SearchSort sort) {
-            this.sorts.add(sort);
+            if (sort != null) {
+                this.sorts.add(sort);
+            }
             return (K) this;
         }
 
         public K addSort(Collection<SearchSort> sort) {
-            this.sorts.addAll(sort);
+            if (sort != null) {
+                this.sorts.addAll(sort);
+            }
             return (K) this;
         }
 

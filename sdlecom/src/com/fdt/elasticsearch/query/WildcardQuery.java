@@ -36,14 +36,9 @@ public class WildcardQuery extends AbstractQuery {
         private String field;
         private String value;
 
-        public Builder withField(String field) {
+        public Builder(String field, String value) {
             this.field = field;
-            return this;
-        }
-
-        public Builder withValue(String value) {
             this.value = value;
-            return this;
         }
 
         public WildcardQuery build() {
@@ -53,17 +48,10 @@ public class WildcardQuery extends AbstractQuery {
 
     public static void main(String[] args) {
 
-        WildcardQuery query = new WildcardQuery.Builder()
-                .withField("testField")
-                .withValue("test*value**")
-                .build();
+        WildcardQuery query = new WildcardQuery.Builder("testField", "test*value**").build();
         System.out.println(query.getAsStringPrettyPrint());
 
-        query = new WildcardQuery.Builder()
-                .withField("testField")
-                .withValue("test?value")
-                .withBoost(3F)
-                .build();
+        query = new WildcardQuery.Builder("testField", "test?value").withBoost(3F).build();
         System.out.println(query.getAsStringPrettyPrint());
     }
 }

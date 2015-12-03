@@ -2,7 +2,7 @@ package com.fdt.elasticsearch.type.result;
 
 import io.searchbox.client.JestResult;
 
-public class GetResult extends CustomJestResult {
+public class GetResult extends CustomJestResult<JestResult> {
 
     public GetResult(JestResult jestResult) {
         super(jestResult);

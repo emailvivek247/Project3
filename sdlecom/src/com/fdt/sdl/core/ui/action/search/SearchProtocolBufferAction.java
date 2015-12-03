@@ -15,6 +15,7 @@ import net.javacoding.xsearch.config.ServerConfiguration;
 import net.javacoding.xsearch.search.HTMLEntities;
 import net.javacoding.xsearch.search.Highlighter;
 import net.javacoding.xsearch.search.HitDocument;
+import net.javacoding.xsearch.search.analysis.QueryHelper;
 import net.javacoding.xsearch.search.result.SearchResult;
 import net.javacoding.xsearch.search.result.SearchSort;
 import net.javacoding.xsearch.search.result.filter.Count;
@@ -64,7 +65,7 @@ public class SearchProtocolBufferAction extends Action {
 
             String q = r.getQuery();
 
-            Query query = SearchAction.getSearchQuery(sr, q, r.getLuceneQuery(), filterResult, request, sc.dc, sc.irs, r.getBooleanOperator(), r.getSearchable(), r.getRandomQuerySeed(), sc.debug);
+            Query query = QueryHelper.getSearchQuery(sr, q, r.getLuceneQuery(), filterResult, request, sc.dc, sc.irs, r.getBooleanOperator(), r.getSearchable(), r.getRandomQuerySeed(), sc.debug);
 
             List<HitDocument> docs = null;
             int[] total = new int[1];
