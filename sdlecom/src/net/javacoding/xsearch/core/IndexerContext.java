@@ -1,11 +1,14 @@
 package net.javacoding.xsearch.core;
 
+import io.searchbox.core.Index;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
-
-import com.fdt.sdl.admin.ui.action.constants.IndexType;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
 
 import net.javacoding.xsearch.config.DatasetConfiguration;
 import net.javacoding.xsearch.connection.ConnectionProvider;
@@ -13,9 +16,12 @@ import net.javacoding.xsearch.core.exception.DataSourceException;
 import net.javacoding.xsearch.core.task.Scheduler;
 import net.javacoding.xsearch.core.task.dispatch.FetcherPoolDispatchTask;
 import net.javacoding.xsearch.core.task.dispatch.WriterPoolDispatchTask;
+import net.javacoding.xsearch.core.task.work.ESIndexConsumer;
 import net.javacoding.xsearch.core.threading.WorkerThreadPool;
 import net.javacoding.xsearch.indexer.IndexWriterProvider;
 import net.javacoding.xsearch.status.P;
+
+import com.fdt.sdl.admin.ui.action.constants.IndexType;
 
 public abstract class IndexerContext {
 
@@ -37,6 +43,10 @@ public abstract class IndexerContext {
 
     protected IndexType indexType;
     protected String targetIndexName;
+
+    protected List<ESIndexConsumer> consumerThreads;
+    protected ExecutorService consumerService;
+    protected BlockingQueue<Index> queue;
 
     final Map<Object, Object> cache = new WeakHashMap<Object, Object>();
 
@@ -133,4 +143,7 @@ public abstract class IndexerContext {
         return affectedDirectoryGroup.getNewDirectory();
     }
 
+    public BlockingQueue<Index> getQueue() {
+        return queue;
+    }
 }

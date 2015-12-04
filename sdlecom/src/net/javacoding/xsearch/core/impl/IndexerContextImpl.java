@@ -1,6 +1,10 @@
 package net.javacoding.xsearch.core.impl;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import net.javacoding.xsearch.config.DatasetConfiguration;
 import net.javacoding.xsearch.connection.ConnectionProvider;
@@ -14,6 +18,7 @@ import net.javacoding.xsearch.core.task.Scheduler;
 import net.javacoding.xsearch.core.task.SchedulerFactory;
 import net.javacoding.xsearch.core.task.dispatch.FetcherPoolDispatchTask;
 import net.javacoding.xsearch.core.task.dispatch.WriterPoolDispatchTask;
+import net.javacoding.xsearch.core.task.work.ESIndexConsumer;
 import net.javacoding.xsearch.core.threading.WorkerThreadPool;
 import net.javacoding.xsearch.indexer.IndexWriterProvider;
 import net.javacoding.xsearch.indexer.IndexWriterProviderFactory;
@@ -62,6 +67,14 @@ public class IndexerContextImpl extends IndexerContext {
 
         this.affectedDirectoryGroup = adg;
         this.targetIndexName = targetIndexName;
+
+        this.queue = new LinkedBlockingQueue<>();
+        this.consumerService = Executors.newFixedThreadPool(2);
+        this.consumerThreads = Arrays.asList(
+                new ESIndexConsumer(queue, targetIndexName, dc.getName()),
+                new ESIndexConsumer(queue, targetIndexName, dc.getName())
+        );
+        this.consumerThreads.forEach(t -> this.consumerService.execute(t));
 
         this.periodTable = IndexStatus.createPeriodTableIfNeeded(dc);
         logger.info("Existing Period Table: " + this.periodTable);
@@ -127,6 +140,17 @@ public class IndexerContextImpl extends IndexerContext {
                 logger.info("Releasing index writer pool...");
                 this.iwp.close();
                 this.iwp = null;
+            }
+            if (consumerThreads != null) {
+                consumerThreads.forEach(t -> t.finish());
+            }
+            if (consumerService != null) {
+                consumerService.shutdown();
+                try {
+                    consumerService.awaitTermination(10, TimeUnit.MINUTES);
+                } catch (InterruptedException e) {
+                    // Don't care
+                }
             }
         } catch (DataSourceException dse) {
             logger.warn("Error releasing index writer pool:", dse);

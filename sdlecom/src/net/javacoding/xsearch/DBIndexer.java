@@ -1,7 +1,6 @@
 package net.javacoding.xsearch;
 
 import io.searchbox.client.JestClient;
-import io.searchbox.indices.CreateIndex;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fdt.elasticsearch.config.SpringContextUtil;
-import com.fdt.elasticsearch.util.JestExecute;
 import com.fdt.sdl.admin.ui.action.constants.IndexType;
 
 /**

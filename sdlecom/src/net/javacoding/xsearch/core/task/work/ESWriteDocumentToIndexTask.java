@@ -1,13 +1,12 @@
 package net.javacoding.xsearch.core.task.work;
 
-import io.searchbox.client.JestClient;
-import io.searchbox.core.DocumentResult;
 import io.searchbox.core.Index;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.BlockingQueue;
 
 import net.javacoding.xsearch.config.Column;
 import net.javacoding.xsearch.config.DatasetConfiguration;
@@ -21,9 +20,6 @@ import net.javacoding.xsearch.utility.VMTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fdt.elasticsearch.config.SpringContextUtil;
-import com.fdt.elasticsearch.util.JestExecute;
-
 public class ESWriteDocumentToIndexTask extends BaseWorkerTaskImpl {
 
     protected static final Logger logger = LoggerFactory.getLogger(ESWriteDocumentToIndexTask.class);
@@ -36,7 +32,7 @@ public class ESWriteDocumentToIndexTask extends BaseWorkerTaskImpl {
     private Optional<String> primaryKeyColumnName;
     private List<Column> columns;
 
-    private JestClient jestClient;
+    private BlockingQueue<Index> queue;
 
     public ESWriteDocumentToIndexTask(Scheduler sched, TextDocument doc, int contextId) {
         super(WorkerTask.WORKERTASK_WRITERTASK, sched);
@@ -48,10 +44,10 @@ public class ESWriteDocumentToIndexTask extends BaseWorkerTaskImpl {
         super.prepare();
         ic = scheduler.getIndexerContext();
         dc = ic.getDatasetConfiguration();
+        queue = ic.getQueue();
         if (columns == null) {
             columns = dc.getColumns();
         }
-        jestClient = SpringContextUtil.getBean(JestClient.class);
         if (dc.getPrimaryKeyColumn() != null) {
             primaryKeyColumnName = Optional.of(dc.getPrimaryKeyColumn().getColumnName());
         } else {
@@ -95,16 +91,12 @@ public class ESWriteDocumentToIndexTask extends BaseWorkerTaskImpl {
                     }
                 }
 
-                String aliasName = dc.getName();
-                String indexName = ic.getTargetIndexName();
 
-                Index.Builder builder = new Index.Builder(source).index(indexName).type(aliasName);
+                Index.Builder builder = new Index.Builder(source);
                 if (primaryKeyValue.isPresent()) {
                     builder = builder.id(primaryKeyValue.get());
                 }
-                Index request = builder.build();
-
-                JestExecute.execute(jestClient, request);
+                queue.add(builder.build());
 
                 written = true;
 
