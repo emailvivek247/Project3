@@ -150,6 +150,10 @@ public class DBIndexer {
             logger.info("Stopping all threads...");
             ic.stopAll();
 
+            if (dc.getIndexType() == IndexType.ELASTICSEARCH) {
+                IndexStatus.enableRefresh(jestClient, targetIndexName);
+            }
+
             cleanDirectories();
 
         } catch (Throwable e) {
@@ -208,6 +212,7 @@ public class DBIndexer {
             logger.info("New index name = {}", targetIndexName);
             IndexStatus.createIndex(jestClient, targetIndexName);
             IndexStatus.putMapping(jestClient, dc, targetIndexName);
+            IndexStatus.disableRefresh(jestClient, targetIndexName);
         } else {
             logger.info("Initializing elasticsearch index for updates, data set name = {}", dc.getName());
             targetIndexName = IndexStatus.findCurrentIndexName(jestClient, dc.getName());

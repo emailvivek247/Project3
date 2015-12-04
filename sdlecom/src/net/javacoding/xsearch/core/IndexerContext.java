@@ -4,6 +4,7 @@ import io.searchbox.core.Index;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -53,6 +54,7 @@ public abstract class IndexerContext {
     public IndexerContext(DatasetConfiguration dc) {
         this.dc = dc;
         this.indexType = dc.getIndexType();
+        this.consumerThreads = new ArrayList<>();
     }
 
     abstract public ConnectionProvider getConnectionProvider();

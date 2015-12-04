@@ -1,7 +1,6 @@
 package net.javacoding.xsearch.core.impl;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -31,6 +30,8 @@ import org.slf4j.LoggerFactory;
 public class IndexerContextImpl extends IndexerContext {
 
     private static final Logger logger = LoggerFactory.getLogger(IndexerContextImpl.class);
+    
+    private static final int NUM_CONSUMER_THREADS = 10;
 
     protected WorkerThreadPool fetcherPool;
     protected WorkerThreadPool writerPool;
@@ -69,11 +70,10 @@ public class IndexerContextImpl extends IndexerContext {
         this.targetIndexName = targetIndexName;
 
         this.queue = new LinkedBlockingQueue<>();
-        this.consumerService = Executors.newFixedThreadPool(2);
-        this.consumerThreads = Arrays.asList(
-                new ESIndexConsumer(queue, targetIndexName, dc.getName()),
-                new ESIndexConsumer(queue, targetIndexName, dc.getName())
-        );
+        this.consumerService = Executors.newFixedThreadPool(NUM_CONSUMER_THREADS);
+        for (int i = 0; i < NUM_CONSUMER_THREADS; i++) {
+            this.consumerThreads.add(new ESIndexConsumer(queue, targetIndexName, dc.getName()));
+        }
         this.consumerThreads.forEach(t -> this.consumerService.execute(t));
 
         this.periodTable = IndexStatus.createPeriodTableIfNeeded(dc);
@@ -147,7 +147,7 @@ public class IndexerContextImpl extends IndexerContext {
             if (consumerService != null) {
                 consumerService.shutdown();
                 try {
-                    consumerService.awaitTermination(10, TimeUnit.MINUTES);
+                    consumerService.awaitTermination(20, TimeUnit.MINUTES);
                 } catch (InterruptedException e) {
                     // Don't care
                 }

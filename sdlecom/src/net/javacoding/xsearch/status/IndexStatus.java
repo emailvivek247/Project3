@@ -2,7 +2,6 @@ package net.javacoding.xsearch.status;
 
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestResult;
-import io.searchbox.core.Get;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
 import io.searchbox.core.search.aggregation.TermsAggregation;
@@ -10,10 +9,13 @@ import io.searchbox.indices.CreateIndex;
 import io.searchbox.indices.IndicesExists;
 import io.searchbox.indices.aliases.GetAliases;
 import io.searchbox.indices.mapping.PutMapping;
+import io.searchbox.indices.settings.UpdateSettings;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import net.javacoding.xsearch.config.Column;
@@ -545,6 +547,20 @@ public final class IndexStatus {
         JestExecute.execute(jestClient, putMapping);
     }
 
+    public static void disableRefresh(JestClient jestClient, String indexName) {
+        Map<String, String> settingsMap = new HashMap<>();
+        settingsMap.put("refresh_interval", "-1");
+        UpdateSettings updateSettings = new UpdateSettings.Builder(settingsMap).addIndex(indexName).build();
+        JestExecute.execute(jestClient, updateSettings);
+    }
+
+    public static void enableRefresh(JestClient jestClient, String indexName) {
+        Map<String, String> settingsMap = new HashMap<>();
+        settingsMap.put("refresh_interval", "1");
+        UpdateSettings updateSettings = new UpdateSettings.Builder(settingsMap).addIndex(indexName).build();
+        JestExecute.execute(jestClient, updateSettings);
+    }
+    
     public static String findCurrentIndexName(JestClient jestClient, String aliasName) {
 
         String currentIndexName = null;
