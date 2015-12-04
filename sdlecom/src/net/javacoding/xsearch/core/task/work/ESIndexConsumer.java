@@ -20,7 +20,7 @@ public class ESIndexConsumer implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(ESWriteDocumentToIndexTask.class);
 
-    private static final int BATCH_SIZE = 2000;
+    private static final int BATCH_SIZE = 1000;
 
     private BlockingQueue<Index> queue;
     private String indexName;
@@ -53,13 +53,16 @@ public class ESIndexConsumer implements Runnable {
 
     private void submitList(List<Index> actions) {
         if (!actions.isEmpty()) {
-            logger.info("Processing a batch in ESIndexConsumer: size = {}", actions.size());
+            logger.info("Submitting a batch in ESIndexConsumer: size = {}", actions.size());
+            long start = System.currentTimeMillis();
             Bulk bulk = new Bulk.Builder()
                     .defaultIndex(indexName)
                     .defaultType(typeName)
                     .addAction(actions)
                     .build();
             JestExecute.execute(jestClient, bulk);
+            long duration = System.currentTimeMillis() - start;
+            logger.info("Done submitting a batch in ESIndexConsumer: duration = {}ms", duration);
         }
     }
 
