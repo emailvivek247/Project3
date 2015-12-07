@@ -38,7 +38,7 @@ public class ESIndexConsumer implements Runnable {
     }
 
     public void run() {
-        logger.info("Starting ESIndexConsumer run method");
+        logger.info("Thread ID = {}. Starting ESIndexConsumer run method", Thread.currentThread().getId());
         List<Index> actions = new ArrayList<>();
         while (running || !queue.isEmpty()) {
             Queues.drainUninterruptibly(queue, actions, batchSize, 5, TimeUnit.SECONDS);
@@ -53,7 +53,7 @@ public class ESIndexConsumer implements Runnable {
 
     private void submitList(List<Index> actions) {
         if (!actions.isEmpty()) {
-            logger.info("Submitting a batch in ESIndexConsumer: size = {}", actions.size());
+            logger.info("Thread ID = {}. Submitting a batch in ESIndexConsumer: size = {}", Thread.currentThread().getId(), actions.size());
             long start = System.currentTimeMillis();
             Bulk bulk = new Bulk.Builder()
                     .defaultIndex(indexName)
@@ -62,7 +62,7 @@ public class ESIndexConsumer implements Runnable {
                     .build();
             JestExecute.execute(jestClient, bulk);
             long duration = System.currentTimeMillis() - start;
-            logger.info("Done submitting a batch in ESIndexConsumer: duration = {}ms", duration);
+            logger.info("Thread ID = {}. Done submitting a batch in ESIndexConsumer: duration = {}ms", Thread.currentThread().getId(), duration);
         }
     }
 

@@ -98,7 +98,10 @@ public class ESWriteDocumentToIndexTask extends BaseWorkerTaskImpl {
         boolean written = false;
         while (!ic.isStopping() && !written) {
             try {
-                written = queue.offer(index, 10, TimeUnit.SECONDS);
+                written = queue.offer(index, 5, TimeUnit.SECONDS);
+                if (!written) {
+                    logger.info("Couldn't add index action to queue because it was full. Going to try again in 5 seconds.");
+                }
             } catch (InterruptedException e) {
                 // Just ignore and continue to try and add
             }

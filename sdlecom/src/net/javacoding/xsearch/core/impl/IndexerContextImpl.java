@@ -69,7 +69,10 @@ public class IndexerContextImpl extends IndexerContext {
         this.affectedDirectoryGroup = adg;
         this.targetIndexName = targetIndexName;
 
-        this.queue = new LinkedBlockingQueue<>(SpringContextUtil.getBatchSize() * SpringContextUtil.getBatchesInQueue());
+        int queueSize = SpringContextUtil.getBatchSize() * SpringContextUtil.getBatchesInQueue();
+        logger.info("Index action blocking queue size is {}", queueSize);
+        this.queue = new LinkedBlockingQueue<>(queueSize);
+
         this.consumerService = Executors.newFixedThreadPool(SpringContextUtil.getNumConsumerThreads());
         for (int i = 0; i < SpringContextUtil.getNumConsumerThreads(); i++) {
             this.consumerThreads.add(new ESIndexConsumer(queue, targetIndexName, dc.getName()));
@@ -141,11 +144,14 @@ public class IndexerContextImpl extends IndexerContext {
                 this.iwp = null;
             }
             if (consumerThreads != null) {
+                logger.info("Completing index consumer threads...");
                 consumerThreads.forEach(t -> t.finish());
             }
             if (consumerService != null) {
+                logger.info("Issuing shutdown to consumer service...");
                 consumerService.shutdown();
                 try {
+                    logger.info("Awaiting termination of threads in consumer service...");
                     consumerService.awaitTermination(SpringContextUtil.getAwaitTermTime(), TimeUnit.MINUTES);
                 } catch (InterruptedException e) {
                     // Don't care
