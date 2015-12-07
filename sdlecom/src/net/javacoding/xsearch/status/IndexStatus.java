@@ -556,7 +556,7 @@ public final class IndexStatus {
 
     public static void enableRefresh(JestClient jestClient, String indexName) {
         Map<String, String> settingsMap = new HashMap<>();
-        settingsMap.put("refresh_interval", "1");
+        settingsMap.put("refresh_interval", "1s");
         UpdateSettings updateSettings = new UpdateSettings.Builder(settingsMap).addIndex(indexName).build();
         JestExecute.execute(jestClient, updateSettings);
     }

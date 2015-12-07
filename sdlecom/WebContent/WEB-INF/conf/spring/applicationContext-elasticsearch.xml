@@ -17,4 +17,6 @@
  
     <bean id="springContextUtil" class="com.fdt.elasticsearch.config.SpringContextUtil"/>
 
+    <util:properties id="elasticsearchProperties" location="classpath:elasticsearch.properties"/>
+
 </beans>

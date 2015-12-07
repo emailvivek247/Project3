@@ -20,14 +20,13 @@ public class ESIndexConsumer implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(ESWriteDocumentToIndexTask.class);
 
-    private static final int BATCH_SIZE = 1000;
-
     private BlockingQueue<Index> queue;
     private String indexName;
     private String typeName;
 
     private boolean running;
     private JestClient jestClient;
+    private int batchSize;
 
     public ESIndexConsumer(BlockingQueue<Index> queue, String indexName, String typeName) {
         this.queue = queue;
@@ -35,13 +34,14 @@ public class ESIndexConsumer implements Runnable {
         this.typeName = typeName;
         this.running = true;
         this.jestClient = SpringContextUtil.getBean(JestClient.class);
+        this.batchSize = SpringContextUtil.getBatchSize();
     }
 
     public void run() {
         logger.info("Starting ESIndexConsumer run method");
         List<Index> actions = new ArrayList<>();
         while (running || !queue.isEmpty()) {
-            Queues.drainUninterruptibly(queue, actions, BATCH_SIZE, 5, TimeUnit.SECONDS);
+            Queues.drainUninterruptibly(queue, actions, batchSize, 5, TimeUnit.SECONDS);
             submitList(actions);
             actions.clear();
         }

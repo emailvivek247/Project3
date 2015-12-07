@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import net.javacoding.xsearch.config.Column;
 import net.javacoding.xsearch.config.DatasetConfiguration;
@@ -40,6 +41,7 @@ public class ESWriteDocumentToIndexTask extends BaseWorkerTaskImpl {
         this.contextId = contextId;
     }
 
+    @Override
     public void prepare() {
         super.prepare();
         ic = scheduler.getIndexerContext();
@@ -55,6 +57,7 @@ public class ESWriteDocumentToIndexTask extends BaseWorkerTaskImpl {
         }
     }
 
+    @Override
     public void execute() {
         try {
             if (!ic.isStopping()) {
@@ -66,47 +69,38 @@ public class ESWriteDocumentToIndexTask extends BaseWorkerTaskImpl {
         }
     }
 
-    public void save(TextDocument doc) throws Throwable {
+    
+    public void save(TextDocument doc) {
 
-        boolean written = false;
-        int triedTimes = 0;
+        Optional<String> primaryKeyValue = primaryKeyColumnName.map(column -> doc.get(column));
 
-        while (!ic.isStopping() && !written && triedTimes < 15) {
-
-            try {
-
-                Optional<String> primaryKeyValue = primaryKeyColumnName.map(column -> doc.get(column));
-
-                Map<String, Object> source = new LinkedHashMap<>();
-                for (Column column : columns) {
-                    String[] values = doc.getValues(column.getColumnName());
-                    if (values != null) {
-                        for (String value : values) {
-                            if (column.getIndexFieldType() == IndexFieldType.KEYWORD_DATE_HIERARCHICAL) {
-                                source.put(column.getColumnName(), VMTool.storedStringToLongValue(value));
-                            } else {
-                                source.put(column.getColumnName(), value);
-                            }
-                        }
+        Map<String, Object> source = new LinkedHashMap<>();
+        for (Column column : columns) {
+            String[] values = doc.getValues(column.getColumnName());
+            if (values != null) {
+                for (String value : values) {
+                    if (column.getIndexFieldType() == IndexFieldType.KEYWORD_DATE_HIERARCHICAL) {
+                        source.put(column.getColumnName(), VMTool.storedStringToLongValue(value));
+                    } else {
+                        source.put(column.getColumnName(), value);
                     }
                 }
+            }
+        }
 
+        Index.Builder builder = new Index.Builder(source);
+        if (primaryKeyValue.isPresent()) {
+            builder = builder.id(primaryKeyValue.get());
+        }
 
-                Index.Builder builder = new Index.Builder(source);
-                if (primaryKeyValue.isPresent()) {
-                    builder = builder.id(primaryKeyValue.get());
-                }
-                queue.add(builder.build());
+        Index index = builder.build();
 
-                written = true;
-
-            } catch (Throwable t) {
-                triedTimes++;
-                try {
-                    Thread.sleep(239);
-                } catch (InterruptedException e) {
-                    // Ignore InterruptedException
-                }
+        boolean written = false;
+        while (!ic.isStopping() && !written) {
+            try {
+                written = queue.offer(index, 10, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                // Just ignore and continue to try and add
             }
         }
     }

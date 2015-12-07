@@ -27,11 +27,11 @@ import net.javacoding.xsearch.utility.SchedulerTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fdt.elasticsearch.config.SpringContextUtil;
+
 public class IndexerContextImpl extends IndexerContext {
 
     private static final Logger logger = LoggerFactory.getLogger(IndexerContextImpl.class);
-    
-    private static final int NUM_CONSUMER_THREADS = 10;
 
     protected WorkerThreadPool fetcherPool;
     protected WorkerThreadPool writerPool;
@@ -69,9 +69,9 @@ public class IndexerContextImpl extends IndexerContext {
         this.affectedDirectoryGroup = adg;
         this.targetIndexName = targetIndexName;
 
-        this.queue = new LinkedBlockingQueue<>();
-        this.consumerService = Executors.newFixedThreadPool(NUM_CONSUMER_THREADS);
-        for (int i = 0; i < NUM_CONSUMER_THREADS; i++) {
+        this.queue = new LinkedBlockingQueue<>(SpringContextUtil.getBatchSize() * SpringContextUtil.getBatchesInQueue());
+        this.consumerService = Executors.newFixedThreadPool(SpringContextUtil.getNumConsumerThreads());
+        for (int i = 0; i < SpringContextUtil.getNumConsumerThreads(); i++) {
             this.consumerThreads.add(new ESIndexConsumer(queue, targetIndexName, dc.getName()));
         }
         this.consumerThreads.forEach(t -> this.consumerService.execute(t));
@@ -106,7 +106,6 @@ public class IndexerContextImpl extends IndexerContext {
             this.periodTable.save(IndexStatus.getPeriodTableStoreFile(getAffectedDirectoryGroup().getNewDirectory()));
             logger.info("Period Table: " + this.periodTable);
         }
-        // release resources
         try {
             if (this.cp != null) {
                 logger.info("Releasing connection pool...");
@@ -147,7 +146,7 @@ public class IndexerContextImpl extends IndexerContext {
             if (consumerService != null) {
                 consumerService.shutdown();
                 try {
-                    consumerService.awaitTermination(20, TimeUnit.MINUTES);
+                    consumerService.awaitTermination(SpringContextUtil.getAwaitTermTime(), TimeUnit.MINUTES);
                 } catch (InterruptedException e) {
                     // Don't care
                 }
