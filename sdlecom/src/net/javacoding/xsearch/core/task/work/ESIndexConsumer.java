@@ -38,14 +38,19 @@ public class ESIndexConsumer implements Runnable {
     }
 
     public void run() {
-        logger.info("Thread ID = {}. Starting ESIndexConsumer run method", Thread.currentThread().getId());
-        List<Index> actions = new ArrayList<>();
-        while (running || !queue.isEmpty()) {
-            Queues.drainUninterruptibly(queue, actions, batchSize, 5, TimeUnit.SECONDS);
-            if (!actions.isEmpty()) {
-                submitList(actions);
-                actions.clear();
+        try {
+            logger.info("Thread ID = {}. Starting ESIndexConsumer run method", Thread.currentThread().getId());
+            List<Index> actions = new ArrayList<>();
+            while (running || !queue.isEmpty()) {
+                Queues.drainUninterruptibly(queue, actions, batchSize, 5, TimeUnit.SECONDS);
+                if (!actions.isEmpty()) {
+                    submitList(actions);
+                    actions.clear();
+                }
             }
+        } catch (Throwable t) {
+            logger.error("Uncaught exception in ESIndexConsumer", t);
+            throw t;
         }
     }
 
