@@ -42,8 +42,10 @@ public class ESIndexConsumer implements Runnable {
         List<Index> actions = new ArrayList<>();
         while (running || !queue.isEmpty()) {
             Queues.drainUninterruptibly(queue, actions, batchSize, 5, TimeUnit.SECONDS);
-            submitList(actions);
-            actions.clear();
+            if (!actions.isEmpty()) {
+                submitList(actions);
+                actions.clear();
+            }
         }
     }
 
@@ -52,18 +54,27 @@ public class ESIndexConsumer implements Runnable {
     }
 
     private void submitList(List<Index> actions) {
-        if (!actions.isEmpty()) {
-            logger.info("Thread ID = {}. Submitting a batch in ESIndexConsumer: size = {}", Thread.currentThread().getId(), actions.size());
+        boolean success = false;
+        while (!success) {
+            upload(actions);
+        }
+    }
+
+    private boolean upload(List<Index> actions) {
+        boolean success = false;
+        long threadId = Thread.currentThread().getId();
+        try {
+            logger.info("Thread ID = {}. Submitting a batch in ESIndexConsumer: size = {}", threadId, actions.size());
             long start = System.currentTimeMillis();
-            Bulk bulk = new Bulk.Builder()
-                    .defaultIndex(indexName)
-                    .defaultType(typeName)
-                    .addAction(actions)
-                    .build();
+            Bulk bulk = new Bulk.Builder().defaultIndex(indexName).defaultType(typeName).addAction(actions).build();
             JestExecute.execute(jestClient, bulk);
             long duration = System.currentTimeMillis() - start;
-            logger.info("Thread ID = {}. Done submitting a batch in ESIndexConsumer: duration = {}ms", Thread.currentThread().getId(), duration);
+            logger.info("Thread ID = {}. Done submitting a batch in ESIndexConsumer: duration = {}ms", threadId, duration);
+            success = true;
+        } catch (Throwable t) {
+            logger.warn("Thread ID = " + threadId + ". Failed to submit a batch.", t);
         }
+        return success;
     }
 
 }

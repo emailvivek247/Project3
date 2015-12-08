@@ -2,6 +2,7 @@ package com.fdt.elasticsearch.config;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
@@ -34,6 +35,7 @@ public class JestSpringConfiguration {
         HttpClientConfig clientConfig = new HttpClientConfig
                 .Builder(endpoint)
                 .multiThreaded(true)
+                .maxConnectionIdleTime(1, TimeUnit.MINUTES)
                 .build();
 
         JestClientFactory factory = new JestClientFactory();
