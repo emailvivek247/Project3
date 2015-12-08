@@ -69,7 +69,6 @@ public class ESWriteDocumentToIndexTask extends BaseWorkerTaskImpl {
         }
     }
 
-    
     public void save(TextDocument doc) {
 
         Optional<String> primaryKeyValue = primaryKeyColumnName.map(column -> doc.get(column));
@@ -98,9 +97,9 @@ public class ESWriteDocumentToIndexTask extends BaseWorkerTaskImpl {
         boolean written = false;
         while (!ic.isStopping() && !written) {
             try {
-                written = queue.offer(index, 5, TimeUnit.SECONDS);
+                written = queue.offer(index, 1, TimeUnit.MINUTES);
                 if (!written) {
-                    logger.info("Couldn't add index action to queue because it was full. Going to try again in 5 seconds.");
+                    logger.info("Index queue full. Retrying in 1 minute.");
                 }
             } catch (InterruptedException e) {
                 // Just ignore and continue to try and add

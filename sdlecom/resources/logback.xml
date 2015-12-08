@@ -40,6 +40,21 @@
         </rollingPolicy>
     </appender>
 
+    <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="JEST_FILE">
+        <file>${PREFIX_HOME}/ROAM/Jest.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{MM-dd-yy HH:mm:ss.SSS} %-5level [%33.33logger{5}]: %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${PREFIX_HOME}/Alert/Alert-%d{MM-dd-yyyy}-%i.zip</fileNamePattern>
+            <maxHistory>10<!-- days --></maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>20MB<!-- or whenever the file size reaches 20MB --></maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
     <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="SEARCH_STATS_APPENDER">
         <file>${PREFIX_HOME}/SearchStats/SearchStats.log</file>
         <append>true</append>
@@ -89,6 +104,10 @@
     <logger level="WARN" name="org.hibernate"/>
     <logger level="WARN" name="org.displaytag"/>
     <logger level="ERROR" name="com.fdt.common.util.TIFFToPDFConverter"/>
+
+    <logger additivity="false" level="DEBUG" name="io.searchbox">
+        <appender-ref ref="JEST_FILE"/>
+    </logger>
 
     <logger additivity="false" level="INFO" name="com.fdt.alerts.job">
         <appender-ref ref="ALERT_FILE"/>

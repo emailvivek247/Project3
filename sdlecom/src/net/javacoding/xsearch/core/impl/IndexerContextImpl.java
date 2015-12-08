@@ -102,7 +102,7 @@ public class IndexerContextImpl extends IndexerContext {
 
     }
 
-    public void stopRetrieving() {
+    private void stopRetrieving() {
         setStopping();
         if (this.periodTable != null && this.getAffectedDirectoryGroup() != null) {
             this.periodTable.merge();
@@ -135,6 +135,7 @@ public class IndexerContextImpl extends IndexerContext {
         }
     }
 
+    @Override
     public void stopAll() {
         stopRetrieving();
         try {
