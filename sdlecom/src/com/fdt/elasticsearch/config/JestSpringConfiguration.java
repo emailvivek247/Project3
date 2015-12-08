@@ -36,6 +36,7 @@ public class JestSpringConfiguration {
                 .Builder(endpoint)
                 .multiThreaded(true)
                 .maxConnectionIdleTime(1, TimeUnit.MINUTES)
+                .readTimeout(30 * 1000)
                 .build();
 
         JestClientFactory factory = new JestClientFactory();

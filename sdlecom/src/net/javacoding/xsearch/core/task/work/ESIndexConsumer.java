@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fdt.elasticsearch.config.SpringContextUtil;
 import com.fdt.elasticsearch.util.JestExecute;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;
 
 public class ESIndexConsumer implements Runnable {
@@ -59,9 +60,16 @@ public class ESIndexConsumer implements Runnable {
     }
 
     private void submitList(List<Index> actions) {
+        if (!upload(actions)) {
+            Lists.partition(actions, actions.size() / 10).forEach(l -> resubmitList(l));
+        }
+    }
+
+    private void resubmitList(List<Index> actions) {
         boolean success = false;
-        while (!success) {
-            upload(actions);
+        int numTries = 0;
+        while (!success && numTries++ < 100) {
+            success = upload(actions);
         }
     }
 
