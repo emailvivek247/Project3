@@ -50,7 +50,7 @@ public class TemplateUtil {
         return path.toString();
     }
     public static String getTemplatePath(String indexName, String templateName) {
-        return getTemplatePath(indexName, templateName,null);
+        return getTemplatePath(indexName, templateName);
     }
 
     /**

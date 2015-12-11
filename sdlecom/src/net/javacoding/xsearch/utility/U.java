@@ -323,11 +323,6 @@ public class U {
     	}
         return null;
     }
-    
-    public static void main(String[] args) {
-    	System.out.println("fdsfsd" + nvl(null));
-    }
-    
     public static boolean equals(Object a, Object b) {
         if(a==null) {
             return b==null;
