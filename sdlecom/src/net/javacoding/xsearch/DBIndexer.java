@@ -210,7 +210,7 @@ public class DBIndexer {
             logger.info("Preparing elasticsearch index for recreate, data set name = {}", dc.getName());
             targetIndexName = IndexStatus.findNewIndexName(jestClient, dc.getName());
             logger.info("New index name = {}", targetIndexName);
-            IndexStatus.createIndex(jestClient, targetIndexName);
+            IndexStatus.createIndex(jestClient, dc, targetIndexName);
             IndexStatus.putMapping(jestClient, dc, targetIndexName);
             IndexStatus.disableRefresh(jestClient, targetIndexName);
         } else {

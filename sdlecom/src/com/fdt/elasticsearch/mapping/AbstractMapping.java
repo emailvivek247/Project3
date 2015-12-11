@@ -6,6 +6,7 @@ import net.javacoding.xsearch.config.IndexFieldType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fdt.elasticsearch.analyzer.AbstractAnalyzer;
 
 public abstract class AbstractMapping {
 
@@ -46,9 +47,11 @@ public abstract class AbstractMapping {
             return writeToString(objectNode);
         }
     }
-    
+
     public static AbstractMapping fromColumn(Column column) {
+
         AbstractMapping result = null;
+
         switch (column.getIndexFieldType()) {
         case IndexFieldType.TEXT:
         case IndexFieldType.TEXT_COMPRESSED:
@@ -57,6 +60,7 @@ public abstract class AbstractMapping {
                     .Builder(column.getColumnName())
                     .withStore(false)
                     .withIndex("analyzed")
+                    .withAnalyzer(AbstractAnalyzer.fromColumn(column))
                     .build();
             break;
         case IndexFieldType.UN_INDEXED:
@@ -103,6 +107,7 @@ public abstract class AbstractMapping {
                     .Builder(column.getColumnName())
                     .withStore(false)
                     .withIndex("analyzed")
+                    .withAnalyzer(AbstractAnalyzer.fromColumn(column))
                     .build();
             break;
         }

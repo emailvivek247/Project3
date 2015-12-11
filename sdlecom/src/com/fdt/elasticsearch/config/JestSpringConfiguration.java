@@ -1,12 +1,11 @@
 package com.fdt.elasticsearch.config;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
 import io.searchbox.client.config.HttpClientConfig;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +34,6 @@ public class JestSpringConfiguration {
         HttpClientConfig clientConfig = new HttpClientConfig
                 .Builder(endpoint)
                 .multiThreaded(true)
-                .maxConnectionIdleTime(1, TimeUnit.MINUTES)
                 .readTimeout(30 * 1000)
                 .build();
 
@@ -46,7 +44,7 @@ public class JestSpringConfiguration {
     }
 
     @Bean
-    public Map<String, String> indexSettings() {
+    public IndexSettings indexSettings() {
 
         String numberOfShards = environment.getProperty("elasticsearch.index.number_of_shards");
         String numberOfReplicas = environment.getProperty("elasticsearch.index.number_of_replicas");
@@ -55,6 +53,6 @@ public class JestSpringConfiguration {
         indexSettings.put("number_of_shards", numberOfShards);
         indexSettings.put("number_of_replicas", numberOfReplicas);
 
-        return indexSettings;
+        return new IndexSettings(indexSettings);
     }
 }

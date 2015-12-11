@@ -46,7 +46,7 @@ public class ESReIndexing extends AbstractReIndexing {
 
         logger.info("New index name will be {}", newIndexName);
 
-        IndexStatus.createIndex(jestClient, newIndexName);
+        IndexStatus.createIndex(jestClient, dc, newIndexName);
         IndexStatus.putMapping(jestClient, dc, newIndexName);
 
         String query = "{\"sort\": [\"_doc\"], \"query\" : { \"match_all\" : { } } }";

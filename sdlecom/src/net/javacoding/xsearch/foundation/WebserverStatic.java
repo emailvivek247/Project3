@@ -129,7 +129,6 @@ public class WebserverStatic {
             //+"-XXPermSize=256m"
             //+" -Xms" + heapSize + "m"
             "-Xmx" + heapSize + "m"
-            +" -Dcom.sun.management.jmxremote.port=3333 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
             +" net.javacoding.xsearch.IndexManager"
             +" -config \""+ ServerConfiguration.getServerConfiguration().getConfigFile() +"\""
             +" -index "+indexName+" ";
