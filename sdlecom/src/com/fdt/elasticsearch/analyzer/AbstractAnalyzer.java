@@ -9,7 +9,8 @@ import net.javacoding.xsearch.config.Column;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fdt.sdl.core.analyzer.synonym.SynonymText;
+import com.fdt.elasticsearch.util.StopwordLoader;
+import com.fdt.elasticsearch.util.SynonymLoader;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Converter;
 
@@ -88,51 +89,110 @@ public abstract class AbstractAnalyzer {
         Optional<AbstractAnalyzer> result = Optional.empty();
         if (column != null) {
             String analyzerClassName = column.getAnalyzerName();
+            boolean synAndStop = column.getNeedSynonymsAndStopwords();
             if (analyzerClassName != null && !analyzerClassName.isEmpty()) {
-                result = AbstractAnalyzer.fromAnalyzerClassName(analyzerClassName);
+                result = AbstractAnalyzer.fromAnalyzerClassName(analyzerClassName, synAndStop);
             }
         }
         return result;
     }
 
     public static Optional<AbstractAnalyzer> fromAnalyzerClassName(String analyzerClassName) {
+        return fromAnalyzerClassName(analyzerClassName, false);
+    }
+
+    public static Optional<AbstractAnalyzer> fromAnalyzerClassName(String analyzerClassName, boolean synAndStop) {
         AbstractAnalyzer result = null;
+        CustomAnalyzer.Builder builder = null;
         switch (analyzerClassName) {
         case "com.fdt.sdl.core.analyzer.NumberLowerCaseAnalyzer":
-            result = new PatternAnalyzer
-                    .Builder(getESAnalyzerName(analyzerClassName))
-                    .withPattern("[\\W_]+")
-                    .withLowercase(true)
-                    .build();
+            if (!synAndStop) {
+                result = new PatternAnalyzer
+                        .Builder(getESAnalyzerName(analyzerClassName))
+                        .withPattern("[\\W_]+")
+                        .withLowercase(true)
+                        .build();
+            } else {
+                result = new CustomAnalyzer
+                        .Builder(getESAnalyzerName(analyzerClassName))
+                        .withTokenizerName("non_word_tokenizer")
+                        .addTokenFilterName("lowercase")
+                        .addTokenFilterName("custom_dictionary_stopwords")
+                        .addTokenFilterName("custom_dictionary_synonyms")
+                        .build();
+                result.addTokenizer(new PatternTokenizer
+                        .Builder("non_word_tokenizer")
+                        .withPattern("[\\W_]+")
+                        .build());
+                result.addTokenFilter(new StopTokenFilter
+                        .Builder("custom_dictionary_stopwords")
+                        .addStopword(StopwordLoader.getStopwords())
+                        .build());
+                result.addTokenFilter(new SynonymTokenFilter
+                        .Builder("custom_dictionary_synonyms")
+                        .addSynonym(SynonymLoader.getSynonymsFromDictionaryFile())
+                        .build());
+            }
             break;
         case "com.fdt.sdl.core.analyzer.AlphaNumericAnalyzer":
-            result = new CustomAnalyzer
+            builder = new CustomAnalyzer
                     .Builder(getESAnalyzerName(analyzerClassName))
                     .withTokenizerName("standard")
                     .addTokenFilterName("standard")
                     .addTokenFilterName("lowercase")
-                    .addTokenFilterName("empty_stopwords_filter")
-                    .addCharFilterName("alpha_numeric_char_filter")
-                    .build();
+                    .addCharFilterName("alpha_numeric_char_filter");
+            if (!synAndStop) {
+                result = builder
+                        .addTokenFilterName("empty_stopwords_filter")
+                        .build();
+                result.addTokenFilter(new StopTokenFilter
+                        .Builder("empty_stopwords_filter")
+                        .withStopwordLanguageSet("_none_")
+                        .build());
+            } else {
+                result = builder
+                        .addTokenFilterName("custom_dictionary_stopwords")
+                        .addTokenFilterName("custom_dictionary_synonyms")
+                        .build();
+                result.addTokenFilter(new StopTokenFilter
+                        .Builder("custom_dictionary_stopwords")
+                        .addStopword(StopwordLoader.getStopwords())
+                        .build());
+                result.addTokenFilter(new SynonymTokenFilter
+                        .Builder("custom_dictionary_synonyms")
+                        .addSynonym(SynonymLoader.getSynonymsFromDictionaryFile())
+                        .build());
+            }
             result.addCharFilter(new PatternReplaceCharFilter
                     .Builder("alpha_numeric_char_filter")
                     .withPattern("[^A-Za-z0-9]")
                     .withReplacement("")
                     .build());
-            result.addTokenFilter(new StopTokenFilter
-                    .Builder("empty_stopwords_filter")
-                    .withStopwordLanguageSet("_none_")
-                    .build());
             break;
         case "com.fdt.sdl.core.analyzer.DoubleMetaphoneAnalyzer":
-            result = new CustomAnalyzer
+            builder = new CustomAnalyzer
                     .Builder(getESAnalyzerName(analyzerClassName))
                     .withTokenizerName("standard")
                     .addTokenFilterName("standard")
                     .addTokenFilterName("lowercase")
                     .addTokenFilterName("stop")
-                    .addTokenFilterName("double_metaphone_filter")
-                    .build();
+                    .addTokenFilterName("double_metaphone_filter");
+            if (!synAndStop) {
+                result = builder.build();
+            } else {
+                result = builder
+                        .addTokenFilterName("custom_dictionary_stopwords")
+                        .addTokenFilterName("custom_dictionary_synonyms")
+                        .build();
+                result.addTokenFilter(new StopTokenFilter
+                        .Builder("custom_dictionary_stopwords")
+                        .addStopword(StopwordLoader.getStopwords())
+                        .build());
+                result.addTokenFilter(new SynonymTokenFilter
+                        .Builder("custom_dictionary_synonyms")
+                        .addSynonym(SynonymLoader.getSynonymsFromDictionaryFile())
+                        .build());
+            }
             result.addTokenFilter(new PhoneticTokenFilter
                     .Builder("double_metaphone_filter")
                     .withEncoder("double_metaphone")
@@ -140,18 +200,53 @@ public abstract class AbstractAnalyzer {
             break;
         case "com.fdt.sdl.core.analyzer.DateAnalyzer":
             // This is, I promise, what the current DateAnalyzer class does
-            result = new StandardAnalyzer
-                    .Builder(getESAnalyzerName(analyzerClassName))
-                    .withStopwordLanguageSet("_english_")
-                    .build();
+            if (!synAndStop) {
+                result = new StandardAnalyzer
+                        .Builder(getESAnalyzerName(analyzerClassName))
+                        .withStopwordLanguageSet("_english_")
+                        .build();
+            } else {
+                result = new CustomAnalyzer
+                        .Builder(getESAnalyzerName(analyzerClassName))
+                        .withTokenizerName("standard")
+                        .addTokenFilterName("standard")
+                        .addTokenFilterName("lowercase")
+                        .addTokenFilterName("stop")
+                        .addTokenFilterName("custom_dictionary_stopwords")
+                        .addTokenFilterName("custom_dictionary_synonyms")
+                        .build();
+                result.addTokenFilter(new StopTokenFilter
+                        .Builder("custom_dictionary_stopwords")
+                        .addStopword(StopwordLoader.getStopwords())
+                        .build());
+                result.addTokenFilter(new SynonymTokenFilter
+                        .Builder("custom_dictionary_synonyms")
+                        .addSynonym(SynonymLoader.getSynonymsFromDictionaryFile())
+                        .build());
+            }
             break;
         case "com.fdt.sdl.core.analyzer.KeywordCaseInsensitiveAlphNumericAnalyzer":
-            result = new CustomAnalyzer
+            builder = new CustomAnalyzer
                     .Builder(getESAnalyzerName(analyzerClassName))
                     .withTokenizerName("keyword_1024_tokenizer")
                     .addTokenFilterName("lowercase")
-                    .addCharFilterName("alpha_numeric_space_char_filter")
-                    .build();
+                    .addCharFilterName("alpha_numeric_space_char_filter");
+            if (!synAndStop) {
+                result = builder.build();
+            } else {
+                result = builder
+                        .addTokenFilterName("custom_dictionary_stopwords")
+                        .addTokenFilterName("custom_dictionary_synonyms")
+                        .build();
+                result.addTokenFilter(new StopTokenFilter
+                        .Builder("custom_dictionary_stopwords")
+                        .addStopword(StopwordLoader.getStopwords())
+                        .build());
+                result.addTokenFilter(new SynonymTokenFilter
+                        .Builder("custom_dictionary_synonyms")
+                        .addSynonym(SynonymLoader.getSynonymsFromDictionaryFile())
+                        .build());
+            }
             result.addTokenizer(new KeywordTokenizer
                     .Builder("keyword_1024_tokenizer")
                     .withBufferSize(1024)
@@ -163,12 +258,27 @@ public abstract class AbstractAnalyzer {
                     .build());
             break;
         case "com.fdt.sdl.core.analyzer.OneWordNumberLowerCaseAnalyzer":
-            result = new CustomAnalyzer
+            builder = new CustomAnalyzer
                     .Builder(getESAnalyzerName(analyzerClassName))
                     .withTokenizerName("whitespace")
                     .addTokenFilterName("lowercase")
-                    .addCharFilterName("alpha_numeric_space_char_filter")
-                    .build();
+                    .addCharFilterName("alpha_numeric_space_char_filter");
+            if (!synAndStop) {
+                result = builder.build();
+            } else {
+                result = builder
+                        .addTokenFilterName("custom_dictionary_stopwords")
+                        .addTokenFilterName("custom_dictionary_synonyms")
+                        .build();
+                result.addTokenFilter(new StopTokenFilter
+                        .Builder("custom_dictionary_stopwords")
+                        .addStopword(StopwordLoader.getStopwords())
+                        .build());
+                result.addTokenFilter(new SynonymTokenFilter
+                        .Builder("custom_dictionary_synonyms")
+                        .addSynonym(SynonymLoader.getSynonymsFromDictionaryFile())
+                        .build());
+            }
             result.addCharFilter(new PatternReplaceCharFilter
                     .Builder("alpha_numeric_space_char_filter")
                     .withPattern("[^ A-Za-z0-9]")
@@ -176,31 +286,83 @@ public abstract class AbstractAnalyzer {
                     .build());
             break;
         case "com.fdt.sdl.core.analyzer.synonym.SynonymAlgorithm":
-            result = new CustomAnalyzer
+            builder = new CustomAnalyzer
                     .Builder(getESAnalyzerName(analyzerClassName))
                     .withTokenizerName("standard")
                     .addTokenFilterName("standard")
                     .addTokenFilterName("lowercase")
-                    .addTokenFilterName("synonym_token_filter")
-                    .build();
+                    .addTokenFilterName("custom_sys_prop_synonyms");
+            if (!synAndStop) {
+                result = builder.build();
+            } else {
+                result = builder
+                        .addTokenFilterName("custom_dictionary_stopwords")
+                        .addTokenFilterName("custom_dictionary_synonyms")
+                        .build();
+                result.addTokenFilter(new StopTokenFilter
+                        .Builder("custom_dictionary_stopwords")
+                        .addStopword(StopwordLoader.getStopwords())
+                        .build());
+                result.addTokenFilter(new SynonymTokenFilter
+                        .Builder("custom_dictionary_synonyms")
+                        .addSynonym(SynonymLoader.getSynonymsFromDictionaryFile())
+                        .build());
+            }
             result.addTokenFilter(new SynonymTokenFilter
-                    .Builder("synonym_token_filter")
-                    .addSynonym(SynonymText.getSynonyms())
+                    .Builder("custom_sys_prop_synonyms")
+                    .addSynonym(SynonymLoader.getSynonymsFromSystemProperties())
                     .build());
             break;
         case "org.apache.lucene.analysis.WhitespaceAnalyzer":
-            result = new WhitespaceAnalyzer
-                    .Builder(getESAnalyzerName(analyzerClassName))
-                    .build();
+            if (!synAndStop) {
+                result = new WhitespaceAnalyzer
+                        .Builder(getESAnalyzerName(analyzerClassName))
+                        .build();
+            } else {
+                result = new CustomAnalyzer
+                        .Builder(getESAnalyzerName(analyzerClassName))
+                        .withTokenizerName("whitespace")
+                        .addTokenFilterName("custom_dictionary_stopwords")
+                        .addTokenFilterName("custom_dictionary_synonyms")
+                        .build();
+                result.addTokenFilter(new StopTokenFilter
+                        .Builder("custom_dictionary_stopwords")
+                        .addStopword(StopwordLoader.getStopwords())
+                        .build());
+                result.addTokenFilter(new SynonymTokenFilter
+                        .Builder("custom_dictionary_synonyms")
+                        .addSynonym(SynonymLoader.getSynonymsFromDictionaryFile())
+                        .build());
+            }
             break;
         case "org.apache.lucene.analysis.standard.StandardAnalyzer":
             // The default for the ES standard analyzer is an empty stopword set but
             // for the Lucene StandardAnalyzer class, the default is English stopwords
             // so we will preserve that default here
-            result = new StandardAnalyzer
-                    .Builder(getESAnalyzerName(analyzerClassName))
-                    .withStopwordLanguageSet("_english_")
-                    .build();
+            if (!synAndStop) {
+                result = new StandardAnalyzer
+                        .Builder(getESAnalyzerName(analyzerClassName))
+                        .withStopwordLanguageSet("_english_")
+                        .build();
+            } else {
+                result = new CustomAnalyzer
+                        .Builder(getESAnalyzerName(analyzerClassName))
+                        .withTokenizerName("standard")
+                        .addTokenFilterName("standard")
+                        .addTokenFilterName("lowercase")
+                        .addTokenFilterName("stop")
+                        .addTokenFilterName("custom_dictionary_stopwords")
+                        .addTokenFilterName("custom_dictionary_synonyms")
+                        .build();
+                result.addTokenFilter(new StopTokenFilter
+                        .Builder("custom_dictionary_stopwords")
+                        .addStopword(StopwordLoader.getStopwords())
+                        .build());
+                result.addTokenFilter(new SynonymTokenFilter
+                        .Builder("custom_dictionary_synonyms")
+                        .addSynonym(SynonymLoader.getSynonymsFromDictionaryFile())
+                        .build());
+            }
             break;
         }
         return Optional.ofNullable(result);

@@ -34,18 +34,15 @@ public class AnalyzerHelper {
         }
 
         for (Column column : datasetConfiguration.getColumns()) {
-            analyzerClassName = column.getAnalyzerName();
-            if (analyzerClassName != null && !analyzerClassName.isEmpty()) {
-                Optional<AbstractAnalyzer> analyzer = AbstractAnalyzer.fromAnalyzerClassName(analyzerClassName);
-                if (analyzer.isPresent()) {
-                    analyzers.add(analyzer.get());
-                    tokenizers.addAll(analyzer.get().getTokenizers());
-                    tokenFilters.addAll(analyzer.get().getTokenFilters());
-                    charFilters.addAll(analyzer.get().getCharFilters());
-                }
+            Optional<AbstractAnalyzer> analyzer = AbstractAnalyzer.fromColumn(column);
+            if (analyzer.isPresent()) {
+                analyzers.add(analyzer.get());
+                tokenizers.addAll(analyzer.get().getTokenizers());
+                tokenFilters.addAll(analyzer.get().getTokenFilters());
+                charFilters.addAll(analyzer.get().getCharFilters());
             }
         }
- 
+
         ObjectNode analyzerNode = mapper.createObjectNode();
         if (defaultAnalyzer.isPresent()) {
             analyzerNode.set("default", defaultAnalyzer.get().getAsJsonObject());
