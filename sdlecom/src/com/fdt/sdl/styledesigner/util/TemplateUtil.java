@@ -7,11 +7,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import com.fdt.sdl.styledesigner.Template;
-
-
 import net.javacoding.xsearch.foundation.WebserverStatic;
 import net.javacoding.xsearch.utility.FileUtil;
+
+import com.fdt.sdl.styledesigner.Template;
 
 /**
  * Template utility methods.
@@ -50,7 +49,7 @@ public class TemplateUtil {
         return path.toString();
     }
     public static String getTemplatePath(String indexName, String templateName) {
-        return getTemplatePath(indexName, templateName);
+        return getTemplatePath(indexName, templateName, new String[] {});
     }
 
     /**
