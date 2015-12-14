@@ -542,7 +542,7 @@ public final class IndexStatus {
     public static void putMapping(JestClient jestClient, DatasetConfiguration dc, String indexName) {
 
         List<AbstractMapping> mappings = dc.getColumns().stream().map(
-                c -> AbstractMapping.fromColumn(c)
+                c -> AbstractMapping.fromColumn(dc, c)
         ).collect(Collectors.toList());
 
         RootMapping rootMapping = new RootMapping.Builder().addMapping(mappings).build();

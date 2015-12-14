@@ -21,10 +21,10 @@ public class AnalyzerHelper {
         List<AbstractTokenFilter> tokenFilters = new ArrayList<>();
         List<AbstractCharFilter> charFilters = new ArrayList<>();
 
-        String analyzerClassName = datasetConfiguration.getAnalyzerName();
+        String defaultAnalyzerClassName = datasetConfiguration.getAnalyzerName();
         Optional<AbstractAnalyzer> defaultAnalyzer = null;
-        if (analyzerClassName != null && !analyzerClassName.isEmpty()) {
-            defaultAnalyzer = AbstractAnalyzer.fromAnalyzerClassName(analyzerClassName);
+        if (defaultAnalyzerClassName != null && !defaultAnalyzerClassName.isEmpty()) {
+            defaultAnalyzer = AbstractAnalyzer.fromAnalyzerClassName(defaultAnalyzerClassName, false);
             if (defaultAnalyzer.isPresent()) {
                 analyzers.add(defaultAnalyzer.get());
                 tokenizers.addAll(defaultAnalyzer.get().getTokenizers());
@@ -34,7 +34,7 @@ public class AnalyzerHelper {
         }
 
         for (Column column : datasetConfiguration.getColumns()) {
-            Optional<AbstractAnalyzer> analyzer = AbstractAnalyzer.fromColumn(column);
+            Optional<AbstractAnalyzer> analyzer = AbstractAnalyzer.fromColumn(defaultAnalyzerClassName, column);
             if (analyzer.isPresent()) {
                 analyzers.add(analyzer.get());
                 tokenizers.addAll(analyzer.get().getTokenizers());

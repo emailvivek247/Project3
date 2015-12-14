@@ -1,6 +1,7 @@
 package com.fdt.elasticsearch.mapping;
 
 import net.javacoding.xsearch.config.Column;
+import net.javacoding.xsearch.config.DatasetConfiguration;
 import net.javacoding.xsearch.config.IndexFieldType;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -48,9 +49,11 @@ public abstract class AbstractMapping {
         }
     }
 
-    public static AbstractMapping fromColumn(Column column) {
+    public static AbstractMapping fromColumn(DatasetConfiguration datasetConfiguration, Column column) {
 
+        
         AbstractMapping result = null;
+        String defaultAnalyzerName = datasetConfiguration.getAnalyzerName();
 
         switch (column.getIndexFieldType()) {
         case IndexFieldType.TEXT:
@@ -60,7 +63,7 @@ public abstract class AbstractMapping {
                     .Builder(column.getColumnName())
                     .withStore(false)
                     .withIndex("analyzed")
-                    .withAnalyzer(AbstractAnalyzer.fromColumn(column))
+                    .withAnalyzer(AbstractAnalyzer.fromColumn(defaultAnalyzerName, column))
                     .build();
             break;
         case IndexFieldType.UN_INDEXED:
@@ -107,7 +110,7 @@ public abstract class AbstractMapping {
                     .Builder(column.getColumnName())
                     .withStore(false)
                     .withIndex("analyzed")
-                    .withAnalyzer(AbstractAnalyzer.fromColumn(column))
+                    .withAnalyzer(AbstractAnalyzer.fromColumn(defaultAnalyzerName, column))
                     .build();
             break;
         }

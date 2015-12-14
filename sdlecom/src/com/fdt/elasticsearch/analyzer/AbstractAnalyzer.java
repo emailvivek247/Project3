@@ -85,36 +85,42 @@ public abstract class AbstractAnalyzer {
         }
     }
 
-    public static Optional<AbstractAnalyzer> fromColumn(Column column) {
-        Optional<AbstractAnalyzer> result = Optional.empty();
+    public static Optional<AbstractAnalyzer> fromColumn(String defaultAnalyzerClassName, Column column) {
+        Optional<AbstractAnalyzer> analyzer = Optional.empty();
         if (column != null) {
             String analyzerClassName = column.getAnalyzerName();
-            boolean synAndStop = column.getNeedSynonymsAndStopwords();
-            if (analyzerClassName != null && !analyzerClassName.isEmpty()) {
-                result = AbstractAnalyzer.fromAnalyzerClassName(analyzerClassName, synAndStop);
+            if (column.getNeedSynonymsAndStopwords()) {
+                if (analyzerClassName != null && !analyzerClassName.isEmpty()) {
+                    analyzer = AbstractAnalyzer.fromAnalyzerClassName(analyzerClassName, true);
+                } else {
+                    if (defaultAnalyzerClassName != null && !defaultAnalyzerClassName.isEmpty()) {
+                        analyzer = AbstractAnalyzer.fromAnalyzerClassName(defaultAnalyzerClassName, true);
+                    }
+                }
+            } else {
+                if (analyzerClassName != null && !analyzerClassName.isEmpty()) {
+                    analyzer = AbstractAnalyzer.fromAnalyzerClassName(analyzerClassName, false);
+                }
             }
         }
-        return result;
-    }
-
-    public static Optional<AbstractAnalyzer> fromAnalyzerClassName(String analyzerClassName) {
-        return fromAnalyzerClassName(analyzerClassName, false);
+        return analyzer;
     }
 
     public static Optional<AbstractAnalyzer> fromAnalyzerClassName(String analyzerClassName, boolean synAndStop) {
         AbstractAnalyzer result = null;
         CustomAnalyzer.Builder builder = null;
+        String analyzerName = getESAnalyzerName(analyzerClassName) + (synAndStop ? "_syn_and_stop" : "");
         switch (analyzerClassName) {
         case "com.fdt.sdl.core.analyzer.NumberLowerCaseAnalyzer":
             if (!synAndStop) {
                 result = new PatternAnalyzer
-                        .Builder(getESAnalyzerName(analyzerClassName))
+                        .Builder(analyzerName)
                         .withPattern("[\\W_]+")
                         .withLowercase(true)
                         .build();
             } else {
                 result = new CustomAnalyzer
-                        .Builder(getESAnalyzerName(analyzerClassName))
+                        .Builder(analyzerName)
                         .withTokenizerName("non_word_tokenizer")
                         .addTokenFilterName("lowercase")
                         .addTokenFilterName("custom_dictionary_stopwords")
@@ -136,7 +142,7 @@ public abstract class AbstractAnalyzer {
             break;
         case "com.fdt.sdl.core.analyzer.AlphaNumericAnalyzer":
             builder = new CustomAnalyzer
-                    .Builder(getESAnalyzerName(analyzerClassName))
+                    .Builder(analyzerName)
                     .withTokenizerName("standard")
                     .addTokenFilterName("standard")
                     .addTokenFilterName("lowercase")
@@ -171,7 +177,7 @@ public abstract class AbstractAnalyzer {
             break;
         case "com.fdt.sdl.core.analyzer.DoubleMetaphoneAnalyzer":
             builder = new CustomAnalyzer
-                    .Builder(getESAnalyzerName(analyzerClassName))
+                    .Builder(analyzerName)
                     .withTokenizerName("standard")
                     .addTokenFilterName("standard")
                     .addTokenFilterName("lowercase")
@@ -202,12 +208,12 @@ public abstract class AbstractAnalyzer {
             // This is, I promise, what the current DateAnalyzer class does
             if (!synAndStop) {
                 result = new StandardAnalyzer
-                        .Builder(getESAnalyzerName(analyzerClassName))
+                        .Builder(analyzerName)
                         .withStopwordLanguageSet("_english_")
                         .build();
             } else {
                 result = new CustomAnalyzer
-                        .Builder(getESAnalyzerName(analyzerClassName))
+                        .Builder(analyzerName)
                         .withTokenizerName("standard")
                         .addTokenFilterName("standard")
                         .addTokenFilterName("lowercase")
@@ -227,7 +233,7 @@ public abstract class AbstractAnalyzer {
             break;
         case "com.fdt.sdl.core.analyzer.KeywordCaseInsensitiveAlphNumericAnalyzer":
             builder = new CustomAnalyzer
-                    .Builder(getESAnalyzerName(analyzerClassName))
+                    .Builder(analyzerName)
                     .withTokenizerName("keyword_1024_tokenizer")
                     .addTokenFilterName("lowercase")
                     .addCharFilterName("alpha_numeric_space_char_filter");
@@ -259,7 +265,7 @@ public abstract class AbstractAnalyzer {
             break;
         case "com.fdt.sdl.core.analyzer.OneWordNumberLowerCaseAnalyzer":
             builder = new CustomAnalyzer
-                    .Builder(getESAnalyzerName(analyzerClassName))
+                    .Builder(analyzerName)
                     .withTokenizerName("whitespace")
                     .addTokenFilterName("lowercase")
                     .addCharFilterName("alpha_numeric_space_char_filter");
@@ -287,7 +293,7 @@ public abstract class AbstractAnalyzer {
             break;
         case "com.fdt.sdl.core.analyzer.synonym.SynonymAlgorithm":
             builder = new CustomAnalyzer
-                    .Builder(getESAnalyzerName(analyzerClassName))
+                    .Builder(analyzerName)
                     .withTokenizerName("standard")
                     .addTokenFilterName("standard")
                     .addTokenFilterName("lowercase")
@@ -316,11 +322,11 @@ public abstract class AbstractAnalyzer {
         case "org.apache.lucene.analysis.WhitespaceAnalyzer":
             if (!synAndStop) {
                 result = new WhitespaceAnalyzer
-                        .Builder(getESAnalyzerName(analyzerClassName))
+                        .Builder(analyzerName)
                         .build();
             } else {
                 result = new CustomAnalyzer
-                        .Builder(getESAnalyzerName(analyzerClassName))
+                        .Builder(analyzerName)
                         .withTokenizerName("whitespace")
                         .addTokenFilterName("custom_dictionary_stopwords")
                         .addTokenFilterName("custom_dictionary_synonyms")
@@ -341,12 +347,12 @@ public abstract class AbstractAnalyzer {
             // so we will preserve that default here
             if (!synAndStop) {
                 result = new StandardAnalyzer
-                        .Builder(getESAnalyzerName(analyzerClassName))
+                        .Builder(analyzerName)
                         .withStopwordLanguageSet("_english_")
                         .build();
             } else {
                 result = new CustomAnalyzer
-                        .Builder(getESAnalyzerName(analyzerClassName))
+                        .Builder(analyzerName)
                         .withTokenizerName("standard")
                         .addTokenFilterName("standard")
                         .addTokenFilterName("lowercase")
