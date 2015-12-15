@@ -59,6 +59,7 @@ public abstract class AbstractMapping {
         case IndexFieldType.TEXT:
         case IndexFieldType.TEXT_COMPRESSED:
         case IndexFieldType.KEYWORD_CASE_INSENSITIVE:
+        case IndexFieldType.UN_STORED:
             result = new StringFieldMapping
                     .Builder(column.getColumnName())
                     .withStore(false)
@@ -103,14 +104,6 @@ public abstract class AbstractMapping {
                     .Builder(column.getColumnName())
                     .withStore(false)
                     .withIndex("not_analyzed")
-                    .build();
-            break;
-        case IndexFieldType.UN_STORED:
-            result = new StringFieldMapping
-                    .Builder(column.getColumnName())
-                    .withStore(false)
-                    .withIndex("analyzed")
-                    .withAnalyzer(AbstractAnalyzer.fromColumn(defaultAnalyzerName, column))
                     .build();
             break;
         }

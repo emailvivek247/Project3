@@ -291,6 +291,32 @@ public abstract class AbstractAnalyzer {
                     .withReplacement("")
                     .build());
             break;
+        case "com.fdt.sdl.core.analyzer.CommaSemicolonAnalyzer":
+            builder = new CustomAnalyzer
+                    .Builder(analyzerName)
+                    .withTokenizerName("comma_semicolon_tokenizer")
+                    .addTokenFilterName("lowercase");
+            if (!synAndStop) {
+                result = builder.build();
+            } else {
+                result = builder
+                        .addTokenFilterName("custom_dictionary_stopwords")
+                        .addTokenFilterName("custom_dictionary_synonyms")
+                        .build();
+                result.addTokenFilter(new StopTokenFilter
+                        .Builder("custom_dictionary_stopwords")
+                        .addStopword(StopwordLoader.getStopwords())
+                        .build());
+                result.addTokenFilter(new SynonymTokenFilter
+                        .Builder("custom_dictionary_synonyms")
+                        .addSynonym(SynonymLoader.getSynonymsFromDictionaryFile())
+                        .build());
+            }
+            result.addTokenizer(new PatternTokenizer
+                    .Builder("comma_semicolon_tokenizer")
+                    .withPattern("[,;]\\s*")
+                    .build());
+            break;
         case "com.fdt.sdl.core.analyzer.synonym.SynonymAlgorithm":
             builder = new CustomAnalyzer
                     .Builder(analyzerName)
