@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.javacoding.xsearch.api.SDLIndexDocument;
 import net.javacoding.xsearch.api.protocol.SearchProtocol;
 import net.javacoding.xsearch.config.Column;
 import net.javacoding.xsearch.config.ServerConfiguration;
@@ -121,7 +122,7 @@ public class SearchProtocolBufferAction extends Action {
             SearchProtocol.SearchResponse.Builder rb = SearchProtocol.SearchResponse.newBuilder();
             rb.setSearchTime(sr.getSearchTime());
             rb.setTotal(sr.getTotal());
-            for(HitDocument d : sr.getDocs()) {
+            for(SDLIndexDocument d : sr.getDocs()) {
                 SearchProtocol.Document.Builder db = SearchProtocol.Document.newBuilder();
                 db.setScore(d.getScore()).setBoost(d.getBoost());
                 for(Field f : d.fields()) {

@@ -13,14 +13,14 @@ import net.javacoding.xsearch.foundation.UserPreference;
 import net.javacoding.xsearch.utility.ActionTools;
 import net.javacoding.xsearch.utility.U;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fdt.sdl.styledesigner.Scaffold;
 import com.fdt.sdl.styledesigner.ScaffoldManager;

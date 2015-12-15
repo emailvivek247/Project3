@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.javacoding.xsearch.api.Document;
+import net.javacoding.xsearch.api.SDLIndexDocument;
 import net.javacoding.xsearch.config.DatasetConfiguration;
 import net.javacoding.xsearch.config.ServerConfiguration;
 import net.javacoding.xsearch.config.XMLSerializable;
@@ -29,6 +30,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import com.fdt.sdl.styledesigner.Template;
 import com.fdt.sdl.styledesigner.util.DeviceDetectorUtil;
+import com.fdt.sdl.styledesigner.util.PageStyleUtil;
 import com.fdt.sdl.core.ui.action.search.MultiSearchAction.MultiSearchContext;
 import com.fdt.sdl.core.ui.action.search.SearchAction.SearchContext;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -70,10 +72,7 @@ public class SearchResult extends XMLSerializable{
     @XStreamAlias("sortBys")
 	public List<SearchSort> sortBys;
     @XStreamAlias("docs")
-	public List<HitDocument> docs;
-    
-    @XStreamAlias("xstreamdocs")
-	public List<Document> xstreamdocs;
+	public List<SDLIndexDocument> docs;
     
     @XStreamAlias("searchTime")
 	public long searchTime;
@@ -98,13 +97,7 @@ public class SearchResult extends XMLSerializable{
 
     public String userInput;
     
-    public List<Document> getXstreamdocs() {
-		return xstreamdocs;
-	}
-	public void setXstreamdocs(List<Document> xstreamdocs) {
-		this.xstreamdocs = xstreamdocs;
-	}
-	/**
+    /**
 	 * Get current DatasetConfiguration instance
 	 */
 	public DatasetConfiguration getDatasetConfiguration(){ return datasetConfiguration;}
@@ -152,7 +145,7 @@ public class SearchResult extends XMLSerializable{
 	/**
 	 * Found documents
 	 */
-	public List<HitDocument> getDocs(){return docs;}
+	public List<SDLIndexDocument> getDocs(){return docs;}
 	
     /**
      * If no matches found for query q, this will be the matches for defaultQuery
@@ -274,7 +267,7 @@ public class SearchResult extends XMLSerializable{
         this.indexName = msc.dcs.get(i).getName();
         this.templateName = DeviceDetectorUtil.identifyDevice(msc.dcs.get(i), request);
         this.template = null;
-        this.docs = docs;
+        this.docs = (List<SDLIndexDocument>)(List<?>) docs;
         this.searchTime = searchTime;
         this.total = total;
         this.start = start;
@@ -309,7 +302,7 @@ public class SearchResult extends XMLSerializable{
         this.indexName = sc.dc.getName();
         this.templateName = sc.templateName;
         this.template = sc.template;
-        this.docs = docs;
+        this.docs = (List<SDLIndexDocument>)(List<?>) docs;
         this.defaultDocs = defaultDocs;
         this.searchTime = searchTime;
         this.total = total;
@@ -328,7 +321,7 @@ public class SearchResult extends XMLSerializable{
             String q, 
             String lq,
             org.apache.lucene.search.Query query, 
-            List<Document> xstreamdocs, 
+            List<Document> docs, 
             List<HitDocument> defaultDocs, 
             long searchTime, 
             int total, 
@@ -345,7 +338,7 @@ public class SearchResult extends XMLSerializable{
         this.indexName = sc.dc.getName();
         this.templateName = sc.templateName;
         this.template = sc.template;
-        this.xstreamdocs = xstreamdocs;
+        this.docs = (List<SDLIndexDocument>)(List<?>)  docs;
         this.defaultDocs = defaultDocs;
         this.searchTime = searchTime;
         this.total = total;
@@ -375,7 +368,6 @@ public class SearchResult extends XMLSerializable{
         request.setAttribute("templateName", templateName);
         request.setAttribute("q", q);
         request.setAttribute("lq", lq);
-        request.setAttribute("xstreamdocs", xstreamdocs);
         request.setAttribute("docs", docs);
         request.setAttribute("searchTime", getSearchTimeString());
         request.setAttribute("total", new Integer(total));
@@ -415,8 +407,8 @@ public class SearchResult extends XMLSerializable{
             self.put("sortBys", SearchSort.toJSONArray(sortBys));
             this.summarizer.setHighlightPrefix(beginTag);
             this.summarizer.setHighlightSuffix(endTag);
-            self.put("docs", HitDocument.toJSONArray(docs));
-            self.put("xstreamdocs", Document.toJSONArray(xstreamdocs));
+            self.put("docs", PageStyleUtil.toJSONArray(docs));
+            
             self.put("filterResult", filterResult.toJSONArray());
         } catch (JSONException e) {
             e.printStackTrace();

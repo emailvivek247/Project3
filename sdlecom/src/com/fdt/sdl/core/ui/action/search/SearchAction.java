@@ -262,8 +262,11 @@ public class SearchAction extends Action {
                     AbstractQuery abstractQuery = esQueryBuilder.addSort(sortBys).build();
 
                     JestClient client = SpringContextUtil.getBean(JestClient.class);
+                    
+                    String elasticSearchQuery = abstractQuery.getAsString();
+                    logger.info("Elastic Search Query: " + elasticSearchQuery);
 
-                    Search search = new Search.Builder(abstractQuery.getAsString())
+                    Search search = new Search.Builder(elasticSearchQuery)
                             .addIndex(sc.indexName)
                             .setParameter(Parameters.SIZE, rowsToReturn)
                             .setParameter("from", offset)
