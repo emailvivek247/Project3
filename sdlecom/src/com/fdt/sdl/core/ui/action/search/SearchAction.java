@@ -172,17 +172,18 @@ public class SearchAction extends Action {
 
 
             long start = System.currentTimeMillis();
+            Query query = null;
+            if (!sc.dc.getIsEmptyQueryMatchAll() && U.isEmpty(q) && U.isEmpty(lq)) {
+                query = null;
+            } else {
+                query = QueryHelper.getSearchQuery(sr, q, lq, filterResult, request, sc.dc, sc.irs,
+                        getBooleanOperator(request), request.getParameter("searchable"),
+                        U.getInt(request.getParameter("randomQuerySeed"), 0), sc.debug);
+            }
             if (Boolean.parseBoolean(request.getServletContext().getInitParameter("isPSOOnlyMachine"))) {
                 if (propertiesFile != null && propertiesFile.getAbsolutePath() != null) {
                     
-                    Query query = null;
-                    if (!sc.dc.getIsEmptyQueryMatchAll() && U.isEmpty(q) && U.isEmpty(lq)) {
-                        query = null;
-                    } else {
-                        query = QueryHelper.getSearchQuery(sr, q, lq, filterResult, request, sc.dc, sc.irs,
-                                getBooleanOperator(request), request.getParameter("searchable"),
-                                U.getInt(request.getParameter("randomQuerySeed"), 0), sc.debug);
-                    }
+                    
 
                     indexServerUrl = SystemUtil.readProperty("indexServerUrl", propertiesFile.getAbsolutePath());
                     SearchConnection searchConnection = new SearchConnection(indexServerUrl).setIndex(sc.indexName);
@@ -207,15 +208,6 @@ public class SearchAction extends Action {
 
                     List<HitDocument> docs = null;
                     List<HitDocument> defaultDocs = null;
-
-                    Query query = null;
-                    if (!sc.dc.getIsEmptyQueryMatchAll() && U.isEmpty(q) && U.isEmpty(lq)) {
-                        query = null;
-                    } else {
-                        query = QueryHelper.getSearchQuery(sr, q, lq, filterResult, request, sc.dc, sc.irs,
-                                getBooleanOperator(request), request.getParameter("searchable"),
-                                U.getInt(request.getParameter("randomQuerySeed"), 0), sc.debug);
-                    }
 
                     if (query != null) {
                         Hits hits = null;
@@ -254,8 +246,8 @@ public class SearchAction extends Action {
                             filterResult, request, response);
 
                 } else if (sc.dc.getIndexType() == IndexType.ELASTICSEARCH) {
-
-                    BoolQuery.Builder esQueryBuilder = ESQueryHelper.getSearchQuery(sr, q, lq, filterResult, request, sc.dc, sc.irs,
+                	
+                	BoolQuery.Builder esQueryBuilder = ESQueryHelper.getSearchQuery(sr, q, lq, filterResult, request, sc.dc, sc.irs,
                             getBooleanOperator(request), request.getParameter("searchable"),
                             U.getInt(request.getParameter("randomQuerySeed"), 0), sc.debug);
 
@@ -275,7 +267,7 @@ public class SearchAction extends Action {
                     CustomSearchResult result = new CustomSearchResult(client.execute(search));
                     List<Document> resultDocs = extractResultDocs(result, rowsToReturn, offset);
 
-                    sr.initFor3Tier(sc, q, lq, null, resultDocs, null, searchTime, result.getTotal(), offset,
+                    sr.initFor3Tier(sc, q, lq, query, resultDocs, null, searchTime, result.getTotal(), offset,
                             rowsToReturn, sortBys, filterResult, request, response);
                 }
             }
