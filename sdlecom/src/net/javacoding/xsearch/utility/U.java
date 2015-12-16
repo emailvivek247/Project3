@@ -73,6 +73,17 @@ public class U {
         }
         return null;
     }
+    
+    public static Long getLong(String pValue){
+        if(!U.isEmpty(pValue)){
+            try{
+                return new Long(pValue);
+            }catch(Exception e){
+                return null;
+            }
+        }
+        return null;
+    }
 
     /**
      * If the pValue is empty( null or ""), return default value

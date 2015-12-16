@@ -15,7 +15,7 @@ import org.codehaus.jettison.json.JSONObject;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-public class Document {
+public class Document implements SDLIndexDocument {
 
     SearchProtocol.Document document;
     List<Field> fields;
@@ -83,7 +83,7 @@ public class Document {
      * @param field name
      * @return a list of field values
      */
-    public List<String> getStringList(String field) {
+    public List<String> getValuesList(String field) {
         List<String> ret = new ArrayList<String>();
         for(SearchProtocol.Field f : this.document.getFieldList()) {
             if(f.getName().equals(field)) {
@@ -155,6 +155,7 @@ public class Document {
         }
         return null;
     }
+    
     public List<Field> getFieldList(){
         if(fields==null) {
             fields = new ArrayList<Field>();
@@ -165,31 +166,7 @@ public class Document {
         return fields;
     }
     
-    public static JSONArray toJSONArray(List<Document> l) {
-        JSONArray ret = new JSONArray();
-        if(l!=null) {
-            for(Document d : l) {
-                JSONObject doc = new JSONObject();
-                List<Field> fields = d.getFieldList();
-                for (int i = 0; i < fields.size(); i++) {
-                    Field field = fields.get(i);
-                    try {
-                        doc.put(field.getName(), d.getObject(field.getName()));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                JSONObject h = new JSONObject(d,new String[]{"id","score"});
-                try {
-                    h.put("doc", doc);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                ret.put(h);
-            }
-        }
-        return ret; 
-    }
+    
     
     public final Object getObject(String field) {
     	 for(SearchProtocol.Field f : this.document.getFieldList()) {
@@ -208,4 +185,9 @@ public class Document {
     	 return null;
             	
     }
+
+	public List<org.apache.lucene.document.Field> fields() {
+		// TODO Auto-generated method stub
+		return null;
+	}	
 }

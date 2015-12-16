@@ -21,6 +21,7 @@ import net.javacoding.xsearch.search.result.filter.FilteredColumn;
 import net.javacoding.xsearch.utility.U;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.Token;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.TermAttribute;
 import org.slf4j.Logger;
@@ -118,6 +119,10 @@ public class ESQueryTranslator {
                     // We all create query clause for this field only if
                     // 1. field match
                     // 2. Default field clause on searchable column, and current column is not fieldColumn
+                    continue;
+                }
+                
+                if (column.getColumnType().equalsIgnoreCase("java.sql.Timestamp")) {
                     continue;
                 }
 
@@ -330,59 +335,62 @@ public class ESQueryTranslator {
 
     /** Optimizes terms and re-analyze */
     private static String[] optimizeTerm(Analyzer a, DbsTerm term, String fieldName, Column column) {
-        String t = term.toString();
-        if (column.getIsKeyword()) {
-            if (column.getIsSimpleKeyword()) {
-                return new String[] { t };
-            } else {
-                return new String[] { t.toLowerCase() };
+    	String t = term.toString();
+        if (column.getIsKeyword()){
+            if(column.getIsSimpleKeyword()){
+                return new String[]{t};
+            }else{
+                return new String[]{t.toLowerCase()};
             }
         }
         ArrayList<String> result = new ArrayList<String>();
-        TokenStream tokenStream = a.tokenStream(fieldName, new StringReader(t));
-        TermAttribute termAttribute = (TermAttribute) tokenStream.getAttribute(TermAttribute.class);
+        TokenStream ts = a.tokenStream(fieldName, new java.io.StringReader(t));
+        Token token = null;
         try {
-            while (tokenStream.incrementToken()) {
-                result.add(termAttribute.term());
+            while ((token = ts.next()) != null) {
+                result.add(token.termText());                
             }
         } catch (IOException e) {
             throw new RuntimeException(e.toString());
         }
-        return result.toArray(new String[result.size()]);
+        return (String[]) result.toArray(new String[result.size()]);
     }
 
     /** Optimizes phrase queries to use n-grams when possible. and re-analyze */
     private static String[] optimizePhrase(Analyzer a, DbsPhrase phrase, String fieldName, Column column) {
-        List<String> result = new ArrayList<>();
+    	 ArrayList<String> result = new ArrayList<String>();
+         //TODO:cylu set ts = analyzer.tokenStream("dummy", new StringReader())
+         /*
+          * TokenStream ts = new ArrayTokens(phrase); ts = new
+          * StandardFilter(ts); ts = new LowerCaseFilter(ts); ts = new
+          * StopFilter(ts,QueryAnalysis.STOP_SET);
+          */
+         StringBuffer buffer = new StringBuffer();
+         for (int i = 0; i < phrase.getTerms().length; i++) {
+             buffer.append(phrase.getTerms()[i].toString());
+             if (i != phrase.getTerms().length - 1) buffer.append(" ");
+         }
+         String s =buffer.toString();
+         if (column.getIsKeyword()){
+             if(column.getIsSimpleKeyword()){
+                 return new String[]{s};
+             }else{
+                 return new String[]{s.toLowerCase()};
+             }
+         }
 
-        StringBuffer buffer = new StringBuffer();
-        for (int i = 0; i < phrase.getTerms().length; i++) {
-            buffer.append(phrase.getTerms()[i].toString());
-            if (i != phrase.getTerms().length - 1) {
-                buffer.append(" ");
-            }
-        }
-        String s = buffer.toString();
-        if (column.getIsKeyword()) {
-            if (column.getIsSimpleKeyword()) {
-                return new String[] { s };
-            } else {
-                return new String[] { s.toLowerCase() };
-            }
-        }
+         TokenStream ts = a.tokenStream(fieldName, new java.io.StringReader(s));
 
-        TokenStream tokenStream = a.tokenStream(fieldName, new StringReader(s));
-        TermAttribute termAttribute = (TermAttribute) tokenStream.getAttribute(TermAttribute.class);
-
-        try {
-            while (tokenStream.incrementToken()) {
-                result.add(termAttribute.term());
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e.toString());
-        }
-
-        return result.toArray(new String[result.size()]);
+         Token token= null;
+         try {
+             while ((token = ts.next()) != null) {
+                 result.add(token.termText());                
+             }
+         } catch (IOException e) {
+             throw new RuntimeException(e.toString());
+         }
+        // if (prev != null) result.add(prev.termText());
+         return (String[]) result.toArray(new String[result.size()]);
 
     }
 

@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -35,12 +36,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import net.javacoding.xsearch.api.Document;
+import net.javacoding.xsearch.api.SDLIndexDocument;
 import net.javacoding.xsearch.foundation.WebserverStatic;
+import net.javacoding.xsearch.search.HitDocument;
 import net.javacoding.xsearch.utility.FileUtil;
 import net.javacoding.xsearch.utility.U;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Fieldable;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
@@ -794,4 +803,71 @@ public class PageStyleUtil {
         tree.put(key, fileList);
         return tree;
       }
+    
+    public static JSONArray HitDocumentstoJSONArray(List<HitDocument> l) {
+        JSONArray ret = new JSONArray();
+        if(l!=null) {
+            for(HitDocument d : l) {
+                JSONObject doc = new JSONObject();
+                List<Field> fields = d.doc.getFields();
+                for (int i = 0; i < fields.size(); i++) {
+                    Fieldable field = fields.get(i);
+                    try {
+                        doc.put(field.name(), d.getObject(field.name()));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                JSONObject h = new JSONObject(d,new String[]{"id","score"});
+                try {
+                    h.put("doc", doc);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                ret.put(h);
+            }
+        }
+        return ret; 
+    }
+    
+    public static JSONArray GenericDocumentstoJSONArray(List<Document> l) {
+        JSONArray ret = new JSONArray();
+        if(l!=null) {
+            for(Document d : l) {
+                JSONObject doc = new JSONObject();
+                List<net.javacoding.xsearch.api.Field> fields = d.getFieldList();
+                for (int i = 0; i < fields.size(); i++) {
+                	net.javacoding.xsearch.api.Field field = fields.get(i);
+                    try {
+                        doc.put(field.getName(), d.getObject(field.getName()));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                JSONObject h = new JSONObject(d,new String[]{"id","score"});
+                try {
+                    h.put("doc", doc);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                ret.put(h);
+            }
+        }
+        return ret; 
+    }
+
+	public static JSONArray toJSONArray(List<SDLIndexDocument> docs) {
+		JSONArray jsonArray = new JSONArray();
+		if(docs != null && docs.size()> 0) {
+			SDLIndexDocument sdlIndexDocument = docs.get(0);
+			if (sdlIndexDocument instanceof net.javacoding.xsearch.api.Document) {
+				jsonArray = GenericDocumentstoJSONArray((List<Document>)(List<?>) docs);				
+			} else {
+				jsonArray = HitDocumentstoJSONArray((List<HitDocument>)(List<?>) docs);				
+			}
+			return jsonArray;
+		} else {
+			return jsonArray;
+		}
+	}
 }

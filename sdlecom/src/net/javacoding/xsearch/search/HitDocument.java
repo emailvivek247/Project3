@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import net.javacoding.xsearch.api.SDLIndexDocument;
 import net.javacoding.xsearch.config.Column;
 import net.javacoding.xsearch.config.DatasetConfiguration;
 import net.javacoding.xsearch.utility.U;
@@ -24,7 +25,7 @@ import org.codehaus.jettison.json.JSONObject;
  * To return doc content in List, instead of [], to be used by velocity
  * @
  */
-public class HitDocument {
+public class HitDocument implements SDLIndexDocument {
     public float score;
     public int id;
     public Document doc = null;
@@ -65,15 +66,12 @@ public class HitDocument {
         return ret==null? "" : ret;
     }
     
-    /** Returns an Enumeration of all the fields in a document. */
-    public final List<Field> fields() {
-        if(doc==null) return null;
-        return doc.getFields();
-    }
+   
     public final Field getField(String name) {
         if(doc==null) return null;
         return doc.getField(name);
     }
+    
     public final Field[] getFields(String name) {
         if(doc==null) return null;
         return doc.getFields(name);
@@ -164,30 +162,18 @@ public class HitDocument {
     public final Integer getInteger(String name) {
         return U.getInteger(get(name));
     }
-
-    public static JSONArray toJSONArray(List<HitDocument> l) {
-        JSONArray ret = new JSONArray();
-        if(l!=null) {
-            for(HitDocument d : l) {
-                JSONObject doc = new JSONObject();
-                List<Field> fields = d.doc.getFields();
-                for (int i = 0; i < fields.size(); i++) {
-                    Fieldable field = fields.get(i);
-                    try {
-                        doc.put(field.name(), d.getObject(field.name()));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                JSONObject h = new JSONObject(d,new String[]{"id","score"});
-                try {
-                    h.put("doc", doc);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                ret.put(h);
-            }
-        }
-        return ret; 
+    
+	
+    
+	@Override
+	public Long getLong(String field) {
+		return U.getLong(get(field));
+	}
+	
+	
+	 /** Returns an Enumeration of all the fields in a document. */
+    public List<Field> fields() {
+        if(doc==null) return null;
+        return doc.getFields();
     }
 }
