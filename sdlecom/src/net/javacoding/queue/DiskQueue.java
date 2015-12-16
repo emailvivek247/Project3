@@ -54,8 +54,10 @@ import org.slf4j.LoggerFactory;
  * @author Gordon Mohr
  */
 public class DiskQueue implements Queue, Serializable {
-	
-	private final static Logger logger = LoggerFactory.getLogger(DiskQueue.class);
+
+    private static final long serialVersionUID = -140352481767861425L;
+
+    private static final Logger logger = LoggerFactory.getLogger(DiskQueue.class);
 
     /** the number of elements currently in the queue */
     long length;
@@ -281,9 +283,9 @@ public class DiskQueue implements Queue, Serializable {
      * @see org.archive.queue.Queue#getIterator(boolean)
      * @return iterator
      */
-    public Iterator getIterator(boolean inCacheOnly) {
+    public Iterator<Object> getIterator(boolean inCacheOnly) {
         // There are no levels of storage so we will return all items.
-        Iterator it = null;
+        Iterator<Object> it = null;
 
         if( isInitialized ){
             try {
@@ -293,7 +295,7 @@ public class DiskQueue implements Queue, Serializable {
             }
         }
         if( it == null ){
-            it = new Iterator(){
+            it = new Iterator<Object>(){
                 public void remove() { throw new UnsupportedOperationException(); }
                 public boolean hasNext() { return false; }
                 public Object next() { throw new NoSuchElementException(); }

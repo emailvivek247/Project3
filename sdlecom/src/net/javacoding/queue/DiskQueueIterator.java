@@ -37,7 +37,7 @@ import java.util.NoSuchElementException;
  *
  * @author Kristinn Sigurdsson
  */
-public class DiskQueueIterator implements Iterator {
+public class DiskQueueIterator implements Iterator<Object> {
 
     InputStream inStream;
     ObjectInputStream objectInStream;
