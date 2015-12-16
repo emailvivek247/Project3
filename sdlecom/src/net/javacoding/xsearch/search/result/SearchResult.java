@@ -72,7 +72,7 @@ public class SearchResult extends XMLSerializable{
     @XStreamAlias("sortBys")
 	public List<SearchSort> sortBys;
     @XStreamAlias("docs")
-	public List<SDLIndexDocument> docs;
+	public List<? extends SDLIndexDocument> docs;
     
     @XStreamAlias("searchTime")
 	public long searchTime;
@@ -145,7 +145,7 @@ public class SearchResult extends XMLSerializable{
 	/**
 	 * Found documents
 	 */
-	public List<SDLIndexDocument> getDocs(){return docs;}
+	public List<? extends SDLIndexDocument> getDocs(){return docs;}
 	
     /**
      * If no matches found for query q, this will be the matches for defaultQuery
@@ -302,14 +302,14 @@ public class SearchResult extends XMLSerializable{
         this.indexName = sc.dc.getName();
         this.templateName = sc.templateName;
         this.template = sc.template;
-        this.docs = (List<SDLIndexDocument>)(List<?>) docs;
+        this.docs = docs;
         this.defaultDocs = defaultDocs;
         this.searchTime = searchTime;
         this.total = total;
         this.start = start;
         this.length = length;
-        if(query!=null){
-            this.summarizer = new net.javacoding.xsearch.search.Highlighter(sc.dc.getAnalyzer(), query.rewrite(sc.irs.getIndexReader()), q);
+        if (query != null) {
+            this.summarizer = new Highlighter(sc.dc.getAnalyzer(), query.rewrite(sc.irs.getIndexReader()), q);
         }
         this.sortBys = sortBys;
         this.filterResult = filterResult;
@@ -338,7 +338,7 @@ public class SearchResult extends XMLSerializable{
         this.indexName = sc.dc.getName();
         this.templateName = sc.templateName;
         this.template = sc.template;
-        this.docs = (List<SDLIndexDocument>)(List<?>)  docs;
+        this.docs = docs;
         this.defaultDocs = defaultDocs;
         this.searchTime = searchTime;
         this.total = total;

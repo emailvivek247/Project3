@@ -856,7 +856,7 @@ public class PageStyleUtil {
         return ret; 
     }
 
-	public static JSONArray toJSONArray(List<SDLIndexDocument> docs) {
+	public static JSONArray toJSONArray(List<? extends SDLIndexDocument> docs) {
 		JSONArray jsonArray = new JSONArray();
 		if(docs != null && docs.size()> 0) {
 			SDLIndexDocument sdlIndexDocument = docs.get(0);

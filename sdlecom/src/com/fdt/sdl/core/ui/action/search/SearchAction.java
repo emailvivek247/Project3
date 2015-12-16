@@ -246,15 +246,15 @@ public class SearchAction extends Action {
                             filterResult, request, response);
 
                 } else if (sc.dc.getIndexType() == IndexType.ELASTICSEARCH) {
-                	
-                	BoolQuery.Builder esQueryBuilder = ESQueryHelper.getSearchQuery(sr, q, lq, filterResult, request, sc.dc, sc.irs,
-                            getBooleanOperator(request), request.getParameter("searchable"),
+
+                    BoolQuery.Builder esQueryBuilder = ESQueryHelper.getSearchQuery(sr, q, lq, filterResult, request,
+                            sc.dc, getBooleanOperator(request), request.getParameter("searchable"),
                             U.getInt(request.getParameter("randomQuerySeed"), 0), sc.debug);
 
                     AbstractQuery abstractQuery = esQueryBuilder.addSort(sortBys).build();
 
                     JestClient client = SpringContextUtil.getBean(JestClient.class);
-                    
+
                     String elasticSearchQuery = abstractQuery.getAsString();
                     logger.info("Elastic Search Query: " + elasticSearchQuery);
 

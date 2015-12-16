@@ -9,7 +9,6 @@ import net.javacoding.xsearch.search.analysis.QueryAnalysis;
 import net.javacoding.xsearch.search.query.DbsQuery;
 import net.javacoding.xsearch.search.result.SearchResult;
 import net.javacoding.xsearch.search.result.filter.FilterResult;
-import net.javacoding.xsearch.search.searcher.IndexReaderSearcher;
 import net.javacoding.xsearch.utility.U;
 
 import org.slf4j.Logger;
@@ -20,8 +19,8 @@ public class ESQueryHelper {
     private static final Logger logger = LoggerFactory.getLogger(ESQueryHelper.class);
 
     public static BoolQuery.Builder getSearchQuery(SearchResult sr, String q, String lq, FilterResult filterResult,
-            HttpServletRequest request, DatasetConfiguration dc, IndexReaderSearcher irs, int booleanOperator,
-            String dynamicSearchable, int randomQuerySeed, boolean debug) {
+            HttpServletRequest request, DatasetConfiguration dc, int booleanOperator, String dynamicSearchable,
+            int randomQuerySeed, boolean debug) {
 
         BoolQuery.Builder builder = new BoolQuery.Builder(); 
 
@@ -68,12 +67,11 @@ public class ESQueryHelper {
                     ESQueryTranslator translator = new ESQueryTranslator(dc.getColumns(), dynamicSearchable);
                     translator.setSlop(5);
                     translator.setBooleanOperator(booleanOperator);
-                    builder.addMustClause(translator.translate(dc.getAnalyzer(), myQuery, filterResult, dc));
+                    builder.addMustClause(translator.translate(myQuery, filterResult, dc));
                     if (translator.getIsAllNegative()) {
                         builder.addMustClause(new MatchAllQuery.Builder().build());
                     }
                 }
-                
                 if (!U.isEmpty(lq)) {
                     String queryStr = SearchQueryParser.elasticsearchParse(lq);
                     builder.addMustClause(new QueryStringQuery.Builder(queryStr).build());
