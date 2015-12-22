@@ -219,6 +219,7 @@
       </fileset>
       <fileset dir="${webcontent}" >
         <include name="WEB-INF/conf/spring/sdl-Non-Security-servlet.xml" />
+        <include name="WEB-INF/conf/spring/applicationContext-elasticsearch.xml" />
       </fileset>
       <lib dir="dist/lib" />
     </war>
