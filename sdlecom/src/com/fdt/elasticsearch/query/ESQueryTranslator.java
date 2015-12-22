@@ -179,7 +179,7 @@ public class ESQueryTranslator {
                 logger.debug("Adding add'l fullMatch section to query");
                 BoolQuery.Builder fullMatch = new BoolQuery.Builder();
                 for (Column c : columnList) {
-                    if (isSearchable(c)) {
+                    if (isSearchable(c) && !c.getColumnType().equalsIgnoreCase("java.sql.Timestamp")) {
                         if (IndexFieldType.isKeyword(c.getIndexFieldType())) {
                             fullMatch.addShouldClause(matchQuery(c.getColumnName(), input.getTerms(),
                                     c.getSearchWeight()));
