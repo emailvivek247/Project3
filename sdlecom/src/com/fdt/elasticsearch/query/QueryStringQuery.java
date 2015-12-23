@@ -17,6 +17,7 @@ public class QueryStringQuery extends AbstractQuery {
 
     private final Optional<String> defaultOperator;
     private final Optional<String> defaultField;
+    private final Optional<Integer> phraseSlop;
 
     protected QueryStringQuery(Builder builder) {
         super(builder);
@@ -24,6 +25,7 @@ public class QueryStringQuery extends AbstractQuery {
         this.query = builder.query;
         this.defaultOperator = builder.defaultOperator;
         this.defaultField = builder.defaultField;
+        this.phraseSlop = builder.phraseSlop;
     }
 
     @Override
@@ -47,6 +49,9 @@ public class QueryStringQuery extends AbstractQuery {
         if (defaultField.isPresent()) {
             queryStringNode.put("default_field", defaultField.get());
         }
+        if (phraseSlop.isPresent()) {
+            queryStringNode.put("phrase_slop", phraseSlop.get());
+        }
 
         ObjectNode queryNode = mapper.createObjectNode();
         queryNode.set("query_string", queryStringNode);
@@ -61,6 +66,7 @@ public class QueryStringQuery extends AbstractQuery {
 
         private Optional<String> defaultOperator;
         private Optional<String> defaultField;
+        private Optional<Integer> phraseSlop;
 
         public Builder(String query) {
             this.query = query;
@@ -86,6 +92,11 @@ public class QueryStringQuery extends AbstractQuery {
 
         public Builder withDefaultField(String defaultField) {
             this.defaultField = Optional.of(defaultField);
+            return this;
+        }
+
+        public Builder withPhraseSlop(int phraseSlop) {
+            this.phraseSlop = Optional.of(phraseSlop);
             return this;
         }
 

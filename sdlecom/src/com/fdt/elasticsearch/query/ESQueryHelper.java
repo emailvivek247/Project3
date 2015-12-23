@@ -53,6 +53,7 @@ public class ESQueryHelper {
                 }
                 */
                 if (!U.isEmpty(q)) {
+                    
                     if (debug) {
                         logger.info("Start parse query: " + HTMLEntities.encode(q));
                     }
@@ -64,10 +65,11 @@ public class ESQueryHelper {
                     if (debug) {
                         logger.info("parsed query: " + HTMLEntities.encode(myQuery.toString()));
                     }
-                    ESQueryTranslator translator = new ESQueryTranslator(dc.getColumns(), dynamicSearchable);
+                    
+                    ESQueryTranslator2 translator = new ESQueryTranslator2(dc.getColumns(), dynamicSearchable);
                     translator.setSlop(5);
                     translator.setBooleanOperator(booleanOperator);
-                    builder.addMustClause(translator.translate(myQuery, filterResult, dc));
+                    builder.addMustClause(translator.translate(q, filterResult, dc));
                     if (translator.getIsAllNegative()) {
                         builder.addMustClause(new MatchAllQuery.Builder().build());
                     }
