@@ -73,6 +73,7 @@ public class QueryStringQuery extends AbstractQuery {
             this.fields = new ArrayList<>();
             this.defaultOperator = Optional.empty();
             this.defaultField = Optional.empty();
+            this.phraseSlop = Optional.empty();
         }
 
         public Builder addField(String field) {
