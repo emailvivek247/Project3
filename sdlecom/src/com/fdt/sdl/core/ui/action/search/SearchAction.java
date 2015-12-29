@@ -248,8 +248,7 @@ public class SearchAction extends Action {
                 } else if (sc.dc.getIndexType() == IndexType.ELASTICSEARCH) {
 
                     BoolQuery.Builder esQueryBuilder = ESQueryHelper.getSearchQuery(sr, q, lq, filterResult, request,
-                            sc.dc, getBooleanOperator(request), request.getParameter("searchable"),
-                            U.getInt(request.getParameter("randomQuerySeed"), 0), sc.debug);
+                            sc.dc, request.getParameter("searchable"), sc.debug);
 
                     AbstractQuery abstractQuery = esQueryBuilder.addSort(sortBys).build();
 

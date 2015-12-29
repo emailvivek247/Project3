@@ -1,8 +1,11 @@
 package com.fdt.elasticsearch.query;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import net.javacoding.xsearch.config.Column;
 import net.javacoding.xsearch.config.DatasetConfiguration;
@@ -12,18 +15,15 @@ import net.javacoding.xsearch.utility.U;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fdt.elasticsearch.util.StopwordLoader;
+import com.google.common.base.Joiner;
+
 public class ESQueryTranslator2 {
 
     private static final Logger logger = LoggerFactory.getLogger(ESQueryTranslator2.class);
 
     private List<Column> columnList;
     private Set<String> dynamicSearchableColumns;
-    private int slop = Integer.MAX_VALUE;
-    private int booleanOperator = 0;
-    private boolean isAllNegative = true;
-
-    private static int AND = 1;
-    private static int OR = 2;
 
     public ESQueryTranslator2(List<Column> columnList, String columnsString) {
         this.columnList = columnList;
@@ -41,18 +41,6 @@ public class ESQueryTranslator2 {
                 && dynamicSearchableColumns.contains(column.getColumnName().toLowerCase());
     }
 
-    public void setSlop(int slop) {
-        this.slop = slop;
-    }
-
-    public void setBooleanOperator(int booleanOperator) {
-        this.booleanOperator = booleanOperator;
-    }
-
-    public boolean getIsAllNegative() {
-        return isAllNegative;
-    }
-
     public AbstractQuery translate(String queryStr, FilterResult filterResult, DatasetConfiguration dc) {
         if (columnList != null) {
             return processClauses(queryStr, filterResult);
@@ -65,27 +53,75 @@ public class ESQueryTranslator2 {
 
         BoolQuery.Builder result = new BoolQuery.Builder();
 
-        for (Column column : columnList) {
+        List<Column> searchCols = columnList.stream()
+            .filter(c -> isSearchable(c))
+            .filter(c -> !c.getColumnType().equalsIgnoreCase("java.sql.Timestamp"))
+            .collect(Collectors.toList());
 
-            if (!isSearchable(column) || column.getColumnType().equalsIgnoreCase("java.sql.Timestamp")) {
-                continue;
+        List<String> individualFields = searchCols.stream().map((c) -> {
+            String field = c.getColumnName();
+            float boost = c.getSearchWeight();
+            if (boost != 1.0F) {
+                field += "^" + boost;
             }
+            return field;
+        }).collect(Collectors.toList());
 
-            AbstractQuery query = queryStringQuery(column, queryStr);
-            result.addShouldClause(query);
+        List<String> phraseFields = searchCols.stream().map((c) -> {
+            String field = c.getColumnName();
+            float boost = c.getIsKeyword() ? c.getSearchWeight() : c.getSearchWeight() * 10F;
+            if (boost != 1.0F) {
+                field += "^" + boost;
+            }
+            return field;
+        }).collect(Collectors.toList());
 
+        String phraseQueryStr = buildPhraseQueryString(queryStr);
+
+        if (!queryStr.contains("\"")) {
+            queryStr = buildQueryString(queryStr);
         }
 
-        return result.build();
-    }
-
-
-    private AbstractQuery queryStringQuery(Column c, String queryStr) {
-        return new QueryStringQuery.Builder(queryStr)
-                .withDefaultField(c.getColumnName())
-                .withPhraseSlop(slop)
-                .withBoost(c.getSearchWeight())
+        QueryStringQuery individual = new QueryStringQuery.Builder(queryStr)
+                .addField(individualFields)
+                .withUseDisMax(true)
                 .build();
+
+        QueryStringQuery phrase = new QueryStringQuery.Builder(phraseQueryStr)
+                .addField(phraseFields)
+                .withPhraseSlop(2)
+                .withUseDisMax(true)
+                .build();
+
+        return result.addShouldClause(individual).addShouldClause(phrase).build();
+
     }
 
+    private static String buildQueryString(String queryStr) {
+
+        Set<String> stopwords = StopwordLoader.getStopwordSet();
+        String[] split = queryStr.split("\\s+");
+
+        List<String> parts = new ArrayList<>();
+        for (String part : split) {
+            if (stopwords.contains(part)) {
+                parts.add(part);
+            } else {
+                parts.add("+" + part);
+            }
+        }
+
+        return Joiner.on(" ").join(parts);
+    }
+
+    private static String buildPhraseQueryString(String queryStr) {
+        String phraseQueryStr = queryStr;
+        if (!phraseQueryStr.startsWith("\"")) {
+            phraseQueryStr = "\"" + phraseQueryStr;
+        }
+        if (!phraseQueryStr.endsWith("\"")) {
+            phraseQueryStr = phraseQueryStr + "\"";
+        }
+        return phraseQueryStr;
+    }
 }
