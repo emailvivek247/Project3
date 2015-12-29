@@ -38,7 +38,7 @@ public class ESQueryHelper {
                     if (sr != null) {
                         sr.setUserInput(q);
                     }
-                    ESQueryTranslator2 translator = new ESQueryTranslator2(dc.getColumns(), dynamicSearchable);
+                    ESQueryTranslator translator = new ESQueryTranslator(dc.getColumns(), dynamicSearchable);
                     builder.addMustClause(translator.translate(q, filterResult, dc));
                 }
                 if (!U.isEmpty(lq)) {
