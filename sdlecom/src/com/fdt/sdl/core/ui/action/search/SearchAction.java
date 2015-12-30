@@ -264,9 +264,9 @@ public class SearchAction extends Action {
                             .build();
 
                     CustomSearchResult result = new CustomSearchResult(client.execute(search));
-                    List<Document> resultDocs = extractResultDocs(result, rowsToReturn, offset);
+                    List<Document> resultDocs = extractResultDocs(result);
 
-                    sr.initFor3Tier(sc, q, lq, query, resultDocs, null, searchTime, result.getTotal(), offset,
+                    sr.initFor3Tier(sc, q, lq, null, resultDocs, null, searchTime, result.getTotal(), offset,
                             rowsToReturn, sortBys, filterResult, request, response);
                 }
             }
@@ -590,16 +590,8 @@ public class SearchAction extends Action {
 		return retValue;
 	}
 
-    protected static List<Document> extractResultDocs(CustomSearchResult result, int rowsToReturn, int offset)
-            throws IOException {
-        List<Document> retValue = result.stream().map((hit) -> {
-            return new Document(
-                    hit.get("_source").getAsJsonObject(),
-                    hit.get("_score").getAsFloat(),
-                    hit.get("_id").getAsString()
-            );
-        }).collect(Collectors.toList());
-        return retValue;
+    protected static List<Document> extractResultDocs(CustomSearchResult result) {
+        return result.stream().map(hit -> new Document(hit)).collect(Collectors.toList());
     }
 
     protected static List<HitDocument> collectHits(DatasetConfiguration paramDatasetConfiguration,

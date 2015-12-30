@@ -25,14 +25,16 @@ import net.javacoding.xsearch.utility.HttpUtil;
 import net.javacoding.xsearch.utility.U;
 import net.javacoding.xsearch.utility.VMTool;
 
+import org.apache.lucene.search.Query;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import com.fdt.sdl.admin.ui.action.constants.IndexType;
+import com.fdt.sdl.core.ui.action.search.MultiSearchAction.MultiSearchContext;
+import com.fdt.sdl.core.ui.action.search.SearchAction.SearchContext;
 import com.fdt.sdl.styledesigner.Template;
 import com.fdt.sdl.styledesigner.util.DeviceDetectorUtil;
 import com.fdt.sdl.styledesigner.util.PageStyleUtil;
-import com.fdt.sdl.core.ui.action.search.MultiSearchAction.MultiSearchContext;
-import com.fdt.sdl.core.ui.action.search.SearchAction.SearchContext;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 /**
@@ -57,64 +59,81 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
  */
 @XStreamAlias("SearchResult")
 public class SearchResult extends XMLSerializable{
+
+    private static final long serialVersionUID = -5095050639345513273L;
+
     transient DatasetConfiguration datasetConfiguration;
     transient Template template;
     @XStreamAlias("indexName")
-	public String indexName;
+    public String indexName;
     @XStreamAlias("templateName")
-	public String templateName;
-	private transient HttpServletRequest request;
-	private transient HttpServletResponse response;
+    public String templateName;
+    private transient HttpServletRequest request;
+    private transient HttpServletResponse response;
     @XStreamAlias("q")
-	public String q;
+    public String q;
     @XStreamAlias("lq")
-	public String lq;
+    public String lq;
     @XStreamAlias("sortBys")
-	public List<SearchSort> sortBys;
+    public List<SearchSort> sortBys;
     @XStreamAlias("docs")
-	public List<? extends SDLIndexDocument> docs;
-    
+    public List<? extends SDLIndexDocument> docs;
+
     @XStreamAlias("searchTime")
-	public long searchTime;
+    public long searchTime;
     @XStreamAlias("searchTimeString")
-	public String searchTimeString;
+    public String searchTimeString;
 
     @XStreamAlias("total")
-	public int total;
+    public int total;
     @XStreamAlias("start")
-	public int start;
+    public int start;
     @XStreamAlias("length")
-	public int length;
-	
-	transient Highlighter summarizer;
-	transient String beginTag="<B>", endTag="</B>";
+    public int length;
+
+    transient Highlighter summarizer;
+    transient String beginTag = "<B>";
+    transient String endTag = "</B>";
 
     @XStreamAlias("filterResult")
-	public FilterResult filterResult;
-	
+    public FilterResult filterResult;
+
     @XStreamAlias("defaultDocs")
     public List<HitDocument> defaultDocs;
 
     public String userInput;
-    
+
     /**
-	 * Get current DatasetConfiguration instance
-	 */
-	public DatasetConfiguration getDatasetConfiguration(){ return datasetConfiguration;}
-    public Template getTemplate(){ return this.template;}
-	/**
-	 * Get all DatasetConfigurations
-	 */
-	public ArrayList<DatasetConfiguration> getDatasetConfigurations() {
-		try {
-			return ServerConfiguration.getDatasetConfigurations(false);
-		} catch (ConfigurationException e) {
-		}
-		return null;
-	}
-	public String getIndexName(){ return indexName;}
-    public String getTemplateName(){ return templateName;}
-	
+     * Get current DatasetConfiguration instance
+     */
+    public DatasetConfiguration getDatasetConfiguration() {
+        return datasetConfiguration;
+    }
+
+    public Template getTemplate() {
+        return this.template;
+    }
+
+    /**
+     * Get all DatasetConfigurations
+     */
+    public ArrayList<DatasetConfiguration> getDatasetConfigurations() {
+        try {
+            return ServerConfiguration.getDatasetConfigurations(false);
+        } catch (ConfigurationException e) {
+            // Ignore
+        }
+        return null;
+    }
+
+    public String getIndexName() {
+        return indexName;
+    }
+
+    public String getTemplateName() {
+        return templateName;
+    }
+
 	/**
 	 * Exact query that the user typed in
 	 */
@@ -166,24 +185,28 @@ public class SearchResult extends XMLSerializable{
 	public Integer getStart(){ return start;}
 	public Integer getLength(){ return length;}
 	
-	/**
-	 * Used for summarize, or highlight a piece of text
-	 */
-	public Highlighter getSummarizer(){ return summarizer;}
-	
-	/**
-	 * Convenience function to get the request's query string
-	 */
-	public String getQueryString(){
-		return request.getQueryString();
-	}
-	/**
-	 * Convenience function to remove "start=xxx" from the request's query string
-	 * And also removing "fileName=xxx".
-	 */
-	public String getQueryStringWithoutStart(){
-		return HttpUtil.addOrSetQuery(HttpUtil.addOrSetQuery(request.getQueryString(),"start",""),"fileName","");
-	}
+    /**
+     * Used for summarize, or highlight a piece of text
+     */
+    public Highlighter getSummarizer() {
+        return summarizer;
+    }
+
+    /**
+     * Convenience function to get the request's query string
+     */
+    public String getQueryString() {
+        return request.getQueryString();
+    }
+
+    /**
+     * Convenience function to remove "start=xxx" from the request's query
+     * string And also removing "fileName=xxx".
+     */
+    public String getQueryStringWithoutStart() {
+        return HttpUtil.addOrSetQuery(HttpUtil.addOrSetQuery(request.getQueryString(), "start", ""), "fileName", "");
+    }
+
 	public class RequestQuery{
 	    String requestQueryString;
 	    public RequestQuery(String requestQueryString) {
@@ -267,24 +290,25 @@ public class SearchResult extends XMLSerializable{
         this.indexName = msc.dcs.get(i).getName();
         this.templateName = DeviceDetectorUtil.identifyDevice(msc.dcs.get(i), request);
         this.template = null;
-        this.docs = (List<SDLIndexDocument>)(List<?>) docs;
+        this.docs = docs;
         this.searchTime = searchTime;
         this.total = total;
         this.start = start;
         this.length = length;
-        if(query!=null){
-            this.summarizer = new net.javacoding.xsearch.search.Highlighter(msc.dcs.get(i).getAnalyzer(), query.rewrite(msc.irss.get(i).getIndexReader()), q);
+        if (query != null) {
+            this.summarizer = new Highlighter(msc.dcs.get(i).getAnalyzer(),
+                    query.rewrite(msc.irss.get(i).getIndexReader()), q);
         }
         this.sortBys = sortBys;
         this.filterResult = filterResult;
         this.request = request;
         this.response = response;
     }
-    
+
     public void init(SearchContext sc, 
             String q, 
             String lq,
-            org.apache.lucene.search.Query query, 
+            Query query, 
             List<HitDocument> docs, 
             List<HitDocument> defaultDocs, 
             long searchTime, 
@@ -320,7 +344,7 @@ public class SearchResult extends XMLSerializable{
     public void initFor3Tier(SearchContext sc, 
             String q, 
             String lq,
-            org.apache.lucene.search.Query query, 
+            Query query, 
             List<Document> docs, 
             List<HitDocument> defaultDocs, 
             long searchTime, 
@@ -331,7 +355,7 @@ public class SearchResult extends XMLSerializable{
             FilterResult filterResult,
             HttpServletRequest request,
             HttpServletResponse response
-            ) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException{
+            ) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
         this.datasetConfiguration = sc.dc;
         this.q = q;
         this.lq = lq;
@@ -344,8 +368,8 @@ public class SearchResult extends XMLSerializable{
         this.total = total;
         this.start = start;
         this.length = length;
-        if(query!=null){
-            this.summarizer = new net.javacoding.xsearch.search.Highlighter(sc.dc.getAnalyzer(), query.rewrite(sc.irs.getIndexReader()), q);
+        if (query != null) {
+            this.summarizer = new Highlighter(sc.dc.getAnalyzer(), query.rewrite(sc.irs.getIndexReader()), q);
         }
         this.sortBys = sortBys;
         this.filterResult = filterResult;
@@ -354,14 +378,14 @@ public class SearchResult extends XMLSerializable{
     }
 
     public SearchResult() {
-    	super();
+        super();
     }
-    
+
     /**
-	 * set these attributes for backward compatibility
-	 * @deprecated
-	 */
-	public void setAttributes() throws IOException {
+     * set these attributes for backward compatibility
+     * @deprecated
+     */
+    public void setAttributes() throws IOException {
         request.setAttribute("dc", datasetConfiguration);
         request.setAttribute("template", template);
         request.setAttribute("indexName", indexName);
@@ -383,8 +407,8 @@ public class SearchResult extends XMLSerializable{
         request.setAttribute("encoding", getEncoding());
         request.setAttribute("dcs", getDatasetConfigurations());
 
-        //set sortBy to the first sortBy column
-        if(sortBys!=null && sortBys.size()>0) {
+        // set sortBy to the first sortBy column
+        if (sortBys != null && sortBys.size() > 0) {
             request.setAttribute("sortBy", sortBys.get(0).field);
         } else {
             request.removeAttribute("sortBy");
@@ -392,7 +416,8 @@ public class SearchResult extends XMLSerializable{
         if (!U.getBoolean(request.getParameter("desc"), "Y", true)) {
             request.setAttribute("desc", "N");
         }
-	}
+    }
+
     public JSONObject toJSONObject() {
         JSONObject self = new JSONObject();
         try {
@@ -408,91 +433,63 @@ public class SearchResult extends XMLSerializable{
             this.summarizer.setHighlightPrefix(beginTag);
             this.summarizer.setHighlightSuffix(endTag);
             self.put("docs", PageStyleUtil.toJSONArray(docs));
-            
             self.put("filterResult", filterResult.toJSONArray());
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return self;
     }
-    /**
-     * 
-     * @param beginTag like &lt;span style="background-color:#00ff00"&gt; , default to &lt;B&gt;
-     * @param endTag like &lt;/span&gt; , default to &lt;/B&gt;
-     */
+
     public void setHighlightTag(String beginTag, String endTag) {
         this.beginTag = beginTag;
         this.endTag = endTag;
     }
+
     /**
-     * Not ready yet. Too verbose. Directly using the template is recommended for more flexible control of the format.
+     * Not ready yet. Too verbose. Directly using the template is recommended
+     * for more flexible control of the format.
      */
-	public String toJson() {
-	    return toJSONObject().toString();
-	}
-	
-	/**
-	 * Usage: searchResult.hightlight(doc, "id")
-	 * <br/>
-	 * Convenient methods to replace
-	 * searchResult.summarizer.getHighlighted(doc.get("id")?html,"id")
-	 */
-	public String highlight(HitDocument doc, String field) {
-	    String t = EscapeChars.forHTMLTag(doc.get(field));
-	    return this.summarizer.getHighlighted(t, field);
-	}
-	
-	public String highlight(Document doc, String field) {
-	    String t = EscapeChars.forHTMLTag(doc.getString(field));
-	    if (this.summarizer == null) {
-	        return t;
-	    }
-	    return this.summarizer.getHighlighted(t, field);
-	}
-	
-	/**
-	 * Usage: searchResult.hightlight(doc, "id")
-	 * <br/>
-	 * Convenient methods to replace
-	 * searchResult.summarizer.getHighlighted(doc.get("id")?html,"id")
-	 */
-	public String highlight(String value, String field) {
-		String t = EscapeChars.forHTMLTag(value);
-	    return this.summarizer.getHighlighted(t, field);
-	}	
-	
-    /**
-     * Usage: searchResult.directHightlight(doc, "id")
-     * <br/>
-     * Convenient methods to replace
-     * searchResult.summarizer.getHighlighted(doc.get("id"),"id")
-     */
-    public String directHighlight(HitDocument doc, String field) {
-        String t = doc.get(field);
-        return this.summarizer.getHighlighted(t, field);
+    public String toJson() {
+        return toJSONObject().toString();
     }
-    
-    public String directHighlight(Document doc, String field) {
-        String t = doc.getString(field);
-        return this.summarizer.getHighlighted(t, field);
-    }
-    
+
     /**
-     * Usage: searchResult.summarize(doc, "id")
-     * <br/>
+     * Usage: searchResult.hightlight(doc, "id") <br/>
      * Convenient methods to replace
-     * searchResult.summarizer.getSummary(doc.get("id")?html,"id")
+     * searchResult.summarizer.getHighlighted(doc.get("id")?html,"id")
      */
-    public String summarize(HitDocument doc, String field) {
+    public String highlight(HitDocument doc, String field) {
         String t = EscapeChars.forHTMLTag(doc.get(field));
-        return this.summarizer.getSummary(t, field);
+        if (summarizer == null) {
+            return t;
+        } else {
+            return summarizer.getHighlighted(t, field);
+        }
     }
-    
-    public String summarize(Document doc, String field) {
-        String t = EscapeChars.forHTMLTag(doc.getString(field));
-        return this.summarizer.getSummary(t, field);
+
+    public String highlight(Document doc, String field) {
+        String result = null;
+        IndexType indexType = datasetConfiguration.getIndexType();
+        if (indexType == null || indexType == IndexType.LUCENE) {
+            String t = EscapeChars.forHTMLTag(doc.getString(field));
+            if (summarizer == null) {
+                result = t;
+            } else {
+                result = summarizer.getHighlighted(t, field);
+            }
+        } else if (indexType == IndexType.ELASTICSEARCH) {
+            String value = doc.getString(field, true);
+            if (value.contains("hl-tag-replace")) {
+                value = value.replaceAll("<hl-tag-replace>", beginTag);
+                value = value.replaceAll("</hl-tag-replace>", endTag);
+            } else {
+                value = EscapeChars.forHTMLTag(value);
+            }
+            result = value;
+        }
+        return result;
     }
-    
+
     /**
      * Usage: searchResult.directSummarize(doc, "id")
      * <br/>
@@ -500,18 +497,25 @@ public class SearchResult extends XMLSerializable{
      * searchResult.summarizer.getSummary(doc.get("id"),"id")
      */
     public String directSummarize(HitDocument doc, String field) {
-        String t = doc.get(field);
-        return this.summarizer.getSummary(t, field);
+        if (summarizer == null) {
+            return doc.get(field);
+        } else {
+            return summarizer.getSummary(doc.get(field), field);
+        }
     }
-    
+
     public String directSummarize(Document doc, String field) {
-        String t = doc.getString(field);
-        return this.summarizer.getSummary(t, field);
+        if (summarizer == null) {
+            return doc.get(field);
+        } else {
+            return summarizer.getSummary(doc.get(field), field);
+        }
     }
 
     public String getUserInput() {
         return userInput;
     }
+
     public void setUserInput(String userInput) {
         this.userInput = userInput;
     }

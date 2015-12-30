@@ -16,17 +16,43 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public abstract class AbstractQuery {
 
     protected final ObjectMapper mapper = new ObjectMapper();
-    
+
     protected final List<SearchSort> sorts;
+    protected final List<String> highlightFields;
     protected final Optional<Float> boost;
-    
+
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public AbstractQuery(AbstractQueryBuilder builder) {
         boost = builder.boost;
         sorts = builder.sorts;
+        highlightFields = builder.highlightFields;
     }
 
     public abstract ObjectNode getQueryObjectNode();
+
+    public ObjectNode getHighlightObjectNode() {
+
+        ObjectNode fieldsNode = mapper.createObjectNode();
+        for (String highlightField : highlightFields) {
+            ObjectNode innerNode = mapper.createObjectNode();
+            fieldsNode.set(highlightField, innerNode);
+        }
+
+        ObjectNode highlightNode = mapper.createObjectNode();
+        highlightNode.set("fields", fieldsNode);
+        highlightNode.put("encoder", "html");
+        highlightNode.put("number_of_fragments", 0);
+
+        ArrayNode preTagsArrayNode = mapper.createArrayNode();
+        preTagsArrayNode.add("<hl-tag-replace>");
+        ArrayNode postTagsArrayNode = mapper.createArrayNode();
+        postTagsArrayNode.add("</hl-tag-replace>");
+
+        highlightNode.set("pre_tags", preTagsArrayNode);
+        highlightNode.set("post_tags", postTagsArrayNode);
+
+        return highlightNode;
+    }
 
     public ArrayNode getSortArrayNode() {
 
@@ -53,6 +79,7 @@ public abstract class AbstractQuery {
         ObjectNode outerNode = mapper.createObjectNode();
         outerNode.set("query", getQueryObjectNode());
         outerNode.set("sort", getSortArrayNode());
+        outerNode.set("highlight", getHighlightObjectNode());
         return outerNode;
     }
 
@@ -88,10 +115,12 @@ public abstract class AbstractQuery {
     public abstract static class AbstractQueryBuilder<T extends AbstractQuery, K> {
 
         protected List<SearchSort> sorts;
+        protected List<String> highlightFields;
         protected Optional<Float> boost;
 
         public AbstractQueryBuilder() {
             sorts = new ArrayList<>();
+            highlightFields = new ArrayList<>();
             boost = Optional.empty();
         }
 
@@ -105,6 +134,20 @@ public abstract class AbstractQuery {
         public K addSort(Collection<SearchSort> sort) {
             if (sort != null) {
                 this.sorts.addAll(sort);
+            }
+            return (K) this;
+        }
+
+        public K addHighlightField(String highlightField) {
+            if (highlightField != null) {
+                this.highlightFields.add(highlightField);
+            }
+            return (K) this;
+        }
+
+        public K addHighlightField(Collection<String> highlightField) {
+            if (highlightField != null) {
+                this.highlightFields.addAll(highlightField);
             }
             return (K) this;
         }

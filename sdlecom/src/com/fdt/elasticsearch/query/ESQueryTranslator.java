@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import net.javacoding.xsearch.config.Column;
 import net.javacoding.xsearch.config.DatasetConfiguration;
@@ -36,11 +35,6 @@ public class ESQueryTranslator {
         }
     }
 
-    private boolean isSearchable(Column column) {
-        return dynamicSearchableColumns == null && column.getIsSearchable() || dynamicSearchableColumns != null
-                && dynamicSearchableColumns.contains(column.getColumnName().toLowerCase());
-    }
-
     public AbstractQuery translate(String queryStr, FilterResult filterResult, DatasetConfiguration dc) {
         if (columnList != null) {
             return processClauses(queryStr, filterResult);
@@ -49,14 +43,27 @@ public class ESQueryTranslator {
         }
     }
 
+    public List<Column> getSearchCols() {
+        return columnList.stream()
+            .filter(c -> isSearchable(c))
+            .filter(c -> !c.getColumnType().equalsIgnoreCase("java.sql.Timestamp"))
+            .collect(Collectors.toList());
+    }
+
+    public List<String> getSearchColsStr() {
+        return getSearchCols().stream().map(c -> c.getColumnName()).collect(Collectors.toList());
+    }
+
+    private boolean isSearchable(Column column) {
+        return dynamicSearchableColumns == null && column.getIsSearchable() || dynamicSearchableColumns != null
+                && dynamicSearchableColumns.contains(column.getColumnName().toLowerCase());
+    }
+
     private AbstractQuery processClauses(String queryStr, FilterResult filterResult) {
 
         BoolQuery.Builder result = new BoolQuery.Builder();
 
-        List<Column> searchCols = columnList.stream()
-            .filter(c -> isSearchable(c))
-            .filter(c -> !c.getColumnType().equalsIgnoreCase("java.sql.Timestamp"))
-            .collect(Collectors.toList());
+        List<Column> searchCols = getSearchCols();
 
         List<String> individualFields = searchCols.stream().map((c) -> {
             String field = c.getColumnName();

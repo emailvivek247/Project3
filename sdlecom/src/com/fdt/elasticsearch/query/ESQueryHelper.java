@@ -19,7 +19,9 @@ public class ESQueryHelper {
     public static BoolQuery.Builder getSearchQuery(SearchResult sr, String q, String lq, FilterResult filterResult,
             HttpServletRequest request, DatasetConfiguration dc, String dynamicSearchable, boolean debug) {
 
-        BoolQuery.Builder builder = new BoolQuery.Builder(); 
+        BoolQuery.Builder builder = new BoolQuery.Builder();
+
+        ESQueryTranslator translator = new ESQueryTranslator(dc.getColumns(), dynamicSearchable);
 
         if (filterResult == null) {
             filterResult = new FilterResult();
@@ -38,7 +40,6 @@ public class ESQueryHelper {
                     if (sr != null) {
                         sr.setUserInput(q);
                     }
-                    ESQueryTranslator translator = new ESQueryTranslator(dc.getColumns(), dynamicSearchable);
                     builder.addMustClause(translator.translate(q, filterResult, dc));
                 }
                 if (!U.isEmpty(lq)) {
@@ -55,6 +56,8 @@ public class ESQueryHelper {
             if (debug)
                 logger.error("Cannot parse query: " + q);
         }
+
+        builder.addHighlightField(translator.getSearchColsStr());
 
         return builder;
     }

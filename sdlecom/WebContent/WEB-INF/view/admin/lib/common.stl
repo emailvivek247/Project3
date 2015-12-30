@@ -232,6 +232,7 @@ ${_currentUrlPrefix?chop_linebreak}</#macro>
 <#macro highlight(_content)>${summarizer.getHighlighted(_content)}</#macro>
 <#macro summarize(_content)>${summarizer.getSummary(_content)}</#macro>
 <#macro useHighlightTag(_prefix, _suffix)>
+ ${searchResult.setHighlightTag(_prefix, _suffix)}
  <#if searchResult.summarizer?has_content>
  ${searchResult.summarizer.setHighlightPrefix(_prefix)}${searchResult.summarizer.setHighlightSuffix(_suffix)}
  </#if>

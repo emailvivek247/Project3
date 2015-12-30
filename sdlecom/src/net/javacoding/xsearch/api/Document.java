@@ -8,10 +8,6 @@ import net.javacoding.xsearch.api.protocol.SearchProtocol;
 import net.javacoding.xsearch.utility.U;
 import net.javacoding.xsearch.utility.VMTool;
 
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -21,19 +17,21 @@ public class Document implements SDLIndexDocument {
     List<Field> fields;
 
     private JsonObject source;
+    private JsonObject highlight;
     private float score;
-    private String id;
-    
+
     private final static String[] NO_STRINGS = new String[0];
 
     public Document(SearchProtocol.Document document) {
         this.document = document;
     }
 
-    public Document(JsonObject source, float score, String id) {
-        this.source = source;
-        this.score = score;
-        this.id = id;
+    public Document(JsonObject hit) {
+        source = hit.get("_source").getAsJsonObject();
+        score = hit.get("_score").getAsFloat();
+        if (hit.get("highlight") != null) {
+            highlight = hit.get("highlight").getAsJsonObject();
+        }
     }
 
     public float getScore() {
@@ -45,35 +43,36 @@ public class Document implements SDLIndexDocument {
     }
 
     public String get(String field) {
-        if (document != null) {
-            for (SearchProtocol.Field f : this.document.getFieldList()) {
-                if (f.getName().equals(field)) {
-                    return f.getValue();
-                }
-            }
-        } else if (source != null) {
-            JsonElement element = source.get(field);
-            if (element != null) {
-                return source.get(field).getAsString();
-            }
-        }
-        return "";
+        return getString(field);
     }
 
     public String getString(String field) {
+        return getString(field, false);
+    }
+
+    public String getString(String field, boolean useHighlight) {
+        String value = null;
         if (document != null) {
             for (SearchProtocol.Field f : this.document.getFieldList()) {
                 if (f.getName().equals(field)) {
-                    return f.getValue();
+                    value = f.getValue();
                 }
             }
         } else if (source != null) {
-            JsonElement element = source.get(field);
-            if (element != null) {
-                return source.get(field).getAsString();
+            if (useHighlight && highlight != null) {
+                JsonElement element = highlight.get(field);
+                if (element != null) {
+                    value = element.getAsString();
+                }
+            }
+            if (value == null) {
+                JsonElement element = source.get(field);
+                if (element != null) {
+                    value = element.getAsString();
+                }
             }
         }
-        return "";
+        return value == null ? "" : value;
     }
 
     /**
