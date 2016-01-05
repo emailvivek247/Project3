@@ -39,6 +39,8 @@ import net.javacoding.xsearch.search.result.SearchSort;
 import net.javacoding.xsearch.search.result.filter.Count;
 import net.javacoding.xsearch.search.result.filter.FilterColumn;
 import net.javacoding.xsearch.search.result.filter.FilterResult;
+import net.javacoding.xsearch.search.result.filter.FilterValue;
+import net.javacoding.xsearch.search.result.filter.FilteredColumn;
 import net.javacoding.xsearch.search.searcher.IndexReaderSearcher;
 import net.javacoding.xsearch.search.searcher.SearcherManager;
 import net.javacoding.xsearch.search.searcher.SearcherProvider;
@@ -68,14 +70,18 @@ import org.slf4j.LoggerFactory;
 
 import com.fdt.common.util.SystemUtil;
 import com.fdt.elasticsearch.config.SpringContextUtil;
+import com.fdt.elasticsearch.parsing.ESQueryHelper;
 import com.fdt.elasticsearch.query.AbstractQuery;
 import com.fdt.elasticsearch.query.BoolQuery;
-import com.fdt.elasticsearch.query.ESQueryHelper;
+import com.fdt.elasticsearch.query.BoolQuery.Builder;
 import com.fdt.elasticsearch.type.result.CustomSearchResult;
 import com.fdt.sdl.admin.ui.action.constants.IndexType;
 import com.fdt.sdl.styledesigner.Template;
 import com.fdt.sdl.styledesigner.util.DeviceDetectorUtil;
 import com.fdt.sdl.styledesigner.util.TemplateUtil;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 /**
  * Implementation of <strong>Action </strong> that performs search.
@@ -176,9 +182,11 @@ public class SearchAction extends Action {
             if (!sc.dc.getIsEmptyQueryMatchAll() && U.isEmpty(q) && U.isEmpty(lq)) {
                 query = null;
             } else {
-                query = QueryHelper.getSearchQuery(sr, q, lq, filterResult, request, sc.dc, sc.irs,
-                        getBooleanOperator(request), request.getParameter("searchable"),
-                        U.getInt(request.getParameter("randomQuerySeed"), 0), sc.debug);
+                if (sc.dc.getIndexType() == null || sc.dc.getIndexType() == IndexType.LUCENE) {
+                    query = QueryHelper.getSearchQuery(sr, q, lq, filterResult, request, sc.dc, sc.irs,
+                            getBooleanOperator(request), request.getParameter("searchable"),
+                            U.getInt(request.getParameter("randomQuerySeed"), 0), sc.debug);
+                }
             }
             if (Boolean.parseBoolean(request.getServletContext().getInitParameter("isPSOOnlyMachine"))) {
                 if (propertiesFile != null && propertiesFile.getAbsolutePath() != null) {
@@ -247,10 +255,19 @@ public class SearchAction extends Action {
 
                 } else if (sc.dc.getIndexType() == IndexType.ELASTICSEARCH) {
 
-                    BoolQuery.Builder esQueryBuilder = ESQueryHelper.getSearchQuery(sr, q, lq, filterResult, request,
-                            sc.dc, request.getParameter("searchable"), sc.debug);
+                    String searchableColsStr = request.getParameter("searchable");
+                    boolean forceLucene = "Y".equalsIgnoreCase(request.getParameter("lucene"));
+                    ESQueryHelper queryHelper = new ESQueryHelper(sc.dc, q, lq, searchableColsStr, forceLucene);
 
-                    AbstractQuery abstractQuery = esQueryBuilder.addSort(sortBys).build();
+                    BoolQuery.Builder esQueryBuilder = queryHelper.getSearchQuery();
+                    esQueryBuilder.addFilterField(sc.dc.getFilterableColumns());
+                    esQueryBuilder.addSort(sortBys);
+                    esQueryBuilder.addHighlightField(sc.dc.getColumnNames());
+
+                    filterResult.addFilteredColumns(queryHelper.getFilteredColumns());
+                    sr.setUserInput(queryHelper.getUserInput());
+
+                    AbstractQuery abstractQuery = esQueryBuilder.build();
 
                     JestClient client = SpringContextUtil.getBean(JestClient.class);
 
@@ -265,6 +282,7 @@ public class SearchAction extends Action {
 
                     CustomSearchResult result = new CustomSearchResult(client.execute(search));
                     List<Document> resultDocs = extractResultDocs(result);
+                    populateFilterResult(filterResult, result, sc.dc);
 
                     sr.initFor3Tier(sc, q, lq, null, resultDocs, null, searchTime, result.getTotal(), offset,
                             rowsToReturn, sortBys, filterResult, request, response);
@@ -317,9 +335,10 @@ public class SearchAction extends Action {
     }
 
 	@SuppressWarnings("unused")
-    private void displayFilterResult(FilterResult filterResult, Result result) {
+    private void displayFilterResult(FilterResult filterResult) {
         List<FilterColumn> filterColumns = filterResult.getFilterColumns();
     
+        System.out.println("FILTER COLUMNS ***************************************************");
         for (FilterColumn filterColumn : filterColumns) {
             System.out.println("***************************************************");
             Column column = filterColumn.getColumn();
@@ -330,25 +349,102 @@ public class SearchAction extends Action {
                 System.out.println(count);
             }
         }
+        
+        List<FilteredColumn> filteredColumns = filterResult.getFilteredColumns();
+        System.out.println("FILTERED COLUMNS ***************************************************");
+        for (FilteredColumn filteredColumn : filteredColumns) {
+            System.out.println("***************************************************");
+            Column column = filteredColumn.getColumn();
+            System.out.println(column);
+            FilterValue filterValue = filteredColumn.getValue();
+            System.out.println("------------------------------------------------");
+            System.out.println(filterValue);
+        }
     
     }
 
-    private void populateFilterResult(FilterResult filterResult, Result result) {
-		for (FacetChoice fChoice : result.getFacetChoiceList()) {
-			FilterColumn filterColumn = filterResult.getFilterColumn(fChoice.getColumn());
-			if (filterColumn != null) {
-				Map<Object, Count> counts = new HashMap<Object, Count>();
-				for (FacetCount fc : fChoice.getFacetCountList()) {
-					Count count = new Count(fChoice.getColumn(), fc.getValue(), fc.getCount());
-					counts.put(fc.getValue(), count);
-				}
-				filterColumn.setCounts(counts);
-			}
-		}
+    /**
+     * Populates FilterResult for original three-tier set-ups.
+     * 
+     * @param filterResult the object to populate
+     * @param result the three-tier search result
+     */
+    private static void populateFilterResult(FilterResult filterResult, Result result) {
+        for (FacetChoice fChoice : result.getFacetChoiceList()) {
+            FilterColumn filterColumn = filterResult.getFilterColumn(fChoice.getColumn());
+            if (filterColumn != null) {
+                Map<Object, Count> counts = new HashMap<Object, Count>();
+                for (FacetCount fc : fChoice.getFacetCountList()) {
+                    Count count = new Count(fChoice.getColumn(), fc.getValue(), fc.getCount());
+                    counts.put(fc.getValue(), count);
+                }
+                filterColumn.setCounts(counts);
+            }
+        }
+    }
 
-	}
+    /**
+     * Populates FilterResult for Elasticsearch index types
+     * 
+     * @param filterResult the object to populate
+     * @param result the Elasticsearch search result (JSON in Google's GSON format)
+     * @param dc the dataset configuration for the active search
+     */
+    private static void populateFilterResult(FilterResult filterResult, CustomSearchResult result, DatasetConfiguration dc) {
+        filterResult.setFilterColumns(dc.getFilterableColumns());
+        JsonObject aggregations = result.getAggregations();
+        for (Column column : dc.getFilterableColumns()) {
+            String columnName = column.getColumnName();
+            if (column.getIsDate()) {
+                String suffix = "-yyyy";
+                if (filterResult.getFilteredColumn(column.getColumnName()) != null) {
+                    suffix = "-yyyy/MM";
+                }
+                for (Map.Entry<String, JsonElement> aggregation : aggregations.entrySet()) {
+                    if (aggregation.getKey().equals(columnName + suffix)) {
+                        FilterColumn filterColumn = filterResult.getFilterColumn(columnName);
+                        if (filterColumn != null) {
+                            JsonObject aggValueObject = aggregation.getValue().getAsJsonObject();
+                            JsonArray bucketsArray = aggValueObject.getAsJsonArray("buckets");
+                            Map<Object, Count> counts = new HashMap<Object, Count>();
+                            for (JsonElement bucketElement : bucketsArray) {
+                                JsonObject bucket = bucketElement.getAsJsonObject();
+                                int docCount = bucket.get("doc_count").getAsInt();
+                                String key = bucket.get("key_as_string").getAsString();
+                                if (docCount > 0) {
+                                    Count count = new Count(columnName, key, docCount);
+                                    counts.put(key, count);
+                                }
+                            }
+                            filterColumn.setCounts(counts);
+                        }
+                    }
+                }
+            } else {
+                for (Map.Entry<String, JsonElement> aggregation : aggregations.entrySet()) {
+                    if (aggregation.getKey().equals(columnName)) {
+                        FilterColumn filterColumn = filterResult.getFilterColumn(columnName);
+                        if (filterColumn != null) {
+                            JsonObject aggValueObject = aggregation.getValue().getAsJsonObject();
+                            JsonArray bucketsArray = aggValueObject.getAsJsonArray("buckets");
+                            Map<Object, Count> counts = new HashMap<Object, Count>();
+                            for (JsonElement bucketElement : bucketsArray) {
+                                JsonObject bucket = bucketElement.getAsJsonObject();
+                                int docCount = bucket.get("doc_count").getAsInt();
+                                String key = bucket.get("key").getAsString();
+                                Count count = new Count(columnName, key, docCount);
+                                counts.put(key, count);
+                            }
+                            filterColumn.setCounts(counts);
+                        }
+                    }
+                }
+            }
+        }
+        filterResult.finish();
+    }
 
-	/**
+    /**
 	 * indexName: Optional. If empty, all indexes are searched. If using
 	 * multiple indexes, the index names are separated by comma. <br/>
 	 * templateName: Optional. If empty, use the default template. <br/>

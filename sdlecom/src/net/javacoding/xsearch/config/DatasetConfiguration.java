@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import net.javacoding.xsearch.IndexManager;
 import net.javacoding.xsearch.core.exception.ConfigurationException;
@@ -824,6 +825,10 @@ public class DatasetConfiguration extends Configuration implements StorageConfig
             }
         }
         return al;
+    }
+
+    public List<String> getColumnNames() {
+        return getColumns().stream().map(c -> c.getColumnName()).collect(Collectors.toList());
     }
 
     /**

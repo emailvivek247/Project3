@@ -51,27 +51,34 @@ public class FilterResult{
         }
         return null;
     }
+
+    public void addFilteredColumns(List<FilteredColumn> filteredColumns) {
+        filteredColumns.forEach(fc -> addFilteredColumn(fc));
+    }
+
     public void addFilteredColumn(FilteredColumn c) {
-        for(FilteredColumn fc : filteredColumns) {
-            if(fc.column.getFilterParentColumnName()==c.getColumn().getName()) {
+        for (FilteredColumn fc : filteredColumns) {
+            if (fc.column.getFilterParentColumnName() == c.getColumn().getName()) {
                 c.child = fc;
-            }else if(c.column.getFilterParentColumnName()==fc.column.getName()) {
+            } else if (c.column.getFilterParentColumnName() == fc.column.getName()) {
                 fc.child = c;
             }
         }
         filteredColumns.add(c);
     }
-	public boolean hasFilteredColumn(String columnName) {
-	    for(FilteredColumn c : filteredColumns) {
-	        if(c.column.getName().equalsIgnoreCase(columnName)) {
-	            return true;
-	        }
-	    }
-	    return false;
-	}
-	/**
-	 * Used during searching. Not for rendering.
-	 */
+
+    public boolean hasFilteredColumn(String columnName) {
+        for (FilteredColumn c : filteredColumns) {
+            if (c.column.getName().equalsIgnoreCase(columnName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Used during searching. Not for rendering.
+     */
 	public void finish() {
 	    //mark Count filtered
         for(FilteredColumn filtered : filteredColumns) {

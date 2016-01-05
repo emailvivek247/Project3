@@ -18,6 +18,10 @@ public class CustomSearchResult extends CustomJestResult<SearchResult>  {
         JsonArray hitsArray = jestResult.getJsonObject().getAsJsonObject("hits").getAsJsonArray("hits");
         return StreamSupport.stream(hitsArray.spliterator(), false).map(e -> e.getAsJsonObject());
     }
+    
+    public JsonObject getAggregations() {
+        return jestResult.getJsonObject().getAsJsonObject("aggregations");
+    }
 
     public int getTotal() {
         return jestResult.getTotal();

@@ -96,7 +96,9 @@ public class BoolQuery extends AbstractQuery {
         }
 
         public Builder addShouldClause(AbstractQuery query) {
-            this.shouldClauses.add(query);
+            if (query != null) {
+                this.shouldClauses.add(query);
+            }
             return this;
         }
 
