@@ -198,10 +198,11 @@ public class ESQueryHelper {
         if (queryParts.stream().anyMatch(p -> p.isPhrase)) {
             return null;
         } else {
-            return queryParts.stream()
-                .filter(p -> p.field == null)
-                .map(p -> p.part)
-                .collect(Collectors.joining(" "));
+            String phrase = queryParts.stream()
+                    .filter(p -> p.field == null)
+                    .map(p -> p.part)
+                    .collect(Collectors.joining(" "));
+            return "\"" + phrase + "\"";
         }
     }
 }
