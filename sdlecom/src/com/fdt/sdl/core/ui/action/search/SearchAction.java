@@ -260,7 +260,7 @@ public class SearchAction extends Action {
                     ESQueryHelper queryHelper = new ESQueryHelper(sc.dc, q, lq, searchableColsStr, forceLucene);
 
                     BoolQuery.Builder esQueryBuilder = queryHelper.getSearchQuery();
-                    esQueryBuilder.addFilterField(sc.dc.getFilterableColumns());
+                    esQueryBuilder.addTermsAggregation(sc.dc.getFilterableColumns());
                     esQueryBuilder.addSort(sortBys);
                     esQueryBuilder.addHighlightField(sc.dc.getColumnNames());
 
@@ -394,48 +394,51 @@ public class SearchAction extends Action {
         filterResult.setFilterColumns(dc.getFilterableColumns());
         JsonObject aggregations = result.getAggregations();
         for (Column column : dc.getFilterableColumns()) {
-            String columnName = column.getColumnName();
-            if (column.getIsDate()) {
-                String suffix = "-yyyy";
-                if (filterResult.getFilteredColumn(column.getColumnName()) != null) {
-                    suffix = "-yyyy/MM";
-                }
-                for (Map.Entry<String, JsonElement> aggregation : aggregations.entrySet()) {
-                    if (aggregation.getKey().equals(columnName + suffix)) {
-                        FilterColumn filterColumn = filterResult.getFilterColumn(columnName);
-                        if (filterColumn != null) {
-                            JsonObject aggValueObject = aggregation.getValue().getAsJsonObject();
-                            JsonArray bucketsArray = aggValueObject.getAsJsonArray("buckets");
-                            Map<Object, Count> counts = new HashMap<Object, Count>();
-                            for (JsonElement bucketElement : bucketsArray) {
-                                JsonObject bucket = bucketElement.getAsJsonObject();
-                                int docCount = bucket.get("doc_count").getAsInt();
-                                String key = bucket.get("key_as_string").getAsString();
-                                if (docCount > 0) {
+            String parentFilter = column.getFilterParentColumnName();
+            if (parentFilter == null || filterResult.hasFilteredColumn(parentFilter)) {
+                String columnName = column.getColumnName();
+                if (column.getIsDate()) {
+                    String suffix = "-yyyy";
+                    if (filterResult.getFilteredColumn(column.getColumnName()) != null) {
+                        suffix = "-yyyy/MM";
+                    }
+                    for (Map.Entry<String, JsonElement> aggregation : aggregations.entrySet()) {
+                        if (aggregation.getKey().equals(columnName + suffix)) {
+                            FilterColumn filterColumn = filterResult.getFilterColumn(columnName);
+                            if (filterColumn != null) {
+                                JsonObject aggValueObject = aggregation.getValue().getAsJsonObject();
+                                JsonArray bucketsArray = aggValueObject.getAsJsonArray("buckets");
+                                Map<Object, Count> counts = new HashMap<Object, Count>();
+                                for (JsonElement bucketElement : bucketsArray) {
+                                    JsonObject bucket = bucketElement.getAsJsonObject();
+                                    int docCount = bucket.get("doc_count").getAsInt();
+                                    String key = bucket.get("key_as_string").getAsString();
+                                    if (docCount > 0) {
+                                        Count count = new Count(columnName, key, docCount);
+                                        counts.put(key, count);
+                                    }
+                                }
+                                filterColumn.setCounts(counts);
+                            }
+                        }
+                    }
+                } else {
+                    for (Map.Entry<String, JsonElement> aggregation : aggregations.entrySet()) {
+                        if (aggregation.getKey().equals(columnName)) {
+                            FilterColumn filterColumn = filterResult.getFilterColumn(columnName);
+                            if (filterColumn != null) {
+                                JsonObject aggValueObject = aggregation.getValue().getAsJsonObject();
+                                JsonArray bucketsArray = aggValueObject.getAsJsonArray("buckets");
+                                Map<Object, Count> counts = new HashMap<Object, Count>();
+                                for (JsonElement bucketElement : bucketsArray) {
+                                    JsonObject bucket = bucketElement.getAsJsonObject();
+                                    int docCount = bucket.get("doc_count").getAsInt();
+                                    String key = bucket.get("key").getAsString();
                                     Count count = new Count(columnName, key, docCount);
                                     counts.put(key, count);
                                 }
+                                filterColumn.setCounts(counts);
                             }
-                            filterColumn.setCounts(counts);
-                        }
-                    }
-                }
-            } else {
-                for (Map.Entry<String, JsonElement> aggregation : aggregations.entrySet()) {
-                    if (aggregation.getKey().equals(columnName)) {
-                        FilterColumn filterColumn = filterResult.getFilterColumn(columnName);
-                        if (filterColumn != null) {
-                            JsonObject aggValueObject = aggregation.getValue().getAsJsonObject();
-                            JsonArray bucketsArray = aggValueObject.getAsJsonArray("buckets");
-                            Map<Object, Count> counts = new HashMap<Object, Count>();
-                            for (JsonElement bucketElement : bucketsArray) {
-                                JsonObject bucket = bucketElement.getAsJsonObject();
-                                int docCount = bucket.get("doc_count").getAsInt();
-                                String key = bucket.get("key").getAsString();
-                                Count count = new Count(columnName, key, docCount);
-                                counts.put(key, count);
-                            }
-                            filterColumn.setCounts(counts);
                         }
                     }
                 }

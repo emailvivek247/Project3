@@ -1,5 +1,14 @@
 package com.fdt.sdl.core.ui.action.indexing.status;
 
+import io.searchbox.client.JestClient;
+import io.searchbox.core.Count;
+import io.searchbox.core.CountResult;
+import io.searchbox.core.DocumentResult;
+import io.searchbox.core.Get;
+import io.searchbox.core.Search;
+import io.searchbox.core.SearchResult;
+import io.searchbox.params.Parameters;
+
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -30,24 +39,23 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 
+import com.fdt.elasticsearch.config.SpringContextUtil;
+import com.fdt.elasticsearch.query.MatchAllQuery;
+import com.fdt.elasticsearch.type.result.CustomSearchResult;
+import com.fdt.elasticsearch.type.result.GetResult;
+import com.fdt.elasticsearch.util.JestExecute;
+import com.fdt.sdl.admin.ui.action.constants.IndexType;
 import com.fdt.sdl.util.SecurityUtil;
 
-/**
- * Implementation of <strong>Action</strong> that performs search.
- *
- * 
- */
+public final class ShowIndexContentByPKAction extends Action {
 
-public final class ShowIndexContentByPKAction extends Action
-{
-  	private static Logger logger = LoggerFactory.getLogger(ShowIndexContentByPKAction.class);
+    private static Logger logger = LoggerFactory.getLogger(ShowIndexContentByPKAction.class);
 
-    public ActionForward execute(ActionMapping mapping,
-                                 ActionForm form,
-                                 HttpServletRequest request,
-                                 HttpServletResponse response)
-                                 throws IOException, ServletException {
-        if (!SecurityUtil.isAdminUser(request))return (mapping.findForward("welcome"));
+    public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+            HttpServletResponse response) throws IOException, ServletException {
+        if (!SecurityUtil.isAdminUser(request)) {
+            return (mapping.findForward("welcome"));
+        }
         ActionMessages errors = new ActionMessages();
         HttpSession session = request.getSession();
         String indexName = request.getParameter("indexName");
@@ -56,53 +64,71 @@ public final class ShowIndexContentByPKAction extends Action
         Integer intDocNumber = null;
         IndexReader ir = null;
         try {
-            if(!U.isEmpty(pkValue)){ pkValue = pkValue.trim();}
-
             DatasetConfiguration dc = ServerConfiguration.getDatasetConfiguration(indexName);
             session.setAttribute("dc", dc);
+            if (!U.isEmpty(pkValue)) {
+                pkValue = pkValue.trim();
+            }
             Column pkColumn = null;
-            if(dc.getWorkingQueueDataquery()!=null){
+            if (dc.getWorkingQueueDataquery() != null) {
                 pkColumn = dc.getWorkingQueueDataquery().getPrimaryKeyColumn();
                 request.setAttribute("pkColumn", pkColumn);
-            }
-
-            ir = IndexStatus.openIndexReader(dc);
-            if(ir!=null){
-                request.setAttribute("totalCount", new Integer(ir.numDocs()));
-            }else{
-                request.setAttribute("totalCount", new Integer(0));
-            }
-            if(!U.isEmpty(pkValue) && ir!=null && pkColumn!=null){
-                Query pkQuery = null;
-                Term pkTerm = null;
-                pkTerm = new Term(pkColumn.getColumnName(), pkValue);
-                pkQuery = new TermQuery(pkTerm);
-                Hits hits = null;
-                Searcher s = new IndexSearcher(ir);
-                try{
-                    hits = s.search(pkQuery);
-                }catch(RuntimeException re){
-                    errors.add("error", new ActionMessage("action.search.runtime.error", re.getMessage()));
-                }
-                if (hits != null) {
-                    int totalFound = hits.length();
-                    if(totalFound>1){
-                        errors.add("error", new ActionMessage("action.showIndexStatus.duplicatePrimaryKey.error",pkColumn.getColumnName()+"="+pkValue));
-                        Document doc = hits.doc(0);
-                        request.setAttribute("doc", doc);
-                    }else if(totalFound<=0){
-                        errors.add("error", new ActionMessage("action.showIndexStatus.notFoundPrimaryKey.error",pkColumn.getColumnName()+"="+pkValue));
-                    }else{
-                        Document doc = hits.doc(0);
-                        request.setAttribute("doc", doc);
-                    }
-                }
-            }else{
-                intDocNumber = new Integer(0);
             }
             request.setAttribute("periodTable", IndexStatus.getPeriodTable(dc));
             request.setAttribute("docNum", intDocNumber);
             session.setAttribute("indexName", indexName);
+            if (dc.getIndexType() == null || dc.getIndexType() == IndexType.LUCENE) {
+                ir = IndexStatus.openIndexReader(dc);
+                if (ir != null) {
+                    request.setAttribute("totalCount", new Integer(ir.numDocs()));
+                } else {
+                    request.setAttribute("totalCount", new Integer(0));
+                }
+                if (!U.isEmpty(pkValue) && ir != null && pkColumn != null) {
+                    Query pkQuery = null;
+                    Term pkTerm = null;
+                    pkTerm = new Term(pkColumn.getColumnName(), pkValue);
+                    pkQuery = new TermQuery(pkTerm);
+                    Hits hits = null;
+                    Searcher s = new IndexSearcher(ir);
+                    try {
+                        hits = s.search(pkQuery);
+                    } catch (RuntimeException re) {
+                        errors.add("error", new ActionMessage("action.search.runtime.error", re.getMessage()));
+                    }
+                    if (hits != null) {
+                        int totalFound = hits.length();
+                        if (totalFound > 1) {
+                            errors.add("error", new ActionMessage("action.showIndexStatus.duplicatePrimaryKey.error",
+                                    pkColumn.getColumnName() + "=" + pkValue));
+                            Document doc = hits.doc(0);
+                            request.setAttribute("doc", doc);
+                        } else if (totalFound <= 0) {
+                            errors.add("error", new ActionMessage("action.showIndexStatus.notFoundPrimaryKey.error",
+                                    pkColumn.getColumnName() + "=" + pkValue));
+                        } else {
+                            Document doc = hits.doc(0);
+                            request.setAttribute("doc", doc);
+                        }
+                    }
+                } else {
+                    intDocNumber = new Integer(0);
+                }
+            } else if (dc.getIndexType() == IndexType.ELASTICSEARCH) {
+                JestClient client = SpringContextUtil.getBean(JestClient.class);
+                Get getRequest = new Get.Builder(indexName, pkValue).build();
+                GetResult getResult = new GetResult(JestExecute.executeNoCheck(client, getRequest));
+                if (!getResult.exists()) {
+                    errors.add("error", new ActionMessage("action.showIndexStatus.notFoundPrimaryKey.error",
+                            pkColumn.getColumnName() + "=" + pkValue));
+                } else {
+                    request.setAttribute("result", getResult.getAsMap());
+                }
+                Count countRequest = new Count.Builder().addIndex(indexName).build();
+                CountResult countResult = JestExecute.execute(client, countRequest);
+                request.setAttribute("totalCount", countResult.getCount());
+            }
+
         } catch (IOException ex) {
             errors.add("error", new ActionMessage("action.showIndexStatus.index.error",indexName));
             logger.debug("Exception Occurred", ex);

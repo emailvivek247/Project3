@@ -65,60 +65,108 @@ ${indexName} $!{periodTable}
 </table>
 
 <form action="showIndexContentByPK.do">
-<Table cellspacing="0" cellpadding="0" border="0">
-<TR>
-	<TD>
-<input type="hidden" name="indexName" value="$!{indexName}">
-Primary Key Column <b>$!pkColumn.columnName</b> : <input type="text" name="pkValue" value="$!{pkValue}">
-	</TD>
-	<TD>	
-		<button class="go" type="submit">Go</button>
-	</TD>
-</TR>
-</TABLE>
-</form>
-<br>
-#set($htmlTool = $toolLoader.load("net.javacoding.xsearch.search.HTMLEntities"))
-<table width="100%" border="0" id="columntable" class="xsearchtable">
-#if( $doc )
-    #if(false) ## this boost value is not stored in the index. It's already distributed among all fields
-    <tr bgcolor="#dddddd">
-      <td valign=top nowrap><b>Document Boost</b><br />
-      <td>$!{doc.boost}</td>
+  <table cellspacing="0" cellpadding="0" border="0">
+    <tr>
+      <td>
+        <input type="hidden" name="indexName" value="$!{indexName}" />
+        Primary Key Column <b>$!pkColumn.columnName</b> :
+        <input type="text" name="pkValue" value="$!{pkValue}"/>
+      </td>
+      <td>
+        <button class="go" type="submit">Go</button>
+      </td>
     </tr>
+  </table>
+</form>
+
+<br />
+
+#set ($htmlTool = $toolLoader.load("net.javacoding.xsearch.search.HTMLEntities"))
+
+<table width="100%" border="0" id="columntable" class="xsearchtable">
+#if ($dc.getIndexType() == "ELASTICSEARCH")
+  #if ($result)
+    #set ($showColor = false)
+    <tr>
+      <th>Field Name</th>
+      <th>Index Content</th>
+    </tr>
+    #foreach ($key in $sorter.sort($result.keySet()))
+      #if ($showColor)
+        #set ($showColor=false)
+      #else
+        #set ($showColor=true)
+      #end
+      #if ($showColor)
+        #set ($rowColor='#eeeeee')
+      #else
+        #set($rowColor ='#ffffff')
+      #end
+      #set ($column = $dc.findColumn(${key}))
+      #set ($value = $result.get($key))
+      <tr bgcolor="$rowColor">
+        <td valign=top>
+          <b>${key}</b>
+          <br />
+          #if ($column.isKeyword)
+            (Keyword)
+          #else
+            (Text)
+          #end
+        </td>
+        <td>
+          #if ($column.isDate)
+            ${vmTool.storedStringToDateES($value)} ($value)
+          #else
+            $!{htmlTool.encode($value)}
+          #end
+        </td>
+      </tr>
     #end
+  #end
+#else
+  #if ($doc)
     #set($showColor = false )
     <tr>
-    	<th>Field Name
-    	</th>
-    	<th>Index Content
-    	</th>
-    </tr>	
-    #foreach( $field in $doc.fields() )
-      #if($showColor)#set($showColor=false)#else#set($showColor =true)#end
-      ##set ($showColor = ! $showColor )
-      #if($showColor)#set($rowColor='#eeeeee')#else#set($rowColor ='#ffffff')#end
+      <th>Field Name</th>
+      <th>Index Content</th>
+    </tr>
+    #foreach ($field in $doc.fields())
+      #if ($showColor)
+        #set ($showColor=false)
+      #else
+        #set ($showColor=true)
+      #end
+      #if ($showColor)
+        #set ($rowColor='#eeeeee')
+      #else
+        #set($rowColor ='#ffffff')
+      #end
       <tr bgcolor="$rowColor">
-        <td valign=top><b>${field.name()}</b><br />
-        #if     ( $field.isStored() && $field.isIndexed() && $field.isTokenized() )
+        <td valign=top>
+          <b>${field.name()}</b>
+          <br />
+          #if ($field.isStored() && $field.isIndexed() && $field.isTokenized())
             (Text)
-        #elseif ( $field.isStored() &&!$field.isIndexed() &&!$field.isTokenized() )
+          #elseif ($field.isStored() &&!$field.isIndexed() &&!$field.isTokenized())
             (UnIndexed)
-        #elseif ( $field.isStored() && $field.isIndexed() &&!$field.isTokenized() )
+          #elseif ($field.isStored() && $field.isIndexed() &&!$field.isTokenized())
             (Keyword)
-        #else
+          #else
             (UnStored)
-        #end
-        ##(stored=${field.isStored()}, tokenized=${field.isTokenized()},indexed=${field.isIndexed()})
+          #end
         </td>
-        #if( $dc.findColumn(${field.name()}).isDate )
-          <td>${vmTool.storedStringToDate( $field.stringValue() )}($field.stringValue())</td>
-        #else
-          <td>$!{htmlTool.encode( $field.stringValue() )}</td>
-        #end
+        <td>
+          #if ($dc.findColumn(${field.name()}).isDate)
+            ${vmTool.storedStringToDate($field.stringValue())} ($field.stringValue())
+          #else
+            $!{htmlTool.encode($field.stringValue())}
+          #end
+        </td>
       </tr>
     #end
     </td></tr>
+  #end
 #end
 </table>
 #closeFieldset()

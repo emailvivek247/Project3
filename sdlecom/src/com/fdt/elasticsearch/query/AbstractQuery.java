@@ -20,7 +20,7 @@ public abstract class AbstractQuery {
 
     protected final List<SearchSort> sorts;
     protected final List<String> highlightFields;
-    protected final List<Column> filterFields;
+    protected final List<TermsAggregation> termsAggregations;
     protected final Optional<Float> boost;
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -28,7 +28,7 @@ public abstract class AbstractQuery {
         boost = builder.boost;
         sorts = builder.sorts;
         highlightFields = builder.highlightFields;
-        filterFields = builder.filterFields;
+        termsAggregations = builder.termsAggregations;
     }
 
     public abstract ObjectNode getQueryObjectNode();
@@ -37,7 +37,7 @@ public abstract class AbstractQuery {
 
         List<ObjectNode> outerNodes = sorts.stream().map((sort) -> {
             String sortField = sort.field;
-            if (sort.getColumn().getIsNumber()) {
+            if (sort.getColumn() != null && sort.getColumn().getIsNumber()) {
                 sortField += ".number";
             }
             ObjectNode innerNode = mapper.createObjectNode();
@@ -82,28 +82,31 @@ public abstract class AbstractQuery {
     public ObjectNode getAggsObjectNode() {
 
         ObjectNode aggsNode = mapper.createObjectNode();
-        for (Column filterField : filterFields) {
-            if (filterField.getIsDate()) {
+        for (TermsAggregation termsAggregation : termsAggregations) {
+            if (termsAggregation.isDate) {
                 ObjectNode yearDateHistogramNode = mapper.createObjectNode();
-                yearDateHistogramNode.put("field", filterField.getColumnName());
+                yearDateHistogramNode.put("field", termsAggregation.fieldName);
                 yearDateHistogramNode.put("interval", "year");
                 yearDateHistogramNode.put("format", "yyyy");
                 ObjectNode innerNode = mapper.createObjectNode();
                 innerNode.set("date_histogram", yearDateHistogramNode);
-                aggsNode.set(filterField.getColumnName() + "-yyyy", innerNode);
+                aggsNode.set(termsAggregation.fieldName + "-yyyy", innerNode);
                 ObjectNode monthDateHistogramNode = mapper.createObjectNode();
-                monthDateHistogramNode.put("field", filterField.getColumnName());
+                monthDateHistogramNode.put("field", termsAggregation.fieldName);
                 monthDateHistogramNode.put("interval", "month");
                 monthDateHistogramNode.put("format", "yyyy/MM");
                 innerNode = mapper.createObjectNode();
                 innerNode.set("date_histogram", monthDateHistogramNode);
-                aggsNode.set(filterField.getColumnName() + "-yyyy/MM", innerNode);
+                aggsNode.set(termsAggregation.fieldName + "-yyyy/MM", innerNode);
             } else {
                 ObjectNode termsNode = mapper.createObjectNode();
-                termsNode.put("field", filterField.getColumnName());
+                termsNode.put("field", termsAggregation.fieldName);
+                if (termsAggregation.size.isPresent()) {
+                    termsNode.put("size", termsAggregation.size.get());
+                }
                 ObjectNode innerNode = mapper.createObjectNode();
                 innerNode.set("terms", termsNode);
-                aggsNode.set(filterField.getColumnName(), innerNode);
+                aggsNode.set(termsAggregation.fieldName, innerNode);
             }
         }
 
@@ -152,14 +155,23 @@ public abstract class AbstractQuery {
 
         protected List<SearchSort> sorts;
         protected List<String> highlightFields;
-        protected List<Column> filterFields;
+        protected List<TermsAggregation> termsAggregations;
         protected Optional<Float> boost;
 
         public AbstractQueryBuilder() {
             sorts = new ArrayList<>();
             highlightFields = new ArrayList<>();
-            filterFields = new ArrayList<>();
+            termsAggregations = new ArrayList<>();
             boost = Optional.empty();
+        }
+
+        public K addSort(String field) {
+            return addSort(field, false);
+        }
+
+        public K addSort(String field, boolean descending) {
+            this.sorts.add(new SearchSort(field, descending));
+            return (K) this;
         }
 
         public K addSort(SearchSort sort) {
@@ -190,16 +202,30 @@ public abstract class AbstractQuery {
             return (K) this;
         }
 
-        public K addFilterField(Collection<Column> filterField) {
-            if (filterField != null) {
-                this.filterFields.addAll(filterField);
+        public K addTermsAggregation(Collection<Column> termsAggregation) {
+            if (termsAggregation != null) {
+                termsAggregation.forEach(t -> this.termsAggregations.add(new TermsAggregation(t)));
             }
             return (K) this;
         }
 
-        public K addFilterField(Column filterField) {
-            if (filterField != null) {
-                this.filterFields.add(filterField);
+        public K addTermsAggregation(Column termsAggregation) {
+            if (termsAggregation != null) {
+                this.termsAggregations.add(new TermsAggregation(termsAggregation));
+            }
+            return (K) this;
+        }
+
+        public K addTermsAggregation(List<TermsAggregation> termsAggregation) {
+            if (termsAggregation != null) {
+                this.termsAggregations.addAll(termsAggregation);
+            }
+            return (K) this;
+        }
+
+        public K addTermsAggregation(TermsAggregation termsAggregation) {
+            if (termsAggregation != null) {
+                this.termsAggregations.add(termsAggregation);
             }
             return (K) this;
         }

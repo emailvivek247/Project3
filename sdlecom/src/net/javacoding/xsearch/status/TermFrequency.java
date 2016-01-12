@@ -1,27 +1,43 @@
-/*
- */
 package net.javacoding.xsearch.status;
 
-import org.apache.lucene.index.Term;
-
 public class TermFrequency {
-    public TermFrequency(Term t, int df) {
-        term = t;
-        frequency = df;
+
+    private final int frequency;
+    private final Term term;
+
+    public TermFrequency(String field, String value, int frequency) {
+        this.term = new Term(field, value);
+        this.frequency = frequency;
     }
 
-    int frequency;
-    Term term;
     public int getFrequency() {
         return frequency;
     }
-    public void setFrequency(int frequency) {
-        this.frequency = frequency;
-    }
+
     public Term getTerm() {
         return term;
     }
-    public void setTerm(Term term) {
-        this.term = term;
+
+    public class Term {
+
+        private String field;
+        private String value;
+
+        public Term(String field, String value) {
+            this.field = field;
+            this.value = value;
+        }
+
+        public String field() {
+            return field;
+        }
+
+        public String value() {
+            return value;
+        }
+
+        public String text() {
+            return value;
+        }
     }
 }

@@ -28,16 +28,31 @@ public final class VMTool{
             return null;
         }
     }
-    /** Converts a string-encoded date into a Date object. */
+
+    /**
+     * Converts a string-encoded date into a Date object. This method is based on the original
+     * direct-Lucene method of storing dates.
+     * */
     public static Date storedStringToDate(String s) {
-        try{
-            return new Date(Long.parseLong(s)-DATE_LONG_DELTA);
-        }catch(NumberFormatException nfe){
+        try {
+            return new Date(Long.parseLong(s) - DATE_LONG_DELTA);
+        } catch (NumberFormatException nfe) {
             return null;
         }
-        //for performance, use radix=10, instread of standard lucene Charactor.MAX_RADIX
-        //return new Date(org.apache.lucene.document.DateField.stringToTime(s));
     }
+
+    /**
+     * Converts a string-encoded date into a Date object. This method is based on the Elasticsearch
+     * method of storing dates in which they are simple millis past the epoch.
+     */
+    public static Date storedStringToDateES(String s) {
+        try {
+            return new Date(Long.parseLong(s));
+        } catch (NumberFormatException nfe) {
+            return null;
+        }
+    }
+
     public static Long storedStringToLong(String s) {
         try{
             return Long.valueOf(s)-DATE_LONG_DELTA;

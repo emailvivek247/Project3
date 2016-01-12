@@ -42,6 +42,11 @@
     <class>org.apache.velocity.tools.generic.MathTool</class>
   </tool>
   <tool>
+    <key>sorter</key>
+    <scope>application</scope>
+    <class>org.apache.velocity.tools.generic.SortTool</class>
+  </tool>
+  <tool>
     <key>render</key>
     <scope>request</scope>
     <class>org.apache.velocity.tools.view.tools.ViewRenderTool</class>
