@@ -69,7 +69,10 @@ public class IndexerContextImpl extends IndexerContext {
         this.affectedDirectoryGroup = adg;
         this.targetIndexName = targetIndexName;
 
-        int queueSize = SpringContextUtil.getBatchSize() * SpringContextUtil.getBatchesInQueue();
+        int maxNumBatchesInQueue = SpringContextUtil.getBatchesInQueue();
+        int numBatchesInQueue = Math.min(dc.getJvmMaxHeapSize() / 75, maxNumBatchesInQueue);
+        int queueSize = SpringContextUtil.getBatchSize() * numBatchesInQueue;
+
         logger.info("Index action blocking queue size is {}", queueSize);
         this.queue = new LinkedBlockingQueue<>(queueSize);
 
