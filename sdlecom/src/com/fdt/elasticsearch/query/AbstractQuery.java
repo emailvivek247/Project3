@@ -66,7 +66,7 @@ public abstract class AbstractQuery {
         highlightNode.set("fields", fieldsNode);
         highlightNode.put("encoder", "html");
         highlightNode.put("number_of_fragments", 0);
-        highlightNode.put("require_field_match", false);
+        highlightNode.put("require_field_match", true);
 
         ArrayNode preTagsArrayNode = mapper.createArrayNode();
         preTagsArrayNode.add("<hl-tag-replace>");

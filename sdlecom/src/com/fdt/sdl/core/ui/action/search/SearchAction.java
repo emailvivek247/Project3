@@ -70,6 +70,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fdt.common.util.SystemUtil;
 import com.fdt.elasticsearch.config.SpringContextUtil;
+import com.fdt.elasticsearch.parsing.ESColumnHelper;
 import com.fdt.elasticsearch.parsing.ESQueryHelper;
 import com.fdt.elasticsearch.query.AbstractQuery;
 import com.fdt.elasticsearch.query.BoolQuery;
@@ -255,36 +256,42 @@ public class SearchAction extends Action {
 
                 } else if (sc.dc.getIndexType() == IndexType.ELASTICSEARCH) {
 
-                    String searchableColsStr = request.getParameter("searchable");
-                    boolean forceLucene = "Y".equalsIgnoreCase(request.getParameter("lucene"));
-                    ESQueryHelper queryHelper = new ESQueryHelper(sc.dc, q, lq, searchableColsStr, forceLucene);
+                    List<Document> resultDocs = new ArrayList<>();
+                    int totalCount = 0;
+                    if (sc.dc.getIsEmptyQueryMatchAll() || !U.isEmpty(q) || !U.isEmpty(lq)) {
+                        boolean forceLucene = "Y".equalsIgnoreCase(request.getParameter("lucene"));
+                        String searchableColsStr = request.getParameter("searchable");
+                        ESColumnHelper columnHelper = new ESColumnHelper(sc.dc.getColumns(), searchableColsStr);
+                        ESQueryHelper queryHelper = new ESQueryHelper(sc.dc, q, lq, forceLucene, columnHelper);
 
-                    BoolQuery.Builder esQueryBuilder = queryHelper.getSearchQuery();
-                    esQueryBuilder.addTermsAggregation(sc.dc.getFilterableColumns());
-                    esQueryBuilder.addSort(sortBys);
-                    esQueryBuilder.addHighlightField(sc.dc.getColumnNames());
+                        BoolQuery.Builder esQueryBuilder = queryHelper.getSearchQuery();
+                        esQueryBuilder.addTermsAggregation(sc.dc.getFilterableColumns());
+                        esQueryBuilder.addSort(sortBys);
+                        esQueryBuilder.addHighlightField(columnHelper.getHighlightColsStr());
 
-                    filterResult.addFilteredColumns(queryHelper.getFilteredColumns());
-                    sr.setUserInput(queryHelper.getUserInput());
+                        filterResult.addFilteredColumns(queryHelper.getFilteredColumns());
+                        sr.setUserInput(queryHelper.getUserInput());
 
-                    AbstractQuery abstractQuery = esQueryBuilder.build();
+                        AbstractQuery abstractQuery = esQueryBuilder.build();
 
-                    JestClient client = SpringContextUtil.getBean(JestClient.class);
+                        JestClient client = SpringContextUtil.getBean(JestClient.class);
 
-                    String elasticSearchQuery = abstractQuery.getAsString();
-                    logger.info("Elastic Search Query: " + elasticSearchQuery);
+                        String elasticSearchQuery = abstractQuery.getAsString();
+                        logger.info("Elastic Search Query: " + elasticSearchQuery);
 
-                    Search search = new Search.Builder(elasticSearchQuery)
-                            .addIndex(sc.indexName)
-                            .setParameter(Parameters.SIZE, rowsToReturn)
-                            .setParameter("from", offset)
-                            .build();
+                        Search search = new Search.Builder(elasticSearchQuery)
+                                .addIndex(sc.indexName)
+                                .setParameter(Parameters.SIZE, rowsToReturn)
+                                .setParameter("from", offset)
+                                .build();
 
-                    CustomSearchResult result = new CustomSearchResult(client.execute(search));
-                    List<Document> resultDocs = extractResultDocs(result);
-                    populateFilterResult(filterResult, result, sc.dc);
+                        CustomSearchResult result = new CustomSearchResult(client.execute(search));
+                        resultDocs = extractResultDocs(result);
+                        totalCount = result.getTotal();
+                        populateFilterResult(filterResult, result, sc.dc);
+                    }
 
-                    sr.initFor3Tier(sc, q, lq, null, resultDocs, null, searchTime, result.getTotal(), offset,
+                    sr.initFor3Tier(sc, q, lq, null, resultDocs, null, searchTime, totalCount, offset,
                             rowsToReturn, sortBys, filterResult, request, response);
                 }
             }

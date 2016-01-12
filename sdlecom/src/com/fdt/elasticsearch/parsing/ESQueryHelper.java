@@ -31,7 +31,6 @@ public class ESQueryHelper {
     private DatasetConfiguration dc;
     private String q;
     private String lq;
-    private String searchableColsStr;
     private boolean forceLucene;
 
     private ESColumnHelper columnHelper;
@@ -39,19 +38,17 @@ public class ESQueryHelper {
     private ESQuery query;
     private BoolQuery.Builder builder;
 
-    public ESQueryHelper(DatasetConfiguration dc, String q, String lq, String searchableColsStr,
-            boolean forceLucene) {
+    public ESQueryHelper(DatasetConfiguration dc, String q, String lq, boolean forceLucene, ESColumnHelper columnHelper) {
         this.dc = dc;
         this.q = q;
         this.lq = lq;
-        this.searchableColsStr = searchableColsStr;
         this.forceLucene = forceLucene;
+        this.columnHelper = columnHelper;
         evaluate();
     }
 
     private BoolQuery.Builder evaluate() {
 
-        columnHelper = new ESColumnHelper(dc.getColumns(), searchableColsStr);
         parser = new ESParser();
         builder = new BoolQuery.Builder();
 
@@ -90,17 +87,9 @@ public class ESQueryHelper {
             for (QueryPart part : fieldParts) {
                 String field = part.field;
                 String value = part.part;
-                Optional<Column> matchingColumn = dc.getColumns().stream().filter(
-                        c -> c.getColumnName().equals(field)
-                ).findFirst();
-                if (matchingColumn.isPresent()) {
-                    if (matchingColumn.get().getIsDate()) {
-                        if (value.startsWith("\"") && value.endsWith("\"")) {
-                            value = value.substring(1, value.length() - 1);
-                        }
-                    }
+                if (value.startsWith("\"") && value.endsWith("\"")) {
+                    value = value.substring(1, value.length() - 1);
                 }
-                
                 result.add(new FilteredColumn(dc, field, value));
             }
         }

@@ -31,6 +31,24 @@ public class ESColumnHelper {
             .collect(Collectors.toList());
     }
 
+    public List<Column> getHighlightCols() {
+        return columnList.stream().filter((column) -> {
+            if (column.getIsDate()) {
+                return false;
+            }
+            String columnName = column.getColumnName().toLowerCase();
+            if (columnName.endsWith("date") || columnName.endsWith("datefilter") ||
+                    columnName.endsWith("datedisplay") || columnName.endsWith("datesort")) {
+                return false;
+            }
+            return true;
+        }).collect(Collectors.toList());
+    }
+
+    public List<String> getHighlightColsStr() {
+        return getHighlightCols().stream().map(c -> c.getColumnName()).collect(Collectors.toList());
+    }
+
     private boolean isSearchable(Column column) {
         return dynamicSearchableColumns == null && column.getIsSearchable() || dynamicSearchableColumns != null
                 && dynamicSearchableColumns.contains(column.getColumnName().toLowerCase());
