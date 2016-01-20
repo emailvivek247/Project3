@@ -69,7 +69,7 @@ public class QueryStringQuery extends AbstractQuery {
         return queryNode;
     }
 
-    public static class Builder extends AbstractQueryBuilder<QueryStringQuery, Builder> {
+    public static class Builder extends AbstractQuery.Builder<QueryStringQuery, Builder> {
 
         private List<String> fields;
         private String query;

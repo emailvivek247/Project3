@@ -51,7 +51,7 @@ public class BoolQuery extends AbstractQuery {
         }
     }
 
-    public static class Builder extends AbstractQueryBuilder<BoolQuery, Builder> {
+    public static class Builder extends AbstractQuery.Builder<BoolQuery, Builder> {
 
         private List<AbstractQuery> mustClauses;
         private List<AbstractQuery> mustNotClauses;

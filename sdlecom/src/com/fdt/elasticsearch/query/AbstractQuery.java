@@ -24,7 +24,7 @@ public abstract class AbstractQuery {
     protected final Optional<Float> boost;
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public AbstractQuery(AbstractQueryBuilder builder) {
+    public AbstractQuery(Builder builder) {
         boost = builder.boost;
         sorts = builder.sorts;
         highlightFields = builder.highlightFields;
@@ -151,14 +151,14 @@ public abstract class AbstractQuery {
     }
 
     @SuppressWarnings("unchecked")
-    public abstract static class AbstractQueryBuilder<T extends AbstractQuery, K> {
+    public abstract static class Builder<T extends AbstractQuery, K> {
 
         protected List<SearchSort> sorts;
         protected List<String> highlightFields;
         protected List<TermsAggregation> termsAggregations;
         protected Optional<Float> boost;
 
-        public AbstractQueryBuilder() {
+        public Builder() {
             sorts = new ArrayList<>();
             highlightFields = new ArrayList<>();
             termsAggregations = new ArrayList<>();

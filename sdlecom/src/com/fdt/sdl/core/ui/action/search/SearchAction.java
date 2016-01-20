@@ -264,7 +264,7 @@ public class SearchAction extends Action {
                         ESColumnHelper columnHelper = new ESColumnHelper(sc.dc.getColumns(), searchableColsStr);
                         ESQueryHelper queryHelper = new ESQueryHelper(sc.dc, q, lq, forceLucene, columnHelper);
 
-                        BoolQuery.Builder esQueryBuilder = queryHelper.getSearchQuery();
+                        AbstractQuery.Builder<?, ?> esQueryBuilder = queryHelper.getSearchQuery();
                         esQueryBuilder.addTermsAggregation(sc.dc.getFilterableColumns());
                         esQueryBuilder.addSort(sortBys);
                         esQueryBuilder.addHighlightField(columnHelper.getHighlightColsStr());

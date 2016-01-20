@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import net.javacoding.xsearch.config.Column;
+import net.javacoding.xsearch.config.IndexFieldType;
 import net.javacoding.xsearch.utility.U;
 
 public class ESColumnHelper {
@@ -47,6 +48,17 @@ public class ESColumnHelper {
 
     public List<String> getHighlightColsStr() {
         return getHighlightCols().stream().map(c -> c.getColumnName()).collect(Collectors.toList());
+    }
+
+    public List<Column> getBoostCols() {
+        return columnList.stream().filter((column) -> {
+            String indexFieldType = column.getIndexFieldType();
+            return indexFieldType == IndexFieldType.BOOST || indexFieldType == IndexFieldType.KEYWORD_BOOST;
+        }).collect(Collectors.toList());
+    }
+
+    public List<String> getBoostColsStr() {
+        return getBoostCols().stream().map(c -> c.getColumnName()).collect(Collectors.toList());
     }
 
     private boolean isSearchable(Column column) {

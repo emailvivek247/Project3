@@ -22,7 +22,7 @@ public class MatchAllQuery extends AbstractQuery {
         return queryNode;
     }
 
-    public static class Builder extends AbstractQueryBuilder<MatchAllQuery, Builder>  {
+    public static class Builder extends AbstractQuery.Builder<MatchAllQuery, Builder>  {
         public MatchAllQuery build() {
             return new MatchAllQuery(this);
         }

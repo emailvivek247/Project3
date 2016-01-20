@@ -31,7 +31,7 @@ public class TermQuery extends AbstractQuery {
         return queryNode;
     }
 
-    public static class Builder extends AbstractQueryBuilder<TermQuery, Builder>  {
+    public static class Builder extends AbstractQuery.Builder<TermQuery, Builder>  {
 
         private String field;
         private String value;

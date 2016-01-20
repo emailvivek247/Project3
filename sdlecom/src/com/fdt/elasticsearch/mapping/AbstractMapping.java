@@ -51,7 +51,6 @@ public abstract class AbstractMapping {
 
     public static AbstractMapping fromColumn(DatasetConfiguration datasetConfiguration, Column column) {
 
-        
         AbstractMapping result = null;
         String defaultAnalyzerName = datasetConfiguration.getAnalyzerName();
 
@@ -82,9 +81,9 @@ public abstract class AbstractMapping {
             if (column.getIsNumber()) {
                 String type = null;
                 if (column.getColumnScale() == 0) {
-                    type= NumericFieldMapping.Type.LONG.toString();
+                    type = NumericFieldMapping.Type.LONG.toString();
                 } else {
-                    type= NumericFieldMapping.Type.DOUBLE.toString();
+                    type = NumericFieldMapping.Type.DOUBLE.toString();
                 }
                 result = new NumericFieldMapping
                         .Builder(type, column.getColumnName())

@@ -49,7 +49,7 @@ public class MatchQuery extends AbstractQuery {
         return queryNode;
     }
 
-    public static class Builder extends AbstractQueryBuilder<MatchQuery, Builder>  {
+    public static class Builder extends AbstractQuery.Builder<MatchQuery, Builder>  {
 
         private String field;
         private String query;

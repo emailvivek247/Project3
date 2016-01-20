@@ -19,6 +19,7 @@ import com.fdt.elasticsearch.parsing.ESQuery.PartType;
 import com.fdt.elasticsearch.parsing.ESQuery.QueryPart;
 import com.fdt.elasticsearch.query.AbstractQuery;
 import com.fdt.elasticsearch.query.BoolQuery;
+import com.fdt.elasticsearch.query.FunctionScoreQuery;
 import com.fdt.elasticsearch.query.MatchAllQuery;
 import com.fdt.elasticsearch.query.QueryStringQuery;
 import com.fdt.elasticsearch.util.StopwordLoader;
@@ -36,7 +37,9 @@ public class ESQueryHelper {
     private ESColumnHelper columnHelper;
     private ESParser parser;
     private ESQuery query;
+ 
     private BoolQuery.Builder builder;
+    private FunctionScoreQuery.Builder wrapperBuilder;
 
     public ESQueryHelper(DatasetConfiguration dc, String q, String lq, boolean forceLucene, ESColumnHelper columnHelper) {
         this.dc = dc;
@@ -47,7 +50,7 @@ public class ESQueryHelper {
         evaluate();
     }
 
-    private BoolQuery.Builder evaluate() {
+    private void evaluate() {
 
         parser = new ESParser();
         builder = new BoolQuery.Builder();
@@ -73,11 +76,16 @@ public class ESQueryHelper {
             }
         }
 
-        return builder;
     }
 
-    public BoolQuery.Builder getSearchQuery() {
-        return builder;
+    public AbstractQuery.Builder<?, ?> getSearchQuery() {
+        if (!columnHelper.getBoostCols().isEmpty()) {
+            wrapperBuilder =  new FunctionScoreQuery.Builder(builder.build());
+            wrapperBuilder.addBoostField(columnHelper.getBoostColsStr());
+            return wrapperBuilder;
+        } else {
+            return builder;
+        }
     }
 
     public List<FilteredColumn> getFilteredColumns() {

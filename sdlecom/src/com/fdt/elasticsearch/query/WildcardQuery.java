@@ -31,7 +31,7 @@ public class WildcardQuery extends AbstractQuery {
         return queryNode;
     }
 
-    public static class Builder extends AbstractQueryBuilder<WildcardQuery, Builder>  {
+    public static class Builder extends AbstractQuery.Builder<WildcardQuery, Builder>  {
 
         private String field;
         private String value;

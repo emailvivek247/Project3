@@ -50,7 +50,7 @@ public class MultiMatchQuery extends AbstractQuery {
         return queryNode;
     }
 
-    public static class Builder extends AbstractQueryBuilder<MultiMatchQuery, Builder>  {
+    public static class Builder extends AbstractQuery.Builder<MultiMatchQuery, Builder>  {
 
         private List<String> fields;
         private String query;
