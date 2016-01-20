@@ -47,13 +47,13 @@ function onChangeOption() {
     var s = $(this).find('select[name=indexFieldType]');
     if(!t) return;
     if(isDate(t)){
-      onlyShowSelectOption(s,'Keyword,KeywordDateHierarchical,UnIndexed,Parameter');
+      onlyShowSelectOption(s,'Keyword,KeywordDateHierarchical,UnIndexed');
     }else if(isNumber(t)){
-      onlyShowSelectOption(s,'Keyword,UnIndexed,UnStored,Parameter,KeywordBoost,Keywords,Boost');
+      onlyShowSelectOption(s,'Keyword,UnIndexed,KeywordBoost,Keywords,Boost');
     }else if(isSimpleString(t)){
-      onlyShowSelectOption(s,'Keyword,Text,TextHtml,TextCompressed,UnIndexed,UnStored,Parameter,Keywords,KeywordCaseInsensitive');
+      onlyShowSelectOption(s,'Keyword,Text,UnIndexed,Keywords,KeywordCaseInsensitive');
     }else if(isString(t)){
-      onlyShowSelectOption(s,'Text,TextHtml,TextCompressed,UnIndexed,UnStored,Keywords');
+      onlyShowSelectOption(s,'Text,UnIndexed,Keywords');
     }
     showIf($(this).find('[id^=primaryKey]'),isNumber(t)||isSimpleString(t));
     showIf($(this).find('[id^=modifiedDate]'),isDate(t));

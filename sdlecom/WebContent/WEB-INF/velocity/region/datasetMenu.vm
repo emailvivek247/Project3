@@ -26,8 +26,6 @@
             #displayTab( $selectedSubtab 'schedule' 'listSchedules.do' 'Timer' 'resources/images/clock.png')
             #displayTab( $selectedSubtab 'advanced_queries' 'advancedQueries.do' 'Update/Delete SQL' 'resources/images/key1.png')
             #displayTab( $selectedSubtab 'spell_check' 'configSpellCheck.do' 'Spell Check' 'resources/images/palette_text.png')
-            #displayTab( $selectedSubtab 'inMemory' 'configSearchInMemory.do' 'Memory Mode' 'resources/images/memorystick.png')
-            ##displayTab( $selectedSubtab 'security' 'listIndexSecurity.do' 'Security' 'resources/images/lock.png')
             #displayTab( $selectedSubtab 'advanced_settings' 'datasetOptions.do' 'Advanced Settings' 'resources/images/wrench.png')            
     </div>
     <p class="menu_head"><span class="inactive"></span>Search Configuration</p> 
@@ -40,7 +38,6 @@
             #displayTab( $selectedSubtab 'configSortableColumns' 'configSortableColumns.do' 'Sortable Columns' 'resources/images/sort_ascending.png')
             #displayTab( $selectedSubtab 'configFilterableColumns' 'configFilterableColumns.do' 'Filterable Columns' 'resources/images/funnel_preferences.png')
             #displayTab( $selectedSubtab 'configDateWeightColumn' 'configDateWeightColumn.do' 'Date-Time Ordering' 'resources/images/history2.png')
-            ##displayTab( $selectedSubtab 'security' 'configSecurity.do' 'Security' 'resources/images/lock.png')
         
     </div>
      <p class="menu_head"><span class="inactive"></span>Style Configuration</p> 
@@ -56,7 +53,6 @@
             #displayTab( $selectedSubtab 'usage' 'showIndexUsage.do' 'Search Usage' 'resources/images/column-chart.png')
             #displayTab( $selectedSubtab 'log' 'showIndexLog.do' 'Indexing Log' 'resources/images/line-chart.png')
             #displayTab( $selectedSubtab 'content' 'showIndexStatus.do' 'Index Content' 'resources/images/index.png')
-            ## #displayTab( $selectedSubtab 'buffer_content' 'showBufferContent.do' 'Buffer Content' 'resources/images/cd_gold.png')
             #displayTab( $selectedSubtab 'frequent_terms' 'showFrequentTerms.do' 'Frequent Terms' 'resources/images/sunglasses.png')
         
     </div>
