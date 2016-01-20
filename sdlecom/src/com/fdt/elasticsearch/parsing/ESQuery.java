@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import com.fdt.elasticsearch.parsing.ESParser.Context;
 import com.google.common.base.Joiner;
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Splitter;
 
 public class ESQuery {
 
@@ -71,6 +72,7 @@ public class ESQuery {
         }
 
         public String getAsQueryStr() {
+            String value = part;
             StringBuilder builder = new StringBuilder();
             if (partType == PartType.REQUIRED) {
                 builder.append("+");
@@ -79,8 +81,17 @@ public class ESQuery {
             }
             if (field != null) {
                 builder.append(field).append(":");
+                if (value.contains(",")) {
+                    if (value.startsWith("\"") && value.endsWith("\"")) {
+                        value = value.substring(1, value.length() - 1);
+                    }
+                    value = Splitter.on(",").splitToList(value).stream().map(
+                            v -> "\"" + v + "\""
+                    ).collect(Collectors.joining(" OR "));
+                    value = "(" + value + ")";
+                }
             }
-            builder.append(part);
+            builder.append(value);
             return builder.toString();
         }
 

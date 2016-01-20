@@ -169,7 +169,7 @@ public class ESParser {
  
     public static void main(String[] args) {
         ESParser parser = new ESParser();
-        ESQuery query = parser.parse("+otherField:\"Hello, Jon testField-Hello, Jo\" -n");
-        System.out.println(query.toString());
+        ESQuery query = parser.parse("otherField:\"Assumed Names,Brand\"");
+        System.out.println(query.parts.get(0).getAsQueryStr());
     }
 }
