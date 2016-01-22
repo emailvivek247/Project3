@@ -443,6 +443,8 @@ public class SearchResult extends XMLSerializable{
     public void setHighlightTag(String beginTag, String endTag) {
         this.beginTag = beginTag;
         this.endTag = endTag;
+        this.summarizer.setHighlightPrefix(beginTag);
+        this.summarizer.setHighlightSuffix(endTag);
     }
 
     /**
@@ -458,7 +460,7 @@ public class SearchResult extends XMLSerializable{
      * Convenient methods to replace
      * searchResult.summarizer.getHighlighted(doc.get("id")?html,"id")
      */
-    public String highlight(HitDocument doc, String field) {
+    public String highlight(SDLIndexDocument doc, String field) {
         String t = EscapeChars.forHTMLTag(doc.get(field));
         if (summarizer == null) {
             return t;

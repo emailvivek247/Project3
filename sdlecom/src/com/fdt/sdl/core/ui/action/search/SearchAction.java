@@ -76,6 +76,7 @@ import com.fdt.elasticsearch.query.AbstractQuery;
 import com.fdt.elasticsearch.query.BoolQuery;
 import com.fdt.elasticsearch.query.BoolQuery.Builder;
 import com.fdt.elasticsearch.type.result.CustomSearchResult;
+import com.fdt.elasticsearch.util.ESSearchUtils;
 import com.fdt.sdl.admin.ui.action.constants.IndexType;
 import com.fdt.sdl.styledesigner.Template;
 import com.fdt.sdl.styledesigner.util.DeviceDetectorUtil;
@@ -286,9 +287,9 @@ public class SearchAction extends Action {
                                 .build();
 
                         CustomSearchResult result = new CustomSearchResult(client.execute(search));
-                        resultDocs = extractResultDocs(result);
+                        resultDocs = ESSearchUtils.extractResultDocs(result);
                         totalCount = result.getTotal();
-                        populateFilterResult(filterResult, result, sc.dc);
+                        ESSearchUtils.populateFilterResult(filterResult, result, sc.dc);
                     }
 
                     sr.initFor3Tier(sc, q, lq, null, resultDocs, null, searchTime, totalCount, offset,
@@ -390,69 +391,7 @@ public class SearchAction extends Action {
         }
     }
 
-    /**
-     * Populates FilterResult for Elasticsearch index types
-     * 
-     * @param filterResult the object to populate
-     * @param result the Elasticsearch search result (JSON in Google's GSON format)
-     * @param dc the dataset configuration for the active search
-     */
-    private static void populateFilterResult(FilterResult filterResult, CustomSearchResult result, DatasetConfiguration dc) {
-        filterResult.setFilterColumns(dc.getFilterableColumns());
-        JsonObject aggregations = result.getAggregations();
-        for (Column column : dc.getFilterableColumns()) {
-            String parentFilter = column.getFilterParentColumnName();
-            if (parentFilter == null || filterResult.hasFilteredColumn(parentFilter)) {
-                String columnName = column.getColumnName();
-                if (column.getIsDate()) {
-                    String suffix = "-yyyy";
-                    if (filterResult.getFilteredColumn(column.getColumnName()) != null) {
-                        suffix = "-yyyy/MM";
-                    }
-                    for (Map.Entry<String, JsonElement> aggregation : aggregations.entrySet()) {
-                        if (aggregation.getKey().equals(columnName + suffix)) {
-                            FilterColumn filterColumn = filterResult.getFilterColumn(columnName);
-                            if (filterColumn != null) {
-                                JsonObject aggValueObject = aggregation.getValue().getAsJsonObject();
-                                JsonArray bucketsArray = aggValueObject.getAsJsonArray("buckets");
-                                Map<Object, Count> counts = new HashMap<Object, Count>();
-                                for (JsonElement bucketElement : bucketsArray) {
-                                    JsonObject bucket = bucketElement.getAsJsonObject();
-                                    int docCount = bucket.get("doc_count").getAsInt();
-                                    String key = bucket.get("key_as_string").getAsString();
-                                    if (docCount > 0) {
-                                        Count count = new Count(columnName, key, docCount);
-                                        counts.put(key, count);
-                                    }
-                                }
-                                filterColumn.setCounts(counts);
-                            }
-                        }
-                    }
-                } else {
-                    for (Map.Entry<String, JsonElement> aggregation : aggregations.entrySet()) {
-                        if (aggregation.getKey().equals(columnName)) {
-                            FilterColumn filterColumn = filterResult.getFilterColumn(columnName);
-                            if (filterColumn != null) {
-                                JsonObject aggValueObject = aggregation.getValue().getAsJsonObject();
-                                JsonArray bucketsArray = aggValueObject.getAsJsonArray("buckets");
-                                Map<Object, Count> counts = new HashMap<Object, Count>();
-                                for (JsonElement bucketElement : bucketsArray) {
-                                    JsonObject bucket = bucketElement.getAsJsonObject();
-                                    int docCount = bucket.get("doc_count").getAsInt();
-                                    String key = bucket.get("key").getAsString();
-                                    Count count = new Count(columnName, key, docCount);
-                                    counts.put(key, count);
-                                }
-                                filterColumn.setCounts(counts);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        filterResult.finish();
-    }
+   
 
     /**
 	 * indexName: Optional. If empty, all indexes are searched. If using
@@ -695,10 +634,6 @@ public class SearchAction extends Action {
 		}
 		return retValue;
 	}
-
-    protected static List<Document> extractResultDocs(CustomSearchResult result) {
-        return result.stream().map(hit -> new Document(hit)).collect(Collectors.toList());
-    }
 
     protected static List<HitDocument> collectHits(DatasetConfiguration paramDatasetConfiguration,
             TopDocs paramTopDocs, Searcher paramSearcher) throws CorruptIndexException, IOException {

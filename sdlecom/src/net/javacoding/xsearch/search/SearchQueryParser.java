@@ -41,93 +41,71 @@ public class SearchQueryParser {
     }
 
     private static String reformatQuery(String originalText) {
-      StringBuffer formattedText = new StringBuffer();
+        StringBuilder formattedText = new StringBuilder();
         String[] text = StringUtils.split(originalText, "#");
         if (text.length == 1) {
             String decodedString = EscapeChars.decodeURL(originalText);
-            text =  decodedString.split("#");
+            text = decodedString.split("#");
         }
-        StringBuffer formattedWildCardText = new StringBuffer();
-      logger.debug("Input String is : " + originalText);
-        for (String splitText:text) {
+        logger.debug("Input String is : " + originalText);
+        for (String splitText : text) {
             if (!splitText.trim().isEmpty()) {
-                  if (splitText.contains("*") || splitText.contains("?")) {
-                        splitText = splitText.replace("~5", "");
-                        String wildCardColumnName = null;
-                        formattedWildCardText = new StringBuffer();
-                        
-                        for (String wildCardSplitText: splitText.split("\"")) {
-                              if (wildCardColumnName == null) {
-                                    wildCardColumnName = wildCardSplitText;
-                              } else {
-                                    StringTokenizer st = new StringTokenizer(wildCardSplitText);
-                                    while (st.hasMoreTokens()) {
-                                          formattedWildCardText = formattedWildCardText.append(wildCardColumnName);
-                                          formattedWildCardText = formattedWildCardText.append(st.nextToken());
-                                          if (st.hasMoreTokens()) {
-                                                formattedWildCardText = formattedWildCardText.append(" AND ");
-                                          }
-                                  }
-                              }
-                        }
-                        formattedText.append(formattedWildCardText.toString());
+                if (splitText.contains("*") || splitText.contains("?")) {
+                    splitText = splitText.replace("~5", "");
+                    String wildCardColumnName = null;
+                    StringBuilder formattedWildCardText = new StringBuilder();
+                    for (String wildCardSplitText : splitText.split("\"")) {
+                        if (wildCardColumnName == null) {
+                            wildCardColumnName = wildCardSplitText;
                         } else {
-                              formattedText.append(splitText);
+                            StringTokenizer st = new StringTokenizer(wildCardSplitText);
+                            while (st.hasMoreTokens()) {
+                                formattedWildCardText.append(wildCardColumnName);
+                                formattedWildCardText.append(st.nextToken());
+                                if (st.hasMoreTokens()) {
+                                    formattedWildCardText.append(" AND ");
+                                }
+                            }
                         }
-                  } 
+                    }
+                    formattedText.append(formattedWildCardText.toString());
+                } else {
+                    formattedText.append(splitText);
+                }
             }
-            logger.debug("Wildcard Formatted String is : " + formattedText.toString());
-            return formattedText.toString();
-    } 
-    
-    public static void main(String[] args) {
-      String originalText ="aaaa4555aaaaa TAXAMT:[|134| TO |135|]";
-        System.out.println("The Reformated Query is " + reformatRangeQuery(originalText));
+        }
+        logger.debug("Wildcard Formatted String is : " + formattedText.toString());
+        return formattedText.toString();
     }
-    
-    public static String reformatRangeQuery(String originalRangeQuery) {
-      logger.debug("Original Range Query String is : " + originalRangeQuery);
-      if (!StringUtils.contains(originalRangeQuery, "|")) {
-            return originalRangeQuery ;
-      } else {
+
+    private static String reformatRangeQuery(String originalRangeQuery) {
+        logger.debug("Original Range Query String is : " + originalRangeQuery);
+        if (!StringUtils.contains(originalRangeQuery, "|")) {
+            return originalRangeQuery;
+        } else {
             String[] spliTextArray = StringUtils.split(originalRangeQuery, "|");
             StringBuffer formattedRangeQueryText = new StringBuffer();
-            for (String splitText:spliTextArray) {
-                  formattedRangeQueryText.append(splitText);
+            for (String splitText : spliTextArray) {
+                formattedRangeQueryText.append(splitText);
             }
             logger.debug("Range Query Formatted String is : " + formattedRangeQueryText.toString());
             return formattedRangeQueryText.toString();
-      }
-    }    
-    
-    
-
-    public static Query parse(DatasetConfiguration dc, String text) throws Exception{
-        BooleanQuery.setMaxClauseCount(16384);
-        return    parse(dc,text,null);
+        }
     }
 
-    public static Query parse(DatasetConfiguration dc, String text,FilterResult filterResult) throws Exception{
-        if(U.isEmpty(text)) return null;
-        QueryTranslator translator = new QueryTranslator(dc.getColumns());
-        /*
-         for (int i = 0; i < dc.getColumns().size(); i++) {
-            Column c = (Column)dc.getColumns().get(i);
-            if (c != null) {
-                translator.add(c.getColumnName(), c.getSearchWeight());
-            }
-        }
-        */
-        //logger.debug("Start parse query: "+HTMLEntities.encode(text));
-        net.javacoding.xsearch.search.query.DbsQuery myQuery = QueryAnalysis.parseQuery(text,dc);
-        //logger.debug("parsed query: "+HTMLEntities.encode(myQuery.toString()));
-        translator.setSlop(5);
-        Query query = translator.translate(dc.getAnalyzer(), myQuery, filterResult,dc);
-        //String suggestion = SpellChecker.checkSpell(dc,myQuery,text);
-        //logger.debug("translated query: "+HTMLEntities.encode(query.toString()));
+    public static Query parse(DatasetConfiguration dc, String text) throws Exception {
+        BooleanQuery.setMaxClauseCount(16384);
+        return parse(dc, text, null);
+    }
 
+    public static Query parse(DatasetConfiguration dc, String text, FilterResult filterResult) throws Exception {
+        if (U.isEmpty(text))
+            return null;
+        QueryTranslator translator = new QueryTranslator(dc.getColumns());
+        net.javacoding.xsearch.search.query.DbsQuery myQuery = QueryAnalysis.parseQuery(text, dc);
+        translator.setSlop(5);
+        Query query = translator.translate(dc.getAnalyzer(), myQuery, filterResult, dc);
         return query;
     }
-
 
 }
