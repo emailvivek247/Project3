@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -73,17 +72,12 @@ import com.fdt.elasticsearch.config.SpringContextUtil;
 import com.fdt.elasticsearch.parsing.ESColumnHelper;
 import com.fdt.elasticsearch.parsing.ESQueryHelper;
 import com.fdt.elasticsearch.query.AbstractQuery;
-import com.fdt.elasticsearch.query.BoolQuery;
-import com.fdt.elasticsearch.query.BoolQuery.Builder;
 import com.fdt.elasticsearch.type.result.CustomSearchResult;
 import com.fdt.elasticsearch.util.ESSearchUtils;
 import com.fdt.sdl.admin.ui.action.constants.IndexType;
 import com.fdt.sdl.styledesigner.Template;
 import com.fdt.sdl.styledesigner.util.DeviceDetectorUtil;
 import com.fdt.sdl.styledesigner.util.TemplateUtil;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 /**
  * Implementation of <strong>Action </strong> that performs search.
@@ -285,6 +279,8 @@ public class SearchAction extends Action {
                                 .setParameter(Parameters.SIZE, rowsToReturn)
                                 .setParameter("from", offset)
                                 .build();
+
+                        searchTime = System.currentTimeMillis() - start;
 
                         CustomSearchResult result = new CustomSearchResult(client.execute(search));
                         resultDocs = ESSearchUtils.extractResultDocs(result);
