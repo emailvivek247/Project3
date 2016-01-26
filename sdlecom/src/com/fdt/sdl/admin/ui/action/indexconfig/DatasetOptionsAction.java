@@ -64,6 +64,8 @@ public class DatasetOptionsAction extends Action {
                 dc.setWorkDirectory(U.getText(request.getParameter("workDirectory"), "_work"));
                 dc.setMergePercentage(U.getFloat(request.getParameter("mergePercentage"), dc.getMergePercentage()));
                 dc.setPrunePercentage(U.getInt(request.getParameter("prunePercentage"), dc.getPrunePercentage()));
+                dc.setNumberReplicas(U.getInt(request.getParameter("numberReplicas"), dc.getNumberReplicas()));
+                dc.setNumberShards(U.getInt(request.getParameter("numberShards"), dc.getNumberShards()));
                 dc.setMergeHours(request.getParameter("mergeHoursEnabled"), request.getParameter("mergeHoursBegin"), request.getParameter("mergeHoursEnd"));
                 dc.setNumberOfHoursBeforeDeletion(U.getInt(request.getParameter("numberOfHoursBeforeDeletion"), dc.getNumberOfHoursBeforeDeletion()));
     

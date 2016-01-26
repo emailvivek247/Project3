@@ -4,9 +4,6 @@ import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
 import io.searchbox.client.config.HttpClientConfig;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,16 +40,4 @@ public class JestSpringConfiguration {
         return factory.getObject();
     }
 
-    @Bean
-    public IndexSettings indexSettings() {
-
-        String numberOfShards = environment.getProperty("elasticsearch.index.number_of_shards");
-        String numberOfReplicas = environment.getProperty("elasticsearch.index.number_of_replicas");
-
-        Map<String, String> indexSettings = new HashMap<String, String>();
-        indexSettings.put("number_of_shards", numberOfShards);
-        indexSettings.put("number_of_replicas", numberOfReplicas);
-
-        return new IndexSettings(indexSettings);
-    }
 }

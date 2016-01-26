@@ -40,7 +40,6 @@ import org.apache.lucene.store.FSDirectory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fdt.elasticsearch.analyzer.AnalyzerHelper;
 import com.fdt.elasticsearch.config.IndexSettings;
 import com.fdt.elasticsearch.config.SpringContextUtil;
 import com.fdt.elasticsearch.mapping.AbstractMapping;
@@ -530,11 +529,7 @@ public final class IndexStatus {
     }
 
     public static void createIndex(JestClient jestClient, DatasetConfiguration dc, String indexName) {
-
-        IndexSettings indexSettings = SpringContextUtil.getBean(IndexSettings.class);
-        indexSettings.setAnalysisNode(AnalyzerHelper.getAnalysisNode(dc));
-        String indexSettingsStr = indexSettings.getIndexSettingsStr();
-
+        String indexSettingsStr = new IndexSettings(dc).getIndexSettingsStr();
         CreateIndex createIndex = new CreateIndex.Builder(indexName).settings(indexSettingsStr).build();
         JestExecute.execute(jestClient, createIndex);
     }

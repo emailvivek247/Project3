@@ -76,6 +76,8 @@ public class DatasetConfigurationRuleSet extends RuleSetBase {
         digester.addBeanPropertySetter("dataset/list-fetch-size", "listFetchSize");
         digester.addBeanPropertySetter("dataset/temporary-index-minimal-merge-percentage", "mergePercentage");
         digester.addBeanPropertySetter("dataset/prune-index-target-percentage", "prunePercentage");
+        digester.addBeanPropertySetter("dataset/number-replicas", "numberReplicas");
+        digester.addBeanPropertySetter("dataset/number-shards", "numberShards");
         digester.addCallMethod("dataset/merge-hours", "setMergeHours", 3);
         digester.addCallParam("dataset/merge-hours", 0, "enabled");
         digester.addCallParam("dataset/merge-hours", 1, "begin");

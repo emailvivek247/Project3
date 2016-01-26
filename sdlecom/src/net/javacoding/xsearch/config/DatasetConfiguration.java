@@ -1404,6 +1404,14 @@ public class DatasetConfiguration extends Configuration implements StorageConfig
             sb.append("  <spell-checking enabled=\"").append(isSpellChecking).append("\">").append("</spell-checking>\n");
         }
 
+        if (numberReplicas != 0) {
+            sb.append("  <number-replicas>").append(numberReplicas).append("</number-replicas>\n");
+        }
+
+        if (numberShards != 1) {
+            sb.append("  <number-shards>").append(numberShards).append("</number-shards>\n");
+        }
+
         sb.append("</dataset>\n");
 
         return sb.toString();
@@ -1597,7 +1605,7 @@ public class DatasetConfiguration extends Configuration implements StorageConfig
 			this.dataSources.clear();
 		}
 	}
-	
+
     private IndexType indexType;
 
     public void setIndexType(IndexType indexType) {
@@ -1613,4 +1621,27 @@ public class DatasetConfiguration extends Configuration implements StorageConfig
     public IndexType getIndexType() {
         return indexType;
     }
+
+    private int numberReplicas = 0;
+
+    public int getNumberReplicas() {
+        return numberReplicas;
+    }
+
+    public void setNumberReplicas(int numberReplicas) {
+        this.numberReplicas = numberReplicas;
+        isDirty = true;
+    }
+
+    private int numberShards = 1;
+
+    public int getNumberShards() {
+        return numberShards;
+    }
+
+    public void setNumberShards(int numberShards) {
+        this.numberShards = numberShards;
+        isDirty = true;
+    }
+
 }

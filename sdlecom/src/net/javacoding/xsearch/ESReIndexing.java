@@ -64,8 +64,7 @@ public class ESReIndexing extends AbstractReIndexing {
 
         logger.info("Total count from scroll search is {}", totalCount);
 
-        JsonObject result = getNextHits(scrollId);
-
+        JsonObject result = jestResult.getJsonObject();
         JsonArray hits = result.getAsJsonObject("hits").getAsJsonArray("hits");
         scrollId = result.get("_scroll_id").getAsString();
 

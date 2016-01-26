@@ -62,7 +62,7 @@ public class ESSearchUtils {
                     for (Map.Entry<String, JsonElement> aggregation : aggregations.entrySet()) {
                         if (aggregation.getKey().equals(columnName)) {
                             FilterColumn filterColumn = filterResult.getFilterColumn(columnName);
-                            if (filterColumn != null) {
+                            if (filterColumn != null && !filterResult.hasFilteredColumn(columnName)) {
                                 JsonObject aggValueObject = aggregation.getValue().getAsJsonObject();
                                 JsonArray bucketsArray = aggValueObject.getAsJsonArray("buckets");
                                 Map<Object, Count> counts = new HashMap<Object, Count>();
