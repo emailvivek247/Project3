@@ -30,6 +30,7 @@ public class ESReIndexing extends AbstractReIndexing {
     private static final Logger logger = LoggerFactory.getLogger(ESReIndexing.class);
 
     private final JestClient jestClient;
+    private String newIndexName;
 
     public ESReIndexing(DatasetConfiguration dc, AffectedDirectoryGroup adg) {
         super(dc, adg);
@@ -42,12 +43,13 @@ public class ESReIndexing extends AbstractReIndexing {
 
         logger.info("Beginning reindexing on Elasticsearch index for data set {}", dc.getName());
 
-        String newIndexName = IndexStatus.findNewIndexName(jestClient, dc.getName());
+        newIndexName = IndexStatus.findNewIndexName(jestClient, dc.getName());
 
         logger.info("New index name will be {}", newIndexName);
 
         IndexStatus.createIndex(jestClient, dc, newIndexName);
         IndexStatus.putMapping(jestClient, dc, newIndexName);
+        IndexStatus.disableRefresh(jestClient, newIndexName);
 
         String query = "{\"sort\": [\"_doc\"], \"query\" : { \"match_all\" : { } } }";
 
@@ -78,13 +80,16 @@ public class ESReIndexing extends AbstractReIndexing {
                 return new Index.Builder(source).id(id).build();
             }).collect(Collectors.toList());
 
+            long start = System.currentTimeMillis();
             Bulk bulk = new Bulk.Builder()
                     .defaultIndex(newIndexName)
                     .defaultType(dc.getName())
                     .addAction(indexList)
                     .build();
             JestExecute.execute(jestClient, bulk);
-    
+            long duration = System.currentTimeMillis() - start;
+            logger.info("Done submitting a batch of hits: duration = {}ms", duration);
+
             result = getNextHits(scrollId);
             hits = result.getAsJsonObject("hits").getAsJsonArray("hits");
             scrollId = result.getAsJsonPrimitive("_scroll_id").getAsString();
@@ -102,6 +107,7 @@ public class ESReIndexing extends AbstractReIndexing {
     public void close() {
         if (running) {
             try {
+                IndexStatus.enableRefresh(jestClient, newIndexName);
                 IndexStatus.setIndexReady(workingDir);
             } catch (IOException e) {
                 throw new RuntimeException(e);
