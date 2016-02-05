@@ -755,5 +755,15 @@ public class ServiceStubRS implements ServiceStub {
 		return documentId;
 	}
 
+	public boolean removeCard(String username, String creditCardId) {
+		boolean isCardRemoved = false;
+		String url = this.ecomRestURL.concat("removeCard/{username}/{creditCardId}");
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("username", username);
+		paramMap.put("creditCardId", creditCardId);
+		isCardRemoved = restTemplate.getForObject(url, boolean.class, paramMap);
+		return isCardRemoved;
+	}
+
 
 }

@@ -73,6 +73,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fdt.alerts.dto.UserAlertDTO;
 import com.fdt.common.dto.PageRecordsDTO;
+import com.fdt.common.entity.ErrorCode;
 import com.fdt.common.exception.SDLBusinessException;
 import com.fdt.common.ui.controller.AbstractBaseController;
 import com.fdt.ecom.entity.ShoppingCartItem;
@@ -817,6 +818,33 @@ public class AccountSettingsController extends AbstractBaseController {
 		}
 		return viewName;
 	}
+	
+	@RequestMapping(value="/removeCard.admin", produces="application/json")
+    @ResponseBody
+    public List<ErrorCode> removeCard(HttpServletRequest request, @RequestParam(required = false) String username, @RequestParam(required = false) String creditCardId,
+    		@RequestParam(required = false) String comments, RedirectAttributes redirectAttributes) {
+        List<ErrorCode> errors = new LinkedList<ErrorCode>();
+        try {
+                boolean isCardRemoved = this.getService().removeCard(username, creditCardId);
+                if (isCardRemoved) {
+	                ErrorCode error = new ErrorCode();
+	        		error.setCode("SUCCESS");
+	                error.setDescription("Subscription removed successfully");
+	                errors.add(error);
+                } else {
+                	ErrorCode error = new ErrorCode();
+            		error.setCode("ERROR");
+                    error.setDescription("Something went Wrong.");
+                    errors.add(error);
+                }
+        } catch (Exception sdlBusinessException) {
+            	ErrorCode error = new ErrorCode();
+        		error.setCode("ERROR");
+                error.setDescription(sdlBusinessException.getMessage());
+                errors.add(error);
+            }
+       return errors;
+    }
 
 	private boolean isFirmLevelAdministrator(List<SubscriptionDTO> subscriptions){
 		boolean firmLevelAdministrator = false;

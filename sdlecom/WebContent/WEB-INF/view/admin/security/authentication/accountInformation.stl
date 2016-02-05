@@ -6,9 +6,12 @@
 <link rel="stylesheet" href="resources/styles/login.css" />
 <link rel="stylesheet" href="resources/styles/jquery-ui-1.8.11.base.css" />
 <link rel="stylesheet" href="resources/styles/jquery-ui-custom-ext.css" />
+<link rel="stylesheet" href="resources/styles/prompt.css" />
 <link rel="stylesheet" href="resources/styles/vtabs.css" />
 <script type="text/javascript" src="resources/javascripts/jquery.min.js"/></script>
 <script type="text/javascript" src="resources/javascripts/jquery-ui.min.js"/></script>
+<script type="text/javascript" src="resources/javascripts/jquery.form.js"></script>
+<script type="text/javascript" src="resources/javascripts/prompt.js"/></script>
 <script type="text/javascript" src="resources/javascripts/jquery.validationEngine-en.js"></script>
 <script type="text/javascript" src="resources/javascripts/jquery.validationEngine.js"></script>
 <script type="text/javascript" src="resources/javascripts/jquery.cookie.js"></script>
@@ -256,7 +259,8 @@ padding: 8px 8px 8px 12px;
 										<p><b><@spring.message code="security.ecommerce.label.cardOnFile" /></b>&nbsp;****${user.getCreditCard().number} <a style="text-decoration:underline;" href="ccinfo.admin"><@spring.message code="security.authentication.update" /></a></p>
 										<#else>
 										<p><b><@spring.message code="security.ecommerce.label.cardOnFile" /></b>&nbsp;********${user.getCreditCard().number}
-										<a href="viewAccountInformation.admin?return_url=${request.getRequestURL()}"><@spring.message code="security.authentication.update" /></a></p>
+										<a href="viewAccountInformation.admin?return_url=${request.getRequestURL()}"><@spring.message code="security.authentication.update" /></a>
+										<a href="#Delete_Card" name="${user.getCreditCard().id}" id="deleteCreditCardID">Delete Card</a></p>
 										</#if>
 										<p><b><@spring.message code="security.ecommerce.accountType" /></b>&nbsp;${user.getCreditCard().getCardType()}</p>
 										<p><b><@spring.message code="security.ecommerce.label.cardStatus" /></b>&nbsp;<#if user.isCreditCardActive()><span class="paid"><@spring.message code="security.ecommerce.label.active" /></span><#else><span class="unPaid"><@spring.message code="security.ecommerce.label.expired" /></span></#if></p>
@@ -604,6 +608,73 @@ padding: 8px 8px 8px 12px;
 			$( "#dialog-form" ).dialog( "open" );
 			return false;
 		});
+		
+		$('a[href="#Delete_Card"]').click(function() {
+		var str = $('a[href="#Delete_Card"]').attr('name');
+    var txt = 'Do you want to permanently remove the credit card for the user ?  <br /><br /> If Yes, Click Remove <br /><br />The page refreshes once the credit card is removed to reflect the changes.<br /> <input name="creditCardIdFromValue" type="hidden" value=' + $(this).attr("name") + '>';
+    $.prompt(txt,{
+		   buttons:[
+				{title: 'Remove Card',value:true}
+				],
+		    focus:1,
+		    prefix:'jqismooth',
+			submit: function(e,v,m,f){
+					console.log(f.creditCardIdFromValue);
+					e.preventDefault();
+					
+					removeCard(v, f);
+			}
+		});
+  });
+  
+  function removeCard(sendNotification, f) {
+		var usernameTxt="${user.username}";		
+		console.log(f.creditCardIdFromValue);
+		var creditCardIdTxt=f.creditCardIdFromValue;
+		$.ajax({
+			cache: false,
+		    type: 'POST',
+		    url: "removeCard.admin",
+		    data: {
+		       username: usernameTxt,
+		       creditCardId: creditCardIdTxt		     
+		    },
+		    success: function(data) {
+	    	  $.each(data, function(i,item){
+	    		 if (item.code != "SUCCESS" && item.code != "ERROR") {
+	    		 	$.prompt.close();
+	    		    $.prompt("System Error. Please contact administrator for more information.");
+	    		 } else if (item.code == "SUCCESS") {
+	    			$.prompt.close();
+	    		    $.prompt(item.description, {
+		title: "Success",
+		buttons: { "OK": true},
+		persistent: false,
+		submit: function(e,v,m,f){
+			if(v){
+				e.preventDefault();
+				
+			}
+		}
+	});	    		 	
+	    		 } else {
+	    			$.prompt.close();
+	    		    $.prompt(item.description, {
+		title: "Error",
+		buttons: { "OK": true},
+		persistent: false,
+		submit: function(e,v,m,f){
+			if(v){
+				e.preventDefault();
+				
+			}
+		}
+	});
+	    		 }
+	          });
+			},
+		});
+	}
 
 
 	    var $items = $('#vtab>ul>li');
@@ -705,5 +776,6 @@ padding: 8px 8px 8px 12px;
 	window.onbeforeunload = function (e) {
 		resetRemoveSubMessage();
 	};
+ 
 </script>
 </@loginLayout>

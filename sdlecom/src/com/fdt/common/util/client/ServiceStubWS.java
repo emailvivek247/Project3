@@ -340,8 +340,11 @@ public class ServiceStubWS implements ServiceStub, ApplicationContextAware {
     	return this.getService().getLocationByNameAndAccessName(locationName, accessName);
 	}
 
-	@Override
 	public String getDocumentIdByCertifiedDocumentNumber(String certifiedDocumentNumber, String siteName) {
 		return this.getService().getDocumentIdByCertifiedDocumentNumber(certifiedDocumentNumber, siteName);
+	}
+
+	public boolean removeCard(String username, String creditCardId) {
+		return false;
 	}
 }

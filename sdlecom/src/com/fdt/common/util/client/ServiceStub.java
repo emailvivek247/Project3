@@ -169,4 +169,6 @@ public interface ServiceStub {
 	
 	public String getDocumentIdByCertifiedDocumentNumber(String certifiedDocumentNumber, String siteName);
 
+	public boolean removeCard(String username, String creditCardId);	
+
 }
