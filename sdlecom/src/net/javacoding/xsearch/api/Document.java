@@ -87,9 +87,20 @@ public class Document implements SDLIndexDocument {
     @Override
     public List<String> getValuesList(String field) {
         List<String> ret = new ArrayList<>();
-        for (SearchProtocol.Field f : document.getFieldList()) {
-            if (f.getName().equals(field)) {
-                ret.add(f.getValue());
+        if (document != null) {
+            for (SearchProtocol.Field f : document.getFieldList()) {
+                if (f.getName().equals(field)) {
+                    ret.add(f.getValue());
+                }
+            }
+        } else if (source != null) {
+            JsonElement element = source.get(field);
+            if (element != null) {
+                if (element.isJsonArray()) {
+                    element.getAsJsonArray().forEach(e -> ret.add(e.getAsString()));
+                } else if (element.isJsonPrimitive()) {
+                    ret.add(element.getAsString());
+                }
             }
         }
         return ret;
@@ -98,13 +109,24 @@ public class Document implements SDLIndexDocument {
     @Override
     public String[] getValues(String field) {
         List<String> ret = new ArrayList<>();
-        for (SearchProtocol.Field f : document.getFieldList()) {
-            if (f.getName().equals(field)) {
-                ret.add(f.getValue());
+        if (document != null) {
+            for (SearchProtocol.Field f : document.getFieldList()) {
+                if (f.getName().equals(field)) {
+                    ret.add(f.getValue());
+                }
             }
-        }
-        if (ret.size() == 0) {
-            return NO_STRINGS;
+            if (ret.size() == 0) {
+                return NO_STRINGS;
+            }
+        } else if (source != null) {
+            JsonElement element = source.get(field);
+            if (element != null) {
+                if (element.isJsonArray()) {
+                    element.getAsJsonArray().forEach(e -> ret.add(e.getAsString()));
+                } else if (element.isJsonPrimitive()) {
+                    ret.add(element.getAsString());
+                }
+            }
         }
         return (String[]) ret.toArray(new String[ret.size()]);
     }

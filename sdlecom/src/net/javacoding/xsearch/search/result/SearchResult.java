@@ -490,6 +490,15 @@ public class SearchResult extends XMLSerializable{
         return result;
     }
 
+    public String highlight(String value, String field) {
+        String t = EscapeChars.forHTMLTag(value);
+        if (summarizer == null) {
+            return t;
+        } else {
+            return summarizer.getHighlighted(t, field);
+        }
+    }
+
     /**
      * Usage: searchResult.directSummarize(doc, "id")
      * <br/>

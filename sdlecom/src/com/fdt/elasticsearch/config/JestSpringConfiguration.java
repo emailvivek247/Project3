@@ -31,7 +31,7 @@ public class JestSpringConfiguration {
         HttpClientConfig clientConfig = new HttpClientConfig
                 .Builder(endpoint)
                 .multiThreaded(true)
-                .readTimeout(30 * 1000)
+                .readTimeout(60 * 1000)
                 .build();
 
         JestClientFactory factory = new JestClientFactory();

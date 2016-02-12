@@ -3,6 +3,7 @@ package net.javacoding.xsearch;
 import static com.fdt.common.SystemConstants.NOTIFY_ADMIN;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestResult;
+import io.searchbox.core.Delete;
 import io.searchbox.indices.aliases.AddAliasMapping;
 import io.searchbox.indices.aliases.AliasMapping;
 import io.searchbox.indices.aliases.GetAliases;
@@ -474,26 +475,41 @@ public class IndexManager {
 
         logger.info("Sending request to modify aliases");
         JestExecute.execute(jestClient, modifyAliases);
+
+        logger.info("Sending request to delete old versions");
+        deleteOldIndexes(dc, jestClient);
     }
 
     private static String getNewestIndexName(DatasetConfiguration dc, JestClient jestClient) {
+        return getSortedIndexNames(dc, jestClient).get(0);
+    }
+
+    private static void deleteOldIndexes(DatasetConfiguration dc, JestClient jestClient) {
+        List<String> indexNameList = getSortedIndexNames(dc, jestClient);
+        int numVersionsToKeep = SpringContextUtil.getNumIndexVersionsToKeep();
+        int numVersionsToDelete = indexNameList.size() - numVersionsToKeep;
+        List<String> indexesToDelete = indexNameList.subList(indexNameList.size() - numVersionsToDelete, indexNameList.size());
+        for (String index : indexesToDelete) {
+            logger.info("Sending request to delete index '{}'", index);
+            Delete delete = new Delete.Builder(index).build();
+            JestExecute.execute(jestClient, delete);
+        }
+    }
+
+    private static List<String> getSortedIndexNames(DatasetConfiguration dc, JestClient jestClient) {
 
         GetSettings getSettings = new GetSettings.Builder().build();
         JestResult jestResult = JestExecute.execute(jestClient, getSettings);
         GetSettingsResult getSettingsResult = new GetSettingsResult(jestResult);
         List<String> indexNameList = getSettingsResult.getIndexNameList(dc.getName() + "_\\d{5}");
 
-        String newestIndexName = null;
-        long newestCreationDate = -1;
+        indexNameList.sort((i1, i2) -> {
+            Long date1 = getSettingsResult.getCreationDate(i1);
+            Long date2 = getSettingsResult.getCreationDate(i2);
+            return date2.compareTo(date1);
+        });
 
-        for (String indexName : indexNameList) {
-            long creationDate = getSettingsResult.getCreationDate(indexName);
-            if (creationDate > newestCreationDate) {
-                newestCreationDate = creationDate;
-                newestIndexName = indexName;
-            }
-        }
-        
-        return newestIndexName;
+        return indexNameList;
     }
+
 }

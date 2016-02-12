@@ -56,7 +56,7 @@ public class ESReIndexing extends AbstractReIndexing {
         Search search = new Search.Builder(query)
                 .addIndex(dc.getName())
                 .addType(dc.getName())
-                .setParameter(Parameters.SIZE, 10000)
+                .setParameter(Parameters.SIZE, 1000)
                 .setParameter(Parameters.SCROLL, "5m")
                 .build();
 

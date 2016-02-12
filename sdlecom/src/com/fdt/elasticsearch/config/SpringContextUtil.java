@@ -38,6 +38,10 @@ public class SpringContextUtil implements ApplicationContextAware {
         return Integer.parseInt(getElasticsearchProperties().getProperty("elasticsearch.indexing.num_consumer_threads"));
     }
 
+    public static int getNumIndexVersionsToKeep() {
+        return Integer.parseInt(getElasticsearchProperties().getProperty("elasticsearch.indexing.num_index_versions_to_keep"));
+    }
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         SpringContextUtil.applicationContext = applicationContext;

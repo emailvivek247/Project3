@@ -25,6 +25,6 @@ public class TermsAggregation {
     public TermsAggregation(Column column) {
         this.fieldName = column.getColumnName();
         this.isDate = column.getIsDate();
-        this.size = Optional.empty();
+        this.size = Optional.of(0);
     }
 }

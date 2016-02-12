@@ -2,9 +2,7 @@ package net.javacoding.xsearch.core.task.work;
 
 import io.searchbox.core.Index;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -20,6 +18,8 @@ import net.javacoding.xsearch.utility.VMTool;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.fdt.elasticsearch.util.DocumentBuilder;
 
 public class ESWriteDocumentToIndexTask extends BaseWorkerTaskImpl {
 
@@ -73,21 +73,22 @@ public class ESWriteDocumentToIndexTask extends BaseWorkerTaskImpl {
 
         Optional<String> primaryKeyValue = primaryKeyColumnName.map(column -> doc.get(column));
 
-        Map<String, Object> source = new LinkedHashMap<>();
+        DocumentBuilder docBuilder = new DocumentBuilder();
         for (Column column : columns) {
             String[] values = doc.getValues(column.getColumnName());
             if (values != null) {
                 for (String value : values) {
                     if (column.getIndexFieldType() == IndexFieldType.KEYWORD_DATE_HIERARCHICAL) {
-                        source.put(column.getColumnName(), VMTool.storedStringToLongValue(value));
+                        String dateValue = String.valueOf(VMTool.storedStringToLongValue(value));
+                        docBuilder.add(column.getColumnName(), dateValue);
                     } else {
-                        source.put(column.getColumnName(), value);
+                        docBuilder.add(column.getColumnName(), value);
                     }
                 }
             }
         }
 
-        Index.Builder builder = new Index.Builder(source);
+        Index.Builder builder = new Index.Builder(docBuilder.buildDocument());
         if (primaryKeyValue.isPresent()) {
             builder = builder.id(primaryKeyValue.get());
         }
