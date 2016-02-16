@@ -208,14 +208,14 @@ public class DBIndexer {
     private void prepareESIndex() {
         if (ic.getIsRecreate()) {
             logger.info("Preparing elasticsearch index for recreate, data set name = {}", dc.getName());
-            targetIndexName = IndexStatus.findNewIndexName(jestClient, dc.getName());
+            targetIndexName = IndexStatus.findNewIndexName(jestClient, dc);
             logger.info("New index name = {}", targetIndexName);
             IndexStatus.createIndex(jestClient, dc, targetIndexName);
             IndexStatus.putMapping(jestClient, dc, targetIndexName);
             IndexStatus.disableRefresh(jestClient, targetIndexName);
         } else {
             logger.info("Initializing elasticsearch index for updates, data set name = {}", dc.getName());
-            targetIndexName = IndexStatus.findCurrentIndexName(jestClient, dc.getName());
+            targetIndexName = IndexStatus.findCurrentIndexName(jestClient, dc);
             logger.info("Target index name = {}", targetIndexName);
         }
     }

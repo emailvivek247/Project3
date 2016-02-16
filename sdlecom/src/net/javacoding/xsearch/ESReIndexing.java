@@ -43,7 +43,7 @@ public class ESReIndexing extends AbstractReIndexing {
 
         logger.info("Beginning reindexing on Elasticsearch index for data set {}", dc.getName());
 
-        newIndexName = IndexStatus.findNewIndexName(jestClient, dc.getName());
+        newIndexName = IndexStatus.findNewIndexName(jestClient, dc);
 
         logger.info("New index name will be {}", newIndexName);
 

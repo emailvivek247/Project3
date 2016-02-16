@@ -13,6 +13,7 @@ import io.searchbox.indices.settings.UpdateSettings;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,16 +21,19 @@ import java.util.stream.Collectors;
 
 import net.javacoding.xsearch.config.Column;
 import net.javacoding.xsearch.config.DatasetConfiguration;
+import net.javacoding.xsearch.config.ServerConfiguration;
 import net.javacoding.xsearch.config.WorkingQueueDataquery;
 import net.javacoding.xsearch.core.IndexerContext;
 import net.javacoding.xsearch.core.PeriodEntry;
 import net.javacoding.xsearch.core.PeriodTable;
+import net.javacoding.xsearch.foundation.WebserverStatic;
 import net.javacoding.xsearch.search.searcher.SearcherManager;
 import net.javacoding.xsearch.search.searcher.SearcherProvider;
 import net.javacoding.xsearch.utility.FileUtil;
 import net.javacoding.xsearch.utility.SchedulerTool;
 import net.javacoding.xsearch.utility.VMTool;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.MultiReader;
 import org.apache.lucene.index.Term;
@@ -512,7 +516,18 @@ public final class IndexStatus {
         return size;
     }
 
-    public static String findNewIndexName(JestClient jestClient, String aliasName) {
+    public static String getIndexNamePrefix() {
+        String rootDir = ServerConfiguration.getServerConfiguration().getIndexRootDirectory();
+        return Paths.get(rootDir).getFileName().toString();
+    }
+
+    public static String getAliasName(DatasetConfiguration dc) {
+        return getIndexNamePrefix() + "_" + dc.getName();
+    }
+
+    public static String findNewIndexName(JestClient jestClient, DatasetConfiguration dc) {
+
+        String aliasName = getAliasName(dc);
 
         GetAliases getAliases = new GetAliases.Builder().build();
         JestResult jestResult = JestExecute.execute(jestClient, getAliases);
@@ -526,6 +541,26 @@ public final class IndexStatus {
         } while (currentIndexes.contains(newIndexName));
 
         return newIndexName;
+    }
+
+    public static String findCurrentIndexName(JestClient jestClient, DatasetConfiguration dc) {
+
+        String aliasName = getAliasName(dc);
+
+        String currentIndexName = null;
+
+        GetAliases getAliases = new GetAliases.Builder().build();
+        JestResult jestResult = JestExecute.execute(jestClient, getAliases);
+        GetAliasesResult result = new GetAliasesResult(jestResult);
+        List<String> currentIndexes = result.getIndexNameList();
+
+        for (String indexName : currentIndexes) {
+            if (result.getAliases(indexName).contains(aliasName)) {
+                currentIndexName = indexName;
+            }
+        }
+
+        return currentIndexName;
     }
 
     public static void createIndex(JestClient jestClient, DatasetConfiguration dc, String indexName) {
@@ -561,22 +596,5 @@ public final class IndexStatus {
         UpdateSettings updateSettings = new UpdateSettings.Builder(settingsMap).addIndex(indexName).build();
         JestExecute.execute(jestClient, updateSettings);
     }
-    
-    public static String findCurrentIndexName(JestClient jestClient, String aliasName) {
 
-        String currentIndexName = null;
-
-        GetAliases getAliases = new GetAliases.Builder().build();
-        JestResult jestResult = JestExecute.execute(jestClient, getAliases);
-        GetAliasesResult result = new GetAliasesResult(jestResult);
-        List<String> currentIndexes = result.getIndexNameList();
-
-        for (String indexName : currentIndexes) {
-            if (result.getAliases(indexName).contains(aliasName)) {
-                currentIndexName = indexName;
-            }
-        }
-
-        return currentIndexName;
-    }
 }

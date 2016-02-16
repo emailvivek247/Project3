@@ -67,8 +67,22 @@ end
 FileUtils.cp(temp_build_props_path, final_build_props_path)
 FileUtils.rm(temp_build_props_path)
 
+File.readlines(final_build_props_path).each do |line|
+  if line.start_with?("client.templatetype")
+    if line.split("=")[1] == "SDLECOM"
+      secure = true
+    elsif line.split("=")[1] == "SDL"
+      secure = false
+    end
+  end
+end
+
 Dir.chdir(project_path) do
-  `ant -f sdlecom/build.xml buildJenkins`
+  if secure
+    `ant -f sdlecom/build.xml buildJenkins`
+  else
+    `ant -f sdlecom/buildNonSecurity.xml buildJenkins`
+  end
 end
 
 source_system_props_path = "#{project_path}/sdlecom/WebContent/WEB-INF/classes/system.properties"

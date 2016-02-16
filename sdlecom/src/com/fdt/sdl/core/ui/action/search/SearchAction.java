@@ -44,6 +44,7 @@ import net.javacoding.xsearch.search.searcher.IndexReaderSearcher;
 import net.javacoding.xsearch.search.searcher.SearcherManager;
 import net.javacoding.xsearch.search.searcher.SearcherProvider;
 import net.javacoding.xsearch.search.searcher.collector.FilterablesHitCollector;
+import net.javacoding.xsearch.status.IndexStatus;
 import net.javacoding.xsearch.status.QueryLogger;
 import net.javacoding.xsearch.utility.FileUtil;
 import net.javacoding.xsearch.utility.HttpUtil;
@@ -275,7 +276,7 @@ public class SearchAction extends Action {
                         logger.info("Elastic Search Query: " + elasticSearchQuery);
 
                         Search search = new Search.Builder(elasticSearchQuery)
-                                .addIndex(sc.indexName)
+                                .addIndex(IndexStatus.getAliasName(sc.dc))
                                 .setParameter(Parameters.SIZE, rowsToReturn)
                                 .setParameter("from", offset)
                                 .build();

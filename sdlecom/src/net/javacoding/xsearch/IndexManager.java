@@ -447,27 +447,29 @@ public class IndexManager {
         // Now we have to iterate through all the existing aliases to see if
         // there are any we have to remove.
 
+        String aliasName = IndexStatus.getAliasName(dc);
+
         GetAliases getAliases = new GetAliases.Builder().build();
         JestResult jestResult = JestExecute.execute(jestClient, getAliases);
         GetAliasesResult getAliasesResult = new GetAliasesResult(jestResult);
 
         // Get the names of indices that match the pattern for this data set
-        List<String> indexNameList = getAliasesResult.getIndexNameList(dc.getName() + "_\\d{5}");
+        List<String> indexNameList = getAliasesResult.getIndexNameList(aliasName + "_\\d{5}");
 
         List<AliasMapping> removeMappings = new ArrayList<AliasMapping>();
         for (String indexName : indexNameList) {
             if (!indexName.equals(newestIndexName)) {
                 List<String> aliases = getAliasesResult.getAliases(indexName);
                 if (aliases.contains(dc.getName())) {
-                    logger.info("Queueing alias removal: alias name '{}'; index name '{}'", dc.getName(), indexName);
-                    removeMappings.add(new RemoveAliasMapping.Builder(indexName, dc.getName()).build());
+                    logger.info("Queueing alias removal: alias name '{}'; index name '{}'", aliasName, indexName);
+                    removeMappings.add(new RemoveAliasMapping.Builder(indexName, aliasName).build());
                 }
             }
         }
 
         // Cool. Now we start constructing the request
-        logger.info("Queueing alias addition: alias name '{}'; index name '{}'", dc.getName(), newestIndexName);
-        AddAliasMapping addMapping = new AddAliasMapping.Builder(newestIndexName, dc.getName()).build();
+        logger.info("Queueing alias addition: alias name '{}'; index name '{}'", aliasName, newestIndexName);
+        AddAliasMapping addMapping = new AddAliasMapping.Builder(newestIndexName, aliasName).build();
 
         Builder builder = new ModifyAliases.Builder(addMapping).addAlias(removeMappings);
 
@@ -500,10 +502,12 @@ public class IndexManager {
 
     private static List<String> getSortedIndexNames(DatasetConfiguration dc, JestClient jestClient) {
 
+        String aliasName = IndexStatus.getAliasName(dc);
+
         GetSettings getSettings = new GetSettings.Builder().build();
         JestResult jestResult = JestExecute.execute(jestClient, getSettings);
         GetSettingsResult getSettingsResult = new GetSettingsResult(jestResult);
-        List<String> indexNameList = getSettingsResult.getIndexNameList(dc.getName() + "_\\d{5}");
+        List<String> indexNameList = getSettingsResult.getIndexNameList(aliasName + "_\\d{5}");
 
         indexNameList.sort((i1, i2) -> {
             Long date1 = getSettingsResult.getCreationDate(i1);
