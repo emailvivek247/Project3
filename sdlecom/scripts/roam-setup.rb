@@ -67,6 +67,7 @@ end
 FileUtils.cp(temp_build_props_path, final_build_props_path)
 FileUtils.rm(temp_build_props_path)
 
+secure = false
 File.readlines(final_build_props_path).each do |line|
   if line.start_with?("client.templatetype")
     if line.split("=")[1] == "SDLECOM"
