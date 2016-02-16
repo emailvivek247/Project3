@@ -92,7 +92,7 @@ public class ESFetchDeletedDocumentListBySQLTask extends BaseFetchPrimaryKeysByS
             ).collect(Collectors.toList());
     
             Bulk bulkRequest = new Bulk.Builder()
-                    .defaultIndex(dc.getName())
+                    .defaultIndex(IndexStatus.getAliasName(dc))
                     .defaultType(dc.getName())
                     .addAction(deleteActions)
                     .build();

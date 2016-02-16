@@ -75,7 +75,7 @@ public final class ShowIndexStatusAction extends Action {
                 JestClient client = SpringContextUtil.getBean(JestClient.class);
                 MatchAllQuery query = new MatchAllQuery.Builder().addSort("_doc").build();
                 Search search = new Search.Builder(query.getAsString())
-                        .addIndex(indexName)
+                        .addIndex(IndexStatus.getAliasName(dc))
                         .setParameter(Parameters.SIZE, 1)
                         .setParameter("from", intDocNumber)
                         .build();

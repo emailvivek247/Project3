@@ -115,7 +115,7 @@ public final class ShowFrequentTermsAction extends Action {
                 String queryStr = query.getAsString();
                 logger.info("Elasticsearch query: {}", queryStr);
                 Search search = new Search.Builder(queryStr)
-                        .addIndex(indexName)
+                        .addIndex(IndexStatus.getAliasName(dc))
                         .setParameter(Parameters.SIZE, 0)
                         .setParameter("from", 0)
                         .build();

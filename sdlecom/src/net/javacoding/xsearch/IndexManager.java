@@ -460,7 +460,7 @@ public class IndexManager {
         for (String indexName : indexNameList) {
             if (!indexName.equals(newestIndexName)) {
                 List<String> aliases = getAliasesResult.getAliases(indexName);
-                if (aliases.contains(dc.getName())) {
+                if (aliases.contains(aliasName)) {
                     logger.info("Queueing alias removal: alias name '{}'; index name '{}'", aliasName, indexName);
                     removeMappings.add(new RemoveAliasMapping.Builder(indexName, aliasName).build());
                 }
