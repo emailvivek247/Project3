@@ -70,9 +70,9 @@ FileUtils.rm(temp_build_props_path)
 secure = false
 File.readlines(final_build_props_path).each do |line|
   if line.start_with?("client.templatetype")
-    if line.split("=")[1] == "SDLECOM"
+    if line.split("=")[1].strip == "SDLECOM"
       secure = true
-    elsif line.split("=")[1] == "SDL"
+    elsif line.split("=")[1].strip == "SDL"
       secure = false
     end
   end
