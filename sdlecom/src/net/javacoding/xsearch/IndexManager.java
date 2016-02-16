@@ -487,12 +487,14 @@ public class IndexManager {
     private static void deleteOldIndexes(DatasetConfiguration dc, JestClient jestClient) {
         List<String> indexNameList = getSortedIndexNames(dc, jestClient);
         int numVersionsToKeep = SpringContextUtil.getNumIndexVersionsToKeep();
-        int numVersionsToDelete = indexNameList.size() - numVersionsToKeep;
-        List<String> indexesToDelete = indexNameList.subList(indexNameList.size() - numVersionsToDelete, indexNameList.size());
-        for (String index : indexesToDelete) {
-            logger.info("Sending request to delete index '{}'", index);
-            Delete delete = new Delete.Builder(index).build();
-            JestExecute.execute(jestClient, delete);
+        if (indexNameList.size() > numVersionsToKeep) {
+            int numVersionsToDelete = indexNameList.size() - numVersionsToKeep;
+            List<String> indexesToDelete = indexNameList.subList(indexNameList.size() - numVersionsToDelete, indexNameList.size());
+            for (String index : indexesToDelete) {
+                logger.info("Sending request to delete index '{}'", index);
+                Delete delete = new Delete.Builder(index).build();
+                JestExecute.execute(jestClient, delete);
+            }
         }
     }
 
