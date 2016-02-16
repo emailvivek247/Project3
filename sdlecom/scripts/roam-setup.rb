@@ -16,7 +16,7 @@ def print_usage()
   puts("Usage: #{File.basename($0)} countyName ecomEnv (local or qa) reset (optional)")
 end
 
-project_path = "#{File.dirname($0)}/../../"
+project_path = "#{File.dirname($0)}/../.."
 files_path = "#{ENV["HOME"]}/files"
 
 if ARGV.length == 0 || (ARGV.length == 1 && ARGV[0] == "help")
