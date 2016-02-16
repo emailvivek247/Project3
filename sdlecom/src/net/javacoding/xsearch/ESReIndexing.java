@@ -54,7 +54,7 @@ public class ESReIndexing extends AbstractReIndexing {
         String query = "{\"sort\": [\"_doc\"], \"query\" : { \"match_all\" : { } } }";
 
         Search search = new Search.Builder(query)
-                .addIndex(dc.getName())
+                .addIndex(IndexStatus.getAliasName(dc))
                 .addType(dc.getName())
                 .setParameter(Parameters.SIZE, 1000)
                 .setParameter(Parameters.SCROLL, "5m")

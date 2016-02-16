@@ -89,7 +89,7 @@ public class DirectorySizeChecker {
         }
         if (indexType == IndexType.ELASTICSEARCH) {
             jestClient = SpringContextUtil.getBean(JestClient.class);
-            dataSetName = dc.getName();
+            dataSetName = IndexStatus.getAliasName(dc);
         }
         return this;
     }
