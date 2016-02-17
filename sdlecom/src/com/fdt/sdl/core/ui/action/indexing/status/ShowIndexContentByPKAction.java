@@ -116,7 +116,7 @@ public final class ShowIndexContentByPKAction extends Action {
                 }
             } else if (dc.getIndexType() == IndexType.ELASTICSEARCH) {
                 JestClient client = SpringContextUtil.getBean(JestClient.class);
-                Get getRequest = new Get.Builder(indexName, pkValue).build();
+                Get getRequest = new Get.Builder(IndexStatus.getAliasName(dc), pkValue).build();
                 GetResult getResult = new GetResult(JestExecute.executeNoCheck(client, getRequest));
                 if (!getResult.exists()) {
                     errors.add("error", new ActionMessage("action.showIndexStatus.notFoundPrimaryKey.error",
@@ -124,7 +124,7 @@ public final class ShowIndexContentByPKAction extends Action {
                 } else {
                     request.setAttribute("result", getResult.getAsMap());
                 }
-                Count countRequest = new Count.Builder().addIndex(indexName).build();
+                Count countRequest = new Count.Builder().addIndex(IndexStatus.getAliasName(dc)).build();
                 CountResult countResult = JestExecute.execute(client, countRequest);
                 request.setAttribute("totalCount", countResult.getCount());
             }
