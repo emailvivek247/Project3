@@ -1,5 +1,6 @@
 package com.fdt.common.util.client;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -315,13 +316,37 @@ public class ServiceStubRS implements ServiceStub {
 		}
 	}
 
-	public CreditCard getCreditCardDetails(Long userId) {
-		String url = this.ecomRestURL.concat("getCreditCardDetails/{userId}");
-		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put("userId", userId);
-		CreditCard creditCard = this.restTemplate.getForObject(url, CreditCard.class, paramMap);
-		return creditCard;
-	}
+    // TODO: DELETE THIS
+    public CreditCard getCreditCardDetails(Long userId) {
+        String url = this.ecomRestURL.concat("getCreditCardDetails/{userId}");
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("userId", userId);
+        CreditCard creditCard = this.restTemplate.getForObject(url, CreditCard.class, paramMap);
+        return creditCard;
+    }
+
+    public CreditCard getCreditCardDetailsWithId(Long userId, Long creditCardId) {
+        String url = this.ecomRestURL.concat("getCreditCardDetailsWithId/{userId}/{creditCardId}");
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("userId", userId);
+        paramMap.put("creditCardId", creditCardId);
+        CreditCard creditCard = this.restTemplate.getForObject(url, CreditCard.class, paramMap);
+        return creditCard;
+    }
+
+    public List<CreditCard> getCreditCardDetailsList(Long userId) {
+        String url = this.ecomRestURL.concat("getCreditCardDetailsList/{userId}");
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("userId", userId);
+        CreditCard[] creditCardArray = this.restTemplate.getForObject(url, CreditCard[].class, paramMap);
+        List<CreditCard> cardList = null;
+        if (creditCardArray != null) {
+            cardList = Arrays.asList(creditCardArray);
+        } else {
+            cardList = new ArrayList<>();
+        }
+        return cardList;
+    }
 
 	public List<SubscriptionDTO> getUserSubscriptions(String userName, String nodeName, String siteName, boolean activeSubscriptionsOnly, boolean firmAdminSubscriptionsOnly) {
 		String url = this.ecomRestURL.concat("getUserSubscriptions?");

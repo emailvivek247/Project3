@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
@@ -45,6 +46,7 @@ import com.fdt.ecom.entity.CreditCard;
 import com.fdt.ecom.entity.Site;
 import com.fdt.ecom.exception.AccessUnAuthorizedException;
 import com.fdt.ecom.ui.form.CreditCardForm;
+import com.fdt.ecom.ui.form.CreditCardSelectionForm;
 import com.fdt.ecom.ui.form.CreditCardForm.DefaultGroup;
 import com.fdt.ecom.ui.validator.CreditCardFormValidator;
 import com.fdt.paymentgateway.dto.PayPalDTO;
@@ -62,10 +64,6 @@ public class CreditCardController extends AbstractBaseController {
 	@Autowired
 	@Qualifier(value="creditCardFormValidator")
 	private CreditCardFormValidator creditCardValidator;
-
-	private static String NEW_CREDIT_CARD = "N";
-
-	private static String UPDATE_CREDIT_CARD = "U";
 
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -89,89 +87,76 @@ public class CreditCardController extends AbstractBaseController {
 			"SUCCESS",
 			"btnPayNow",
 			"bankAccountNumber",
-			"routingNumber"
+			"routingNumber",
+			"selectedCardId"
 		});
 	}
 
-	@RequestMapping(value="/paymentInfo.admin")
-	public ModelAndView getPaymentDetails(ModelAndView modelAndView, HttpServletRequest request) {
-		modelAndView = this.getModelAndView(request, ECOM_PAY_NOW);
-		//Call the Service to get the list of Subscriptions.
-		List <Site> paidSubUnpaidList = this.getService().getPaidSubUnpaidByUser(request.getRemoteUser(), this.nodeName).getSites();
-		User user = this.getUser(request);
-		CreditCardForm creditCardForm =  new CreditCardForm();
-		/** This Attribute is Removed in payForPendingPaidSubscriptions**/
-		request.getSession().setAttribute("sites", paidSubUnpaidList);
-		modelAndView.addObject("sites", paidSubUnpaidList);
-		modelAndView.addObject("user", user);
-		if (user.isCardAvailable()) {
-			CreditCard creditCard = this.getService().getCreditCardDetails(user.getId());
-			creditCardForm = this.buildCreditCardForm(creditCard);
-		}
-		modelAndView.addObject("creditCardForm", creditCardForm);
-		modelAndView.addObject("serverUrl", this.ecomServerURL);
-		return modelAndView;
-	}
+    @RequestMapping(value = "/paymentInfo.admin")
+    public ModelAndView getPaymentDetails(ModelAndView modelAndView, HttpServletRequest request) {
+        modelAndView = this.getModelAndView(request, ECOM_PAY_NOW);
+        // Call the Service to get the list of Subscriptions.
+        List<Site> paidSubUnpaidList = getService().getPaidSubUnpaidByUser(request.getRemoteUser(), nodeName).getSites();
+        User user = this.getUser(request);
+        /** This Attribute is Removed in payForPendingPaidSubscriptions **/
+        request.getSession().setAttribute("sites", paidSubUnpaidList);
+        modelAndView.addObject("sites", paidSubUnpaidList);
+        modelAndView.addObject("user", user);
+        List<CreditCard> cardList = getService().getCreditCardDetailsList(user.getId());
+        modelAndView.addObject("serverUrl", ecomServerURL);
+        modelAndView.addObject("creditCardSelectionForm", new CreditCardSelectionForm(cardList));
+        return modelAndView;
+    }
 
-	@RequestMapping(value = "/payNow.admin", method = RequestMethod.POST)
-	public ModelAndView payForPendingPaidSubscriptions(@ModelAttribute("creditCardForm") CreditCardForm creditCardForm,
-				BindingResult bindingResult, HttpServletRequest request, ModelAndView modelAndView,
-				@RequestParam(defaultValue="false") boolean isReAu) {
-		CreditCard creditCard = null;
-		modelAndView = this.getModelAndView(request, ECOM_REDIRECT_PAYMENT_CONFIRMATION);
-		if (isReAu) {
-			this.reAuthenticate(request);
-		}
-		this.verifyBinding(bindingResult);
-		if(NEW_CREDIT_CARD.equalsIgnoreCase(creditCardForm.getUseExistingAccount())
-				|| UPDATE_CREDIT_CARD.equalsIgnoreCase(creditCardForm.getUseExistingAccount())) {
-			//Use New card.
-			validate(creditCardForm, bindingResult, DefaultGroup.class); // Performing validations specified by annotations.
-			if (bindingResult.hasErrors()) {
-				modelAndView = setModelAndViewForError(modelAndView, request);
-				return modelAndView;
-			}
-			creditCardValidator.validate(creditCardForm, bindingResult); // Performing custom validations.
-			if (bindingResult.hasErrors()) {
-				modelAndView = setModelAndViewForError(modelAndView, request);
-				return modelAndView;
-			}
-			creditCard = this.buildCreditCard(creditCardForm,request);
-		}
-		List<PayPalDTO> payPalDtoList = null;
-		String failureMsg = null;
-		try {
-			SubscriptionDTO subscriptionDTO = new SubscriptionDTO();
-			subscriptionDTO.setCreditCard(creditCard);
-			User user = new User();
-			user.setUsername(request.getRemoteUser());
-			subscriptionDTO.setUser(user);
-			subscriptionDTO.setNodeName(this.nodeName);
-			subscriptionDTO.setMachineName(request.getRemoteAddr());
-			payPalDtoList = this.getService().paySubscriptions(subscriptionDTO);
-		} catch (AccessUnAuthorizedException accessUnAuthorizedException) {
-			failureMsg = this.getMessage("security.ecommerce.accessUnAuthorized");
-			request.getSession().setAttribute(FAILURE_MSG, failureMsg);
-		} catch (SDLBusinessException sDLBusinessException) {
-			request.getSession().setAttribute(FAILURE_MSG, sDLBusinessException.getBusinessMessage());
-		}
+    @RequestMapping(value = "/payNow.admin", method = RequestMethod.POST)
+    public ModelAndView payForPendingPaidSubscriptions(
+            @ModelAttribute("creditCardSelectionForm") CreditCardSelectionForm creditCardSelectionForm,
+            BindingResult bindingResult, HttpServletRequest request, ModelAndView modelAndView,
+            @RequestParam(defaultValue = "false") boolean isReAu) {
 
-		for(PayPalDTO payPalDTO : payPalDtoList) {
-			if (!payPalDTO.isSucessful()) {
-				if (payPalDTO.isSystemException()) {
-					payPalDTO.setErrorDesc(this.getMessage("paypal.errorcode.generalsystemerror"));
-				} else {
-					payPalDTO.setErrorDesc(this.getMessage("paypal.errorcode." + payPalDTO.getErrorCode()));
-				}
-			}
-		}
-		this.reAuthenticate(request);
-		/** This Attribute Was put in the Session in the Method getPaymentDetails**/
-		request.getSession().removeAttribute("sites");
- 		request.getSession().setAttribute("payments", payPalDtoList);
-		return modelAndView;
+        modelAndView = this.getModelAndView(request, ECOM_REDIRECT_PAYMENT_CONFIRMATION);
+        if (isReAu) {
+            this.reAuthenticate(request);
+        }
+        User user = this.getUser(request);
+        this.verifyBinding(bindingResult);
 
-	}
+        Long selectedCardId = creditCardSelectionForm.getSelectedCardId();
+        CreditCard creditCard = getService().getCreditCardDetailsWithId(user.getId(), selectedCardId);
+
+        List<PayPalDTO> payPalDtoList = null;
+        String failureMsg = null;
+        try {
+            SubscriptionDTO subscriptionDTO = new SubscriptionDTO();
+            subscriptionDTO.setCreditCard(creditCard);
+            subscriptionDTO.setUser(user);
+            subscriptionDTO.setNodeName(this.nodeName);
+            subscriptionDTO.setMachineName(request.getRemoteAddr());
+            payPalDtoList = this.getService().paySubscriptions(subscriptionDTO);
+        } catch (AccessUnAuthorizedException accessUnAuthorizedException) {
+            failureMsg = this.getMessage("security.ecommerce.accessUnAuthorized");
+            request.getSession().setAttribute(FAILURE_MSG, failureMsg);
+        } catch (SDLBusinessException sDLBusinessException) {
+            request.getSession().setAttribute(FAILURE_MSG, sDLBusinessException.getBusinessMessage());
+        }
+
+        for (PayPalDTO payPalDTO : payPalDtoList) {
+            if (!payPalDTO.isSucessful()) {
+                if (payPalDTO.isSystemException()) {
+                    payPalDTO.setErrorDesc(this.getMessage("paypal.errorcode.generalsystemerror"));
+                } else {
+                    payPalDTO.setErrorDesc(this.getMessage("paypal.errorcode." + payPalDTO.getErrorCode()));
+                }
+            }
+        }
+
+        this.reAuthenticate(request);
+
+        // This Attribute Was put in the Session in the Method getPaymentDetails
+        request.getSession().removeAttribute("sites");
+        request.getSession().setAttribute("payments", payPalDtoList);
+        return modelAndView;
+    }
 
 	@RequestMapping(value="/paymentConfirmation.admin")
 	public ModelAndView viewPaymentConfirmation(ModelAndView modelAndView, HttpServletRequest request) {
@@ -185,23 +170,23 @@ public class CreditCardController extends AbstractBaseController {
 		return modelAndView;
 	}
 
-	@RequestMapping(value="/ccinfo.admin")
-	public String viewCreditCardInformation(Model model, HttpServletRequest request){
-		request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-				SecurityContextHolder.getContext());
-		CreditCardForm creditCardForm = new CreditCardForm();
-		UsernamePasswordAuthenticationToken userPasswordAuthToken
-			= (UsernamePasswordAuthenticationToken) request.getUserPrincipal();
-		User user = (User)userPasswordAuthToken.getPrincipal();
-		CreditCard creditCard = this.getService().getCreditCardDetails(user.getId());
-		if (creditCard != null) {
-			creditCardForm = this.buildCreditCardForm(creditCard);
-		}
+    @RequestMapping(value="/ccinfo.admin")
+    public String viewCreditCardInformation(Model model, HttpServletRequest request){
+        request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+                SecurityContextHolder.getContext());
+        CreditCardForm creditCardForm = new CreditCardForm();
+        UsernamePasswordAuthenticationToken userPasswordAuthToken
+            = (UsernamePasswordAuthenticationToken) request.getUserPrincipal();
+        User user = (User)userPasswordAuthToken.getPrincipal();
+        CreditCard creditCard = this.getService().getCreditCardDetails(user.getId());
+        if (creditCard != null) {
+            creditCardForm = this.buildCreditCardForm(creditCard);
+        }
 
-		model.addAttribute("user", user);
-		model.addAttribute("creditCardForm", creditCardForm);
-		return ECOM_CC_INFO;
-	}
+        model.addAttribute("user", user);
+        model.addAttribute("creditCardForm", creditCardForm);
+        return ECOM_CC_INFO;
+    }
 
 	@RequestMapping(value="/updateCreditCard.admin", produces="application/json")
 	@ResponseBody

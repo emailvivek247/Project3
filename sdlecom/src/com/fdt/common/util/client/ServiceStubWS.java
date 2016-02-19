@@ -155,8 +155,18 @@ public class ServiceStubWS implements ServiceStub, ApplicationContextAware {
         this.getService().updateExistingCreditCardInformation(userName, modifiedBy, newCreditCardInformation);
     }
 
+    // TODO: DELETE THIS
     public CreditCard getCreditCardDetails(Long userId) {
         return this.getService().getCreditCardDetails(userId);
+    }
+
+    // TODO: DELETE THIS
+    public CreditCard getCreditCardDetailsWithId(Long userId, Long creditCardId) {
+        return this.getService().getCreditCardDetailsWithId(userId, creditCardId);
+    }
+
+    public List<CreditCard> getCreditCardDetailsList(Long userId) {
+        return this.getService().getCreditCardDetailsList(userId);
     }
 
     public List<SubscriptionDTO> getUserSubscriptions(String userName, String nodeName, String siteName,

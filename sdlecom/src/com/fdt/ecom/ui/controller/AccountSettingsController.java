@@ -305,14 +305,18 @@ public class AccountSettingsController extends AbstractBaseController {
 
 	/** Redirect to ECommerce **/
 	@RequestMapping(value="/viewAccountInformation.admin")
-	public ModelAndView viewAccountInformation(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView viewAccountInformation(HttpServletRequest request, HttpServletResponse response,
+	        @RequestParam(defaultValue = "false") boolean addNewCard,
+	        @RequestParam(defaultValue = "-1") Long creditCardId) {
 		String return_url = request.getParameter("return_url");
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String serverUrl = this.ecomServerURL;
 		String viewName = "redirect:" + serverUrl + "secure/viewAccountInformation.admin?"
 				+ "token1="	  + PageStyleUtil.encrypt(((User)authentication.getPrincipal()).getUsername())
 				+ "&token2="  + PageStyleUtil.encrypt(authentication.getCredentials().toString())
-				+ "&token3="  + return_url;
+				+ "&token3="  + return_url
+				+ "&token4="  + addNewCard
+				+ "&token5="  + creditCardId;
 		ModelAndView modelAndView = new ModelAndView(viewName);
 		return modelAndView;
 	}
