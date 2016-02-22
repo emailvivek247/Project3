@@ -250,11 +250,13 @@ div.modal {
                     &nbsp;&nbsp;
                     <a href="#" style="text-decoration:underline;" id="updateUserDetails">Edit</a>
                   </p>
-                  <p>
-                    <b><@spring.message code="security.authentication.firmName" /></b>
-                    &nbsp;
-                    <#if user.getFirmName()?has_content>${user.getFirmName()}</#if>
-                  </p>
+                  <#if user.getFirmName()?has_content>
+                    <p>
+                      <b><@spring.message code="security.authentication.firmName" /></b>
+                      &nbsp;
+                      ${user.getFirmName()}
+                    </p>
+                  </#if>
                   <#if isFirmNumberRequired?has_content && isFirmNumberRequired>
                     <p>
                       <b><@spring.message code="security.authentication.firmNumber" /></b>
@@ -266,71 +268,6 @@ div.modal {
                     <p>
                       <b><@spring.message code="security.authentication.barNumber" /></b>
                       &nbsp;<#if user.getBarNumber()?has_content>${user.getBarNumber()}</#if>
-                    </p>
-                  </#if>
-                  <br />
-                  <p>
-                    <b><@spring.message code="security.ecommerce.totalAmountDue" /></b>
-                    <#if totalDue &gt; 0>
-                      <span class="unPaid"><b>${totalDue?string.currency}</b>&nbsp;&nbsp;</span>
-                      <#if request.getServletContext().getInitParameter("isDBService") == "true">
-                        <a id="pay" href="paymentInfo.admin"><@spring.message code="security.ecommerce.payNow" /></a>
-                      <#else>
-                        <#if user.isCardAvailable()>
-                          <#if user.isCreditCardActive()>
-                            <a id="pay" href="paymentInfo.admin"><@spring.message code="security.ecommerce.payNow" /></a>
-                          <#else>
-                            <a style="text-decoration:underline;" href="viewAccountInformation.admin?return_url=${request.getRequestURL()}">
-                              <@spring.message code="security.ecommerce.label.updateAccount" />
-                            </a>
-                          </#if>
-                        <#else>
-                          <a style="text-decoration:underline;" class="extLink" href="viewAccountInformation.admin?return_url=${request.getRequestURL()}">
-                            <@spring.message code="security.ecommerce.label.addPaymentInformation" />
-                          </a>
-                        </#if>
-                      </#if>
-                    <#else>
-                      <span class="paid"><b>$0.00</b></span>
-                    </#if>
-                  </p>
-                </td>
-                <td valign="top">
-                  <#if user.isCardAvailable()>
-                    <p>
-                      <b><@spring.message code="security.ecommerce.label.cardOnFile" /></b>
-                      &nbsp;********${user.getCreditCard().number}
-                      <a href="viewAccountInformation.admin?return_url=${request.getRequestURL()}">
-                        <@spring.message code="security.authentication.update" />
-                      </a>
-                      <a href="#Delete_Card" name="${user.getCreditCard().id}" id="deleteCreditCardID">
-                        Delete Card
-                      </a>
-                    </p>
-                    <p>
-                      <b><@spring.message code="security.ecommerce.accountType" /></b>
-                      &nbsp;${user.getCreditCard().getCardType()}
-                    </p>
-                    <p>
-                      <b><@spring.message code="security.ecommerce.label.cardStatus" /></b>
-                      &nbsp;
-                      <#if user.isCreditCardActive()>
-                        <span class="paid">
-                          <@spring.message code="security.ecommerce.label.active" />
-                        </span>
-                      <#else>
-                        <span class="unPaid">
-                          <@spring.message code="security.ecommerce.label.expired" />
-                        </span>
-                      </#if>
-                    </p>
-                  <#else>
-                    <p>
-                      <b><@spring.message code="security.ecommerce.label.cardOnFile" /></b>
-                      &nbsp;<@spring.message code="security.ecommerce.label.none" />
-                      <a style="text-decoration:underline;" href="viewAccountInformation.admin?return_url=${request.getRequestURL()}">
-                        <@spring.message code="security.ecommerce.label.addPaymentInformation" />
-                      </a>
                     </p>
                   </#if>
                   <p>
@@ -346,6 +283,65 @@ div.modal {
                       <@spring.message code="security.authentication.roamTerms" />
                     </a>
                   </p>
+                  <br />
+                  <p>
+                    <b><@spring.message code="security.ecommerce.totalAmountDue" /></b>
+                    <#if totalDue &gt; 0>
+                      <span class="unPaid"><b>${totalDue?string.currency}</b>&nbsp;&nbsp;</span>
+                      <#if creditCardList?has_content>
+                        <a id="pay" href="paymentInfo.admin"><@spring.message code="security.ecommerce.payNow" /></a>
+                      <#else>
+                        <a style="text-decoration:underline;" class="extLink" href="viewAccountInformation.admin?return_url=${request.getRequestURL()}&amp;addNewCard=true">
+                          <@spring.message code="security.ecommerce.label.addPaymentInformation" />
+                        </a>
+                      </#if>
+                    <#else>
+                      <span class="paid"><b>$0.00</b></span>
+                    </#if>
+                  </p>
+                </td>
+                <td valign="top">
+                  <#if creditCardList?has_content>
+                    <b><@spring.message code="security.ecommerce.label.cardsOnFile" /></b>
+                    <table>
+                    <#list creditCardList as creditCard>
+                      <#assign number = creditCard.number>
+                      <#assign id = creditCard.id>
+                      <#assign expired = pageStyleUtil.isCardExpired(creditCard)>
+                      <tr>
+                        <td>
+                          ${creditCard.cardType} ending in ${number[number?length - 4..]}
+                        </td>
+                        <td>
+                          <#if !expired>
+                            Expires
+                          <#else>
+                            Expired
+                          </#if>
+                          ${pageStyleUtil.getExpirationDate(creditCard)}
+                        </td>
+                        <td>
+                          <a href="viewAccountInformation.admin?return_url=${request.getRequestURL()}&amp;creditCardId=${id}">
+                            Update
+                          </a>
+                        </td>
+                        <td>
+                          <a href="#Delete_Card" name="${id}" id="deleteCreditCardID">
+                            Delete
+                          </a>
+                        </td>
+                      </tr>
+                    </#list>
+                    </table>
+                  <#else>
+                    <p>
+                      <b><@spring.message code="security.ecommerce.label.cardsOnFile" /></b>
+                      &nbsp;<@spring.message code="security.ecommerce.label.none" />
+                      <a style="text-decoration:underline;" href="viewAccountInformation.admin?return_url=${request.getRequestURL()}&amp;addNewCard=true">
+                        <@spring.message code="security.ecommerce.label.addPaymentInformation" />
+                      </a>
+                    </p>
+                  </#if>
                 </td>
               </tr>
             </table>

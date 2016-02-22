@@ -76,6 +76,7 @@ import com.fdt.common.dto.PageRecordsDTO;
 import com.fdt.common.entity.ErrorCode;
 import com.fdt.common.exception.SDLBusinessException;
 import com.fdt.common.ui.controller.AbstractBaseController;
+import com.fdt.ecom.entity.CreditCard;
 import com.fdt.ecom.entity.ShoppingCartItem;
 import com.fdt.ecom.entity.Site;
 import com.fdt.ecom.entity.Term;
@@ -212,41 +213,46 @@ public class AccountSettingsController extends AbstractBaseController {
 		return modelAndView;
 	}
 
-	@RequestMapping(value="/accountInformation.admin", method=RequestMethod.GET)
-	public ModelAndView accountInformation(HttpServletRequest request, @RequestParam(defaultValue="false") boolean isReAu) {
-		ModelAndView modelAndView = this.getModelAndView(request, SECURITY_ACCOUNT_INFORMATION);
-		if (isReAu) {
-			this.reAuthenticate(request);
-		}
-		String siteName = null;
-		List<SubscriptionDTO> subscriptionDTOs = this.getService().getUserSubscriptions(request.getRemoteUser(), this.nodeName, siteName, false , false);
-		User user = this.getUser(request);
-		int shoppingCartSize = 0;
+    @RequestMapping(value = "/accountInformation.admin", method = RequestMethod.GET)
+    public ModelAndView accountInformation(HttpServletRequest request,
+            @RequestParam(defaultValue = "false") boolean isReAu) {
 
-		List<ShoppingCartItem> itemList = new LinkedList<ShoppingCartItem>();
-		 itemList = this.getService().getShoppingBasketItems(request.getRemoteUser(), this.nodeName);
-		 Map<String, ShoppingCartItem> shoppingCart = new LinkedHashMap<String, ShoppingCartItem>();
-		 if (itemList != null) {
-			 for (ShoppingCartItem item : itemList) {
-				 shoppingCart.put(item.getProductId() + item.getUniqueIdentifier(), item);
-			 }
-			 request.getSession().setAttribute(SHOPPING_CART + request.getRemoteUser(), shoppingCart);
-		 } else {
-			 request.getSession().removeAttribute(SHOPPING_CART + request.getRemoteUser());
-		 }
+        ModelAndView modelAndView = this.getModelAndView(request, SECURITY_ACCOUNT_INFORMATION);
+        if (isReAu) {
+            this.reAuthenticate(request);
+        }
 
-		if (shoppingCart != null) {
-			shoppingCartSize = shoppingCart.size();
-		}
+        List<SubscriptionDTO> subscriptionDTOs = this.getService().getUserSubscriptions(request.getRemoteUser(),
+                this.nodeName, null, false, false);
+        User user = this.getUser(request);
+        int shoppingCartSize = 0;
 
-		modelAndView.addObject("shoppingCartSize", shoppingCartSize);
-		modelAndView.addObject("user", user);
-		modelAndView.addObject("isFirmLevelAdministrator", this.isFirmLevelAdministrator(subscriptionDTOs));
-		modelAndView.addObject("serverUrl",this.ecomServerURL);
-		modelAndView.addObject("subscriptions", subscriptionDTOs);
-		return modelAndView;
-	}
+        List<CreditCard> creditCardList = getService().getCreditCardDetailsList(user.getId());
 
+        List<ShoppingCartItem> itemList = new LinkedList<ShoppingCartItem>();
+        itemList = this.getService().getShoppingBasketItems(request.getRemoteUser(), this.nodeName);
+        Map<String, ShoppingCartItem> shoppingCart = new LinkedHashMap<String, ShoppingCartItem>();
+        if (itemList != null) {
+            for (ShoppingCartItem item : itemList) {
+                shoppingCart.put(item.getProductId() + item.getUniqueIdentifier(), item);
+            }
+            request.getSession().setAttribute(SHOPPING_CART + request.getRemoteUser(), shoppingCart);
+        } else {
+            request.getSession().removeAttribute(SHOPPING_CART + request.getRemoteUser());
+        }
+
+        if (shoppingCart != null) {
+            shoppingCartSize = shoppingCart.size();
+        }
+
+        modelAndView.addObject("shoppingCartSize", shoppingCartSize);
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("creditCardList", creditCardList);
+        modelAndView.addObject("isFirmLevelAdministrator", this.isFirmLevelAdministrator(subscriptionDTOs));
+        modelAndView.addObject("serverUrl", this.ecomServerURL);
+        modelAndView.addObject("subscriptions", subscriptionDTOs);
+        return modelAndView;
+    }
 
 	@RequestMapping(value="/getSubscriptionDetails.admin", method=RequestMethod.GET)
 	public ModelAndView getSubscriptionDetails(@RequestParam("uaId") String accessId, HttpServletRequest request,

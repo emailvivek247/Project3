@@ -15,6 +15,8 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.text.StringCharacterIterator;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -50,6 +52,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import com.fdt.common.util.SystemUtil;
+import com.fdt.ecom.entity.CreditCard;
 import com.fdt.ecom.entity.ShoppingCartItem;
 import com.fdt.sdl.admin.ui.controller.printq.PrintQController;
 import com.fdt.security.entity.User;
@@ -425,7 +428,27 @@ public class PageStyleUtil {
 		}
 		return shoppingCartSize;
 	}
-	
+
+    public static Boolean isCardExpired(CreditCard creditCard) {
+        Integer expiryYear = creditCard.getExpiryYear();
+        Integer expiryMonth = creditCard.getExpiryMonth();
+        LocalDate expiryDate = LocalDate.of(expiryYear, expiryMonth, 1).with(TemporalAdjusters.lastDayOfMonth());
+        return expiryDate.compareTo(LocalDate.now()) < 0;
+    }
+
+    public static Boolean areAllCardsExpired(List<CreditCard> creditCardList) {
+        return creditCardList.stream().allMatch(c -> PageStyleUtil.isCardExpired(c));
+    }
+
+    public static String getExpirationDate(CreditCard creditCard) {
+        Integer expiryYear = creditCard.getExpiryYear();
+        Integer expiryMonth = creditCard.getExpiryMonth();
+        LocalDate expiryDate = LocalDate.of(expiryYear, expiryMonth, 1);
+        java.time.format.DateTimeFormatter formatter = 
+                java.time.format.DateTimeFormatter.ofPattern("MM/yyyy");
+        return expiryDate.format(formatter);
+    }
+
 	public int getPrinQSize(HttpServletRequest request) {
 		return PrintQController.getPrinQSize(request);
 	}
