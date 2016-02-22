@@ -304,35 +304,39 @@ div.modal {
                   <#if creditCardList?has_content>
                     <b><@spring.message code="security.ecommerce.label.cardsOnFile" /></b>
                     <table>
-                    <#list creditCardList as creditCard>
-                      <#assign number = creditCard.number>
-                      <#assign id = creditCard.id>
-                      <#assign expired = pageStyleUtil.isCardExpired(creditCard)>
-                      <tr>
-                        <td>
-                          ${creditCard.cardType} ending in ${number[number?length - 4..]}
-                        </td>
-                        <td>
-                          <#if !expired>
-                            Expires
-                          <#else>
-                            Expired
-                          </#if>
-                          ${pageStyleUtil.getExpirationDate(creditCard)}
-                        </td>
-                        <td>
-                          <a href="viewAccountInformation.admin?return_url=${request.getRequestURL()}&amp;creditCardId=${id}">
-                            Update
-                          </a>
-                        </td>
-                        <td>
-                          <a href="#Delete_Card" name="${id}" id="deleteCreditCardID">
-                            Delete
-                          </a>
-                        </td>
-                      </tr>
-                    </#list>
+                      <#list creditCardList as creditCard>
+                        <#assign number = creditCard.number>
+                        <#assign id = creditCard.id>
+                        <#assign expired = pageStyleUtil.isCardExpired(creditCard)>
+                        <tr>
+                          <td>
+                            ${creditCard.cardType} ending in ${number[number?length - 4..]}
+                          </td>
+                          <td>
+                            <#if !expired>
+                              Expires
+                            <#else>
+                              Expired
+                            </#if>
+                            ${pageStyleUtil.getExpirationDate(creditCard)}
+                          </td>
+                          <td>
+                            <a href="viewAccountInformation.admin?return_url=${request.getRequestURL()}&amp;creditCardId=${id}">
+                              Update
+                            </a>
+                          </td>
+                          <td>
+                            <a href="#Delete_Card" name="${id}" id="deleteCreditCardID">
+                              Delete
+                            </a>
+                          </td>
+                        </tr>
+                      </#list>
                     </table>
+                    <br />
+                    <a href="viewAccountInformation.admin?return_url=${request.getRequestURL()}&amp;addNewCard=true">
+                      <@spring.message code="security.ecommerce.label.addCardToAccount" />
+                    </a>
                   <#else>
                     <p>
                       <b><@spring.message code="security.ecommerce.label.cardsOnFile" /></b>
