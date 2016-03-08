@@ -24,17 +24,17 @@ The real rendering is here. Actually, still render it almost similar to a normal
  <div class="filter_list"> 
   <p class="filter_head"><span class="active"></span><@displayParentFilteredColumn c />${c.displayName}</p> 
   <div class="filter_body" id="filter_${c.name}" style="display: none; ">
-    <#foreach cCount in filterColumn.getTopCounts(30)>
-		<#if (cCount_index == 20) >
-		  <a href="#" class="more_link">More ... </a>
-		  <div class="more">
-		  <#assign hasMore = true>
-		</#if>
-      	<@displayMultiSelectFilterColumnCount c.name, c, cCount/>
-		 <#if (cCount_index >= 30) >
-	 	 <#if hasMore> ...</#if>
-    	 	</div><#break>	    
-	    </#if>   
+    <#foreach cCount in filterColumn.getTopCounts(100000)>
+      <#if (cCount_index == 250) >
+        <a href="#" class="more_link">More ... </a>
+        <div class="more">
+        <#assign hasMore = true>
+      </#if>
+      <@displayMultiSelectFilterColumnCount c.name, c, cCount/>
+      <#if (cCount_index >= 500) >
+        <#if hasMore> Your search has returned more than 500 entries. Please narrow down the search and try again.</#if>
+        </div><#break>
+      </#if> 
     </#foreach>
     <form style="display:none">
       <input type="submit" class="button" value="Filter"/>
