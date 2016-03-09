@@ -150,17 +150,6 @@ public class ServiceStubWS implements ServiceStub, ApplicationContextAware {
         return this.getService().getPaidSubUnpaidByUser(userName, nodeName);
     }
 
-    public void updateExistingCreditCardInformation(String userName, String modifiedBy, CreditCard newCreditCardInformation)
-    		throws PaymentGatewaySystemException, PaymentGatewayUserException {
-        this.getService().updateExistingCreditCardInformation(userName, modifiedBy, newCreditCardInformation);
-    }
-
-    // TODO: DELETE THIS
-    public CreditCard getCreditCardDetails(Long userId) {
-        return this.getService().getCreditCardDetails(userId);
-    }
-
-    // TODO: DELETE THIS
     public CreditCard getCreditCardDetailsWithId(Long userId, Long creditCardId) {
         return this.getService().getCreditCardDetailsWithId(userId, creditCardId);
     }
@@ -170,7 +159,7 @@ public class ServiceStubWS implements ServiceStub, ApplicationContextAware {
     }
 
     public List<SubscriptionDTO> getUserSubscriptions(String userName, String nodeName, String siteName,
-    			boolean activeSubscriptionsOnly, boolean firmAdminSubscriptionsOnly) {
+            boolean activeSubscriptionsOnly, boolean firmAdminSubscriptionsOnly) {
         return this.getService().getUserSubscriptions(userName, nodeName, siteName, activeSubscriptionsOnly, firmAdminSubscriptionsOnly);
     }
 

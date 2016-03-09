@@ -303,28 +303,6 @@ public class ServiceStubRS implements ServiceStub {
 		return user;
 	}
 
-	public void updateExistingCreditCardInformation(String userName, String modifiedBy, CreditCard newCreditCardInformation)
-			throws PaymentGatewaySystemException, PaymentGatewayUserException {
-		String url = this.ecomRestURL.concat("updateExistingCreditCardInformation/{userName}");
-		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put("userName", userName);
-		try {
-			this.restTemplate.postForObject(url, newCreditCardInformation, Void.class, paramMap);
-		} catch (UnknownHttpStatusCodeException unknownHttpStatusCodeExcp) {
-			exceptionHandler.handlePaymentGatewayUserException(jacksonObjectMapper, unknownHttpStatusCodeExcp);
-			exceptionHandler.handlePaymentGatewaySystemException(jacksonObjectMapper, unknownHttpStatusCodeExcp);
-		}
-	}
-
-    // TODO: DELETE THIS
-    public CreditCard getCreditCardDetails(Long userId) {
-        String url = this.ecomRestURL.concat("getCreditCardDetails/{userId}");
-        Map<String, Object> paramMap = new HashMap<String, Object>();
-        paramMap.put("userId", userId);
-        CreditCard creditCard = this.restTemplate.getForObject(url, CreditCard.class, paramMap);
-        return creditCard;
-    }
-
     public CreditCard getCreditCardDetailsWithId(Long userId, Long creditCardId) {
         String url = this.ecomRestURL.concat("getCreditCardDetailsWithId/{userId}/{creditCardId}");
         Map<String, Object> paramMap = new HashMap<String, Object>();

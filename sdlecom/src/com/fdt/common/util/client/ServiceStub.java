@@ -82,12 +82,6 @@ public interface ServiceStub {
 
     public User getPaidSubUnpaidByUser(String userName, String nodeName);
 
-    public void updateExistingCreditCardInformation(String userName, String modifiedBy, CreditCard newCreditCardInformation)
-    	throws PaymentGatewaySystemException, PaymentGatewayUserException;
-
-    // TODO: DELETE THIS
-    public CreditCard getCreditCardDetails(Long userId);
-
     public CreditCard getCreditCardDetailsWithId(Long userId, Long creditCardId);
 
     public List<CreditCard> getCreditCardDetailsList(Long userId);
