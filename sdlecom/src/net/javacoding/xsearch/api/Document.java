@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import net.javacoding.xsearch.api.protocol.SearchProtocol;
+import net.javacoding.xsearch.search.result.SearchResult;
 import net.javacoding.xsearch.utility.U;
 import net.javacoding.xsearch.utility.VMTool;
 
@@ -126,6 +127,74 @@ public class Document implements SDLIndexDocument {
                 } else if (element.isJsonPrimitive()) {
                     ret.add(element.getAsString());
                 }
+            }
+        }
+        return (String[]) ret.toArray(new String[ret.size()]);
+    }
+
+    public String[] getValues(String field, SearchResult searchResult) {
+        List<String> ret = new ArrayList<>();
+        if (document != null) {
+            for (SearchProtocol.Field f : document.getFieldList()) {
+                if (f.getName().equals(field)) {
+                    ret.add(f.getValue());
+                }
+            }
+            if (ret.size() == 0) {
+                return NO_STRINGS;
+            }
+        } else if (source != null) {
+            List<String> strippedHighlights = new ArrayList<>();
+            List<String> finalHighlights = new ArrayList<>();
+            if (highlight != null) {
+                List<String> highlights = new ArrayList<>();
+                JsonElement element = highlight.get(field);
+                if (element != null) {
+                    if (element.isJsonArray()) {
+                        element.getAsJsonArray().forEach(e -> highlights.add(e.getAsString()));
+                    } else if (element.isJsonPrimitive()) {
+                        highlights.add(element.getAsString());
+                    }
+                    strippedHighlights.addAll(highlights.stream().map((h) ->{
+                        if (h.contains("hl-tag-replace")) {
+                            h = h.replaceAll("<hl-tag-replace>", "");
+                            h = h.replaceAll("</hl-tag-replace>", "");
+                        }
+                        return h;
+                    }).collect(Collectors.toList()));
+                    finalHighlights.addAll(highlights.stream().map((h) ->{
+                        if (h.contains("hl-tag-replace")) {
+                            h = h.replaceAll("<hl-tag-replace>", searchResult.getBeginTag());
+                            h = h.replaceAll("</hl-tag-replace>", searchResult.getEndTag());
+                        }
+                        return h;
+                    }).collect(Collectors.toList()));
+                }
+            }
+            JsonElement element = source.get(field);
+            if (element != null) {
+                if (element.isJsonArray()) {
+                    for (JsonElement value : element.getAsJsonArray()) {
+                        ret.add(value.getAsString());
+                    }
+                } else if (element.isJsonPrimitive()) {
+                    ret.add(element.getAsString());
+                }
+                ret = ret.stream().sorted((one, two) -> {
+                    if (strippedHighlights.contains(one) && !strippedHighlights.contains(two)) {
+                        return -1;
+                    } else if (!strippedHighlights.contains(one) && strippedHighlights.contains(two)) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                 }).map((v) -> {
+                    if (strippedHighlights.contains(v)) {
+                        return finalHighlights.get(strippedHighlights.indexOf(v));
+                    } else {
+                        return v;
+                    }
+                }).collect(Collectors.toList());
             }
         }
         return (String[]) ret.toArray(new String[ret.size()]);

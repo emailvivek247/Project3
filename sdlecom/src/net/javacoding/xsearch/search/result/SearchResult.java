@@ -245,7 +245,15 @@ public class SearchResult extends XMLSerializable{
 	public FilterResult getFilterResult(){ return filterResult;}
 	
 	public List<SearchSort> getSearchSorts(){ return sortBys;}
-	
+
+	public String getBeginTag() {
+	    return beginTag;
+	}
+
+	public String getEndTag() {
+	    return endTag;
+	}
+
 	/**
 	 * This is used to hold results from search.do
 	 */
