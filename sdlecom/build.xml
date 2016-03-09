@@ -10,6 +10,7 @@
   <property name="webcontent.lib" value="${webcontent.web-inf}/lib"/>
   <property name="build_info" value="${basedir}/resources/system.properties"/>
   <property name="client-conf" value="${webcontent.web-inf}/conf/spring/properties/client.properties"/>
+  <property name="elasticsearch-conf" value="${basedir}/resources/elasticsearch.properties"/>
   <property name="full.template.path" value="${basedir}/${client.templateroot}/eAccept-Templates-${client.templatetype}/${client.templatepath}"/>
 
   <echo message="client.templateroot = ${client.templateroot}"/>
@@ -127,6 +128,9 @@
       <entry key="documentManagementSystemWsdl" value="${documentManagementSystemWsdl}" />
       <entry key="documentManagementSystemClassName" value="${documentManagementSystemClassName}" />
       <entry key="printQServiceWsdl" value="${printQServiceWsdl}" />
+    </propertyfile>
+    <propertyfile file="${elasticsearch-conf}">
+      <entry key="elasticsearch.client.endpoint" value="${elasticsearch.client.endpoint}" />
     </propertyfile>
     <xmltask source="${basedir}/resources/logback.xml" dest="${basedir}/resources/logback.xml" failWithoutMatch="true">
       <attr path="/configuration/property" attr="value" value="${prefixPathForLogs}" />
