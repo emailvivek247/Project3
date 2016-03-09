@@ -22,7 +22,6 @@ import javax.validation.Validator;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,7 +46,6 @@ import com.fdt.ecert.Certification;
 import com.fdt.ecom.entity.Code;
 import com.fdt.ecom.entity.Location;
 import com.fdt.ecom.entity.ShoppingCartItem;
-import com.fdt.ecom.ui.validator.CreditCardFormValidator;
 import com.fdt.payasugotx.dto.PayAsUSubDTO;
 import com.fdt.payasugotx.entity.PayAsUGoTxItem;
 import com.fdt.sdl.styledesigner.util.PageStyleUtil;
@@ -59,10 +57,6 @@ public class ImageViewerController extends AbstractBaseController {
 
 	@Autowired(required = true)
 	private Validator validator;
-
-	@Autowired
-	@Qualifier(value="creditCardFormValidator")
-	private CreditCardFormValidator creditCardValidator;
 
 	@Autowired(required = true)
 	CacheableServices cachedService;

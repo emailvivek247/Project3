@@ -307,8 +307,14 @@ div.modal {
                       <#list creditCardList as creditCard>
                         <#assign number = creditCard.number>
                         <#assign id = creditCard.id>
+                        <#assign defaultCC = creditCard.defaultCC>
                         <#assign expired = pageStyleUtil.isCardExpired(creditCard)>
                         <tr>
+                          <td>
+                            <#if defaultCC>
+                              Default
+                            </#if>
+                          </td>
                           <td>
                             ${creditCard.cardType} ending in ${number[number?length - 4..]}
                           </td>
