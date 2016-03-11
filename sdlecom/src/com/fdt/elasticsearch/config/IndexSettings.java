@@ -28,6 +28,7 @@ public class IndexSettings {
 
         ObjectNode rootNode = mapper.createObjectNode();
         rootNode.set("analysis", analysisNode);
+        rootNode.put("max_result_window", SpringContextUtil.getMaxResultWindow());
         rootNode.put("number_of_shards", datasetConfiguration.getNumberShards());
         rootNode.put("number_of_replicas", datasetConfiguration.getNumberReplicas());
 

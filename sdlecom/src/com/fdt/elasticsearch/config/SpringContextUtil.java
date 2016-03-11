@@ -42,6 +42,10 @@ public class SpringContextUtil implements ApplicationContextAware {
         return Integer.parseInt(getElasticsearchProperties().getProperty("elasticsearch.indexing.num_index_versions_to_keep"));
     }
 
+    public static int getMaxResultWindow() {
+        return Integer.parseInt(getElasticsearchProperties().getProperty("elasticsearch.index.max_result_window"));
+    }
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         SpringContextUtil.applicationContext = applicationContext;

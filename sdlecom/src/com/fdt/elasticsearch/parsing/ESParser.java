@@ -66,7 +66,7 @@ public class ESParser {
             @Override
             public ParserState nextState(Context context, ESQuery query) {
                 Character character = context.character;
-                if (Character.isWhitespace(character)) {
+                if (Character.isWhitespace(character) || character.charValue() == ',') {
                     return DEFAULT;
                 } else if (character.charValue() == '"') {
                     context.phraseStart = context.index;
@@ -169,7 +169,7 @@ public class ESParser {
  
     public static void main(String[] args) {
         ESParser parser = new ESParser();
-        ESQuery query = parser.parse("otherField:\"Assumed Names,Brand\"");
-        System.out.println(query.parts.get(0).getAsQueryStr());
+        ESQuery query = parser.parse("PartySeq:\"1,0\",seq:\"1,0\",RoleFilter:\"1,0\",");
+        System.out.println(query.toString());
     }
 }

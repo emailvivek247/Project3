@@ -266,18 +266,22 @@ public class Document implements SDLIndexDocument {
     }
 
     public final Object getObject(String field) {
-        for (SearchProtocol.Field f : this.document.getFieldList()) {
-            if (f.getName().equals(field) && f.getType().equals(SearchProtocol.Field.Type.DATETIME)) {
-                return getDate(field);
-            } else if (f.getName().equals(field) && f.getType().equals(SearchProtocol.Field.Type.STRING)) {
-                return getString(field);
-            } else if (f.getName().equals(field) && f.getType().equals(SearchProtocol.Field.Type.NUMBER)) {
-                return getString(field);
-            } else if (f.getName().equals(field)) {
-                return f.getValue();
-            } else {
-                return null;
+        if (document != null) {
+            for (SearchProtocol.Field f : this.document.getFieldList()) {
+                if (f.getName().equals(field) && f.getType().equals(SearchProtocol.Field.Type.DATETIME)) {
+                    return getDate(field);
+                } else if (f.getName().equals(field) && f.getType().equals(SearchProtocol.Field.Type.STRING)) {
+                    return getString(field);
+                } else if (f.getName().equals(field) && f.getType().equals(SearchProtocol.Field.Type.NUMBER)) {
+                    return getString(field);
+                } else if (f.getName().equals(field)) {
+                    return f.getValue();
+                } else {
+                    return null;
+                }
             }
+        } else if (source != null) {
+            return getString(field);
         }
         return null;
 
