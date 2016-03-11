@@ -28,6 +28,7 @@ import net.javacoding.xsearch.search.result.SearchSort;
 import net.javacoding.xsearch.search.result.filter.Count;
 import net.javacoding.xsearch.search.result.filter.FilterColumn;
 import net.javacoding.xsearch.search.result.filter.FilterResult;
+import net.javacoding.xsearch.status.IndexStatus;
 import net.javacoding.xsearch.status.QueryLogger;
 import net.javacoding.xsearch.utility.EscapeChars;
 import net.javacoding.xsearch.utility.U;
@@ -174,7 +175,7 @@ public class SearchProtocolBufferAction extends Action {
                     logger.info("Elastic Search Query: " + elasticSearchQuery);
 
                     Search search = new Search.Builder(elasticSearchQuery)
-                            .addIndex(sc.indexName)
+                            .addIndex(IndexStatus.getAliasName(sc.dc))
                             .setParameter(Parameters.SIZE, r.getResultPerPage())
                             .setParameter("from", r.getStart())
                             .build();
