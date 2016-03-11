@@ -41,8 +41,8 @@
             <exclude module="commons-imaging"/>
             <exclude module="commons-io"/>
         </dependency>
-        <dependency org="com.lowagie" name="itext" rev="2.1.3">
-            <!-- IText 2 is required by JMesa and Display Tag (we use IText 5 above) -->
+        <dependency org="com.lowagie" name="itext" rev="1.3">
+            <!-- IText 1/2 is required by JMesa and Display Tag (we use IText 5 above) -->
             <exclude module="bcprov-jdk14"/>
             <exclude module="bcmail-jdk14"/>
         </dependency>
@@ -218,6 +218,7 @@
             <exclude module="xwork"/>
             <exclude module="bsf"/>
             <exclude module="js"/>
+            <exclude module="itext"/>
         </dependency>
 
         <!-- Open SAML dependencies -->
@@ -292,7 +293,9 @@
         <dependency org="org.quartz-scheduler" name="quartz" rev="2.2.1"/>
         <!-- End Quartz dependencies -->
 
-        <dependency org="org.xhtmlrenderer" name="core-renderer" rev="R8"/>
+        <dependency org="org.xhtmlrenderer" name="core-renderer" rev="R8">
+          <exclude module="itext"/>
+        </dependency>
 
         <dependency org="rome" name="rome" rev="1.0"/>
         <dependency org="wsdl4j" name="wsdl4j" rev="1.6.3"/>
