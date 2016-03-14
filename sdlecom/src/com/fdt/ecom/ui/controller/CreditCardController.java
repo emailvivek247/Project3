@@ -4,9 +4,13 @@ import static com.fdt.ecom.ui.EcomViewConstants.ECOM_PAYMENT_CONFIRMATION;
 import static com.fdt.ecom.ui.EcomViewConstants.ECOM_PAY_NOW;
 import static com.fdt.ecom.ui.EcomViewConstants.ECOM_REDIRECT_PAYMENT_CONFIRMATION;
 
+
 import java.util.List;
 
+import java.util.stream.Collectors;
+
 import javax.servlet.http.HttpServletRequest;
+
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
 
 import com.fdt.common.exception.SDLBusinessException;
 import com.fdt.common.ui.controller.AbstractBaseController;
@@ -51,8 +56,11 @@ public class CreditCardController extends AbstractBaseController {
         modelAndView.addObject("sites", paidSubUnpaidList);
         modelAndView.addObject("user", user);
         List<CreditCard> cardList = getService().getCreditCardDetailsList(user.getId());
+        List<CreditCard> sortedCardList = cardList.stream().sorted((one, two) -> {
+            return Boolean.compare(two.getDefaultCC(),  one.getDefaultCC());
+        }).collect(Collectors.toList());
         modelAndView.addObject("serverUrl", ecomServerURL);
-        modelAndView.addObject("creditCardSelectionForm", new CreditCardSelectionForm(cardList));
+        modelAndView.addObject("creditCardSelectionForm", new CreditCardSelectionForm(sortedCardList));
         return modelAndView;
     }
 

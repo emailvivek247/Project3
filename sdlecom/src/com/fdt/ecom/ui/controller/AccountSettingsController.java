@@ -39,6 +39,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -159,7 +160,7 @@ public class AccountSettingsController extends AbstractBaseController {
 	        	 url = savedRequest.getRedirectUrl();
 	        	 viewName = "redirect:" + url;
         		 modelAndView.setViewName(viewName);
-        		 /** Removed the Saved Request from the Request Cache. So that the Request is not saved in the
+        		 /** Removed the Saved Request from the Request Cach e. So that the Request is not saved in the
         		  * Subsequent Request**/
         		 sDLSavedRequestAwareAuthenticationSuccessHandler.getRequestCache().removeRequest(request, response);
         	 }
@@ -227,7 +228,10 @@ public class AccountSettingsController extends AbstractBaseController {
         User user = this.getUser(request);
         int shoppingCartSize = 0;
 
-        List<CreditCard> creditCardList = getService().getCreditCardDetailsList(user.getId());
+        List<CreditCard> cardList = getService().getCreditCardDetailsList(user.getId());
+        List<CreditCard> sortedCardList = cardList.stream().sorted((one, two) -> {
+            return Boolean.compare(two.getDefaultCC(),  one.getDefaultCC());
+        }).collect(Collectors.toList());
 
         List<ShoppingCartItem> itemList = new LinkedList<ShoppingCartItem>();
         itemList = this.getService().getShoppingBasketItems(request.getRemoteUser(), this.nodeName);
@@ -247,7 +251,7 @@ public class AccountSettingsController extends AbstractBaseController {
 
         modelAndView.addObject("shoppingCartSize", shoppingCartSize);
         modelAndView.addObject("user", user);
-        modelAndView.addObject("creditCardList", creditCardList);
+        modelAndView.addObject("creditCardList", sortedCardList);
         modelAndView.addObject("isFirmLevelAdministrator", this.isFirmLevelAdministrator(subscriptionDTOs));
         modelAndView.addObject("serverUrl", this.ecomServerURL);
         modelAndView.addObject("subscriptions", subscriptionDTOs);
