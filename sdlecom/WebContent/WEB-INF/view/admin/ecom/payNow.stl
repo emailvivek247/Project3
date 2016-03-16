@@ -231,6 +231,7 @@ td.footer{
                 <i class="fa fa-exclamation-triangle red" style="font-size:18px;"></i>&nbsp;
                 <b><@spring.message code="security.ecommerce.label.importantInformation" /></b>
                 <br /><br />
+                * <@spring.message code="security.ecommerce.alert.defaultWillBeUsed" /><br /><br />
                 * <@spring.message code="security.ecommerce.alert.acceptOnlyAuthorizedPayments" /><br /><br />
                 * <@spring.message code="security.ecommerce.alert.paymentProcessing" />
               </span>

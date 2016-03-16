@@ -41,7 +41,8 @@ public class CreditCardController extends AbstractBaseController {
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.setAllowedFields(new String[] {
-            "selectedCardId"
+            "selectedCardId",
+            "btnPayNow"
         });
     }
 
