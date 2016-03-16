@@ -78,6 +78,7 @@ public class ESIndexConsumer implements Runnable {
         long threadId = Thread.currentThread().getId();
         try {
             logger.info("Thread ID = {}. Submitting a batch in ESIndexConsumer: size = {}", threadId, actions.size());
+            logger.info("Thread ID = {}. indexName = {}; typeName = {}", threadId, indexName, typeName);
             long start = System.currentTimeMillis();
             Bulk bulk = new Bulk.Builder().defaultIndex(indexName).defaultType(typeName).addAction(actions).build();
             JestExecute.execute(jestClient, bulk);
