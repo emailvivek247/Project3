@@ -66,7 +66,8 @@ public class ESFetchDeletedDocumentListBySQLTask extends BaseFetchPrimaryKeysByS
 
         int toDeleteCount = 0;
 
-        Get getRequest = new Get.Builder(dc.getName(), pkValue).type(dc.getName()).build();
+        String aliasName = IndexStatus.getAliasName(dc);
+        Get getRequest = new Get.Builder(aliasName, pkValue).type(dc.getName()).build();
         DocumentResult jestResult = JestExecute.executeNoCheck(jestClient, getRequest);
         GetResult result = new GetResult(jestResult);
 
