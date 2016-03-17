@@ -17,6 +17,9 @@
 <script type="text/javascript" src="resources/javascripts/jquery.cookie.js"></script>
 <script type="text/javascript" src="resources/javascripts/jquery.browser.js"></script>
 
+<script>
+
+</script>
 
 <style>
 div.ADCSI {
@@ -332,7 +335,7 @@ div.modal {
                             </a>
                           </td>
                           <td>
-                            <a href="#Delete_Card" name="${id}" id="deleteCreditCardID">
+                            <a href="#" onClick="handleDeleteClick(${id}, ${defaultCC?string}, ${creditCardList?size})">
                               Delete
                             </a>
                           </td>
@@ -702,7 +705,8 @@ div.modal {
 </div>
 
 <script type="text/javascript">
-  function removeFirmUserSubscription(username, userAccessId, rowCell){
+
+  function removeFirmUserSubscription(username, userAccessId, rowCell) {
     resetRemoveSubMessage();
     $('#removeFirmUserSubForm').validationEngine('hide');
     removeSubForm = document.forms['removeFirmUserSubForm'];
@@ -714,11 +718,111 @@ div.modal {
     return false;
   }
 
-  function resetRemoveSubMessage(){
+  function resetRemoveSubMessage() {
     removeSubLableElem = document.getElementById('removeSubscriptionMessageLabel');
     removeSubLableElem.innerHTML  = '';
   }
 
+  function handleDeleteClick(creditCardId, isDefault, listSize) {
+    console.log('creditCardId', creditCardId, 'isDefault', isDefault, 'listSize', listSize)
+
+    var states = {};
+
+    if (isDefault && listSize > 1) {
+      states.abortDeleteDefault = {
+        html: 'This is your default card and cannot be deleted. Please set another card as your default and try again.',
+        buttons: {
+          'Ok': false,
+        },
+        focus: 1,
+        prefix: 'jqismooth',
+        submit: function(e, v, m, f) {
+          return true;
+        }
+      };
+    } else if (isDefault && listSize === 1) {
+      states.defaultOnlyCard = {
+        html: 'This credit card is your default and only credit card, are you sure you want to permanently ' +
+          'remove this credit card?  <br /><br /> If yes, click Remove. <br /><br />' + 
+          'The page refreshes once the credit card is removed to reflect the changes.',
+        buttons: {
+          'Cancel': false,
+          'Remove Card': true
+        },
+        focus: 1,
+        prefix: 'jqismooth',
+        submit: function(e, v, m, f) {
+          if (v) {
+            e.preventDefault();
+            removeCard(creditCardId);
+          }
+        }
+      };
+    } else {
+      states.initialPrompt = {
+        html: 'Are you sure you want to permanently remove this credit card?  <br /><br /> ' +
+          'If yes, click Remove. <br /><br />' + 
+          'The page refreshes once the credit card is removed to reflect the changes.',
+        buttons: {
+          'Cancel': false,
+          'Remove Card': true
+        },
+        focus: 1,
+        prefix: 'jqismooth',
+        submit: function(e, v, m, f) {
+          if (v) {
+            e.preventDefault();
+            removeCard(creditCardId);
+          }
+        }
+      };
+    }
+
+    states.removeSuccess = {
+      title: 'Success',
+      html: 'Credit card removed',
+      persistent: false,
+      submit: function(e, v, m, f) {
+        window.location.reload();
+      }
+    };
+
+    states.removeError = {
+      title: 'Error',
+      html: 'System Error. Please contact administrator for more information.',
+      persistent: false,
+      submit: function(e, v, m, f) {
+        window.location.reload();
+      }
+    };
+
+    $.prompt(states);
+
+  }
+
+  function removeCard(creditCardId) {
+    var usernameTxt = '${user.username}';
+    $.ajax({
+      cache: false,
+      type: 'POST',
+      url: 'removeCard.admin',
+      data: {
+        username: usernameTxt,
+        creditCardId: creditCardId
+      },
+      success: function(data) {
+        $.each(data, function(i,item) {
+          if (item.code != 'SUCCESS' && item.code != 'ERROR') {
+            $.prompt.goToState('removeError');
+          } else if (item.code == 'SUCCESS') {
+            $.prompt.goToState('removeSuccess');
+          } else {
+            $.prompt.goToState('removeError');
+          }
+        });
+      },
+    });
+  }
 
   $(function() {
     $("#pay").button({
@@ -730,6 +834,7 @@ div.modal {
   });
 
   $(document).ready(function() {
+
     var ops = "1";
     $("img#processing").hide();
     $("#dialog-form").dialog({
@@ -803,70 +908,6 @@ div.modal {
       $("#dialog-form" ).dialog("open");
       return false;
     });
-    
-    $('a[href="#Delete_Card"]').click(function() {
-      var deleteCardPromptStates = {
-        initialPrompt: {
-          html: 'Do you want to permanently remove the credit card for the user?  <br /><br /> If Yes, ' +
-            'Click Remove <br /><br />The page refreshes once the credit card is removed to reflect ' +
-            'the changes.<br /> <input name="creditCardIdFromValue" type="hidden" value=' + $(this).attr("name") + '>',
-          buttons: {
-            'Cancel': false,
-            'Remove Card': true
-          },
-          focus: 1,
-          prefix: 'jqismooth',
-          submit: function(e, v, m, f) {
-            if (v) {
-              e.preventDefault();
-              removeCard(f);
-            }
-          }
-        },
-        removeSuccess: {
-          title: 'Success',
-          html: 'Credit card removed',
-          persistent: false,
-          submit: function(e, v, m, f) {
-            window.location.reload();
-          }
-        },
-        removeError: {
-          title: 'Error',
-          html: 'System Error. Please contact administrator for more information.',
-          persistent: false,
-          submit: function(e, v, m, f) {
-            window.location.reload();
-          }
-        }
-      };
-      $.prompt(deleteCardPromptStates);
-    });
-
-    function removeCard(f) {
-      var usernameTxt = '${user.username}';
-      var creditCardIdTxt = f.creditCardIdFromValue;
-      $.ajax({
-        cache: false,
-        type: 'POST',
-        url: 'removeCard.admin',
-        data: {
-          username: usernameTxt,
-          creditCardId: creditCardIdTxt
-        },
-        success: function(data) {
-          $.each(data, function(i,item) {
-            if (item.code != 'SUCCESS' && item.code != 'ERROR') {
-              $.prompt.goToState('removeError');
-            } else if (item.code == 'SUCCESS') {
-              $.prompt.goToState('removeSuccess');
-            } else {
-              $.prompt.goToState('removeError');
-            }
-          });
-        },
-      });
-    }
 
     var $items = $('#vtab>ul>li');
     $items.click(function() {
