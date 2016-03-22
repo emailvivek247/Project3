@@ -187,9 +187,6 @@ public class SearchAction extends Action {
             }
             if (Boolean.parseBoolean(request.getServletContext().getInitParameter("isPSOOnlyMachine"))) {
                 if (propertiesFile != null && propertiesFile.getAbsolutePath() != null) {
-                    
-                    
-
                     indexServerUrl = SystemUtil.readProperty("indexServerUrl", propertiesFile.getAbsolutePath());
                     SearchConnection searchConnection = new SearchConnection(indexServerUrl).setIndex(sc.indexName);
                     SearchQuery searchQuery = new SearchQuery().setStart(offset).setLength(rowsToReturn);
@@ -200,9 +197,7 @@ public class SearchAction extends Action {
                         searchQuery.setAdvancedQuery(lq);
                     }
                     Result result = searchConnection.search(searchQuery);
-                    // Populate Filters
-                    narrowBySearch(query, sc.irs, sc.dc, filterResult, errors, request);
-                    populateFilterResult(filterResult, result);
+                    populateFilterResult(sc.dc, filterResult, result);
                     sr.initFor3Tier(sc, q, lq, query, result.getDocList(), null, searchTime, result.getTotal(),
                             offset, rowsToReturn, sortBys, filterResult, request, response);
                 }
@@ -374,7 +369,8 @@ public class SearchAction extends Action {
      * @param filterResult the object to populate
      * @param result the three-tier search result
      */
-    private static void populateFilterResult(FilterResult filterResult, Result result) {
+    private static void populateFilterResult(DatasetConfiguration dc, FilterResult filterResult, Result result) {
+        filterResult.setFilterColumns(dc.getFilterableColumns());
         for (FacetChoice fChoice : result.getFacetChoiceList()) {
             FilterColumn filterColumn = filterResult.getFilterColumn(fChoice.getColumn());
             if (filterColumn != null) {
@@ -386,6 +382,7 @@ public class SearchAction extends Action {
                 filterColumn.setCounts(counts);
             }
         }
+        filterResult.finish();
     }
 
    
