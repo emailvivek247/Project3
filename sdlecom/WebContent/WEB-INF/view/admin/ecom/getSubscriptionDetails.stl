@@ -204,7 +204,7 @@ span.alert {
 						</#if>	
 					</#if>
 				</#list>
-		   		<#if availableAccessCount &gt; 1 && subscription.category = "RECURRING_SUBSCRIPTION">	   		
+		   		<#if availableAccessCount &gt; 0 && subscription.category = "RECURRING_SUBSCRIPTION">	   		
 		   		<span style="width:100%;text-align:center;font-weight:bold;display:inline-block;margin:25px 0 15px 0"><@spring.message code="security.ecommerce.label.otherAvailableSubscriptions" /> for ${subscription.siteName}</span>
 		   		<form id="frmChangeSubscription" name="frmChangeSubscription" method="post" action="viewChangeSubscriptionInfoRequest.admin">
 		   		<input type="hidden" name="userAccessID" id="userAccessID" value="${subscription.userAccessId}">
