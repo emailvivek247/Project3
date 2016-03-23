@@ -55,6 +55,7 @@ import com.fdt.security.exception.UserNameAlreadyExistsException;
 import com.fdt.security.exception.UserNameNotFoundException;
 import com.fdt.security.exception.UserNotActiveException;
 import com.fdt.subscriptions.dto.AccessDetailDTO;
+import com.fdt.subscriptions.dto.CreditCardForChangeSubscriptionDTO;
 import com.fdt.subscriptions.dto.SubscriptionDTO;
 
 
@@ -388,7 +389,8 @@ public class ServiceStubRS implements ServiceStub {
 	}
 
 	public UpgradeDowngradeDTO changeFromRecurringToRecurringSubscription(Long userAccessId, Long accessId, String userName,
-			String machineName) throws PaymentGatewaySystemException, PaymentGatewayUserException,
+			String machineName, CreditCardForChangeSubscriptionDTO creditCardForChangeSubscriptionDTO) 
+					throws PaymentGatewaySystemException, PaymentGatewayUserException,
 			SDLBusinessException, MaxUsersExceededException {
 		UpgradeDowngradeDTO upgradeDowngradeDTO = null;
 		String url = this.ecomRestURL.concat("changeFromRecurringToRecurringSubscription/{userAccessId}/{accessId}/" +
@@ -398,8 +400,9 @@ public class ServiceStubRS implements ServiceStub {
 		paramMap.put("accessId", accessId);
 		paramMap.put("userName", userName);
 		paramMap.put("machineName", machineName);
+		
 		try {
-			upgradeDowngradeDTO = this.restTemplate.postForObject(url, null, UpgradeDowngradeDTO.class, paramMap);
+			upgradeDowngradeDTO = this.restTemplate.postForObject(url, creditCardForChangeSubscriptionDTO, UpgradeDowngradeDTO.class, paramMap);
 		} catch (UnknownHttpStatusCodeException unknownHttpStatusCodeExcp) {
 			exceptionHandler.handlePaymentGatewayUserException(jacksonObjectMapper, unknownHttpStatusCodeExcp);
 			exceptionHandler.handlePaymentGatewaySystemException(jacksonObjectMapper, unknownHttpStatusCodeExcp);

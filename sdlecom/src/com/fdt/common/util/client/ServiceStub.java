@@ -37,6 +37,7 @@ import com.fdt.security.exception.UserNameAlreadyExistsException;
 import com.fdt.security.exception.UserNameNotFoundException;
 import com.fdt.security.exception.UserNotActiveException;
 import com.fdt.subscriptions.dto.AccessDetailDTO;
+import com.fdt.subscriptions.dto.CreditCardForChangeSubscriptionDTO;
 import com.fdt.subscriptions.dto.SubscriptionDTO;
 
 public interface ServiceStub {
@@ -98,7 +99,8 @@ public interface ServiceStub {
     	throws SDLBusinessException, MaxUsersExceededException;
 
     public UpgradeDowngradeDTO changeFromRecurringToRecurringSubscription(Long userAccessId, Long accessId, String userName,
-        String machineName) throws PaymentGatewaySystemException, PaymentGatewayUserException, SDLBusinessException, MaxUsersExceededException;
+        String machineName, CreditCardForChangeSubscriptionDTO creditCardForChangeSubscriptionDTO)
+        		throws PaymentGatewaySystemException, PaymentGatewayUserException, SDLBusinessException, MaxUsersExceededException;
 
     public List<AccessDetailDTO> addSubscription(SubscriptionDTO subscriptionDTO) throws SDLBusinessException;
 

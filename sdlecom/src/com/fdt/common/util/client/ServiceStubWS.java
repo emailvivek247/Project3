@@ -47,6 +47,7 @@ import com.fdt.security.exception.UserNameAlreadyExistsException;
 import com.fdt.security.exception.UserNameNotFoundException;
 import com.fdt.security.exception.UserNotActiveException;
 import com.fdt.subscriptions.dto.AccessDetailDTO;
+import com.fdt.subscriptions.dto.CreditCardForChangeSubscriptionDTO;
 import com.fdt.subscriptions.dto.SubscriptionDTO;
 
 @Component("serviceStubWS")
@@ -178,9 +179,9 @@ public class ServiceStubWS implements ServiceStub, ApplicationContextAware {
     }
 
     public UpgradeDowngradeDTO changeFromRecurringToRecurringSubscription(Long userAccessId, Long accessId, String userName,
-            String machineName) throws PaymentGatewaySystemException, PaymentGatewayUserException, SDLBusinessException,
-            MaxUsersExceededException {
-        return this.getService().changeFromRecurringToRecurringSubscription(userAccessId, accessId, userName, machineName);
+            String machineName, CreditCardForChangeSubscriptionDTO creditCardForChangeSubscriptionDTO) 
+            		throws PaymentGatewaySystemException, PaymentGatewayUserException, SDLBusinessException, MaxUsersExceededException {
+        return this.getService().changeFromRecurringToRecurringSubscription(userAccessId, accessId, userName, machineName, creditCardForChangeSubscriptionDTO);
     }
 
     public List<AccessDetailDTO> addSubscription(SubscriptionDTO subscriptionDTO)

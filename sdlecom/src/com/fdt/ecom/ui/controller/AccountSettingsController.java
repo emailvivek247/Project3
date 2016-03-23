@@ -81,6 +81,7 @@ import com.fdt.ecom.entity.CreditCard;
 import com.fdt.ecom.entity.ShoppingCartItem;
 import com.fdt.ecom.entity.Site;
 import com.fdt.ecom.entity.Term;
+import com.fdt.ecom.ui.form.CreditCardSelectionForm;
 import com.fdt.ecom.ui.util.ExcelExport;
 import com.fdt.ecom.ui.util.ExportConstants;
 import com.fdt.ecom.ui.util.PDFCell;
@@ -100,6 +101,7 @@ import com.fdt.security.exception.MaxUsersExceededException;
 import com.fdt.security.exception.UserNameNotFoundException;
 import com.fdt.security.spring.SDLSavedRequestAwareAuthenticationSuccessHandler;
 import com.fdt.subscriptions.dto.AccessDetailDTO;
+import com.fdt.subscriptions.dto.CreditCardForChangeSubscriptionDTO;
 import com.fdt.subscriptions.dto.SubscriptionDTO;
 
 @Controller
@@ -486,9 +488,15 @@ public class AccountSettingsController extends AbstractBaseController {
 			this.reAuthenticate(request);
 		}
 		ModelAndView modelAndView = this.getModelAndView(request, ECOM_VIEW_CHANGE_SUBSCRIPTION_INFO);
+		
 		User user = this.getUser(request);
+		List<CreditCard> cardList = getService().getCreditCardDetailsList(user.getId());
+		List<CreditCard> sortedCardList = cardList.stream().sorted((one, two) -> {
+		            return Boolean.compare(two.getDefaultCC(),  one.getDefaultCC());
+		        }).collect(Collectors.toList());
 		modelAndView.addObject("user", user);
 		modelAndView.addObject("changeSubscriptionInfo", request.getSession().getAttribute("changeSubscriptionInfo"));
+		modelAndView.addObject("creditCardSelectionForm", new CreditCardSelectionForm(sortedCardList));
 		if (request.getSession().getAttribute(FAILURE_MSG) != null) {
 			modelAndView.addObject(FAILURE_MSG, request.getSession().getAttribute(FAILURE_MSG));
 		}
@@ -501,8 +509,22 @@ public class AccountSettingsController extends AbstractBaseController {
 		String failureMsg = null;
 		UpgradeDowngradeDTO changeDTO = null;
 		try {
+			Long selectedRefundCardId = Long.parseLong(request.getParameter("selectedRefundCardId"));
+			Long selectedChargeCardId = Long.parseLong(request.getParameter("selectedChargeCardId"));	
+			
+			CreditCardForChangeSubscriptionDTO creditCardForChangeSubscriptionDTO = new CreditCardForChangeSubscriptionDTO();
+			
+			CreditCard creditCardForOldSubscription = new CreditCard();
+			creditCardForOldSubscription.setId(selectedRefundCardId);
+			CreditCard creditCardForNewSubscription = new CreditCard();
+			creditCardForNewSubscription.setId(selectedChargeCardId);
+			
+			creditCardForChangeSubscriptionDTO.setCreditCardForOldSubscription(creditCardForOldSubscription);
+			creditCardForChangeSubscriptionDTO.setCreditCardForNewSubscription(creditCardForNewSubscription);
+			
 			changeDTO = this.getService().changeFromRecurringToRecurringSubscription(Long.parseLong(request.getParameter("currentUserAccessId")),
-					Long.parseLong(request.getParameter("newAccessId")), request.getRemoteUser(), request.getRemoteAddr());
+					Long.parseLong(request.getParameter("newAccessId")), request.getRemoteUser(), request.getRemoteAddr(),
+					creditCardForChangeSubscriptionDTO);
 			successMsg = this.getMessage("security.ecommerce.changeSubscriptionStatus");
 			request.getSession().setAttribute(SUCCESS_MSG, successMsg);
 			this.reAuthenticate(request);
