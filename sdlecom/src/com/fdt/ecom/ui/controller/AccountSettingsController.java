@@ -509,19 +509,21 @@ public class AccountSettingsController extends AbstractBaseController {
 		String failureMsg = null;
 		UpgradeDowngradeDTO changeDTO = null;
 		try {
-			Long selectedRefundCardId = Long.parseLong(request.getParameter("selectedRefundCardId"));
-			Long selectedChargeCardId = Long.parseLong(request.getParameter("selectedChargeCardId"));	
-			
+			String selectedRefundCardIdString = request.getParameter("selectedRefundCardId");
+			String selectedChargeCardIdString = request.getParameter("selectedChargeCardId");
 			CreditCardForChangeSubscriptionDTO creditCardForChangeSubscriptionDTO = new CreditCardForChangeSubscriptionDTO();
-			
 			CreditCard creditCardForOldSubscription = new CreditCard();
-			creditCardForOldSubscription.setId(selectedRefundCardId);
-			CreditCard creditCardForNewSubscription = new CreditCard();
-			creditCardForNewSubscription.setId(selectedChargeCardId);
-			
+			CreditCard creditCardForNewSubscription = new CreditCard();			
+			if(!(StringUtils.isBlank(selectedRefundCardIdString))) {			
+				Long selectedRefundCardId = Long.parseLong(selectedRefundCardIdString);				
+				creditCardForOldSubscription.setId(selectedRefundCardId);
+			}
+			if(!(StringUtils.isBlank(selectedChargeCardIdString))) {			
+				Long selectedChargeCardId = Long.parseLong(selectedChargeCardIdString);				
+				creditCardForNewSubscription.setId(selectedChargeCardId);				
+			}
 			creditCardForChangeSubscriptionDTO.setCreditCardForOldSubscription(creditCardForOldSubscription);
 			creditCardForChangeSubscriptionDTO.setCreditCardForNewSubscription(creditCardForNewSubscription);
-			
 			changeDTO = this.getService().changeFromRecurringToRecurringSubscription(Long.parseLong(request.getParameter("currentUserAccessId")),
 					Long.parseLong(request.getParameter("newAccessId")), request.getRemoteUser(), request.getRemoteAddr(),
 					creditCardForChangeSubscriptionDTO);
