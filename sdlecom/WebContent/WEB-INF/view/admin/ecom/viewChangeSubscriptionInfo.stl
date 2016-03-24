@@ -133,7 +133,7 @@ span.text {float:left;width:600px;text-align:left;color:#cc0000;}
                   <#else>
                     <td class="left"> <input type="radio" name="selectedRefundCardId" id="selectedRefundCardId" value=${id} disabled=true /> </td>
                     <td class="right"> ${creditCard.cardType} ending in ${number[number?length - 4..]} (Expired) - 
-                    <a href="viewAccountInformation.admin?addNewCard=true&return_url=${request.getRequestURL()}&amp;creditCardId=${id}">
+                    <a href="viewAccountInformation.admin?return_url=${request.getRequestURL()}&amp;creditCardId=${id}">
                       Update
                     </a> </td>
                   </#if>
@@ -187,7 +187,7 @@ span.text {float:left;width:600px;text-align:left;color:#cc0000;}
                   <#else>
                     <td class="left"> <input type="radio" name="selectedChargeCardId" id="selectedChargeCardId" value=${id} disabled=true /> </td>
                     <td class="right"> ${creditCard.cardType} ending in ${number[number?length - 4..]} (Expired) - 
-                    <a href="viewAccountInformation.admin?addNewCard=true&return_url=${request.getRequestURL()}&amp;creditCardId=${id}">
+                    <a href="viewAccountInformation.admin?return_url=${request.getRequestURL()}&amp;creditCardId=${id}">
                       Update
                     </a> </td>
                   </#if>
