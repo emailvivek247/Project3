@@ -16,6 +16,7 @@ import com.fdt.elasticsearch.config.SpringContextUtil;
 import com.fdt.elasticsearch.util.JestExecute;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Queues;
+import com.google.gson.Gson;
 
 public class ESIndexConsumer implements Runnable {
 
@@ -68,8 +69,17 @@ public class ESIndexConsumer implements Runnable {
     private void resubmitList(List<Index> actions) {
         boolean success = false;
         int numTries = 0;
-        while (!success && numTries++ < 100) {
+        while (!success && numTries++ < 10) {
             success = upload(actions);
+        }
+        actions.forEach(a -> submitSingleItem(a));
+    }
+
+    private void submitSingleItem(Index action) {
+        boolean success = false;
+        int numTries = 0;
+        while (!success && numTries++ < 10) {
+            success = uploadSingleItem(action);
         }
     }
 
@@ -77,18 +87,41 @@ public class ESIndexConsumer implements Runnable {
         boolean success = false;
         long threadId = Thread.currentThread().getId();
         try {
-            logger.info("Thread ID = {}. Submitting a batch in ESIndexConsumer: size = {}", threadId, actions.size());
-            logger.info("Thread ID = {}. indexName = {}; typeName = {}", threadId, indexName, typeName);
+            logger.info("Thread ID = {}. Submitting a batch in ESIndexConsumer: " +
+                    "size = {}, indexName = {}, typeName = {}", threadId, actions.size(), indexName, typeName);
             long start = System.currentTimeMillis();
             Bulk bulk = new Bulk.Builder().defaultIndex(indexName).defaultType(typeName).addAction(actions).build();
             JestExecute.execute(jestClient, bulk);
             long duration = System.currentTimeMillis() - start;
-            logger.info("Thread ID = {}. Done submitting a batch in ESIndexConsumer: duration = {}ms", threadId, duration);
+            logger.info("Thread ID = {}. Done submitting a batch in ESIndexConsumer: " +
+                    "duration = {}ms", threadId, duration);
             success = true;
         } catch (Throwable t) {
-            logger.warn("Thread ID = " + threadId + ". Failed to submit a batch.", t);
+            logger.warn("Thread ID = " + threadId + ". Failed to submit a batch.");
         }
         return success;
     }
 
+    private boolean uploadSingleItem(Index action) {
+        boolean success = false;
+        long threadId = Thread.currentThread().getId();
+        try {
+            logger.info("Thread ID = {}. Submitting a single item in ESIndexConsumer: " +
+                    "size = {}, indexName = {}, typeName = {}", threadId, indexName, typeName);
+            long start = System.currentTimeMillis();
+            Index index = new Index.Builder(action.getData(new Gson()))
+                    .id(action.getId())
+                    .index(indexName)
+                    .type(typeName)
+                    .build();
+            JestExecute.execute(jestClient, index);
+            long duration = System.currentTimeMillis() - start;
+            logger.info("Thread ID = {}. Done submitting a single item in ESIndexConsumer: " +
+                    "duration = {}ms", threadId, duration);
+            success = true;
+        } catch (Throwable t) {
+            logger.error("Thread ID = " + threadId + ". Failed to submit a single item.", t);
+        }
+        return success;
+    }
 }
