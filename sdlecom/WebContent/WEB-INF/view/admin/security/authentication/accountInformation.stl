@@ -294,7 +294,7 @@ div.modal {
                       <#if creditCardList?has_content>
                         <a id="pay" href="paymentInfo.admin"><@spring.message code="security.ecommerce.payNow" /></a>
                       <#else>
-                        <a style="text-decoration:underline;" class="extLink" href="viewAccountInformation.admin?return_url=${request.getRequestURL()}&amp;addNewCard=true">
+                        <a style="text-decoration:underline;" class="extLink" href="viewAccountInformation.admin?addNewCard=true&return_url=${request.getRequestURL()}&amp;addNewCard=true">
                           <@spring.message code="security.ecommerce.label.addPaymentInformation" />
                         </a>
                       </#if>
@@ -330,7 +330,7 @@ div.modal {
                             ${pageStyleUtil.getExpirationDate(creditCard)}
                           </td>
                           <td>
-                            <a href="viewAccountInformation.admin?return_url=${request.getRequestURL()}&amp;creditCardId=${id}">
+                            <a href="viewAccountInformation.admin?addNewCard=true&return_url=${request.getRequestURL()}&amp;creditCardId=${id}">
                               Update
                             </a>
                           </td>
@@ -343,14 +343,14 @@ div.modal {
                       </#list>
                     </table>
                     <br />
-                    <a href="viewAccountInformation.admin?return_url=${request.getRequestURL()}&amp;addNewCard=true">
+                    <a href="viewAccountInformation.admin?addNewCard=true&return_url=${request.getRequestURL()}&amp;addNewCard=true">
                       <@spring.message code="security.ecommerce.label.addCardToAccount" />
                     </a>
                   <#else>
                     <p>
                       <b><@spring.message code="security.ecommerce.label.cardsOnFile" /></b>
                       &nbsp;<@spring.message code="security.ecommerce.label.none" />
-                      <a style="text-decoration:underline;" href="viewAccountInformation.admin?return_url=${request.getRequestURL()}&amp;addNewCard=true">
+                      <a style="text-decoration:underline;" href="viewAccountInformation.admin?addNewCard=true&return_url=${request.getRequestURL()}&amp;addNewCard=true">
                         <@spring.message code="security.ecommerce.label.addPaymentInformation" />
                       </a>
                     </p>

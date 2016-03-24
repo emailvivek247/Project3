@@ -141,7 +141,7 @@ span.alert {
 		            				<#if subscription.isAuthorized()>&nbsp;&nbsp;&nbsp;&nbsp;<a id="pay" href="paymentInfo.admin"><@spring.message code="security.ecommerce.payNow" /></a></#if>
 		            			<#else>
 		            				<@spring.message code="security.ecommerce.label.paymentDue" />
-		            				<#if subscription.isAuthorized()>&nbsp;&nbsp;&nbsp;&nbsp;<a id="pay" href="viewAccountInformation.admin?return_url=${clientUrl}accountInformation.admin"><@spring.message code="security.ecommerce.label.addPaymentInformation" /></a></#if>
+		            				<#if subscription.isAuthorized()>&nbsp;&nbsp;&nbsp;&nbsp;<a id="pay" href="viewAccountInformation.admin?addNewCard=true&return_url=${clientUrl}accountInformation.admin"><@spring.message code="security.ecommerce.label.addPaymentInformation" /></a></#if>
 		            			</#if>
 							</#if>
 						<#else>							
@@ -184,7 +184,7 @@ span.alert {
 										<a name="btnUpdateCC" id="btnUpdateCC" href="ccinfo.admin"><@spring.message code="security.ecommerce.label.updateAccount" /></a>
 									<#else>
 										<span class="alert"><@spring.message code="security.ecommerce.ccExpiredAlert" /></span><br /><br />
-										<a name="btnUpdateCC" id="btnUpdateCC" href="viewAccountInformation.admin?return_url=${clientUrl}accountInformation.admin"><@spring.message code="security.ecommerce.label.updateAccount" /></a>									
+										<a name="btnUpdateCC" id="btnUpdateCC" href="viewAccountInformation.admin?addNewCard=true&return_url=${clientUrl}accountInformation.admin"><@spring.message code="security.ecommerce.label.updateAccount" /></a>									
 									</#if>	
 								</#if>
 								

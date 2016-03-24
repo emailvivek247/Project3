@@ -133,7 +133,7 @@ span.text {float:left;width:600px;text-align:left;color:#cc0000;}
                   <#else>
                     <td class="left"> <input type="radio" name="selectedRefundCardId" id="selectedRefundCardId" value=${id} disabled=true /> </td>
                     <td class="right"> ${creditCard.cardType} ending in ${number[number?length - 4..]} (Expired) - 
-                    <a href="viewAccountInformation.admin?return_url=${request.getRequestURL()}&amp;creditCardId=${id}">
+                    <a href="viewAccountInformation.admin?addNewCard=true&return_url=${request.getRequestURL()}&amp;creditCardId=${id}">
                       Update
                     </a> </td>
                   </#if>
@@ -187,7 +187,7 @@ span.text {float:left;width:600px;text-align:left;color:#cc0000;}
                   <#else>
                     <td class="left"> <input type="radio" name="selectedChargeCardId" id="selectedChargeCardId" value=${id} disabled=true /> </td>
                     <td class="right"> ${creditCard.cardType} ending in ${number[number?length - 4..]} (Expired) - 
-                    <a href="viewAccountInformation.admin?return_url=${request.getRequestURL()}&amp;creditCardId=${id}">
+                    <a href="viewAccountInformation.admin?addNewCard=true&return_url=${request.getRequestURL()}&amp;creditCardId=${id}">
                       Update
                     </a> </td>
                   </#if>
@@ -211,7 +211,7 @@ span.text {float:left;width:600px;text-align:left;color:#cc0000;}
 						<#if request.getServletContext().getInitParameter("isDBService") == "true">
 							<a href="ccinfo.admin" id="btnChangeSubscription"><@spring.message code="security.ecommerce.label.updateAccount" /></a>
 						<#else>
-							<a href="viewAccountInformation.admin?return_url=${request.getRequestURL()}" id="btnChangeSubscription"><@spring.message code="security.ecommerce.label.updateAccount" /></a>
+							<a href="viewAccountInformation.admin?addNewCard=true&return_url=${request.getRequestURL()}" id="btnChangeSubscription"><@spring.message code="security.ecommerce.label.updateAccount" /></a>
 						</#if>
 					<#else>
 						<input class="button" type="submit" name="btnChangeSubscription" id="btnChangeSubscription" <#if user.cardAvailable && user.creditCardActive && changeSubscriptionInfo.newBalance &gt; 0 && !changeSubscriptionInfo.isAccessUnAuthorizedExceptionFlag()>value='<@spring.message code="security.ecommerce.changeSubscriptionConfirmAndPay" />'<#else>value='<@spring.message code="security.ecommerce.changeSubscriptionConfirm" />'</#if> />

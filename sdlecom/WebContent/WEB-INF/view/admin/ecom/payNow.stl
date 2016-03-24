@@ -136,7 +136,7 @@ td.footer{
                   <#else>
                     <@form.radiobutton path="selectedCardId" value=id disabled=true />
                     ${creditCard.cardType} ending in ${number[number?length - 4..]} (Expired) - 
-                    <a href="viewAccountInformation.admin?return_url=${request.getRequestURL()}&amp;creditCardId=${id}">
+                    <a href="viewAccountInformation.admin?addNewCard=true&return_url=${request.getRequestURL()}&amp;creditCardId=${id}">
                       Update
                     </a>
                   </#if>
@@ -152,7 +152,7 @@ td.footer{
                 <br />
                 <br />
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a class="extLink" href="viewAccountInformation.admin?return_url=${request.getRequestURL()}&amp;addNewCard=true">
+                <a class="extLink" href="viewAccountInformation.admin?addNewCard=true&return_url=${request.getRequestURL()}&amp;addNewCard=true">
                   <@spring.message code="security.ecommerce.label.addCardToAccount" />
                 </a>
               <#else>
@@ -163,7 +163,7 @@ td.footer{
                 </p>
                 <p>
                   <b>
-                    <a href="viewAccountInformation.admin?return_url=${request.getRequestURL()}">
+                    <a href="viewAccountInformation.admin?addNewCard=true&return_url=${request.getRequestURL()}">
                       <@spring.message code="security.ecommerce.label.addCardToAccount" />
                     </a>
                   </b>

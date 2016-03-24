@@ -143,7 +143,7 @@ td.footer{
 				            	<div class="alert"><@spring.message code="security.ecommerce.totalAmountDue" /> ${totalDue?string.currency}</div>
 								<#if user.isCardAvailable()>
 									<#if !user.isCreditCardActive() && !(request.getServletContext().getInitParameter("isDBService") == "true")>
-									    <p><a class="extLink" href="viewAccountInformation.admin?return_url=${request.getRequestURL()}"><@spring.message code="security.ecommerce.label.cardExpiredUpdateRequired" /></a></p>
+									    <p><a class="extLink" href="viewAccountInformation.admin?addNewCard=true&return_url=${request.getRequestURL()}"><@spring.message code="security.ecommerce.label.cardExpiredUpdateRequired" /></a></p>
 									<#else>
 										<p><b><@spring.message code="security.ecommerce.label.cardOnFile" /></b>&nbsp;********${user.getCreditCard().number}</p>
 										<a href="paymentInfo.admin" id="pay"><@spring.message code="security.ecommerce.label.proceedToPayment" /></a>
@@ -153,7 +153,7 @@ td.footer{
 										<a href="paymentInfo.admin" id="pay"><@spring.message code="security.ecommerce.label.proceedToPayment" /></a>
 									<#else>
 									<p><b><@spring.message code="security.ecommerce.label.cardRequired" /></b></p>
-									<p><b><a class="extLink" href="viewAccountInformation.admin?return_url=${request.getRequestURL()}"><@spring.message code="security.ecommerce.label.addCardToAccount" /></a></b></p>
+									<p><b><a class="extLink" href="viewAccountInformation.admin?addNewCard=true&return_url=${request.getRequestURL()}"><@spring.message code="security.ecommerce.label.addCardToAccount" /></a></b></p>
 									</#if>
 								</#if>
 						</td>

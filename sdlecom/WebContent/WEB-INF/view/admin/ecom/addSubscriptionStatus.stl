@@ -144,9 +144,9 @@ td.footer{
 							 	<img id="processing" src="resources/images/processing.gif" style="display:none"><br />								 	
 								<#if request.getServletContext().getInitParameter("isDBService") == "false" && (!user.isCardAvailable() || !user.isCreditCardActive())>
 									<#if !user.isCardAvailable()>
-										<a id="redirect" href="viewAccountInformation.admin?return_url=${clientURL}accountInformation.admin"><@spring.message code="security.ecommerce.label.addPaymentInformation" /></a>
+										<a id="redirect" href="viewAccountInformation.admin?addNewCard=true&return_url=${clientURL}accountInformation.admin"><@spring.message code="security.ecommerce.label.addPaymentInformation" /></a>
 									<#elseif user.isCardAvailable() && !user.isCreditCardActive()>
-										<a id="redirect" href="viewAccountInformation.admin?return_url=${clientURL}accountInformation.admin"><@spring.message code="security.ecommerce.label.updateAccount" /></a>
+										<a id="redirect" href="viewAccountInformation.admin?addNewCard=true&return_url=${clientURL}accountInformation.admin"><@spring.message code="security.ecommerce.label.updateAccount" /></a>
 									</#if>
 								<#else>
 									<a id="pay" href="paymentInfo.admin"><@spring.message code="security.ecommerce.payNow" /></a>
