@@ -115,7 +115,7 @@ span.text {float:left;width:600px;text-align:left;color:#cc0000;}
 					<td class="right"><#if changeSubscriptionInfo.downgradeFee?has_content>${changeSubscriptionInfo.downgradeFee?string.currency}</#if></td>
 				</tr>
 			</#if>
-
+			<#if changeSubscriptionInfo.unUsedBalance - changeSubscriptionInfo.downgradeFee != 0>
 			  <#assign creditCardList = creditCardSelectionForm.creditCardList>
               <#if creditCardList?has_content>
                 <#list creditCardList as creditCard>
@@ -143,6 +143,7 @@ span.text {float:left;width:600px;text-align:left;color:#cc0000;}
 				 </tr>
                 </#list>
 			  </#if>
+			</#if>
 			
 
 
@@ -169,34 +170,35 @@ span.text {float:left;width:600px;text-align:left;color:#cc0000;}
 				<td class="footer left"><@spring.message code="security.ecommerce.label.ChargeForRestOfThePeriod" /> : </td>
 				<td class="footer right">${changeSubscriptionInfo.newBalance?string.currency}</td>
 			</tr>
-			
-			<#assign creditCardList = creditCardSelectionForm.creditCardList>
-              <#if creditCardList?has_content>
-                <#list creditCardList as creditCard>
-				 <tr>
-                  <#assign number = creditCard.number>
-                  <#assign id = creditCard.id>
-                  <#assign expired = creditCardSelectionForm.isCardExpired(creditCard_index)>
-                  <#if !expired>
-                    <#if creditCard_index == 0>
-                     <td class="left"> <input type="radio" name="selectedChargeCardId" id="selectedChargeCardId" value=${id} checked="checked" /> </td>
-                    <#else>
-                      <td class="left"><input type="radio" name="selectedChargeCardId" id="selectedChargeCardId" value=${id} /> </td>
-                    </#if>
-                    <td class="right"> ${creditCard.cardType} ending in ${number[number?length - 4..]} </td>
-                  <#else>
-                    <td class="left"> <input type="radio" name="selectedChargeCardId" id="selectedChargeCardId" value=${id} disabled=true /> </td>
-                    <td class="right"> ${creditCard.cardType} ending in ${number[number?length - 4..]} (Expired) - 
-                    <a href="viewAccountInformation.admin?return_url=${request.getRequestURL()}&amp;creditCardId=${id}">
-                      Update
-                    </a> </td>
-                  </#if>
-                  <#if creditCard_has_next>
-                    <br />
-                  </#if>
-				 </tr>
-                </#list>
-			  </#if>
+			<#if changeSubscriptionInfo.newBalance != 0>
+				<#assign creditCardList = creditCardSelectionForm.creditCardList>
+				  <#if creditCardList?has_content>
+					<#list creditCardList as creditCard>
+					 <tr>
+					  <#assign number = creditCard.number>
+					  <#assign id = creditCard.id>
+					  <#assign expired = creditCardSelectionForm.isCardExpired(creditCard_index)>
+					  <#if !expired>
+						<#if creditCard_index == 0>
+						 <td class="left"> <input type="radio" name="selectedChargeCardId" id="selectedChargeCardId" value=${id} checked="checked" /> </td>
+						<#else>
+						  <td class="left"><input type="radio" name="selectedChargeCardId" id="selectedChargeCardId" value=${id} /> </td>
+						</#if>
+						<td class="right"> ${creditCard.cardType} ending in ${number[number?length - 4..]} </td>
+					  <#else>
+						<td class="left"> <input type="radio" name="selectedChargeCardId" id="selectedChargeCardId" value=${id} disabled=true /> </td>
+						<td class="right"> ${creditCard.cardType} ending in ${number[number?length - 4..]} (Expired) - 
+						<a href="viewAccountInformation.admin?return_url=${request.getRequestURL()}&amp;creditCardId=${id}">
+						  Update
+						</a> </td>
+					  </#if>
+					  <#if creditCard_has_next>
+						<br />
+					  </#if>
+					 </tr>
+					</#list>
+				  </#if>
+			</#if>
 
 			<tr>
 				<td colspan="2" style="text-align:right;">
