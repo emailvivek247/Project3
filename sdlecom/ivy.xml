@@ -170,7 +170,7 @@
         <dependency org="org.apache.tika" name="tika-parsers" rev="1.1">
             <exclude module="isoparser"/>
             <exclude module="bcmail-jdk15"/>
-            <exclude module="bcproc-jdk15"/>
+            <exclude module="bcprov-jdk15"/>
             <exclude module="vorbis-java-tika"/>
             <exclude module="vorbis-java-core"/>
         </dependency>
