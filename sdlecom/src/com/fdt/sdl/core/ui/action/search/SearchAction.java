@@ -70,11 +70,13 @@ import org.slf4j.LoggerFactory;
 
 import com.fdt.common.util.SystemUtil;
 import com.fdt.elasticsearch.config.SpringContextUtil;
+import com.fdt.elasticsearch.exception.JestFailureException;
 import com.fdt.elasticsearch.parsing.ESColumnHelper;
 import com.fdt.elasticsearch.parsing.ESQueryHelper;
 import com.fdt.elasticsearch.query.AbstractQuery;
 import com.fdt.elasticsearch.type.result.CustomSearchResult;
 import com.fdt.elasticsearch.util.ESSearchUtils;
+import com.fdt.elasticsearch.util.JestExecute;
 import com.fdt.sdl.admin.ui.action.constants.IndexType;
 import com.fdt.sdl.styledesigner.Template;
 import com.fdt.sdl.styledesigner.util.DeviceDetectorUtil;
@@ -278,7 +280,7 @@ public class SearchAction extends Action {
 
                         searchTime = System.currentTimeMillis() - start;
 
-                        CustomSearchResult result = new CustomSearchResult(client.execute(search));
+                        CustomSearchResult result = new CustomSearchResult(JestExecute.execute(client, search));
                         resultDocs = ESSearchUtils.extractResultDocs(result);
                         totalCount = result.getTotal();
                         ESSearchUtils.populateFilterResult(filterResult, result, sc.dc);
@@ -307,23 +309,11 @@ public class SearchAction extends Action {
         } catch (TooManyClauses tooManyClauseExcep) {
             errors.add("error", new ActionMessage("action.search.runtime.error.toomanyclause"));
             logger.info("Error while using wildcard search:" + tooManyClauseExcep);
-            return (mapping.findForward("error"));
-        } catch (IOException ioe) {
+            return mapping.findForward("error");
+        } catch (Throwable e) {
             errors.add("error", new ActionMessage("action.showIndexStatus.index.error", sc.indexName));
-            System.err.println("Search IOE:" + q);
-            ioe.printStackTrace();
-            return (mapping.findForward("error"));
-        } catch (NullPointerException se) {
-            errors.add("error", new ActionMessage("action.showIndexStatus.index.error", sc.indexName));
-            System.err.println("Search NPE:" + q);
-            se.printStackTrace();
-            return (mapping.findForward("error"));
-        } catch (Throwable t) {
-            errors.add("error", new ActionMessage("action.showIndexStatus.index.error", sc.indexName));
-            System.err.println("Search Error:" + q);
-            t.printStackTrace();
-            request.setAttribute("errors", t);
-            return (mapping.findForward("error"));
+            logger.error("Search exception: q = '" + q + "'; lq = '" + lq + "'", e);
+            return mapping.findForward("error");
         } finally {
             if (sc != null && sc.indexName != null && sc.irs != null) {
                 SearchAction.closeIndexReaderSearcher(sc.irs);
