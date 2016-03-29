@@ -358,3 +358,7 @@ The inline code excerpts below should be run from the terminal.
         - HIBERNATE_KEY: dookudu
         - PROPERTY_FILE_KEY: dookudu
         - USER_AUTH_KEY: dookudu
+
+## Install Elasticsearch
+
+For running the Elasticsearch version of ROAM, following the elasticsearch-install.md guide in this directory.
